@@ -1,5 +1,5 @@
 /**
- * acks-content — bring-your-own-book content streamer (PoC).
+ * acks-importer — bring-your-own-book content streamer (PoC).
  *
  * POSSESSION MODEL: what persists across sessions is the LOCATION of each
  * seat's book (in IndexedDB, per seat) — never the prose. Every session
@@ -14,7 +14,7 @@
  * dialog offers back with a picker beside it. Same enforcement throughout;
  * only the number of clicks changes.
  *
- * PoC api (globalThis.acksImporter / game.modules.get("acks-extras").api):
+ * PoC api (globalThis.acksImporter / game.modules.get("acks-importer").api):
  *   connectBook()    pick a book + your local PDF (location remembered)
  *   reconnectBooks() reopen this seat's remembered books (runs on join too)
  *   browseAndLoad()  GM: pick a page, choose headings, load actors/items
@@ -43,7 +43,7 @@ import { registerGettingStartedSettings, showGettingStarted } from "./getting-st
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
-const LEGACY_KEYS = ["acks-content.proseCache", "acks-content.contentCache"]; // pre-possession-model storage
+const LEGACY_KEYS = ["acks-importer.proseCache", "acks-importer.contentCache"]; // pre-possession-model storage
 
 /** Open PDFs this session: bookId -> { doc, title }. Memory only. */
 const sessionDocs = new Map();
@@ -226,7 +226,7 @@ const rememberFile = (bookId, file) =>
  * persists anywhere.
  */
 const CACHE_HEARTBEAT_MS = 20_000;
-const STAMP_KEY = "acks-content.bridgeTouched";
+const STAMP_KEY = "acks-importer.bridgeTouched";
 /** How far ahead of this document a stamp may sit before it means clock drift. */
 const CLOCK_TOLERANCE_MS = 5_000;
 
@@ -424,7 +424,7 @@ function rerenderPdfTextApps() {
   let n = 0;
   for (const app of open) {
     const el = app?.element instanceof HTMLElement ? app.element : app?.element?.[0];
-    if (!el?.querySelector?.(".acks-content-pdftext")) continue;
+    if (!el?.querySelector?.(".acks-importer-pdftext")) continue;
     try {
       app.render();
       n++;
@@ -446,9 +446,9 @@ function rerenderPdfTextApps() {
  * a one-off read that should leave nothing behind.
  */
 async function connectBookUrl(bookId, url, { remember = true } = {}) {
-  if (!BOOKS[bookId]) return ui.notifications.warn(`acks-content | unknown book id "${bookId}".`);
+  if (!BOOKS[bookId]) return ui.notifications.warn(`acks-importer | unknown book id "${bookId}".`);
   const resp = await fetch(url);
-  if (!resp.ok) return ui.notifications.warn(`acks-content | could not read ${url} (${resp.status}).`);
+  if (!resp.ok) return ui.notifications.warn(`acks-importer | could not read ${url} (${resp.status}).`);
   // Blob first, buffer from it: pdf.js detaches the array it is handed, and a
   // re-download of a whole book is exactly what the refresh bridge saves.
   const blob = await resp.blob();
@@ -479,7 +479,7 @@ async function ingestBook(bookId, buffer, { silent = false, cache = null } = {})
     bar.note(game.i18n.localize(`${LANG_PREFIX}.ui.progressOpening`));
     const { doc, numPages, title } = await openBook(buffer);
     const warning = fingerprintWarning(bookId, numPages, title);
-    if (warning && !silent) ui.notifications.warn(`acks-content | ${warning}`);
+    if (warning && !silent) ui.notifications.warn(`acks-importer | ${warning}`);
     sessionDocs.set(bookId, { doc, title });
     const entries = proseMem.get(bookId) ?? {};
     for (const recipe of recipes) {
@@ -495,7 +495,7 @@ async function ingestBook(bookId, buffer, { silent = false, cache = null } = {})
     // Anything already on screen still says "connect your book" until it is drawn
     // again — the tag resolves per render, not per document.
     const redrawn = rerenderPdfTextApps();
-    const message = `acks-content | ${BOOKS[bookId]?.label ?? bookId}: open — ${hits}/${recipes.length} descriptions readable this session (in memory only; never stored).`;
+    const message = `acks-importer | ${BOOKS[bookId]?.label ?? bookId}: open — ${hits}/${recipes.length} descriptions readable this session (in memory only; never stored).`;
     if (silent) console.log(message);
     else ui.notifications.info(message);
     if (redrawn) console.log(`${MODULE_ID} | re-rendered ${redrawn} open sheet(s) so their page references resolve.`);
@@ -525,7 +525,7 @@ async function cookbookImportTables() {
   try {
     report = await importTables(sessionDocs, { onProgress: (name) => bar.step(name) });
   } catch (err) {
-    ui.notifications.error(`acks-content | ${err.message}`);
+    ui.notifications.error(`acks-importer | ${err.message}`);
     return null;
   } finally {
     bar.finish();
@@ -642,7 +642,7 @@ async function connectBookDialog(capture) {
           }
         } else {
           const files = [...(form.elements.pdf.files ?? [])];
-          if (!files.length) return ui.notifications.warn("acks-content | no file chosen — nothing read.");
+          if (!files.length) return ui.notifications.warn("acks-importer | no file chosen — nothing read.");
           if (files.length > 1) return connectSeveral(files.map((file) => ({ file })));
           const file = files[0];
           await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
@@ -869,8 +869,8 @@ async function offerReconnectDialog(pending, capture) {
   const rows = pending
     .map((id) => {
       const record = records.get(id);
-      return `<div class="acks-content-reconnect-row" data-row="${esc(id)}">
-        <div class="acks-content-reconnect-head">
+      return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
+        <div class="acks-importer-reconnect-head">
           <strong>${esc(BOOKS[id]?.label ?? id)}</strong>
           ${control(id, record)}
         </div>
@@ -889,8 +889,8 @@ async function offerReconnectDialog(pending, capture) {
   const pickable = pending.filter((id) => records.get(id)?.kind !== "url");
   const bulk =
     pickable.length > 1
-      ? `<div class="acks-content-reconnect-row acks-content-reconnect-bulk">
-           <div class="acks-content-reconnect-head">
+      ? `<div class="acks-importer-reconnect-row acks-importer-reconnect-bulk">
+           <div class="acks-importer-reconnect-head">
              <strong>${game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllHead`, { count: pickable.length })}</strong>
              <input type="file" name="pdf-all" data-bulk accept="application/pdf" multiple>
            </div>
@@ -914,7 +914,7 @@ async function offerReconnectDialog(pending, capture) {
         if (status) status.textContent = message;
         if (!ok) return;
         left.delete(bookId);
-        root.querySelector(`[data-row="${bookId}"]`)?.classList.add("acks-content-reconnect-done");
+        root.querySelector(`[data-row="${bookId}"]`)?.classList.add("acks-importer-reconnect-done");
         // Nothing left to ask for: get out of the way rather than making the
         // reader dismiss a dialog that has finished its job.
         if (!left.size) dialog.close();
@@ -1081,7 +1081,7 @@ async function bookStatus() {
     : `refresh bridge: ${windowMs / 1000}s window, ${cached?.length ?? 0} book(s) bridged` +
       (stamp ? `, stamped ${Math.round((Date.now() - stamp) / 1000)}s ago` : ", not stamped yet") +
       `; this page was away ${((performance.timeOrigin - stamp) / 1000).toFixed(1)}s before starting`;
-  ui.notifications.info(`acks-content | ${game.i18n.localize(`${LANG_PREFIX}.ui.statusNote`)} Console has per-book detail.`);
+  ui.notifications.info(`acks-importer | ${game.i18n.localize(`${LANG_PREFIX}.ui.statusNote`)} Console has per-book detail.`);
   console.log(`${MODULE_ID} | book status (this seat):\n${lines.join("\n")}\n${bridge}`);
 }
 
@@ -1093,7 +1093,7 @@ async function forgetBooks() {
   await stampClear();
   proseMem.clear();
   sessionDocs.clear();
-  ui.notifications.info("acks-content | remembered book locations dropped; in-memory prose cleared. Sheets show stubs until books reconnect.");
+  ui.notifications.info("acks-importer | remembered book locations dropped; in-memory prose cleared. Sheets show stubs until books reconnect.");
 }
 
 /* -------------------------------------------- */
@@ -1109,7 +1109,7 @@ function guessKind(bookId, mode) {
 }
 
 async function browseAndLoad() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates documents and world recipes).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates documents and world recipes).");
 
   const options = Object.entries(BOOKS)
     .map(([id, b]) => `<option value="${id}">${b.label}${sessionDocs.has(id) ? " ✓ open" : ""}</option>`)
@@ -1130,10 +1130,10 @@ async function browseAndLoad() {
         const form = button.form;
         const bookId = form.elements.book.value;
         const page = parseInt(form.elements.page.value, 10);
-        if (!Number.isFinite(page) || page < 1) return ui.notifications.warn("acks-content | enter a PDF page number.");
+        if (!Number.isFinite(page) || page < 1) return ui.notifications.warn("acks-importer | enter a PDF page number.");
         if (!sessionDocs.has(bookId)) {
           return ui.notifications.warn(
-            `acks-content | ${BOOKS[bookId].label} is not open this session — connect it first (PoC 2 / unlock dialog).`,
+            `acks-importer | ${BOOKS[bookId].label} is not open this session — connect it first (PoC 2 / unlock dialog).`,
           );
         }
         return pickHeadings(bookId, page);
@@ -1144,18 +1144,18 @@ async function browseAndLoad() {
 
 async function pickHeadings(bookId, page) {
   const { doc, title } = sessionDocs.get(bookId);
-  if (page > doc.numPages) return ui.notifications.warn(`acks-content | page ${page} > ${doc.numPages}.`);
+  if (page > doc.numPages) return ui.notifications.warn(`acks-importer | page ${page} > ${doc.numPages}.`);
   const pageData = await pageItems(doc, page);
   const heads = listHeadings(pageData);
-  if (!heads.length) return ui.notifications.warn(`acks-content | no extraction anchors detected on PDF p. ${page}.`);
+  if (!heads.length) return ui.notifications.warn(`acks-importer | no extraction anchors detected on PDF p. ${page}.`);
 
   const esc = foundry.utils.escapeHTML ?? ((s) => s);
   const rows = heads
     .map(
-      (h, i) => `<label class="acks-content-browse-row">
+      (h, i) => `<label class="acks-importer-browse-row">
         <input type="checkbox" name="sel" value="${i}">
         <span>${esc(h.text)}</span>
-        <span class="acks-content-cite">${h.mode === "display" ? game.i18n.localize(`${LANG_PREFIX}.ui.modeDisplay`) : game.i18n.localize(`${LANG_PREFIX}.ui.modeRunin`)}</span>
+        <span class="acks-importer-cite">${h.mode === "display" ? game.i18n.localize(`${LANG_PREFIX}.ui.modeDisplay`) : game.i18n.localize(`${LANG_PREFIX}.ui.modeRunin`)}</span>
       </label>`,
     )
     .join("");
@@ -1164,7 +1164,7 @@ async function pickHeadings(bookId, page) {
     .join("");
   const content = `
     <p class="notes">${game.i18n.format(`${LANG_PREFIX}.ui.browseFound`, { n: heads.length, book: BOOKS[bookId].label, page })}</p>
-    <div class="acks-content-browse-list">${rows}</div>
+    <div class="acks-importer-browse-list">${rows}</div>
     <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.kindLabel`)}</label>
       <select name="kind">${kinds}</select></div>`;
 
@@ -1178,7 +1178,7 @@ async function pickHeadings(bookId, page) {
         const form = button.form;
         const kindChoice = form.elements.kind.value;
         const picked = [...form.querySelectorAll('input[name="sel"]:checked')].map((el) => heads[+el.value]);
-        if (!picked.length) return ui.notifications.warn("acks-content | nothing selected.");
+        if (!picked.length) return ui.notifications.warn("acks-importer | nothing selected.");
         return loadHeadings(bookId, page, pageData, picked, kindChoice, title);
       },
     },
@@ -1192,7 +1192,7 @@ async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
   for (const head of picked) {
     const prose = head.mode === "runin" ? extractRunin(pageData, head.text) : extractDisplay(pageData, head.text);
     if (!prose) {
-      ui.notifications.warn(`acks-content | "${head.text}" extracted nothing — skipped.`);
+      ui.notifications.warn(`acks-importer | "${head.text}" extracted nothing — skipped.`);
       continue;
     }
     const name = head.text.replace(/:$/, "");
@@ -1225,7 +1225,7 @@ async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
 
 /** Extract the page illustration from the GM's book and set it as actor+token
  *  art. NOTE the deliberate asymmetry with prose: art must render on every
- *  client's canvas, so it uploads into world data (acks-content-art/) — a
+ *  client's canvas, so it uploads into world data (acks-importer-art/) — a
  *  world asset sourced from the GM's own book, like a scan the GM saved. */
 /**
  * Extract + upload a page illustration WITHOUT touching an actor — returns
@@ -1237,7 +1237,7 @@ async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
  */
 async function uploadPageArt(doc, recipe) {
   const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
-  const dir = "acks-content-art";
+  const dir = "acks-importer-art";
   const filename = `${recipe.id.replaceAll(".", "-")}.png`;
   // Already imported? Reuse it — decode + upload is the expensive half of a
   // re-import. A tiny file is a corrupt/aborted upload and is redone.
@@ -1280,7 +1280,7 @@ async function importArt(actor, doc, recipe) {
 
 async function applyStatsToActor(actor, doc, pageData, recipe) {
   const pairs = extractStatPairs(pageData);
-  if (!pairs.length) return ui.notifications.warn(`acks-content | ${recipe.name}: no stat rows found on PDF p. ${recipe.page}.`);
+  if (!pairs.length) return ui.notifications.warn(`acks-importer | ${recipe.name}: no stat rows found on PDF p. ${recipe.page}.`);
   const { system, extras, items, applied, unmapped } = mapPairs(pairs);
 
   // Stream the entry prose where the sheet the seat is using will ENRICH it,
@@ -1334,7 +1334,7 @@ async function applyStatsToActor(actor, doc, pageData, recipe) {
     `${MODULE_ID} | ${actor.name}: stats [${applied.join(", ")}]; ${spoils.length} spoils${unmapped.length ? `; unmapped: ${unmapped.join(", ")}` : ""}`,
   );
   ui.notifications.info(
-    `acks-content | ${actor.name}: ${applied.length} stat fields, ${items.length} attack/ability items, ${spoils.length} spoils${gotArt ? ", art imported" : ""}, ${unmapped.length} labels stored raw (console has details).`,
+    `acks-importer | ${actor.name}: ${applied.length} stat fields, ${items.length} attack/ability items, ${spoils.length} spoils${gotArt ? ", art imported" : ""}, ${unmapped.length} labels stored raw (console has details).`,
   );
 }
 
@@ -1354,7 +1354,7 @@ async function fillMonster(actor, recipe) {
   const session = sessionDocs.get(recipe.book);
   if (!session) {
     ui.notifications.warn(
-      `acks-content | ${BOOKS[recipe.book]?.label ?? recipe.book} is not open this session — connect it (PoC 2 / unlock) to fill ${actor.name}.`,
+      `acks-importer | ${BOOKS[recipe.book]?.label ?? recipe.book} is not open this session — connect it (PoC 2 / unlock) to fill ${actor.name}.`,
     );
     return false;
   }
@@ -1387,11 +1387,11 @@ function applyStatsTargets() {
  * what the GM pointed at and nothing else.
  */
 async function applyStats() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   const selected = applyStatsTargets();
   if (!selected.length) {
     return ui.notifications.warn(
-      "acks-content | select a monster token or open its sheet first — Apply Stats targets only what you point at, never every monster.",
+      "acks-importer | select a monster token or open its sheet first — Apply Stats targets only what you point at, never every monster.",
     );
   }
   let touched = 0;
@@ -1424,14 +1424,14 @@ async function applyStats() {
     if (await fillMonster(actor, recipe)) touched++;
   }
   if (closed.size) {
-    ui.notifications.warn(`acks-content | not open this session: ${[...closed].join(", ")} — connect to refill from it.`);
+    ui.notifications.warn(`acks-importer | not open this session: ${[...closed].join(", ")} — connect to refill from it.`);
   }
   if (unknown.length) {
     ui.notifications.warn(
-      `acks-content | not from the cookbook and no recipe matches: ${unknown.slice(0, 5).join(", ")}${unknown.length > 5 ? ` (+${unknown.length - 5})` : ""}.`,
+      `acks-importer | not from the cookbook and no recipe matches: ${unknown.slice(0, 5).join(", ")}${unknown.length > 5 ? ` (+${unknown.length - 5})` : ""}.`,
     );
   }
-  if (touched) ui.notifications.info(`acks-content | refilled ${touched} monster${touched === 1 ? "" : "s"} from your book.`);
+  if (touched) ui.notifications.info(`acks-importer | refilled ${touched} monster${touched === 1 ? "" : "s"} from your book.`);
 }
 
 /* -------------------------------------------- */
@@ -1441,16 +1441,16 @@ async function applyStats() {
 function enrichPdfText(recipeId, label) {
   const recipe = resolveRecipe(recipeId);
   const holder = document.createElement("span");
-  holder.classList.add("acks-content-pdftext");
+  holder.classList.add("acks-importer-pdftext");
   const stubEl = document.createElement("span");
-  stubEl.classList.add("acks-content-stub");
+  stubEl.classList.add("acks-importer-stub");
   stubEl.textContent =
     (recipe ? stubFor(recipe) : cookbookStub(recipeId)) ?? game.i18n.localize(`${LANG_PREFIX}.pdftext.${recipeId}`);
   holder.append(stubEl);
   if (proseFor(recipeId) || cookbookCanReveal(recipeId)) {
     const reveal = document.createElement("a");
-    reveal.classList.add("acks-content-reveal");
-    reveal.dataset.acksContentId = recipeId;
+    reveal.classList.add("acks-importer-reveal");
+    reveal.dataset.acksImporterId = recipeId;
     reveal.textContent = `📖 ${game.i18n.localize(`${LANG_PREFIX}.ui.reveal`)}${label ? ` (${label})` : ""}`;
     holder.append(" ", reveal);
   }
@@ -1458,18 +1458,18 @@ function enrichPdfText(recipeId, label) {
 }
 
 async function onRevealClick(event) {
-  const link = event.target.closest?.(".acks-content-reveal");
+  const link = event.target.closest?.(".acks-importer-reveal");
   if (!link) return;
   event.preventDefault();
-  const holder = link.closest(".acks-content-pdftext");
-  const open = holder?.querySelector(".acks-content-prose");
+  const holder = link.closest(".acks-importer-pdftext");
+  const open = holder?.querySelector(".acks-importer-prose");
   if (open) return open.remove(); // toggle off — reproduction stays on-demand
   // Session memory first; else a cookbook id executes lazily from this seat's book.
-  const id = link.dataset.acksContentId;
+  const id = link.dataset.acksImporterId;
   const prose = proseFor(id) ?? (cookbookCanReveal(id) ? await cookbookProse(id) : null);
   if (!prose) return;
   const block = document.createElement("span");
-  block.classList.add("acks-content-prose");
+  block.classList.add("acks-importer-prose");
   block.textContent = prose; // textContent: extracted text is never parsed as HTML
   holder.append(block);
 }
@@ -1560,7 +1560,7 @@ Hooks.once("ready", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module) module.api = api;
   console.log(
-    `${MODULE_ID} | ready. Macros in "ACKS Content — Macros", or: acksContent.connectBook() · acksContent.cookbookImport() · acksContent.cookbookImportAbilitiesDialog() · acksContent.cookbookUpdateAbilities() · acksContent.browseAndLoad().`,
+    `${MODULE_ID} | ready. Macros in the "ACKS Importer — Macros" compendium (folders "1 · Your Book" through "4 · Tools & Maintenance"), or: acksImporter.connectBook() · acksImporter.cookbookImport() · acksImporter.cookbookImportAbilitiesDialog() · acksImporter.cookbookUpdateAbilities() · acksImporter.browseAndLoad().`,
   );
 
   // Before anything reads bytes: decide whether this page load is a reload

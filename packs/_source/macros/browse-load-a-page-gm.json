@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/direction.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\napi.browseAndLoad();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.browseAndLoad();",
   "folder": "ackscFldTools000",
   "sort": 410,
   "ownership": {

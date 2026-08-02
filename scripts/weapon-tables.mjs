@@ -8,7 +8,7 @@
  * the same shape core's `acks-all-equipment` ships (used only as a target-shape
  * reference; every value here comes from the reader's book, never from core).
  *
- * IP posture (matches the rest of acks-content): the register/recipe ships only
+ * IP posture (matches the rest of acks-importer): the register/recipe ships only
  * GEOMETRY — column x-anchors and cell patterns — never a damage die, an AC, an
  * encumbrance or a price. All of those materialize per-seat from the connected
  * PDF. A bookless seat gets nothing from this path (a grid has no lazy prose to

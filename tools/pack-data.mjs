@@ -17,7 +17,7 @@
 const STATS = { coreVersion: "14", createdTime: 1784332800000, modifiedTime: 1784332800000 };
 
 const GUARD = `const api = globalThis.acksImporter;
-if (!api) return ui.notifications.warn("acks-content | module not ready (is it enabled?).");
+if (!api) return ui.notifications.warn("acks-importer | module not ready (is it enabled?).");
 `;
 
 /**
@@ -81,7 +81,7 @@ function buildMacros() {
       "Getting Started (open the walkthrough)",
       "icons/svg/light.svg",
       GUARD +
-        `if (!api.gettingStarted) return ui.notifications.warn("acks-content | the walkthrough needs a newer module build.");
+        `if (!api.gettingStarted) return ui.notifications.warn("acks-importer | the walkthrough needs a newer module build.");
 api.gettingStarted({ force: true });`,
       90,
       FOLDERS.setup,
@@ -92,7 +92,7 @@ api.gettingStarted({ force: true });`,
       "Reconnect Remembered Books (this seat)",
       "icons/svg/paralysis.svg",
       GUARD +
-        `if (!api.reconnectBooks) return ui.notifications.warn("acks-content | reconnecting needs a newer module build.");
+        `if (!api.reconnectBooks) return ui.notifications.warn("acks-importer | reconnecting needs a newer module build.");
 api.reconnectBooks();`,
       105,
       FOLDERS.setup,
@@ -122,7 +122,7 @@ api.reconnectBooks();`,
       "Remove ALL Imports (GM)",
       "icons/svg/trash.svg",
       GUARD +
-        `if (!api.cookbookRemoveImports) return ui.notifications.warn("acks-content | removing imports needs a newer module build.");
+        `if (!api.cookbookRemoveImports) return ui.notifications.warn("acks-importer | removing imports needs a newer module build.");
 api.cookbookRemoveImports();`,
       290,
       FOLDERS.import,
@@ -132,7 +132,7 @@ api.cookbookRemoveImports();`,
       "Import Location Journals (GM)",
       "icons/svg/book.svg",
       GUARD +
-        `if (!api.cookbookImportJournals) return ui.notifications.warn("acks-content | location journals need a newer module build.");
+        `if (!api.cookbookImportJournals) return ui.notifications.warn("acks-importer | location journals need a newer module build.");
 api.cookbookImportJournals();`,
       220,
       FOLDERS.import,
@@ -142,7 +142,7 @@ api.cookbookImportJournals();`,
       "Import Adventure Roll Tables (GM)",
       "icons/svg/d20-grey.svg",
       GUARD +
-        `if (!api.cookbookImportRollTables) return ui.notifications.warn("acks-content | adventure roll tables need a newer module build.");
+        `if (!api.cookbookImportRollTables) return ui.notifications.warn("acks-importer | adventure roll tables need a newer module build.");
 api.cookbookImportRollTables();`,
       230,
       FOLDERS.import,
@@ -152,7 +152,7 @@ api.cookbookImportRollTables();`,
       "Import Rules Tables (GM)",
       "icons/svg/coins.svg",
       GUARD +
-        `if (!api.cookbookImportTables) return ui.notifications.warn("acks-content | table import needs a newer module build.");
+        `if (!api.cookbookImportTables) return ui.notifications.warn("acks-importer | table import needs a newer module build.");
 api.cookbookImportTables();`,
       240,
       FOLDERS.import,
@@ -162,9 +162,9 @@ api.cookbookImportTables();`,
       "Create Foundry Tables from Rules Import (GM)",
       "icons/svg/d20-grey.svg",
       `const svc = globalThis.acksExtras.lib?.services?.get?.("ruledata-import");
-if (!svc?.materializeDocs) return ui.notifications.warn("acks-content | the ruledata provider does not offer materializeDocs \u2014 update acks-location.");
+if (!svc?.materializeDocs) return ui.notifications.warn("acks-importer | the ruledata provider does not offer materializeDocs \u2014 update ACKS Extras.");
 const r = await svc.materializeDocs();
-ui.notifications.info(\`acks-content | \${r.exported} table(s) written as Foundry documents, \${r.placeholders} placeholder(s) for expected-but-missing tables.\`);`,
+ui.notifications.info(\`acks-importer | \${r.exported} table(s) written as Foundry documents, \${r.placeholders} placeholder(s) for expected-but-missing tables.\`);`,
       250,
       FOLDERS.import,
     ),
@@ -191,9 +191,9 @@ ui.notifications.info(\`acks-content | \${r.exported} table(s) written as Foundr
       "Import ALL Equipment (GM)",
       "icons/svg/item-bag.svg",
       GUARD +
-        `if (!api.importAllEquipment) return ui.notifications.warn("acks-content | equipment import needs a newer module build.");
+        `if (!api.importAllEquipment) return ui.notifications.warn("acks-importer | equipment import needs a newer module build.");
 const r = await api.importAllEquipment();
-ui.notifications.info(\`acks-content | equipment: \${r.created} created, \${r.total} in the cookbook.\`);`,
+ui.notifications.info(\`acks-importer | equipment: \${r.created} created, \${r.total} in the cookbook.\`);`,
       320,
       FOLDERS.abilities,
     ),
@@ -220,7 +220,7 @@ ui.notifications.info(\`acks-content | equipment: \${r.created} created, \${r.to
       "Organize Cookbook Documents (GM)",
       "icons/svg/sort.svg",
       GUARD +
-        `if (!api.cookbookOrganize) return ui.notifications.warn("acks-content | organizing needs a newer module build.");
+        `if (!api.cookbookOrganize) return ui.notifications.warn("acks-importer | organizing needs a newer module build.");
 api.cookbookOrganize();`,
       400,
       FOLDERS.tools,

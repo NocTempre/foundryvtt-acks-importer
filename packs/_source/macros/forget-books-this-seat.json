@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/blind.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\napi.forgetBooks();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.forgetBooks();",
   "folder": "ackscFldSetup000",
   "sort": 120,
   "ownership": {

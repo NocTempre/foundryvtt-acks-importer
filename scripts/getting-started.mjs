@@ -51,7 +51,7 @@ const GM_STEPS = [
 
 async function runImportEverything(root) {
   const api = game.modules.get(MODULE_ID)?.api;
-  if (!api) return ui.notifications.warn("acks-content | module not ready.");
+  if (!api) return ui.notifications.warn("acks-importer | module not ready.");
   const status = root.querySelector("[data-gs-import-status]");
   const button = root.querySelector("[data-gs-import]");
   if (button) button.disabled = true;
@@ -64,7 +64,7 @@ async function runImportEverything(root) {
         await run(api);
       } catch (err) {
         console.error(`${MODULE_ID} | getting started: ${key}`, err);
-        ui.notifications.error(`acks-content | ${t(key)}: ${err.message}`);
+        ui.notifications.error(`acks-importer | ${t(key)}: ${err.message}`);
       }
     }
     if (status) status.textContent = t("importDone");
@@ -88,22 +88,22 @@ export async function showGettingStarted({ force = false } = {}) {
   const gmSection = isGM
     ? `<h3>${t("gmHead")}</h3>
        <p>${t("gmBody")}</p>
-       <div class="acks-content-gs-action">
+       <div class="acks-importer-gs-action">
          <button type="button" data-gs-import><i class="fa-solid fa-download"></i> ${t("gmGo")}</button>
          <span class="notes" data-gs-import-status></span>
        </div>`
     : "";
 
-  const content = `<div class="acks-content-gs">
+  const content = `<div class="acks-importer-gs">
     <p>${t("intro")}</p>
     <h3>${t("connectHead")}</h3>
     <p>${t("connectBody")}</p>
-    <div class="acks-content-gs-action">
+    <div class="acks-importer-gs-action">
       <button type="button" data-gs-connect><i class="fa-solid fa-book-open"></i> ${t("connectGo")}</button>
     </div>
     ${gmSection}
     <p class="notes">${t("later", { folder: esc("ACKS Content — Macros") })}</p>
-    <label class="acks-content-gs-dismiss">
+    <label class="acks-importer-gs-dismiss">
       <input type="checkbox" name="dismiss"> ${t("dismiss")}
     </label>
   </div>`;

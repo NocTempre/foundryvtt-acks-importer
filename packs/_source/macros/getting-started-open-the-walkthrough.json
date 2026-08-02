@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/light.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\nif (!api.gettingStarted) return ui.notifications.warn(\"acks-content | the walkthrough needs a newer module build.\");\napi.gettingStarted({ force: true });",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.gettingStarted) return ui.notifications.warn(\"acks-importer | the walkthrough needs a newer module build.\");\napi.gettingStarted({ force: true });",
   "folder": "ackscFldSetup000",
   "sort": 90,
   "ownership": {

@@ -59,7 +59,7 @@ export async function importTables(sessionDocs, { priority, onProgress } = {}) {
   const lib = globalThis.acksExtras?.lib;
   const svc = lib?.services?.get?.("ruledata-import");
   if (!svc) {
-    throw new Error("acks-content: no ruledata-import provider — enable acks-location (the table host).");
+    throw new Error("acks-importer: no ruledata-import provider — enable acks-location (the table host).");
   }
   const P = priority ?? lib.tables.PRIORITY.WORLD;
   const report = { imported: [], missingBooks: new Set(), missingTables: [] };

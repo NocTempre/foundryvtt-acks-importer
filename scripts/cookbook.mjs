@@ -1035,7 +1035,7 @@ const sysObject = (doc) =>
  * them, which is the point — only a changed recipe needs them cleared by hand.
  */
 export async function cookbookRemoveImports() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (deletes documents).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (deletes documents).");
   const mine = (d) => !!d.getFlag(MODULE_ID, "cookbook");
   const groups = [
     ["Actor", game.actors.filter(mine)],
@@ -1051,13 +1051,13 @@ export async function cookbookRemoveImports() {
   );
   const packed = ourPacks.reduce((n, p) => n + p.index.size, 0);
   const total = groups.reduce((n, [, docs]) => n + docs.length, 0) + packed;
-  if (!total) return ui.notifications.info("acks-content | nothing imported by this module to remove.");
+  if (!total) return ui.notifications.info("acks-importer | nothing imported by this module to remove.");
   const lines = [
     ...groups.filter(([, d]) => d.length).map(([type, d]) => `${d.length} ${type}(s)`),
     ...(packed ? [`${packed} in ${ourPacks.length} compendium(s)`] : []),
   ].join(", ");
   const ok = await foundry.applications.api.DialogV2.confirm({
-    window: { title: "acks-content — Remove Imports" },
+    window: { title: "acks-importer — Remove Imports" },
     content: `<p>Delete <strong>${total}</strong> imported document(s): ${lines}?</p>
       <p class="notes">Only documents this module imported are removed. Extracted art files stay on disk and are reused by the next import.</p>`,
   });
@@ -1076,7 +1076,7 @@ export async function cookbookRemoveImports() {
   packCache.clear();
   folderCache.clear();
   forgetImportedIndex(); // every id it remembers has just been deleted
-  ui.notifications.info(`acks-content | removed ${total} imported document(s).`);
+  ui.notifications.info(`acks-importer | removed ${total} imported document(s).`);
   return total;
 }
 
@@ -1100,7 +1100,7 @@ async function importOne(bookId, id, folderId) {
   const session = ctx.sessionDocs.get(bookId);
   const node = await executeEntry(session.doc, found.cb, data.registers, id);
   if (!node.ok) {
-    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    ui.notifications.warn(`acks-importer | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
     return null;
   }
   const { system, items, flags, prototypeToken } = bindMonster(node);
@@ -1158,7 +1158,7 @@ async function importOne(bookId, id, folderId) {
   // three frames away. One unimportable monster must read as one skipped
   // monster, not as a crash in the importer.
   if (!actor) {
-    ui.notifications.warn(`acks-content | ${found.entry.name}: the system rejected the extracted stats — skipped (see console).`);
+    ui.notifications.warn(`acks-importer | ${found.entry.name}: the system rejected the extracted stats — skipped (see console).`);
     return null;
   }
   if (node.fields.art && ctx.importArtForPage) {
@@ -1175,7 +1175,7 @@ async function importOne(bookId, id, folderId) {
 
 /* -------------------------------------------- */
 /*  Template binding (kind.monsterTemplate)     */
-/*  grids -> acks-lib.template generator actor  */
+/*  grids -> acks-extras.template generator actor  */
 /* -------------------------------------------- */
 
 /**
@@ -1443,7 +1443,7 @@ const proseLeaderRoles = ({ options, memberText, axes, cells, out }) => {
 const FAMILY_ONE_OFFS = {};
 
 /**
- * kind.monsterFamily -> ONE `acks-lib.template` generator whose variant axis
+ * kind.monsterFamily -> ONE `acks-extras.template` generator whose variant axis
  * options are the family's member creatures, each a COMPLETE preset: the same
  * bindMonster output a direct import produces (system, weapons, abilities,
  * FMS extras, token size, per-variant art), packed as engine-ready patches.
@@ -1454,7 +1454,7 @@ const FAMILY_ONE_OFFS = {};
 async function importFamily(bookId, famId, folderId) {
   const TEMPLATE_TYPE = globalThis.acksExtras?.lib?.TEMPLATE_TYPE;
   if (!TEMPLATE_TYPE) {
-    ui.notifications.warn(`acks-content | ${famId}: needs acks-lib 0.17+ (template actor type) — skipped.`);
+    ui.notifications.warn(`acks-importer | ${famId}: ACKS Extras is not providing its template actor type — skipped.`);
     return null;
   }
   const found = cookbookEntry(famId);
@@ -1491,7 +1491,7 @@ async function importFamily(bookId, famId, folderId) {
     }
     const node = await executeEntry(bindDoc, bindCb, data.registers, bindId);
     if (!node.ok) {
-      ui.notifications.warn(`acks-content | ${entry.name}: page did not match the cookbook — variant skipped.`);
+      ui.notifications.warn(`acks-importer | ${entry.name}: page did not match the cookbook — variant skipped.`);
       continue;
     }
     // Per-member kind dispatch: MM-style monsters bind rich (stats + FMS
@@ -1558,7 +1558,7 @@ async function importFamily(bookId, famId, folderId) {
     }
   }
   if (!options.length) {
-    ui.notifications.warn(`acks-content | ${fam.name}: no family member could be read — skipped.`);
+    ui.notifications.warn(`acks-importer | ${fam.name}: no family member could be read — skipped.`);
     return null;
   }
 
@@ -1637,10 +1637,10 @@ async function importFamily(bookId, famId, folderId) {
       }
       if (added.length) {
         ui.notifications.info(
-          `acks-content | ${fam.name}: ${added.length} variant(s) from ${BOOKS[bookId]?.label ?? bookId} added to the existing template.`
+          `acks-importer | ${fam.name}: ${added.length} variant(s) from ${BOOKS[bookId]?.label ?? bookId} added to the existing template.`
         );
       } else {
-        ui.notifications.info(`acks-content | ${fam.name}: the existing template already covers this book's variants.`);
+        ui.notifications.info(`acks-importer | ${fam.name}: the existing template already covers this book's variants.`);
       }
       return existing;
     }
@@ -1659,7 +1659,7 @@ async function importFamily(bookId, famId, folderId) {
     flags: { [MODULE_ID]: { cookbook: { id: famId, cite: fam.cite } } },
   });
   if (!actor) {
-    ui.notifications.warn(`acks-content | ${fam.name}: the system rejected the family template — skipped (see console).`);
+    ui.notifications.warn(`acks-importer | ${fam.name}: the system rejected the family template — skipped (see console).`);
     return null;
   }
   return actor;
@@ -1691,26 +1691,26 @@ function subRollFromProse(text) {
 }
 
 /**
- * kind.monsterTemplate -> an `acks-lib.template` GENERATOR actor.
+ * kind.monsterTemplate -> an `acks-extras.template` GENERATOR actor.
  *
  * All book-parsing intelligence happens HERE, once, at import: grid rows map
  * through the same scalar binder as full stat blocks, form routines through
  * the same attackModel, and the template actor stores only engine-ready
- * patches. acks-lib's roll/resolve then never interprets book content — which
+ * patches. the extras lib's roll/resolve then never interprets book content — which
  * is what keeps one owner per mapping. Values persist in world data (the
  * hand-typed-table equivalence), prose stays lazy tags.
  */
 async function importTemplate(bookId, id, folderId) {
   const TEMPLATE_TYPE = globalThis.acksExtras?.lib?.TEMPLATE_TYPE;
   if (!TEMPLATE_TYPE) {
-    ui.notifications.warn(`acks-content | ${id}: needs acks-lib 0.16+ (template actor type) — skipped.`);
+    ui.notifications.warn(`acks-importer | ${id}: ACKS Extras is not providing its template actor type — skipped.`);
     return null;
   }
   const found = cookbookEntry(id);
   const session = ctx.sessionDocs.get(bookId);
   const node = await executeEntry(session.doc, found.cb, data.registers, id);
   if (!node.ok) {
-    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    ui.notifications.warn(`acks-importer | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
     return null;
   }
   const spec = found.entry.template ?? {};
@@ -1829,7 +1829,7 @@ async function importTemplate(bookId, id, folderId) {
     flags: { [MODULE_ID]: { cookbook: { id, cite } } },
   });
   if (!actor) {
-    ui.notifications.warn(`acks-content | ${found.entry.name}: the system rejected the template — skipped (see console).`);
+    ui.notifications.warn(`acks-importer | ${found.entry.name}: the system rejected the template — skipped (see console).`);
     return null;
   }
   if (node.fields.art && ctx.importArtForPage) {
@@ -1991,11 +1991,11 @@ async function importAdventureActor(bookId, id, folderId) {
     // only filtered on the adventure id, and a world that imported the MM
     // entry directly must not get a twin.
     if ((await importedIdSet()).has(target)) {
-      ui.notifications.info(`acks-content | ${id} defers to ${target}, which this world already has — skipped.`);
+      ui.notifications.info(`acks-importer | ${id} defers to ${target}, which this world already has — skipped.`);
       return null;
     }
     const tb = target.split(".")[0];
-    ui.notifications.info(`acks-content | ${id} is reprinted in ${BOOKS[tb]?.label ?? tb} — importing ${target} instead.`);
+    ui.notifications.info(`acks-importer | ${id} is reprinted in ${BOOKS[tb]?.label ?? tb} — importing ${target} instead.`);
     // File it under the book it actually came FROM, not the adventure that
     // pointed at it.
     const tFolder = await actorFolderFor(target);
@@ -2005,7 +2005,7 @@ async function importAdventureActor(bookId, id, folderId) {
   const session = ctx.sessionDocs.get(bookId);
   const node = await executeEntry(session.doc, found.cb, data.registers, id);
   if (!node.ok) {
-    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    ui.notifications.warn(`acks-importer | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
     return null;
   }
   const kind = found.entry.kind;
@@ -2072,7 +2072,7 @@ async function importAdventureActor(bookId, id, folderId) {
  * update in place on re-import, so coverage grows without duplicating.
  */
 export async function cookbookImportJournals() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates journals).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates journals).");
   const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
   let made = 0;
   let updated = 0;
@@ -2149,8 +2149,8 @@ export async function cookbookImportJournals() {
   } finally {
     bar.finish();
   }
-  if (!made && !updated) return ui.notifications.warn("acks-content | no location entries in any open book — connect AX2/AX3 first.");
-  ui.notifications.info(`acks-content | location journals: ${made} page(s) created, ${updated} refreshed, in "${FOLDER_NAME}".`);
+  if (!made && !updated) return ui.notifications.warn("acks-importer | no location entries in any open book — connect AX2/AX3 first.");
+  ui.notifications.info(`acks-importer | location journals: ${made} page(s) created, ${updated} refreshed, in "${FOLDER_NAME}".`);
   return { made, updated };
 }
 
@@ -2162,7 +2162,7 @@ export async function cookbookImportJournals() {
  * 1, mechanically from the shipped range structure.
  */
 export async function cookbookImportRollTables() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates roll tables).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates roll tables).");
   const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
   const present = new Set(game.tables.map((t) => t.getFlag(MODULE_ID, "cookbook")?.id).filter(Boolean));
   let made = 0;
@@ -2188,7 +2188,7 @@ export async function cookbookImportRollTables() {
         }
         const node = await executeEntry(session.doc, cb, data.registers, id).catch(() => null);
         if (!node?.ok) {
-          ui.notifications.warn(`acks-content | ${e.name}: page did not match the cookbook — skipped.`);
+          ui.notifications.warn(`acks-importer | ${e.name}: page did not match the cookbook — skipped.`);
           continue;
         }
         const folder = await targetFolder("RollTable", bookId, e.meta?.group);
@@ -2234,8 +2234,8 @@ export async function cookbookImportRollTables() {
   } finally {
     bar.finish();
   }
-  if (!made && !skipped) return ui.notifications.warn("acks-content | no roll-table entries in any open book — connect AX2/AX3 first.");
-  ui.notifications.info(`acks-content | roll tables: ${made} created, ${skipped} already present, in "${FOLDER_NAME}".`);
+  if (!made && !skipped) return ui.notifications.warn("acks-importer | no roll-table entries in any open book — connect AX2/AX3 first.");
+  ui.notifications.info(`acks-importer | roll tables: ${made} created, ${skipped} already present, in "${FOLDER_NAME}".`);
   return { made, skipped };
 }
 
@@ -2247,7 +2247,7 @@ export async function cookbookImportRollTables() {
  * own cookbook flag are touched, and only their folder/name — never content.
  */
 export async function cookbookOrganize() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (moves documents).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (moves documents).");
   const moved = { Actor: 0, JournalEntry: 0, RollTable: 0, Item: 0 };
   const failed = [];
 
@@ -2367,15 +2367,15 @@ export async function cookbookOrganize() {
   const total = Object.values(moved).reduce((a, b) => a + b, 0);
   ui.notifications.info(
     (total
-      ? `acks-content | organized ${total} document(s): ${Object.entries(moved).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(", ")}.`
-      : `acks-content | every cookbook document is already in place.`) +
+      ? `acks-importer | organized ${total} document(s): ${Object.entries(moved).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(", ")}.`
+      : `acks-importer | every cookbook document is already in place.`) +
       (failed.length ? ` ${failed.length} document(s) could not be moved (see console).` : ""),
   );
   return { ...moved, failed };
 }
 
 /*
- * NOTE a local `levelValueAt()` used to sit here — a third copy of acks-lib's
+ * NOTE a local `levelValueAt()` used to sit here — a third copy of the extras lib's
  * LevelValue resolver, needed only because an imported ability's roll target
  * had to be FLATTENED to a first-level number to fit the core item's single
  * `rollTarget`. Ladders now travel whole into the acks-abilities flag and are
@@ -2643,7 +2643,7 @@ async function prepareItemShelves() {
   const groups = new Set();
   for (const id of cookbookEquipmentIds()) {
     const entry = cookbookEntry(id)?.entry;
-    // Animals file under Actors when acks-lib is present, so their item shelf
+    // Animals file under Actors when ACKS Extras is present, so their item shelf
     // would stand empty — the one thing this loop exists to avoid.
     if (isAnimalEntry(entry) && canImportAnimals()) continue;
     const g = entry?.meta?.group;
@@ -2838,7 +2838,7 @@ export function bindEquipment(entry, node, id) {
  * and it can be ridden. Imported as inventory it was none of those — the system
  * had it filed next to the rope.
  *
- * Requires acks-lib, which supplies the `acks-lib.animal` sub-type. Without it
+ * Requires ACKS Extras, which supplies the `acks-extras.animal` sub-type. Without it
  * there is nowhere for a creature to go, so the entry stays an item rather than
  * failing the import; the caller decides.
  */
@@ -2878,8 +2878,8 @@ export function bindAnimal(entry, node, id) {
 }
 
 /**
- * Can this seat file animals as creatures? acks-lib supplies the
- * `acks-lib.animal` actor sub-type; without it there is nowhere for one to go.
+ * Can this seat file animals as creatures? ACKS Extras supplies the
+ * `acks-extras.animal` actor sub-type; without it there is nowhere for one to go.
  */
 const canImportAnimals = () => !!globalThis.acksExtras?.lib?.ANIMAL_TYPE && !!game.actors;
 
@@ -2890,7 +2890,7 @@ const isAnimalEntry = (entry) => entry?.meta?.group === "animal";
  * Import one equipment entry, deduped by cookbook id.
  *
  * Most entries become world ITEMS. An animal becomes an ACTOR — a mule is a
- * creature you buy, not a thing you carry — provided acks-lib is present to
+ * creature you buy, not a thing you carry — provided ACKS Extras is present to
  * supply the sub-type. Without it the animal falls back to an item rather than
  * failing the import, because a bookless, lib-less seat should still get the
  * shop list.
@@ -2986,7 +2986,7 @@ export async function repairEquipmentAbilities() {
  * (the `generated` flag + a `def.equip.` cookbook id whose entry is an animal),
  * so a hand-made "War Dog" item a table wrote themselves is never deleted.
  *
- * A no-op when acks-lib is absent — without the animal sub-type the items are
+ * A no-op when ACKS Extras' lib is absent — without the animal sub-type the items are
  * still the best available representation, so removing them would delete data
  * with nothing to replace it.
  *
@@ -3013,7 +3013,7 @@ export async function repairAnimalItems() {
 export async function importAllEquipment() {
   const repaired = await repairEquipmentAbilities();
   // A world imported by an earlier version holds animals as items; drop them so
-  // the loop below recreates them as actors (no-op without acks-lib).
+  // the loop below recreates them as actors (no-op without ACKS Extras).
   const repairedAnimals = await repairAnimalItems();
   const ids = cookbookEquipmentIds();
   const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressEquipment`), ids.length);
@@ -3177,7 +3177,7 @@ async function resolveCompanions(effects) {
  * Safe to re-run: a slot already holding an actor is never touched.
  */
 export async function cookbookFillCompanions() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   let filled = 0;
   // A slot that resolves IMPORTS the creature from the seat's book, so this is
   // an actor import wearing a different name — same page extraction, same wait.
@@ -3194,7 +3194,7 @@ export async function cookbookFillCompanions() {
   } finally {
     bar.finish();
   }
-  ui.notifications.info(`acks-content | companions: ${filled} slot(s) linked to an actor.`);
+  ui.notifications.info(`acks-importer | companions: ${filled} slot(s) linked to an actor.`);
   return filled;
 }
 
@@ -3330,12 +3330,12 @@ function preferredId(ids, present) {
  * difference between importing structure and importing structure + mechanics.
  */
 export async function cookbookImportAbilitiesDialog() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates items).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates items).");
   const rows = [];
   for (const [id, e] of abilityEntries()) {
     rows.push({ id, name: e.name, cite: e.cite, book: e.book, category: e.meta?.category ?? "proficiency", alias: !!e.aliasOf, deprecated: !!e.meta?.deprecated });
   }
-  if (!rows.length) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+  if (!rows.length) return ui.notifications.warn("acks-importer | no abilities in the shipped cookbook.");
   rows.sort((a, b) => a.name.localeCompare(b.name));
 
   const esc = foundry.utils.escapeHTML ?? ((x) => x);
@@ -3350,10 +3350,10 @@ export async function cookbookImportAbilitiesDialog() {
         r.deprecated ? `<i class="fa-solid fa-triangle-exclamation" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.abilDeprecated`))}"></i>` : "",
         have.has(r.id) ? `<i class="fa-solid fa-check" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.abilPresent`))}"></i>` : "",
       ].join("");
-      return `<label class="acks-content-browse-row" data-name="${esc(r.name.toLowerCase())}" data-cat="${esc(r.category)}" data-have="${have.has(r.id) ? 1 : 0}">
+      return `<label class="acks-importer-browse-row" data-name="${esc(r.name.toLowerCase())}" data-cat="${esc(r.category)}" data-have="${have.has(r.id) ? 1 : 0}">
         <input type="checkbox" name="sel" value="${esc(r.id)}">
-        <span>${esc(r.name)}</span><span class="acks-content-marks">${marks}</span>
-        <span class="acks-content-cite">${esc(r.cite)}</span>
+        <span>${esc(r.name)}</span><span class="acks-importer-marks">${marks}</span>
+        <span class="acks-importer-cite">${esc(r.cite)}</span>
       </label>`;
     })
     .join("");
@@ -3364,17 +3364,17 @@ export async function cookbookImportAbilitiesDialog() {
       n: rows.length,
       books: openBooks.length ? openBooks.map((b) => BOOKS[b].short).join(", ") : game.i18n.localize(`${LANG_PREFIX}.ui.abilNoBook`),
     })}</p>
-    <div class="acks-content-abil-filters">
+    <div class="acks-importer-abil-filters">
       <input type="text" name="filter" placeholder="${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookFilter`)}">
       <select name="cat"><option value="">${game.i18n.localize(`${LANG_PREFIX}.ui.abilAllCats`)}</option>${catOptions}</select>
       <label><input type="checkbox" name="hideHave"> ${game.i18n.localize(`${LANG_PREFIX}.ui.abilHidePresent`)}</label>
     </div>
-    <div class="acks-content-abil-actions">
+    <div class="acks-importer-abil-actions">
       <button type="button" data-act="all">${game.i18n.localize(`${LANG_PREFIX}.ui.abilSelectShown`)}</button>
       <button type="button" data-act="none">${game.i18n.localize(`${LANG_PREFIX}.ui.abilClear`)}</button>
-      <span class="acks-content-abil-count"></span>
+      <span class="acks-importer-abil-count"></span>
     </div>
-    <div class="acks-content-browse-list acks-content-abil-list">${list}</div>`;
+    <div class="acks-importer-browse-list acks-importer-abil-list">${list}</div>`;
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.abilTitle`), resizable: true },
@@ -3382,14 +3382,14 @@ export async function cookbookImportAbilitiesDialog() {
     content,
     render: (event, dialog) => {
       const root = dialog.element ?? dialog;
-      const listEl = root.querySelector(".acks-content-abil-list");
-      const count = root.querySelector(".acks-content-abil-count");
-      const shown = () => [...listEl.querySelectorAll(".acks-content-browse-row")].filter((r) => r.style.display !== "none");
+      const listEl = root.querySelector(".acks-importer-abil-list");
+      const count = root.querySelector(".acks-importer-abil-count");
+      const shown = () => [...listEl.querySelectorAll(".acks-importer-browse-row")].filter((r) => r.style.display !== "none");
       const refresh = () => {
         const q = root.querySelector('[name="filter"]').value.toLowerCase();
         const cat = root.querySelector('[name="cat"]').value;
         const hide = root.querySelector('[name="hideHave"]').checked;
-        for (const r of listEl.querySelectorAll(".acks-content-browse-row")) {
+        for (const r of listEl.querySelectorAll(".acks-importer-browse-row")) {
           const ok = r.dataset.name.includes(q) && (!cat || r.dataset.cat === cat) && (!hide || r.dataset.have === "0");
           r.style.display = ok ? "" : "none";
           if (!ok) r.querySelector('input[name="sel"]').checked = false;
@@ -3418,7 +3418,7 @@ export async function cookbookImportAbilitiesDialog() {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.abilGo`),
       callback: async (event, button) => {
         const picked = [...button.form.querySelectorAll('input[name="sel"]:checked')].map((el) => el.value);
-        if (!picked.length) return ui.notifications.warn("acks-content | nothing selected.");
+        if (!picked.length) return ui.notifications.warn("acks-importer | nothing selected.");
         const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressAbilities`), picked.length);
         let done = 0;
         try {
@@ -3439,9 +3439,9 @@ export async function cookbookImportAbilitiesDialog() {
 
 /** GM: import every shipped ability as a shared, deduped item. */
 export async function cookbookImportAbilities() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   const ids = cookbookAbilityIds();
-  if (!ids.length) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+  if (!ids.length) return ui.notifications.warn("acks-importer | no abilities in the shipped cookbook.");
   const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressAbilities`), ids.length);
   let made = 0;
   let reused = 0;
@@ -3457,7 +3457,7 @@ export async function cookbookImportAbilities() {
   } finally {
     bar.finish();
   }
-  ui.notifications.info(`acks-content | abilities: ${made} imported, ${reused} already present.`);
+  ui.notifications.info(`acks-importer | abilities: ${made} imported, ${reused} already present.`);
   return { made, reused };
 }
 
@@ -3472,9 +3472,9 @@ export async function cookbookImportAbilities() {
  * GM may have tuned are left alone.
  */
 export async function cookbookUpdateAbilities() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   const index = abilityNameIndex();
-  if (!index.size) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+  if (!index.size) return ui.notifications.warn("acks-importer | no abilities in the shipped cookbook.");
 
   // Which definitions the world already holds — the signal that resolves a
   // name collision without guessing.
@@ -3536,7 +3536,7 @@ export async function cookbookUpdateAbilities() {
   }
   const stale = danglingAbilities().length;
   ui.notifications.info(
-    `acks-content | abilities updated: ${updated} (${onActors} on actors, ${adopted} matched by name` +
+    `acks-importer | abilities updated: ${updated} (${onActors} on actors, ${adopted} matched by name` +
       `${guessed ? `, ${guessed} of them ambiguous — see console` : ""}), ${skipped} not in the cookbook` +
       `${stale ? `; ${stale} left over from a withdrawn definition — run Prune` : ""}.`,
   );
@@ -3569,7 +3569,7 @@ export function danglingAbilities() {
  * do quietly, even when they are certainly stale.
  */
 export async function cookbookPruneAbilities() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   const stale = danglingAbilities();
   if (!stale.length) return ui.notifications.info(game.i18n.localize(`${LANG_PREFIX}.ui.pruneNone`));
   const esc = foundry.utils.escapeHTML ?? ((x) => x);
@@ -3579,7 +3579,7 @@ export async function cookbookPruneAbilities() {
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.pruneTitle`) },
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.prunePrompt`, { n: stale.length })}</p>
-      <ul class="acks-content-browse-list" style="max-height:280px;overflow-y:auto;">${rows}</ul>`,
+      <ul class="acks-importer-browse-list" style="max-height:280px;overflow-y:auto;">${rows}</ul>`,
   });
   if (!ok) return null;
   await Item.deleteDocuments(stale.map((i) => i.id));
@@ -3599,10 +3599,10 @@ export function registerAbilityDirectoryButtons() {
   Hooks.on("renderItemDirectory", (app, element) => {
     if (!game.user.isGM) return;
     const root = element instanceof HTMLElement ? element : element?.[0];
-    if (!root || root.querySelector(".acks-content-ability-tools")) return;
+    if (!root || root.querySelector(".acks-importer-ability-tools")) return;
 
     const bar = document.createElement("div");
-    bar.className = "acks-content-ability-tools";
+    bar.className = "acks-importer-ability-tools";
     const button = (labelKey, tipKey, icon, run) => {
       const b = document.createElement("button");
       b.type = "button";
@@ -3614,7 +3614,7 @@ export function registerAbilityDirectoryButtons() {
           await run();
         } catch (err) {
           console.error(`${MODULE_ID} | ability tools`, err);
-          ui.notifications.error(`acks-content | ${err.message}`);
+          ui.notifications.error(`acks-importer | ${err.message}`);
         } finally {
           for (const x of bar.querySelectorAll("button")) x.disabled = false;
         }
@@ -3646,12 +3646,12 @@ export function registerAbilityDirectoryButtons() {
  * actor).
  */
 export async function cookbookDebug(entryId) {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
   const esc = foundry.utils.escapeHTML ?? ((x) => x);
 
   if (!entryId) {
     const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
-    if (!openBooks.length) return ui.notifications.warn("acks-content | connect a cookbook book first (PoC 2 / unlock).");
+    if (!openBooks.length) return ui.notifications.warn("acks-importer | connect a cookbook book first (PoC 2 / unlock).");
     // Every connected book, grouped — debugging one book while three are open
     // should not mean reconnecting.
     const rows = openBooks
@@ -3675,24 +3675,24 @@ export async function cookbookDebug(entryId) {
   }
 
   const found = cookbookEntry(entryId);
-  if (!found) return ui.notifications.warn(`acks-content | unknown cookbook id "${entryId}".`);
+  if (!found) return ui.notifications.warn(`acks-importer | unknown cookbook id "${entryId}".`);
   const session = ctx.sessionDocs.get(found.cb.book.id);
-  if (!session) return ui.notifications.warn(`acks-content | ${found.cb.book.label} is not open this session.`);
+  if (!session) return ui.notifications.warn(`acks-importer | ${found.cb.book.label} is not open this session.`);
 
   const node = await executeEntry(session.doc, found.cb, data.registers, entryId);
   const f = node.fields;
-  const pre = (v) => `<pre class="acks-content-debug-pre">${esc(JSON.stringify(v, null, 1) ?? "null")}</pre>`;
+  const pre = (v) => `<pre class="acks-importer-debug-pre">${esc(JSON.stringify(v, null, 1) ?? "null")}</pre>`;
   const statRows = Object.entries(f.stats ?? {})
     .map(([k, v]) => `<tr><td>${esc(k)}</td><td><code>${esc(JSON.stringify(v))}</code></td></tr>`)
     .join("");
   const paras = (f.description ?? [])
-    .map((p, i) => `<p class="acks-content-debug-para"><b>[${i}]</b> ${esc(p.text)}</p>`)
+    .map((p, i) => `<p class="acks-importer-debug-para"><b>[${i}]</b> ${esc(p.text)}</p>`)
     .join("");
-  const content = `<div class="acks-content-debug" style="max-height:70vh;overflow-y:auto;">
+  const content = `<div class="acks-importer-debug" style="max-height:70vh;overflow-y:auto;">
     <p><b>${esc(node.name)}</b> — ${esc(node.cite)} · pages ${esc(JSON.stringify(found.entry.pages))} · ok=${node.ok}</p>
     <details open><summary>expect</summary>${pre(f.name)}</details>
     <details open><summary>stats (${Object.keys(f.stats ?? {}).length})</summary>
-      <table class="acks-content-debug-table">${statRows}</table></details>
+      <table class="acks-importer-debug-table">${statRows}</table></details>
     <details open><summary>attacks</summary>${pre(f.attacks ?? null)}</details>
     <details open><summary>spoils</summary>${pre(f.spoils ?? null)}</details>
     <details><summary>art</summary>${pre(f.art ?? null)}</details>
@@ -3712,16 +3712,16 @@ export async function cookbookDebug(entryId) {
  * pool the dialog and import-all use, folders included).
  */
 export async function cookbookImportIds(ids) {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates actors).");
   return importMany(ids ?? [], game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
 }
 
 export async function cookbookImport() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates actors).");
   const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
   if (!openBooks.length) {
     return ui.notifications.warn(
-      `acks-content | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
+      `acks-importer | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
     );
   }
   const esc = foundry.utils.escapeHTML ?? ((x) => x);
@@ -3738,23 +3738,23 @@ export async function cookbookImport() {
       if (bookId !== lastBook) {
         lastBook = bookId;
         lastGroup = null;
-        head += `<div class="acks-content-book-head">${esc(BOOKS[bookId]?.label ?? bookId)}</div>`;
+        head += `<div class="acks-importer-book-head">${esc(BOOKS[bookId]?.label ?? bookId)}</div>`;
       }
       const group = e.meta?.group ?? null;
       if (group && group !== lastGroup) {
         lastGroup = group;
-        head += `<div class="acks-content-group-head">${esc(group)}</div>`;
+        head += `<div class="acks-importer-group-head">${esc(group)}</div>`;
       }
       const searchable = `${e.name} ${BOOKS[bookId]?.label ?? bookId} ${group ?? ""}`.toLowerCase();
-      return `${head}<label class="acks-content-browse-row" data-name="${esc(searchable)}" data-have="${have.has(id) ? 1 : 0}">
+      return `${head}<label class="acks-importer-browse-row" data-name="${esc(searchable)}" data-have="${have.has(id) ? 1 : 0}">
         <input type="checkbox" name="sel" value="${esc(id)}">
         <span>${esc(e.name)}</span>
-        <span class="acks-content-marks">${
+        <span class="acks-importer-marks">${
           have.has(id)
             ? `<i class="fa-solid fa-check" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.cookbookPresent`))}"></i>`
             : ""
         }</span>
-        <span class="acks-content-cite">${esc(e.cite)}</span>
+        <span class="acks-importer-cite">${esc(e.cite)}</span>
       </label>`;
     })
     .join("");
@@ -3763,17 +3763,17 @@ export async function cookbookImport() {
       n: entryRows.length,
       book: openBooks.map((b) => BOOKS[b]?.short ?? b).join(", "),
     })}</p>
-    <div class="acks-content-abil-filters">
+    <div class="acks-importer-abil-filters">
       <input type="text" name="filter" placeholder="${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookFilter`)}">
       <label><input type="checkbox" name="hideHave"> ${game.i18n.localize(`${LANG_PREFIX}.ui.abilHidePresent`)}</label>
     </div>
-    <div class="acks-content-abil-actions">
+    <div class="acks-importer-abil-actions">
       <button type="button" data-act="all">${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookSelectAll`)}</button>
       <button type="button" data-act="shown">${game.i18n.localize(`${LANG_PREFIX}.ui.abilSelectShown`)}</button>
       <button type="button" data-act="none">${game.i18n.localize(`${LANG_PREFIX}.ui.abilClear`)}</button>
-      <span class="acks-content-abil-count"></span>
+      <span class="acks-importer-abil-count"></span>
     </div>
-    <div class="acks-content-browse-list acks-content-mon-list">${rows}</div>`;
+    <div class="acks-importer-browse-list acks-importer-mon-list">${rows}</div>`;
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`), resizable: true },
@@ -3781,9 +3781,9 @@ export async function cookbookImport() {
     content,
     render: (event, dialog) => {
       const root = dialog.element ?? dialog;
-      const listEl = root.querySelector(".acks-content-mon-list");
-      const count = root.querySelector(".acks-content-abil-count");
-      const all = () => [...listEl.querySelectorAll(".acks-content-browse-row")];
+      const listEl = root.querySelector(".acks-importer-mon-list");
+      const count = root.querySelector(".acks-importer-abil-count");
+      const all = () => [...listEl.querySelectorAll(".acks-importer-browse-row")];
       const shown = () => all().filter((r) => r.style.display !== "none");
       const tally = () => {
         const n = listEl.querySelectorAll('input[name="sel"]:checked').length;
@@ -3829,7 +3829,7 @@ export async function cookbookImport() {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookGo`),
       callback: async (event, button) => {
         const picked = [...button.form.querySelectorAll('input[name="sel"]:checked')].map((el) => el.value);
-        if (!picked.length) return ui.notifications.warn("acks-content | nothing selected.");
+        if (!picked.length) return ui.notifications.warn("acks-importer | nothing selected.");
         // Re-read rather than trusting the marks drawn when the dialog opened —
         // an import may have happened in another window since.
         const present = await importedIdSet();
@@ -3848,16 +3848,16 @@ export async function cookbookImport() {
  * so it is a top-up after connecting more of the book, not a duplicator.
  */
 export async function cookbookImportMonsters() {
-  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates actors).");
   const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
   if (!openBooks.length) {
     return ui.notifications.warn(
-      `acks-content | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
+      `acks-importer | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
     );
   }
   // Family MEMBERS don't import individually here — their family's generator
   // template covers them (baseline + select the special case). The dialog
-  // still offers members one at a time. GRACEFUL: without acks-lib there is
+  // still offers members one at a time. GRACEFUL: without ACKS Extras there is
   // no template type, so members import flat exactly as they always did.
   const members = globalThis.acksExtras?.lib?.TEMPLATE_TYPE ? familyMemberIds() : new Set();
   const ids = actorEntriesAcrossBooks().rows.map((r) => r.id).filter((id) => !members.has(id));
@@ -3887,7 +3887,7 @@ export async function cookbookImportMonsters() {
 }
 
 /**
- * `ability-provider` (acks-lib service contract v1): resolve proficiency name
+ * `ability-provider` (ACKS Extras' lib service contract v1): resolve proficiency name
  * tokens into embeddable ability ItemData. Tier 1 reuses the world's own
  * imported items (the same name index the monster import uses, including its
  * proficiency-vs-class-power disambiguation); tier 2 imports the definition

@@ -8,7 +8,7 @@
  *                    self-calibrates the bold font from the matched heading,
  *                    so no font names are hardcoded.
  *
- * The i18n stub for recipe `id` lives at "ACKS-CONTENT.pdftext.<id>" and is
+ * The i18n stub for recipe `id` lives at "ACKS-IMPORTER.pdftext.<id>" and is
  * what any seat without the connected book sees (sparse text + citation).
  */
 

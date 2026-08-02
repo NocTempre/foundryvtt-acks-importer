@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/paralysis.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\nif (!api.reconnectBooks) return ui.notifications.warn(\"acks-content | reconnecting needs a newer module build.\");\napi.reconnectBooks();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.reconnectBooks) return ui.notifications.warn(\"acks-importer | reconnecting needs a newer module build.\");\napi.reconnectBooks();",
   "folder": "ackscFldSetup000",
   "sort": 105,
   "ownership": {

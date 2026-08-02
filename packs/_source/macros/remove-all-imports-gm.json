@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/trash.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\nif (!api.cookbookRemoveImports) return ui.notifications.warn(\"acks-content | removing imports needs a newer module build.\");\napi.cookbookRemoveImports();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookRemoveImports) return ui.notifications.warn(\"acks-importer | removing imports needs a newer module build.\");\napi.cookbookRemoveImports();",
   "folder": "ackscFldImport00",
   "sort": 290,
   "ownership": {

@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/regen.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\napi.cookbookUpdateAbilities();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.cookbookUpdateAbilities();",
   "folder": "ackscFldAbils000",
   "sort": 330,
   "ownership": {

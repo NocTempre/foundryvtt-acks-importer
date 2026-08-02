@@ -2497,7 +2497,7 @@ function replacementPhrase(bodyText) {
  * The acks-lib capability token for a definition id
  * ("def.prof.sensingEvil" → "kw:sensingevil").
  *
- * Inlined rather than imported: acks-content does not otherwise depend on
+ * Inlined rather than imported: acks-importer does not otherwise depend on
  * acks-lib, and a build tool reaching into a sibling repo would break a
  * standalone clone. acks-lib's `capabilityForId` is the canonical definition
  * and is covered by its tests — keep the two in step.

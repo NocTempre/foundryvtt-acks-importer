@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/d20-grey.svg",
   "scope": "global",
-  "command": "const svc = globalThis.acksExtras.lib?.services?.get?.(\"ruledata-import\");\nif (!svc?.materializeDocs) return ui.notifications.warn(\"acks-content | the ruledata provider does not offer materializeDocs — update acks-location.\");\nconst r = await svc.materializeDocs();\nui.notifications.info(`acks-content | ${r.exported} table(s) written as Foundry documents, ${r.placeholders} placeholder(s) for expected-but-missing tables.`);",
+  "command": "const svc = globalThis.acksExtras.lib?.services?.get?.(\"ruledata-import\");\nif (!svc?.materializeDocs) return ui.notifications.warn(\"acks-importer | the ruledata provider does not offer materializeDocs — update ACKS Extras.\");\nconst r = await svc.materializeDocs();\nui.notifications.info(`acks-importer | ${r.exported} table(s) written as Foundry documents, ${r.placeholders} placeholder(s) for expected-but-missing tables.`);",
   "folder": "ackscFldImport00",
   "sort": 250,
   "ownership": {
