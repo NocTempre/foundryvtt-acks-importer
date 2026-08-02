@@ -57,7 +57,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/acrobatics.webp"
   },
   {
     "id": "def.power.adhesiveToePads",
@@ -117,7 +118,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/alertness.webp"
   },
   {
     "id": "def.power.alienBeings",
@@ -207,7 +209,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/ambushing.webp"
   },
   {
     "id": "def.power.analyzeData",
@@ -334,7 +337,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/arcane-dabbling.webp"
   },
   {
     "id": "def.power.arcaneStriking",
@@ -590,7 +594,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/battle-magic.webp"
   },
   {
     "id": "def.power.battlefieldProwess",
@@ -894,7 +899,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/bribery.webp"
   },
   {
     "id": "def.power.brightLore",
@@ -1674,7 +1680,8 @@
       "category": "classPower",
       "deprecated": true,
       "replacedBy": "def.power.naturalStealth"
-    }
+    },
+    "icon": "systems/acks/assets/icons/difficult-to-spot.webp"
   },
   {
     "id": "def.power.divineBlessing",
@@ -1689,7 +1696,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/divine-blessing.webp"
   },
   {
     "id": "def.power.divineHealth",
@@ -1704,7 +1712,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/divine-health.webp"
   },
   {
     "id": "def.power.divineProficiency",
@@ -3211,7 +3220,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/loremastery.webp"
   },
   {
     "id": "def.power.loreOfStarsAndSpheres",
@@ -3819,7 +3829,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/prestidigitation.webp"
   },
   {
     "id": "def.power.probabilitytrance",
@@ -3999,7 +4010,8 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "icon": "systems/acks/assets/icons/read-languages.webp"
   },
   {
     "id": "def.power.relentless",

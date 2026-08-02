@@ -219,6 +219,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/acrobatics.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -466,6 +467,7 @@
           "kw:alertness"
         ]
       },
+      "icon": "systems/acks/assets/icons/alertness.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -837,6 +839,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/ambushing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1348,6 +1351,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/arcane-dabbling.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2132,6 +2136,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/battle-magic.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3291,6 +3296,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/bribery.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6432,6 +6438,7 @@
         "deprecated": true,
         "replacedBy": "def.power.naturalStealth"
       },
+      "icon": "systems/acks/assets/icons/difficult-to-spot.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6491,6 +6498,7 @@
           "kw:divineblessing"
         ]
       },
+      "icon": "systems/acks/assets/icons/divine-blessing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6557,6 +6565,7 @@
           "kw:divinehealth"
         ]
       },
+      "icon": "systems/acks/assets/icons/divine-health.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12548,6 +12557,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/loremastery.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14865,6 +14875,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/prestidigitation.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15667,6 +15678,7 @@
           "kw:deciphering"
         ]
       },
+      "icon": "systems/acks/assets/icons/read-languages.webp",
       "fields": {
         "name": {
           "op": "expect",

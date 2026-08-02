@@ -127,14 +127,16 @@ for (const dirent of fs.existsSync(REGISTER) ? fs.readdirSync(REGISTER, { withFi
         err(`${id}: anchor must have exactly one of display|runin|label|subheading`);
       }
       if (e.aliases && !Array.isArray(e.aliases)) err(`${id}: aliases must be an array`);
-      // An icon must at least be SHAPED like a Foundry core icon path. Whether
-      // the file exists can only be checked against an install, and CI has
-      // none — but a typo'd path renders as a broken image on every seat, so
-      // the cheap half of the check is worth having. `tools/propose-icons.mjs
-      // --search` lists real paths from a local install.
+      // An icon must at least be SHAPED like a path every seat is guaranteed
+      // to have: Foundry core ("icons/...") or the ACKS system's own tree
+      // ("systems/acks/assets/icons/..." — the system is a hard dependency).
+      // Whether the file exists can only be checked against an install, and
+      // CI has none — but a typo'd path renders as a broken image on every
+      // seat, so the cheap half of the check is worth having.
+      // `tools/propose-icons.mjs --search` lists real paths from an install.
       if (e.icon !== undefined) {
-        if (typeof e.icon !== "string" || !/^icons\/[\w./-]+\.(webp|svg|png|jpg)$/.test(e.icon)) {
-          err(`${id}: icon must be a core path like "icons/svg/eye.svg" (got ${JSON.stringify(e.icon)})`);
+        if (typeof e.icon !== "string" || !/^(icons|systems\/acks\/assets\/icons)\/[\w./-]+\.(webp|svg|png|jpg)$/.test(e.icon)) {
+          err(`${id}: icon must be a core or acks-system path like "icons/svg/eye.svg" (got ${JSON.stringify(e.icon)})`);
         }
       }
       // The niche path points into an OPTIONAL module, so it must be a module

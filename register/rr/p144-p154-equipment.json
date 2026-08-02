@@ -65,7 +65,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/backpack.webp"
   },
   {
     "id": "def.equip.barrel",
@@ -167,7 +167,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/crowbar.webp"
   },
   {
     "id": "def.equip.crutch",
@@ -558,7 +558,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/holy-symbol.webp"
   },
   {
     "id": "def.equip.holyWater",
@@ -575,7 +575,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/holy-water.webp"
   },
   {
     "id": "def.equip.ink",
@@ -694,7 +694,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/manacles.webp"
   },
   {
     "id": "def.equip.messKit",
@@ -1068,7 +1068,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "systems/acks/assets/icons/spell-book.webp"
   },
   {
     "id": "def.equip.stakesAndMallet",
@@ -1363,7 +1363,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "systems/acks/assets/icons/cloak.webp"
   },
   {
     "id": "def.equip.gloves",
@@ -1381,7 +1381,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "systems/acks/assets/icons/gloves.webp"
   },
   {
     "id": "def.equip.hat",
@@ -1417,7 +1417,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "systems/acks/assets/icons/robe.webp"
   },
   {
     "id": "def.equip.sandalsShoes",
@@ -1453,7 +1453,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg",
+    "icon": "systems/acks/assets/icons/tunic.webp",
     "assists": {
       "descStopY": 400
     }
@@ -2034,7 +2034,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "systems/acks/assets/icons/shaft.webp"
   },
   {
     "id": "def.equip.stableBarracks",

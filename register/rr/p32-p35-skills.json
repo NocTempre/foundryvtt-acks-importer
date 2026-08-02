@@ -219,7 +219,7 @@
         }
       }
     ],
-    "icon": "icons/skills/trades/security-lockpicking-chest-blue.webp",
+    "icon": "systems/acks/assets/icons/lockpicking.webp",
     "rolls": [
       {
         "key": "hasty",

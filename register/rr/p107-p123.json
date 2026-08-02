@@ -66,7 +66,7 @@
         "condition": "one round spent pausing to listen"
       }
     ],
-    "icon": "icons/svg/direction.svg",
+    "icon": "systems/acks/assets/icons/adventuring.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/backpack.svg"
   },
   {
@@ -84,7 +84,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/jump.svg",
+    "icon": "systems/acks/assets/icons/acrobatics.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/acrobatic.svg"
   },
   {
@@ -151,7 +151,7 @@
         "note": "Extracting toxin from poisonous plants; one dose on a success, spoiled plants on a failure. On an unmodified 1 the character is exposed and must make a Death saving throw."
       }
     ],
-    "icon": "icons/svg/pill.svg",
+    "icon": "systems/acks/assets/icons/alchemy.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/cauldron.svg"
   },
   {
@@ -182,7 +182,7 @@
         "note": "Used in place of the usual Adventuring search/listen target, not added to it."
       }
     ],
-    "icon": "icons/svg/eye.svg",
+    "icon": "systems/acks/assets/icons/alertness.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/hunter-eyes.svg"
   },
   {
@@ -200,7 +200,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/terror.svg",
+    "icon": "systems/acks/assets/icons/ambushing.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/hidden.svg"
   },
   {
@@ -262,7 +262,7 @@
         "note": "On an unmodified 1 the character is exposed and must make a Death saving throw."
       }
     ],
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/animal-husbandry.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/cow.svg"
   },
   {
@@ -281,7 +281,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/animal-training.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/jumping-dog.svg"
   },
   {
@@ -312,7 +312,7 @@
         "note": "No command word needed. On a failure the attempt backfires in some desultory way, at the Judge's discretion."
       }
     ],
-    "icon": "icons/svg/aura.svg",
+    "icon": "systems/acks/assets/icons/arcane-dabbling.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/spell-book.svg"
   },
   {
@@ -399,7 +399,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/coins.svg",
+    "icon": "systems/acks/assets/icons/bargaining.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/trade.svg",
     "effects": [
       {
@@ -430,7 +430,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/explosion.svg",
+    "icon": "systems/acks/assets/icons/battle-magic.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/magic-swirl.svg"
   },
   {
@@ -470,7 +470,7 @@
         "note": "Replaces the base target; the reaction bonus does not improve with it."
       }
     ],
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/beast-friendship.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/wolf-head.svg",
     "effects": [
       {
@@ -520,7 +520,7 @@
         "note": "Makes no morale check."
       }
     ],
-    "icon": "icons/svg/terror.svg",
+    "icon": "systems/acks/assets/icons/berserkergang.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/enrage.svg"
   },
   {
@@ -641,7 +641,7 @@
         "note": "One tier applies, by the size of the bribe offered."
       }
     ],
-    "icon": "icons/svg/coins.svg",
+    "icon": "systems/acks/assets/icons/bribery.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/coins-pile.svg",
     "audited": "2026-07-19"
   },
@@ -678,7 +678,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/padlock.svg",
+    "icon": "systems/acks/assets/icons/cat-burglary.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/lock-picking.svg"
   },
   {
@@ -699,7 +699,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/cave.svg",
+    "icon": "systems/acks/assets/icons/caving.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/cave-entrance.svg"
   },
   {
@@ -735,7 +735,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/book.svg",
+    "icon": "systems/acks/assets/icons/collegiate-wizardry.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/spell-book.svg"
   },
   {
@@ -773,7 +773,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "systems/acks/assets/icons/combat-reflexes.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/dodge.svg"
   },
   {
@@ -809,7 +809,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/tower-flag.svg",
+    "icon": "systems/acks/assets/icons/command.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/knight-banner.svg"
   },
   {
@@ -827,7 +827,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/statue.svg",
+    "icon": "systems/acks/assets/icons/contemplation.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/meditation.svg"
   },
   {
@@ -845,7 +845,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/leg.svg",
+    "icon": "systems/acks/assets/icons/contortionism.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/contortionist.svg"
   },
   {
@@ -882,7 +882,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/hanging-sign.svg",
+    "icon": "systems/acks/assets/icons/diplomacy.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/conversation.svg",
     "effects": [
       {
@@ -919,7 +919,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/mystery-man.svg",
+    "icon": "systems/acks/assets/icons/disguise.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/duality-mask.svg"
   },
   {
@@ -939,7 +939,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/holy-shield.svg",
+    "icon": "systems/acks/assets/icons/divine-blessing.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/prayer.svg"
   },
   {
@@ -957,7 +957,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/heal.svg",
+    "icon": "systems/acks/assets/icons/divine-health.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/healing-shield.svg"
   },
   {
@@ -1012,7 +1012,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/tankard.svg",
+    "icon": "systems/acks/assets/icons/dwarven-brewing.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/barrel.svg"
   },
   {
@@ -1051,7 +1051,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/fire.svg",
+    "icon": "systems/acks/assets/icons/elementalism.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/fire-ray.svg"
   },
   {
@@ -1069,7 +1069,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/wing.svg",
+    "icon": "systems/acks/assets/icons/elven-bloodline.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/elf-ear.svg"
   },
   {
@@ -1087,7 +1087,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/regen.svg",
+    "icon": "systems/acks/assets/icons/endurance.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/muscle-up.svg"
   },
   {
@@ -1106,7 +1106,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/bridge.svg",
+    "icon": "systems/acks/assets/icons/engineering.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/gears.svg"
   },
   {
@@ -1170,7 +1170,7 @@
         "note": "Familiar"
       }
     ],
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/familiar.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/barn-owl.svg"
   },
   {
@@ -1256,7 +1256,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/dice-target.svg",
+    "icon": "systems/acks/assets/icons/gambling.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/coinflip.svg"
   },
   {
@@ -1292,7 +1292,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/heal.svg",
+    "icon": "systems/acks/assets/icons/healing.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/healing.svg"
   },
   {
@@ -1367,7 +1367,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/blood.svg",
+    "icon": "systems/acks/assets/icons/kin-slaying.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/daggers.svg"
   },
   {
@@ -1385,7 +1385,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/book.svg",
+    "icon": "systems/acks/assets/icons/knowledge.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/book-pile.svg"
   },
   {
@@ -1421,7 +1421,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/levels.svg",
+    "icon": "systems/acks/assets/icons/land-surveying.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/compass.svg"
   },
   {
@@ -1440,7 +1440,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/book.svg",
+    "icon": "systems/acks/assets/icons/language.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/conversation.svg"
   },
   {
@@ -1459,7 +1459,7 @@
       "general": false,
       "repeatable": true
     },
-    "icon": "icons/svg/heal.svg",
+    "icon": "systems/acks/assets/icons/laying-on-hands.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/healing.svg",
     "effects": [
       {
@@ -1534,7 +1534,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/deaf.svg",
+    "icon": "systems/acks/assets/icons/lip-reading.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/talk.svg"
   },
   {
@@ -1570,7 +1570,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/book.svg",
+    "icon": "systems/acks/assets/icons/loremastery.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/book-aura.svg"
   },
   {
@@ -1608,7 +1608,7 @@
       "general": false,
       "repeatable": true
     },
-    "icon": "icons/svg/sound.svg",
+    "icon": "systems/acks/assets/icons/magical-music.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/music-spell.svg"
   },
   {
@@ -1626,7 +1626,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/tower-flag.svg",
+    "icon": "systems/acks/assets/icons/manual-of-arms.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/swords-power.svg"
   },
   {
@@ -1645,7 +1645,7 @@
       "general": true,
       "repeatable": true
     },
-    "icon": "icons/svg/bridge.svg",
+    "icon": "systems/acks/assets/icons/mapping.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/treasure-map.svg"
   },
   {
@@ -1676,7 +1676,7 @@
         "note": "Adds one selected weapon group to the class list."
       }
     ],
-    "icon": "icons/svg/combat.svg",
+    "icon": "systems/acks/assets/icons/martial-training.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/battle-gear.svg"
   },
   {
@@ -1752,7 +1752,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/sound.svg",
+    "icon": "systems/acks/assets/icons/mimicry.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/talk.svg"
   },
   {
@@ -1770,7 +1770,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/mountain.svg",
+    "icon": "systems/acks/assets/icons/mountaineering.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/mountain-road.svg"
   },
   {
@@ -1808,7 +1808,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/aura.svg",
+    "icon": "systems/acks/assets/icons/mystic-aura.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/beams-aura.svg",
     "effects": [
       {
@@ -1844,7 +1844,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/oak.svg",
+    "icon": "systems/acks/assets/icons/naturalism.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/herbs-bundle.svg"
   },
   {
@@ -1862,7 +1862,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/direction.svg",
+    "icon": "systems/acks/assets/icons/navigation.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/compass.svg"
   },
   {
@@ -1934,7 +1934,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/target.svg",
+    "icon": "systems/acks/assets/icons/precise-shooting.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/archery-target.svg"
   },
   {
@@ -1952,7 +1952,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/card-hand.svg",
+    "icon": "systems/acks/assets/icons/prestidigitation.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/magic-broom.svg"
   },
   {
@@ -1990,7 +1990,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/sun.svg",
+    "icon": "systems/acks/assets/icons/prophecy.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/crystal-ball.svg"
   },
   {
@@ -2026,7 +2026,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/silenced.svg",
+    "icon": "systems/acks/assets/icons/quiet-magic.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/magic-swirl.svg"
   },
   {
@@ -2080,7 +2080,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/riding.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/horse-head.svg"
   },
   {
@@ -2118,7 +2118,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/walk.svg",
+    "icon": "systems/acks/assets/icons/running.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/run.svg"
   },
   {
@@ -2136,7 +2136,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/anchor.svg",
+    "icon": "systems/acks/assets/icons/seafaring.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/sail.svg"
   },
   {
@@ -2156,7 +2156,7 @@
     },
     "audited": "2026-07-19",
     "auditor": "first-pass",
-    "icon": "icons/svg/card-joker.svg",
+    "icon": "systems/acks/assets/icons/seduction.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/charm.svg",
     "effects": [
       {
@@ -2192,7 +2192,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/terror.svg",
+    "icon": "systems/acks/assets/icons/sensing-evil.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/evil-moon.svg"
   },
   {
@@ -2228,7 +2228,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/aura.svg",
+    "icon": "systems/acks/assets/icons/sensing-power.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/beams-aura.svg"
   },
   {
@@ -2246,7 +2246,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/tower.svg",
+    "icon": "systems/acks/assets/icons/siege-engineering.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/siege-ram.svg"
   },
   {
@@ -2266,7 +2266,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/hanging-sign.svg",
+    "icon": "systems/acks/assets/icons/signaling.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/whistle.svg"
   },
   {
@@ -2284,7 +2284,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/direction.svg",
+    "icon": "systems/acks/assets/icons/skirmishing.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/run.svg"
   },
   {
@@ -2302,7 +2302,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/cowled.svg",
+    "icon": "systems/acks/assets/icons/skulking.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/hidden.svg"
   },
   {
@@ -2320,7 +2320,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/target.svg",
+    "icon": "systems/acks/assets/icons/sniping.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/crosshair.svg"
   },
   {
@@ -2388,7 +2388,7 @@
       "category": "proficiency",
       "general": true
     },
-    "icon": "icons/svg/tankard.svg",
+    "icon": "systems/acks/assets/icons/survival.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/campfire.svg"
   },
   {
@@ -2406,7 +2406,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/sword.svg",
+    "icon": "systems/acks/assets/icons/swashbuckling.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/sword-brandish.svg"
   },
   {
@@ -2480,7 +2480,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/temple.svg",
+    "icon": "systems/acks/assets/icons/theology.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/prayer-beads.svg"
   },
   {
@@ -2511,7 +2511,7 @@
         "note": "On a failure the same area cannot be searched again for a time. Each rank past the first improves this throw; neither that improvement nor the printed circumstance modifiers are modelled here."
       }
     ],
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "systems/acks/assets/icons/tracking.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/deer-track.svg"
   },
   {
@@ -2529,7 +2529,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/degen.svg",
+    "icon": "systems/acks/assets/icons/transmogrification.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/transform.svg"
   },
   {
@@ -2638,7 +2638,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/combat.svg",
+    "icon": "systems/acks/assets/icons/unarmed-fighting.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/fist.svg"
   },
   {
@@ -2676,7 +2676,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/combat.svg",
+    "icon": "systems/acks/assets/icons/vermin-slaying.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/long-legged-spider.svg"
   },
   {
@@ -2694,7 +2694,7 @@
       "category": "proficiency",
       "general": false
     },
-    "icon": "icons/svg/light.svg",
+    "icon": "systems/acks/assets/icons/wakefulness.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/sleepy.svg"
   },
   {
@@ -2741,7 +2741,7 @@
       "general": false,
       "repeatable": true
     },
-    "icon": "icons/svg/target.svg",
+    "icon": "systems/acks/assets/icons/weapon-focus.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/sword-brandish.svg"
   }
 ]

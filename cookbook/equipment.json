@@ -183,7 +183,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/backpack.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -514,7 +514,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/crowbar.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1803,7 +1803,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/holy-symbol.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1857,7 +1857,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/holy-water.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2235,7 +2235,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/manacles.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3515,7 +3515,7 @@
         "category": "equipment",
         "group": "gear"
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/spell-book.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4490,7 +4490,7 @@
         "group": "clothing",
         "subtype": "clothing"
       },
-      "icon": "icons/svg/statue.svg",
+      "icon": "systems/acks/assets/icons/cloak.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4544,7 +4544,7 @@
         "group": "clothing",
         "subtype": "clothing"
       },
-      "icon": "icons/svg/statue.svg",
+      "icon": "systems/acks/assets/icons/gloves.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4658,7 +4658,7 @@
         "group": "clothing",
         "subtype": "clothing"
       },
-      "icon": "icons/svg/statue.svg",
+      "icon": "systems/acks/assets/icons/robe.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4765,7 +4765,7 @@
         "group": "clothing",
         "subtype": "clothing"
       },
-      "icon": "icons/svg/statue.svg",
+      "icon": "systems/acks/assets/icons/tunic.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6772,7 +6772,7 @@
         "category": "equipment",
         "group": "structure"
       },
-      "icon": "icons/svg/castle.svg",
+      "icon": "systems/acks/assets/icons/shaft.webp",
       "fields": {
         "name": {
           "op": "expect",

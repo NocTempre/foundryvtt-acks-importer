@@ -422,7 +422,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/skills/trades/security-lockpicking-chest-blue.webp",
+      "icon": "systems/acks/assets/icons/lockpicking.webp",
       "fields": {
         "name": {
           "op": "expect",

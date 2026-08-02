@@ -28,6 +28,19 @@ const DEFAULT_ICON_DIRS = [
   "/Applications/FoundryVTT.app/Contents/Resources/app/public/icons",
 ];
 
+/**
+ * The ACKS system's own icon tree — 644 purpose-drawn .webp icons named after
+ * the book's proficiencies, powers and gear. A hard dependency of everything
+ * imported here, thematically exact, and (like Foundry core) no extra module
+ * and no attribution obligation — so it is indexed alongside core and its
+ * exact name matches outrank any keyword guess.
+ */
+const SYSTEM_ICON_DIRS = [
+  path.join(HERE, "..", "..", "foundryvtt-acks-core", "src", "assets", "icons"),
+  "C:\\Users\\benis\\AppData\\Local\\FoundryVTT\\Data\\systems\\acks\\assets\\icons",
+];
+const SYSTEM_ICON_PREFIX = "systems/acks/assets/icons";
+
 const argv = process.argv.slice(2);
 const flag = (name, fallback = null) => {
   const i = argv.indexOf(name);
@@ -43,14 +56,14 @@ if (!iconRoot) {
 const MIN = Number(flag("--min", "2"));
 
 /** Every shippable icon path, as Foundry references it ("icons/skills/..."). */
-function iconIndex(root) {
+function iconIndex(root, prefix = "icons") {
   const out = [];
   const walk = (dir, rel) => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
       const abs = path.join(dir, e.name);
       const r = rel ? `${rel}/${e.name}` : e.name;
       if (e.isDirectory()) walk(abs, r);
-      else if (/\.(webp|svg|png|jpg)$/i.test(e.name)) out.push(`icons/${r.replace(/\\/g, "/")}`);
+      else if (/\.(webp|svg|png|jpg)$/i.test(e.name)) out.push(`${prefix}/${r.replace(/\\/g, "/")}`);
     }
   };
   walk(root, "");
@@ -114,7 +127,12 @@ function registerEntries() {
   return out;
 }
 
-const icons = iconIndex(iconRoot);
+const systemIconRoot = SYSTEM_ICON_DIRS.find((d) => fs.existsSync(d));
+const icons = [
+  ...iconIndex(iconRoot),
+  ...(systemIconRoot ? iconIndex(systemIconRoot, SYSTEM_ICON_PREFIX) : []),
+];
+if (!systemIconRoot) console.error("note: no ACKS system icon tree found — proposing from Foundry core only");
 
 /**
  * --search: what the tool is actually good for.

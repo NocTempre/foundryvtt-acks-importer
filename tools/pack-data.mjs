@@ -120,7 +120,7 @@ api.reconnectBooks();`,
     macro(
       "ackscMacRemoveAl",
       "Remove ALL Imports (GM)",
-      "icons/svg/trash.svg",
+      "icons/svg/cancel.svg",
       GUARD +
         `if (!api.cookbookRemoveImports) return ui.notifications.warn("acks-importer | removing imports needs a newer module build.");
 api.cookbookRemoveImports();`,
@@ -218,7 +218,7 @@ ui.notifications.info(\`acks-importer | equipment: \${r.created} created, \${r.t
     macro(
       "ackscMacOrganize",
       "Organize Cookbook Documents (GM)",
-      "icons/svg/sort.svg",
+      "icons/svg/direction.svg",
       GUARD +
         `if (!api.cookbookOrganize) return ui.notifications.warn("acks-importer | organizing needs a newer module build.");
 api.cookbookOrganize();`,
