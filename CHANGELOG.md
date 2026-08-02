@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0
+
+### Changed
+- Documentation restructured into four kinds: MODEL, DECISIONS, ROADMAP and
+  guides/. Code comments now explain mechanics only.
+- Withdrawn surface is recorded in docs/DECISIONS.md rather than narrated in
+  the files it was removed from: the demo book, the Judge's Screen inserts,
+  the PoC driver, a duplicate LevelValue resolver, and the offline-resolved
+  powerValue that put book values in the module.
+- The equipment-root ruling is owned by acks-extras; both sites here point at
+  it instead of restating it.
+
+### Added
+- docs/guides/ for the three workflows, plus GALLERY.md and docs/README.md.
+
+No user-visible behaviour change, so no release snapshots (TOOLCHAIN §4b).
+
 ## 0.2.0
 
 Identity and icon cleanup (2026-08-02).
