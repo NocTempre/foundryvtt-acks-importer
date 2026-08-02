@@ -3,7 +3,7 @@
   "_key": "!macros!ackscMacRemoveAl",
   "name": "Remove ALL Imports (GM)",
   "type": "script",
-  "img": "icons/svg/trash.svg",
+  "img": "icons/svg/cancel.svg",
   "scope": "global",
   "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookRemoveImports) return ui.notifications.warn(\"acks-importer | removing imports needs a newer module build.\");\napi.cookbookRemoveImports();",
   "folder": "ackscFldImport00",

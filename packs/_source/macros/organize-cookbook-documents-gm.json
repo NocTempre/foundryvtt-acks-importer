@@ -3,7 +3,7 @@
   "_key": "!macros!ackscMacOrganize",
   "name": "Organize Cookbook Documents (GM)",
   "type": "script",
-  "img": "icons/svg/sort.svg",
+  "img": "icons/svg/direction.svg",
   "scope": "global",
   "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookOrganize) return ui.notifications.warn(\"acks-importer | organizing needs a newer module build.\");\napi.cookbookOrganize();",
   "folder": "ackscFldTools000",
