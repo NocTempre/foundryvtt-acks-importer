@@ -3,11 +3,6 @@
  *
  * Persists only @PdfText tags, never prose: the tag resolves per seat at
  * render time from that seat's own extraction.
- *
- * This file was the PoC driver — a fixed sample set and an audit popout
- * contrasting the two language options. Both were demonstrations of a
- * question the cookbook has since answered in production, and were removed
- * 2026-07-19 along with the fake book they leaned on.
  */
 const FOLDER_NAME = "ACKS Content PoC";
 const tagFor = (recipe) => `@PdfText[${recipe.id}]{${recipe.cite}}`;

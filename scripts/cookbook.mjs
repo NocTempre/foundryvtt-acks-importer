@@ -2756,14 +2756,10 @@ export function bindEquipment(entry, node, id) {
   const f = node?.fields ?? {};
   let type = equipmentTypeOf(entry);
 
-  // EQUIPMENT ROOT (acks-equipment, optional). "Equipment is just a special
-  // class of item; they should share a root" (user, 2026-07-24) — acks-equipment
-  // owns that root: it classifies a name into the core type + stats it should
-  // carry. So a torch (a 1d4 light-weapon) and a flask of military oil / holy
-  // water (thrown splash flasks) — dual-nature gear the register files under
-  // adventuring equipment — import as WEAPONS, while a lantern/candle stay
-  // light-bearing items. The RULES live once in acks-equipment, never baked
-  // here; absent the module, the register's own type stands.
+  // EQUIPMENT ROOT (acks-extras, optional). That module owns the rule mapping a
+  // gear NAME to the core item type and stats it should carry; the rules live
+  // there and are never baked here. Absent the module, the register's own type
+  // stands. See acks-extras docs/equipment/DECISIONS.md § The equipment root.
   const klass = globalThis.acksExtras?.equipment?.equipmentClass?.(entry.name) ?? null;
   if (klass?.type) type = klass.type;
 

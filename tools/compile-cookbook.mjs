@@ -968,7 +968,7 @@ const AX_TOP_BAND = 60; // running heads sit at ~y40
 const AX_FOOT_Y = 750;
 // AX2's inline paragraph icons render as literal [TAG] text runs; each starts
 // a section that persists until the next tag (the MM run-in model). AX3 has
-// none. Observed vocabulary (whole-book scan 2026-07-22):
+// none. Observed vocabulary, from a whole-book scan:
 const AX_ICON_SECTIONS = {
   MONSTER: "monster", LORE: "lore", LOOT: "loot", GRAVES: "graves",
   TRICK: "trick", TRAP: "trap", NOISE: "noise",
@@ -1238,11 +1238,11 @@ function axParas(segs, anchorPage, opts = {}) {
 }
 
 /**
- * AUDITED 2026-07-23: the placement heuristic below systematically found the
- * parchment slabs behind the quick-stat blocks (they are the only images whose
- * centers land inside claimed text zones; real portraits stand beside the
- * column). It is therefore only invoked for entries carrying a chef-authored
- * assists.artName, where it resolves the shipped placement box.
+ * Only invoked for entries carrying a chef-authored assists.artName, where it
+ * resolves the shipped placement box. Run unguarded it systematically finds the
+ * parchment slabs behind the quick-stat blocks — they are the only images whose
+ * centres land inside claimed text zones, while real portraits stand beside the
+ * column.
  *
  * The illustration printed INSIDE an entry's claimed region, if any. Purely
  * geometric: candidates come from the operator-list PLACEMENTS (no image

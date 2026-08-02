@@ -1,9 +1,8 @@
 /**
- * bindEquipment ↔ the acks-equipment EQUIPMENT ROOT.
+ * bindEquipment ↔ the acks-extras EQUIPMENT ROOT.
  *
- * "Equipment is just a special class of item; they should share a root" (user,
- * 2026-07-24). acks-equipment owns that root (`equipmentClass(name)`); this test
- * checks that bindEquipment consumes it — a torch imports as a carried light
+ * acks-extras owns that root (`equipmentClass(name)`); this test checks that
+ * bindEquipment consumes it — a torch imports as a carried light
  * STACK (a bundle; it becomes a 1d4 weapon only when readied), a flask of holy
  * water as a thrown splash weapon, a lantern as a light-bearing item — and that
  * it DEGRADES to the register's own type when the module (and thus the root) is

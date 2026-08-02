@@ -3,17 +3,8 @@
  * Fingerprints use page count + metadata title — NEVER file hashes (DTRPG
  * watermarks each customer's copy, so bytes differ per person).
  *
- * A fake book ("cw", Codex of Whispers) sat here to demonstrate the
- * missing-book path. Removed 2026-07-19: the cookbook now spans three real
- * books and no seat is expected to own all of them, so an unreadable entry is
- * the ordinary case and no longer needs a prop to show it off.
- *
- * The Judge's Screen inserts ("js") were listed too, because four hiring
- * tables were read off them. Removed 2026-07-24: every one of those tables is
- * printed in a book the reader already needs — three in the JJ, the signing
- * bonus in the RR — so the screen only ever added a fifth PDF to connect for
- * content the seat could already read. A book id is a promise that connecting
- * that PDF unlocks something; the cheatsheet no longer unlocks anything.
+ * A book id is a promise that connecting that PDF unlocks something. Do not add
+ * one that unlocks nothing — see docs/DECISIONS.md § Withdrawn surface.
  */
 
 export const BOOKS = {

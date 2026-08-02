@@ -1191,7 +1191,7 @@ async function execInstruction(instr, ctx) {
       // proves we are on the right entry — a wrong page shares no prefix — but
       // does not fail over a stray glyph, and a failed expect would otherwise
       // zero the entry's mechanics.
-      // NFKD first (2026-07-22): the AX PDFs mix precomposed and decomposed
+      // NFKD first: the AX PDFs mix precomposed and decomposed
       // accents (DOPPELGÄNGER prints A+combining diaeresis); folding must land
       // both forms on the same string. Purely widens tolerance — old cookbooks
       // keep matching.
