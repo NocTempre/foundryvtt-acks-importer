@@ -145,18 +145,19 @@ only when a second sibling needs it (symbol → file → feature → repo → th
 template, for facts true of every repo in the family). A fact owned by one repo
 stays there and the other repo points at it; a pointer is not duplication.
 
-- `docs/MODEL.md` — how it works now. Present tense.
-- `docs/DECISIONS.md` — dated: what was ruled, what was rejected, what
+- `docs/<feature>/MODEL.md` — how it works now. Present tense.
+- `docs/<feature>/DECISIONS.md` — dated: what was ruled, what was rejected, what
   it cost. Append-only; a superseded entry stays, marked.
-- `docs/ROADMAP.md` — what is not built.
-- `docs/guides/<workflow>.md` — user-facing how-to, and where release screenshots
+- `docs/<feature>/ROADMAP.md` — what is not built.
+- `docs/guides/<feature>.md` — user-facing how-to, and where release screenshots
   land. `docs/GALLERY.md` indexes them.
-- `docs/wip/` — in-flight audits/plans/proposals only. When the work
+- `docs/<feature>/wip/` — in-flight audits/plans/proposals only. When the work
   lands, its substance moves into the three above and the artifact is deleted.
   **Nothing permanent is named AUDIT, PLAN or PROPOSAL.**
 
-**One workflow-slug vocabulary**, shared by `docs/releases/v*/<slug>.png` and
-`docs/guides/<slug>.md`. Never one name in the gallery and another in the guide.
+**One feature-slug vocabulary**, shared by `docs/<feature>/`,
+`docs/releases/v*/<slug>.png` and `docs/guides/<slug>.md`. Never "henchmen" in
+one and "hirelings" in another.
 
 None of `docs/` ships in `module.zip`.
 
@@ -176,8 +177,8 @@ None of `docs/` ships in `module.zip`.
   docstring — do not write both.
 - `@param`/`@returns` are required only where the type is not obvious from the
   name: destructured option bags, non-obvious return shapes, and anything
-  crossing a module boundary (the cookbook schema, the executor instruction set,
-  anything a binding consumes). Elsewhere prose is preferred.
+  crossing a module boundary (a shared library, the public `api`).
+  Elsewhere prose is preferred.
 - **Treat existing comments and docs as unverified.** They drift: a "deferred
   migration" that already happened, a referenced test file that does not exist,
   a resolved collision still described as open. Check the claim against the code
