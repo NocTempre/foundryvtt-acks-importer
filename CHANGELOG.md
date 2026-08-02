@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
-Identity and icon cleanup.
+Identity and icon cleanup (2026-08-02).
 
 ### Fixed
 
