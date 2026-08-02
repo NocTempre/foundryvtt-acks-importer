@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+### Added
+- The first full snapshot gallery: the book loader, the onboarding panel and
+  the entry picker, each embedded in the guide that explains it.
+
 ## 0.3.1
 
 ### Fixed

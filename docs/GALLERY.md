@@ -9,10 +9,14 @@ raw PNG path, so those links survive the next refresh.
 
 | Workflow | What it shows | Guide | Shot |
 |---|---|---|---|
-| Connect a book | The book panel with an edition identified and its entry count | [guide](guides/connect-a-book.md) | *not yet shot* |
-| Import from the cookbook | A cookbook entry becoming a real Foundry document | [guide](guides/import-from-the-cookbook.md) | *not yet shot* |
-| Browse and audit | An entry revealed against the reader's own PDF | [guide](guides/browse-and-audit.md) | *not yet shot* |
+| Connect a book | The book loader, with three books already open on this seat | [guide](guides/connect-a-book.md) | [v1.0.0](releases/v1.0.0/book-loader.png) |
+| Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v1.0.0](releases/v1.0.0/getting-started.png) |
+| Browse and audit | The entry picker — 467 abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v1.0.0](releases/v1.0.0/cookbook-import.png) |
 
 Snapshots are captured during the live-verification session of a release
-(`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged afterwards. Rows
-read *not yet shot* until the first release that captures them.
+(`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged afterwards. The
+books connected for these shots were disconnected again afterwards.
+
+Names and page citations appear in frame because they are what the picker is
+*for*. They ship publicly in the cookbook register already; no rules text is in
+any shot.

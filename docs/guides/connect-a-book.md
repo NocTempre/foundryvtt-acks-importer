@@ -4,7 +4,9 @@ The importer reads **your own PDFs**, on your own machine. Nothing is uploaded,
 and no book text is stored in the world — a passage resolves per seat, at render
 time, from that seat's own copy.
 
-> *Screenshot pending — captured at the next release.*
+![](../releases/v1.0.0/book-loader.png)
+
+*The book loader, with three books already open on this seat.*
 
 ## Connect
 

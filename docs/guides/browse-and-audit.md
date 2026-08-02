@@ -3,7 +3,9 @@
 What the cookbook claims, what your book actually says, and what to do when they
 disagree.
 
-> *Screenshot pending — captured at the next release.*
+![](../releases/v1.0.0/cookbook-import.png)
+
+*The entry picker: every ability with its book and page citation.*
 
 ## Browse
 
