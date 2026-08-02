@@ -1,0 +1,3926 @@
+/**
+ * Cookbook runtime — the Foundry side of docs/BINDING-FOUNDRY.md.
+ *
+ * Loads the shipped cookbook database (cookbook/registers.json +
+ * cookbook/<book>.json), executes entries through the DUMB executor against
+ * the seat's own connected book, and binds executor output to acks documents:
+ *   - GM import dialog: pick monsters -> Actors (stats, weapons with
+ *     damage type + extraordinary-from-printed-color, abilities, spoils, art);
+ *   - lazy prose: imported actors carry only @PdfText[id] tags; the entry's
+ *     description is executed on demand per seat and kept in session memory.
+ *
+ * The cookbook is read-only data; all judgment happened in the offline
+ * pipeline. This file only maps executor output onto acks system fields.
+ */
+import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
+import { BOOKS } from "./books.mjs";
+import { executeEntry, materializeEffects, attackModel, convertName } from "./executor.mjs";
+import { slugLabel } from "./table-extract.mjs";
+import { pageItems } from "./extract.mjs";
+import { WEAPON_TABLE, extractWeaponsFromDoc, bindWeaponRow } from "./weapon-tables.mjs";
+import { ARMOR_TABLE, extractArmorFromDoc, bindArmorRow } from "./armor-tables.mjs";
+import { extractPriceMapFromDoc, priceFor } from "./gear-prices.mjs";
+import { savesForLevel } from "./stats.mjs";
+import { progressBar } from "./progress.mjs";
+
+const FOLDER_NAME = "ACKS Cookbook";
+
+/**
+ * Shipped data, fetched once at ready. Two cookbook shapes:
+ *  - `books`   per-book files (monsters) — the file names its book.
+ *  - `content` CONTENT-TYPE files (proficiencies/powers/skills), each spanning
+ *    every book that prints that content, so the BOOK is named per entry.
+ */
+const data = { registers: null, books: new Map(), content: new Map() };
+/** Content-type cookbooks, named by WHAT they extract, not the source book. */
+const CONTENT_FILES = ["proficiencies", "powers", "skills", "equipment"];
+/** Injected module state (session docs + prose memory) — set by initCookbook. */
+let ctx = null;
+/** Name collisions already reported this session, so a bulk import says each once. */
+const warnedAmbiguous = new Set();
+
+export function initCookbook(moduleCtx) {
+  ctx = moduleCtx;
+}
+
+export async function loadCookbook() {
+  const base = `modules/${MODULE_ID}/cookbook`;
+  try {
+    data.registers = await foundry.utils.fetchJsonWithTimeout(`${base}/registers.json`);
+  } catch {
+    console.log(`${MODULE_ID} | no cookbook shipped (registers.json missing) — cookbook features disabled.`);
+    return false;
+  }
+  // The compiler writes an index naming exactly the files it produced. Probing
+  // for every book id instead would 404 for each book with no cookbook yet —
+  // caught and harmless, but it fills the console with what look like errors.
+  let index = null;
+  try {
+    index = await foundry.utils.fetchJsonWithTimeout(`${base}/index.json`);
+  } catch {
+    /* cookbook compiled before the index existed — fall back to probing */
+  }
+  const bookFiles = index?.books ?? Object.keys(BOOKS);
+  const contentFiles = index?.content ?? CONTENT_FILES;
+  for (const bookId of bookFiles) {
+    try {
+      const cb = await foundry.utils.fetchJsonWithTimeout(`${base}/${bookId}.json`);
+      if (cb?.entries) data.books.set(bookId, cb);
+    } catch {
+      /* book without a cookbook yet */
+    }
+  }
+  for (const name of contentFiles) {
+    try {
+      const cb = await foundry.utils.fetchJsonWithTimeout(`${base}/${name}.json`);
+      if (cb?.entries) data.content.set(name, cb);
+    } catch {
+      /* this content type isn't compiled yet */
+    }
+  }
+  const n = [...data.books.values()].reduce((s, cb) => s + Object.keys(cb.entries).length, 0);
+  const c = [...data.content.values()].reduce((s, cb) => s + Object.keys(cb.entries).length, 0);
+  console.log(
+    `${MODULE_ID} | cookbook loaded: ${n} entr(ies) across ${data.books.size} book(s)` +
+      `${c ? `, ${c} definition(s) across ${data.content.size} content type(s)` : ""}.`,
+  );
+  return n + c > 0;
+}
+
+/** "mm.griffon#combat" -> { id, section } (section null when absent). */
+const splitId = (full) => {
+  const [id, section] = String(full ?? "").split("#");
+  return { id, section: section || null };
+};
+
+export const cookbookEntry = (fullId) => {
+  const { id } = splitId(fullId);
+  for (const cb of data.books.values()) if (cb.entries[id]) return { cb, entry: cb.entries[id], id };
+  for (const cb of data.content.values()) if (cb.entries[id]) return { cb, entry: cb.entries[id], id };
+  // A FAMILY id resolves to a synthesized entry so every consumer (folders,
+  // dialogs, importMany's book resolution) treats it like any other entry.
+  for (const cb of data.books.values()) {
+    const fam = cb.families?.[id];
+    if (fam) {
+      return {
+        cb,
+        id,
+        entry: { kind: "kind.monsterFamily", name: fam.name, cite: fam.cite, pages: fam.pages, family: fam },
+      };
+    }
+  }
+  return null;
+};
+
+/**
+ * Which book an entry is read from. Per-book cookbooks name it on the file;
+ * content-type cookbooks span books, so the entry names its own.
+ */
+const bookOf = (found) => found?.cb?.book?.id ?? found?.entry?.book ?? null;
+/**
+ * How many shipped entries this book unlocks.
+ *
+ * Both shapes count. Per-book cookbooks (monsters) are keyed by the book;
+ * content-type cookbooks span books and name it per entry, so counting only
+ * the first reported 0 for the Revised Rulebook while 120 proficiencies sat in
+ * proficiencies.json waiting on exactly that book.
+ */
+export const cookbookCount = (bookId) => {
+  let n = Object.keys(data.books.get(bookId)?.entries ?? {}).length;
+  for (const cb of data.content.values()) {
+    for (const e of Object.values(cb.entries)) if (e.book === bookId) n++;
+  }
+  return n;
+};
+
+/* -------------------------------------------- */
+/*  Lazy prose (session memory, per seat)       */
+/* -------------------------------------------- */
+
+/** Stub line for a cookbook id: name + citation (no book needed). */
+export function cookbookStub(fullId) {
+  const found = cookbookEntry(fullId);
+  if (!found) return null;
+  return game.i18n.format(`${LANG_PREFIX}.ui.cookbookStub`, { name: found.entry.name, cite: found.entry.cite });
+}
+
+/** Whether this seat could reveal prose for the id right now. */
+export function cookbookCanReveal(fullId) {
+  const found = cookbookEntry(fullId);
+  return !!found && ctx.sessionDocs.has(bookOf(found));
+}
+
+/** Cache an entry's description paragraphs (session memory only). */
+export function cookbookCacheParas(bookId, id, paras) {
+  if (!paras?.length) return;
+  const mem = ctx.proseMem.get(bookId) ?? {};
+  mem[id] = paras;
+  ctx.proseMem.set(bookId, mem);
+}
+
+/**
+ * Execute the entry's description on demand; cache paragraphs in session
+ * memory only. A "#section" suffix filters to that section's paragraphs.
+ */
+export async function cookbookProse(fullId) {
+  const found = cookbookEntry(fullId);
+  if (!found) return null;
+  const { section } = splitId(fullId);
+  const bookId = bookOf(found);
+  let paras = (ctx.proseMem.get(bookId) ?? {})[found.id];
+  if (!paras) {
+    const session = ctx.sessionDocs.get(bookId);
+    if (!session) return null;
+    const res = await executeEntry(session.doc, found.cb, data.registers, found.id);
+    paras = res.fields.description ?? [];
+    cookbookCacheParas(bookId, found.id, paras);
+  }
+  const picked = section ? paras.filter((p) => (p.section ?? "appearance") === section) : paras;
+  const prose = picked.map((p) => p.text).join("\n\n");
+  return prose || null;
+}
+
+/* -------------------------------------------- */
+/*  Binding: executor output -> acks Actor      */
+/* -------------------------------------------- */
+
+const firstInt = (v) => {
+  const m = /(-?[\d,]+)/.exec(String(v ?? ""));
+  return m ? parseInt(m[1].replace(/,/g, ""), 10) : null;
+};
+const diceOf = (v) => /\d+d\d+(?:[+-]\d+)?/.exec(String(v ?? ""))?.[0] ?? "";
+const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+
+/* -------------------------------------------- */
+/*  Full Monster Sheet extras (acks-monsters)   */
+/* -------------------------------------------- */
+
+const SAVE_CLASS_BY_ABBR = { F: "fighter", C: "crusader", M: "mage", T: "thief", D: "dwarvenVaultguard", E: "elvenSpellsword" };
+const AGE_KEYS = ["baby", "juvenile", "adolescent", "adult", "middleAged", "old", "ancient", "maximum"];
+const TRAINED_ROLE_MAP = {
+  "war mount": "warMount", "work beast": "workbeast", workbeast: "workbeast", guard: "guard",
+  mount: "mount", hunter: "hunter", herald: "herald",
+};
+const DAMAGE_WORDS = {
+  acid: "acidic", acidic: "acidic", arcane: "arcane", bludgeoning: "bludgeoning", cold: "cold",
+  electrical: "electrical", electricity: "electrical", lightning: "electrical", fire: "fire",
+  luminous: "luminous", necrotic: "necrotic", piercing: "piercing", poison: "poisonous",
+  poisonous: "poisonous", seismic: "seismic", slashing: "slashing",
+};
+
+/** "Wandering noun (2d4) / Lair noun (2d6)" -> encounter side object. */
+function encSide(value) {
+  if (!value || /^none/i.test(String(value))) return null;
+  const parse = (part) => {
+    const m = /^([^(]+?)\s*\((\d+d\d+(?:[+-]\d+)?)\)/.exec((part ?? "").trim());
+    return m ? { noun: m[1].trim(), number: m[2] } : null;
+  };
+  const parts = String(value).split("/");
+  const wandering = parse(parts[0]);
+  const lair = parse(parts[1] ?? parts[0]);
+  if (!wandering && !lair) return null;
+  return { wandering: wandering ?? { noun: "", number: "" }, lair: lair ?? { noun: "", number: "" } };
+}
+
+/**
+ * Map executor output onto the Full Monster Sheet's extras schema
+ * (Classification / Rating & Saves / Vision / Movement / Ecology / Defenses).
+ * Pure data mapping — exported so the dev harness can test it without Foundry.
+ */
+export function buildExtras(node) {
+  const s = node.fields.stats ?? {};
+  const raw = (k) => s[`_raw.${k}`];
+  const extras = {};
+
+  /* --- classification --- */
+  if (s.type) extras.types = s.type.keys ?? (s.type.key ? [s.type.key] : []);
+  const sub = s.type?.paren?.[0];
+  if (sub) extras.subtype = sub.key ?? sub.text;
+  if (s.size?.key) extras.size = s.size.key;
+  const massText = s.size?.paren?.map((p) => p.text).join(",") ?? "";
+  const stone = firstInt(massText);
+  if (stone != null && /st/.test(massText)) extras.mass = { stone, lbs: stone * 10 };
+
+  /* --- rating & saves --- */
+  const hdm = /^(\d+)(?:\s*([+-])\s*(\d+))?\s*(\**)/.exec(String(s.hitDice ?? "").trim());
+  if (hdm) {
+    extras.hd = {
+      count: parseInt(hdm[1], 10),
+      bonus: hdm[2] ? (hdm[2] === "-" ? -1 : 1) * parseInt(hdm[3], 10) : null,
+      asterisks: hdm[4]?.length || null,
+      dieType: 8,
+    };
+  }
+  const sv = /^([A-Z]+)\s*(\d+)?/.exec(String(s.save ?? "").trim());
+  if (sv) extras.saveAs = { class: SAVE_CLASS_BY_ABBR[sv[1]] ?? "fighter", level: sv[1] === "NH" ? 0 : parseInt(sv[2] ?? "0", 10) || 0 };
+  if (s.normalLoad != null || s.maxLoad != null) {
+    extras.load = { ...(s.normalLoad != null ? { normal: s.normalLoad } : {}), ...(s.maxLoad != null ? { capacity: s.maxLoad } : {}) };
+  }
+
+  /* --- vision & senses --- */
+  const vis = String(s.vision ?? "").toLowerCase();
+  if (vis) {
+    extras.vision = ["standard", "night", "lightless", "acute", "blind"].filter((k) => vis.includes(k));
+    const range = /lightless[^(]*\((\d+)/.exec(vis);
+    if (range) extras.lightlessRange = parseInt(range[1], 10);
+  }
+  if (s.otherSenses && !/^standard$/i.test(s.otherSenses)) extras.otherSenses = s.otherSenses;
+
+  /* --- movement --- */
+  const speeds = [];
+  for (const [k, v] of Object.entries(s)) {
+    const m = /^speed([A-Z][a-z]+)$/.exec(k);
+    if (!m || !v) continue;
+    const nums = [...String(v).matchAll(/(\d+)/g)].map((n) => parseInt(n[1], 10));
+    if (!nums.length) continue;
+    speeds.push({ type: m[1].toLowerCase(), combat: nums[0] ?? null, run: nums[1] ?? nums[0] ?? null, hover: false });
+  }
+  if (speeds.length) extras.speeds = speeds;
+
+  /* --- encounter --- */
+  const d = encSide(s.dungeonEnc);
+  const w = encSide(s.wildernessEnc);
+  if (d || w || s.lairChance != null) {
+    extras.encounter = {
+      ...(d ? { dungeon: d } : {}),
+      ...(w ? { wilderness: w } : {}),
+      ...(s.lairChance != null ? { lairChance: s.lairChance } : {}),
+    };
+  }
+
+  /* --- ecology (secondary) --- */
+  const secondary = {};
+  const exp = firstInt(raw("expeditionSpeed"));
+  if (exp != null) secondary.expeditionSpeed = exp;
+  const supply = raw("supplyCost");
+  if (supply && !/^none/i.test(supply)) secondary.supplyCost = firstInt(supply) ?? supply;
+  const tp = raw("trainingPeriod");
+  if (tp && !/untrainable/i.test(tp)) secondary.trainingMonths = firstInt(tp);
+  const tm = raw("trainingModifier");
+  if (tm && !/untrainable/i.test(tm)) secondary.trainingModifier = firstInt(tm);
+  const br = raw("battleRating");
+  if (br) {
+    const ind = /([\d.]+)\s*\(individual\)/i.exec(br);
+    const unit = /([\d.]+)\s*\(unit\)/i.exec(br);
+    const single = /^([\d.]+)\s*$/.exec(String(br).trim());
+    if (ind || unit || single) {
+      secondary.battleRating = {
+        ...(ind || single ? { individual: parseFloat((ind ?? single)[1]) } : {}),
+        ...(unit ? { unit: parseFloat(unit[1]) } : {}),
+      };
+    }
+  }
+  const life = raw("lifespan");
+  if (life && /\d+\s*\/\s*\d+/.test(life)) {
+    const vals = life.split("/").map((v) => firstInt(v));
+    const lifespan = {};
+    AGE_KEYS.forEach((k, i) => {
+      if (vals[i] != null) lifespan[k] = vals[i];
+    });
+    secondary.lifespan = lifespan;
+  }
+  const rep = raw("reproduction");
+  if (rep && !/^none/i.test(rep)) {
+    const count = diceOf(rep) || (firstInt(rep) != null ? String(firstInt(rep)) : "");
+    let yt = "";
+    if (/egg|hatchling|clutch/i.test(rep)) {
+      yt = "egg";
+      secondary.oviparous = true;
+    } else if (/litter/i.test(rep)) yt = "litter";
+    else if (/spawn/i.test(rep)) yt = "spawn";
+    else if (/foal|calf|pup|kit|cub|whelp|infant|joey|kid|lamb|piglet|fawn|live/i.test(rep)) yt = "live";
+    else if (/juvenile/i.test(rep)) yt = "juvenile";
+    secondary.reproduction = { ...(count ? { count } : {}), ...(yt ? { youngType: yt } : {}) };
+    const iv = /every\s+(\d+)?\s*(year|month|week|day)/i.exec(rep);
+    if (iv) {
+      secondary.reproduction.interval = iv[1] ? parseInt(iv[1], 10) : 1;
+      secondary.reproduction.intervalUnit = iv[2].toLowerCase();
+    }
+  }
+  const uv = raw("untrainedValue");
+  if (uv && !/^none/i.test(uv)) {
+    // Schema: adult/juvenile/baby are NUMBERS (gp), keyed by the (A)/(J)/(B|e) marker.
+    const bucketNum = (marker) => {
+      const m = new RegExp(`([\\d,]+)\\s*gp\\s*\\((?:${marker})\\)`, "i").exec(uv);
+      return m ? parseInt(m[1].replace(/,/g, ""), 10) : undefined;
+    };
+    const adult = bucketNum("A");
+    const juvenile = bucketNum("J");
+    const baby = bucketNum("B|e|egg");
+    if (adult != null || juvenile != null || baby != null) {
+      secondary.untrainedValue = {
+        ...(adult != null ? { adult } : {}),
+        ...(juvenile != null ? { juvenile } : {}),
+        ...(baby != null ? { baby } : {}),
+      };
+    }
+  }
+  const tv = raw("trainedValue");
+  if (tv && !/^none/i.test(tv)) {
+    // Schema: array of { role (enum), value (gp num), note }. "315gp (war
+    // mount) 40gp (work beast)" -> two rows; unknown roles -> other + note.
+    const list = [];
+    for (const m of tv.matchAll(/([\d,]+)\s*gp\s*(?:\(([^)]+)\))?/g)) {
+      const label = (m[2] ?? "").trim();
+      const role = TRAINED_ROLE_MAP[label.toLowerCase()] ?? "other";
+      list.push({ role, value: parseInt(m[1].replace(/,/g, ""), 10), ...(role === "other" && label ? { note: label } : {}) });
+    }
+    if (list.length) secondary.trainedValue = list;
+  }
+  if (Object.keys(secondary).length) extras.secondary = secondary;
+
+  /* --- defenses (materialized by the executor from this seat's prose) --- */
+  if (node.fields.defenses) {
+    const packSide = (b) =>
+      b ? { damage: b.damage ?? [], effects: (b.effects ?? []).join(", "), mundane: !!b.mundane, extraordinary: !!b.extraordinary } : undefined;
+    const def = {};
+    for (const side of ["immunities", "resistances", "susceptibilities"]) {
+      const p = packSide(node.fields.defenses[side]);
+      if (p) def[side] = p;
+    }
+    if (Object.keys(def).length) extras.defenses = def;
+  }
+
+  /* --- spellcasting (formulaic prose) --- */
+  const paras = node.fields.description ?? [];
+  const castM = /casts? spells(?: and uses magic items)? as (?:an? )?(\d+)(?:st|nd|rd|th)?[- ]level (\w+)/i.exec(
+    paras.map((p) => p.text).join(" "),
+  );
+  if (castM) extras.spellcasting = { class: capitalize(castM[2]), level: parseInt(castM[1], 10) };
+
+  return extras;
+}
+
+/**
+ * Size key -> prototype token footprint in grid squares.
+ *
+ * The book gives each size class a FRONTAGE in 5' squares, and acks-monsters
+ * already publishes the whole size table (scripts/config.mjs SIZES) — so this
+ * is the same posture as SAVES_LUT in stats.mjs: derived game math already
+ * published by a sibling, not new disclosure. Kept local rather than imported
+ * because a seat may not have acks-monsters installed.
+ *
+ * Two deliberate readings, because frontage and footprint are not the same
+ * question. "1 sq or less" and "2/3 sq" both describe how many creatures fit
+ * in a line, not a sub-square token, so Small and Man-Sized are both 1×1 — a
+ * half-square token would be a presentation choice the book never asked for.
+ * `largeHugeGigantic` is absent on purpose: that register key exists because
+ * the page gives a RANGE, and picking one for the GM would be inventing.
+ */
+const TOKEN_SIZE = {
+  small: { width: 1, height: 1 },
+  man: { width: 1, height: 1 },
+  large: { width: 2, height: 1 },
+  huge: { width: 2, height: 2 },
+  gigantic: { width: 4, height: 3 },
+  colossal: { width: 8, height: 6 },
+};
+
+/**
+ * Map the SCALAR stat fields to system paths — the shared half of the binding,
+ * used whole-block by bindMonster and per-grid-row by the template importer
+ * (one mapping owner; a template row is just a partial stat block).
+ */
+export function bindStatsScalars(s) {
+  const system = {};
+
+  if (Number.isInteger(s.armorClass)) system.aac = { value: s.armorClass };
+
+  const hdm = /^(\d+)(?:\s*([+-])\s*(\d+))?/.exec(String(s.hitDice ?? "").trim());
+  if (hdm) {
+    const count = parseInt(hdm[1], 10);
+    const bonus = hdm[2] ? (hdm[2] === "-" ? -1 : 1) * parseInt(hdm[3], 10) : 0;
+    const avg = Math.max(1, Math.floor(count * 4.5 + bonus));
+    system.hp = { hd: `${count}d8${bonus ? (bonus > 0 ? `+${bonus}` : bonus) : ""}`, value: avg, max: avg };
+  }
+
+  const sv = /^([A-Z]+)\s*(\d+)?/.exec(String(s.save ?? "").trim());
+  if (sv) {
+    const level = sv[1] === "NH" ? 0 : parseInt(sv[2] ?? "0", 10) || 0;
+    const row = savesForLevel(level);
+    system.saves = Object.fromEntries(Object.entries(row).map(([k, v]) => [k, { value: v }]));
+    system.saves.breath = { value: row.blast };
+    system.saves.wand = { value: row.implements };
+  }
+
+  // "N/A" morale (mindless undead) is not 0 (=always flees): leave it unset and
+  // flag it, rather than writing a misleading number.
+  const moraleNA = s.morale === "N/A";
+  system.details = {
+    ...(typeof s.morale === "number" ? { morale: s.morale } : {}),
+    ...(s.xp != null && s.xp !== "N/A" ? { xp: s.xp } : {}),
+    ...(s.alignment ? { alignment: capitalize(s.alignment.key ?? s.alignment.text ?? "") } : {}),
+    ...(s.treasureType ? { treasure: { type: /^none/i.test(s.treasureType) ? "None" : s.treasureType } } : {}),
+  };
+  if (s.dungeonEnc || s.wildernessEnc) {
+    system.details.appearing = { d: diceOf(s.dungeonEnc), w: diceOf(s.wildernessEnc) };
+  }
+
+  const speed = String(s.speedLand ?? "");
+  const nums = [...speed.matchAll(/(\d+)/g)].map((m) => parseInt(m[1], 10));
+  if (nums.length) system.movement = { base: nums[nums.length - 1] };
+
+  return { system, moraleNA };
+}
+
+/** Map one executed node to acks actor data + embedded items. */
+export function bindMonster(node) {
+  const f = node.fields;
+  const s = f.stats ?? {};
+  const { system, moraleNA } = bindStatsScalars(s);
+
+  const atk = f.attacks;
+  if (atk) {
+    if (atk.throw != null) system.thac0 = { throw: atk.throw };
+    if (atk.text) system.attacks = atk.text;
+  }
+
+  // Each attack MODE is an OR-alternative (weapon OR claws+bite). Build a
+  // weapon item per segment; only mode 0 is equipped by default, later modes
+  // are tagged so the GM can swap. Duplicate names within a mode get a #suffix.
+  const items = [];
+  for (const [mi, mode] of (atk?.modes ?? []).entries()) {
+    const seen = {};
+    for (const seg of mode.segments) {
+      const base = seg.name ?? "Attack";
+      seen[base] = (seen[base] ?? 0) + 1;
+      items.push({
+        name: seen[base] > 1 ? `${base} ${seen[base]}` : base,
+        type: "weapon",
+        img: "icons/svg/sword.svg",
+        flags: {
+          "acks-extras": {
+            ...(seg.naturalWeapon ? { naturalWeapon: seg.naturalWeapon } : {}),
+            ...(seg.damageType?.key ? { damageType: seg.damageType.key } : {}),
+            extraordinary: seg.quality === "extraordinary",
+            ...(mi > 0 ? { attackMode: mi } : {}),
+          },
+        },
+        system: {
+          description: "", damage: seg.damage, bonus: 0, melee: true, missile: false, equipped: mi === 0,
+          pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
+        },
+      });
+    }
+  }
+  // Stat-block proficiency tokens resolve in three tiers — reuse what the world
+  // already has, else build it from the cookbook, else mint a namesake. Both
+  // indexes are built once per monster and only when there is a token to spend
+  // them on (most monsters print none).
+  const profs = (f.stats?.proficiencies ?? []).filter((p) => p.text && !/^none/i.test(p.text));
+  const nameIndex = profs.length ? abilityNameIndex() : null;
+  const loadedById = profs.length ? loadedAbilityIndex() : new Map();
+  const present = new Set(loadedById.keys());
+  for (const prof of profs) {
+    // When the stat block named it by an older name, the EMBEDDED copy records
+    // the rename (not the shared world item — that would stamp one source's
+    // history onto everyone's). The sheet then explains why the name on the
+    // page and the name in the book differ.
+    const renamed = prof.convertedFrom ? { conversionStatus: "renamed", conversionFrom: prof.convertedFrom } : {};
+
+    // WHICH definition this is. An authored registry `ref` is a decision someone
+    // made and wins outright; without one the printed name is only a guess, so
+    // it is resolved against the ids this world actually holds before category
+    // preference applies. 14 names ("Alertness", "Climbing") are both a
+    // proficiency and a class power, and a world that imported one list and not
+    // the other has already answered which was meant.
+    const guess = prof.ref ? null : idForName(nameIndex, prof.text, present);
+    const id = prof.ref ?? guess?.id ?? null;
+    // A guess is reported, but ONCE per distinct resolution: a bulk import walks
+    // hundreds of blocks and the same handful of shared names ("climbing") would
+    // otherwise bury the console in the same line.
+    if (guess?.ambiguous && !warnedAmbiguous.has(`${prof.text}>${id}`)) {
+      warnedAmbiguous.add(`${prof.text}>${id}`);
+      console.warn(`${MODULE_ID} | "${prof.text}" matches several definitions; adopted ${id}.`);
+    }
+
+    // The block prints THIS creature's own throw target ("climbing 6+"), split
+    // off by the refList's stripRoll. It outranks the definition's generic
+    // ladder — which bindAbility can only resolve at 1st level, having no actor
+    // to read — and it is materialized from the seat's own page like every other
+    // value. Until now nothing consumed it, which was invisible while the tiers
+    // below effectively never fired.
+    const withTarget = (item) =>
+      prof.target == null
+        ? item
+        : {
+            ...item,
+            system: {
+              ...item.system,
+              roll: item.system?.roll || "1d20",
+              rollType: item.system?.rollType || "above",
+              rollTarget: prof.target,
+            },
+          };
+
+    // 1. ALREADY LOADED — copy the item the world holds. Worth preferring over a
+    //    fresh bind: this path has no executed node for the ability, so building
+    //    from the cookbook yields structure only, while an item imported with
+    //    the book open already materialized its throws and effects. It also
+    //    inherits whatever the GM tuned.
+    const loaded = id ? loadedById.get(id) : null;
+    if (loaded) {
+      const src = loaded.toObject();
+      // Identity and filing belong to the world item, not to this copy of it.
+      delete src._id;
+      delete src.folder;
+      delete src.sort;
+      if (prof.convertedFrom) {
+        const abil = ((src.flags ??= {})["acks-extras"] ??= {});
+        abil.extras = { ...(abil.extras ?? {}), ...renamed };
+      }
+      items.push(withTarget(src));
+      continue;
+    }
+
+    // 2. COULD BE LOADED — the cookbook carries the definition, so embed THAT
+    //    ability (lazy descriptor, classification, shared cookbook id) rather
+    //    than a bare namesake.
+    const shared = id ? cookbookEntry(id) : null;
+    if (shared) {
+      items.push(withTarget(bindAbility(shared.entry, null, id, renamed)));
+      continue;
+    }
+
+    // 3. Nothing to point at — degrade to a plain named ability, never a failure.
+    items.push(withTarget({
+      name: prof.text,
+      type: "ability",
+      img: "icons/svg/book.svg",
+      system: {
+        description: "", proficiencytype: "general", favorite: false, pattern: "white",
+        requirements: "", roll: "", rollType: "above", rollTarget: 0, blindroll: false, save: "",
+      },
+    }));
+  }
+  for (const sp of f.spoils ?? []) {
+    items.push({
+      name: capitalize(sp.name),
+      type: "item",
+      img: "icons/svg/item-bag.svg",
+      system: { description: "", subtype: "item", quantity: { value: 1, max: 0 }, cost: sp.cost, weight: 0, weight6: sp.weight6 },
+      flags: { "acks-extras": { spoil: true, component: true, researchEffects: sp.effects.map((e) => e.text) } },
+    });
+  }
+
+  // A Gigantic monster on a 1×1 token is wrong before anyone reads a stat, and
+  // the size is right there in the block. Only set what the table actually
+  // says: an unrecognised or ranged size leaves Foundry's default alone.
+  const token = TOKEN_SIZE[s.size?.key];
+
+  return {
+    system,
+    items,
+    ...(token ? { prototypeToken: token } : {}),
+    flags: moraleNA ? { [MODULE_ID]: { moraleNA: true } } : {},
+  };
+}
+
+/* -------------------------------------------- */
+/*  GM import dialog                            */
+/* -------------------------------------------- */
+
+/* -------------------------------------------- */
+/*  Import target folders (one tree per type)   */
+/* -------------------------------------------- */
+
+/**
+ * Every import lands in a tree, not a heap:
+ *
+ *   ACKS Cookbook
+ *     └── <book label>            e.g. "AX2 Secrets of the Nethercity"
+ *           └── <entry meta.group>  e.g. "New Monsters", "Old District — …"
+ *
+ * Actors, journals and roll tables each get their own type-rooted copy of it
+ * (Foundry folders are per document type). Entries without a group sit in the
+ * book folder; content-type items (abilities, equipment) use their own second
+ * level instead of a book. Resolved folders are cached for the session AND
+ * pre-created before any concurrent import starts, so parallel workers cannot
+ * race two folders of the same name into existence.
+ */
+const folderCache = new Map();
+
+/* -------------------------------------------- */
+/*  Import target: world documents or compendium */
+/* -------------------------------------------- */
+
+/**
+ * Imports may land in WORLD COMPENDIUMS instead of the sidebar (setting
+ * `importToCompendium`): hundreds of imported monsters stay out of the Actors
+ * directory and remain drag-and-droppable reference material. One world pack
+ * per document type, created on first use and cached by type.
+ *
+ * Everything downstream is unchanged — the same documents, flags and folder
+ * paths, just created with `{pack}`. A world that flips the setting keeps
+ * whatever it already imported where it is.
+ */
+const packCache = new Map();
+const compendiumMode = () => {
+  try {
+    return !!game.settings.get(MODULE_ID, "importToCompendium");
+  } catch {
+    return false; // setting not registered (older build / test harness)
+  }
+};
+
+/** The pack collection id imports of this type go to, or null for the world. */
+async function packFor(type) {
+  if (!compendiumMode()) return null;
+  let pending = packCache.get(type);
+  if (!pending) {
+    pending = (async () => {
+      const label = `${FOLDER_NAME} — ${type}`;
+      const found = game.packs.find(
+        (p) => p.metadata.packageType === "world" && p.documentName === type && p.metadata.label === label,
+      );
+      if (found) return found.collection;
+      const CC = foundry.documents?.collections?.CompendiumCollection ?? globalThis.CompendiumCollection;
+      const made = await CC.createCompendium({ label, type });
+      return made.collection;
+    })().catch((err) => {
+      console.warn(`${MODULE_ID} | could not open a ${type} compendium — importing into the world instead.`, err);
+      return null;
+    });
+    packCache.set(type, pending);
+  }
+  return pending;
+}
+
+/** `{pack}` option for document creation, or `{}` in world mode. */
+const packOpts = async (type) => {
+  const pack = await packFor(type);
+  return pack ? { pack } : {};
+};
+
+/** Create a document in the configured target (world or compendium). */
+const createDoc = async (cls, data, opts = {}) => cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) });
+
+/**
+ * Every Item this module may already have imported, indexed by cookbook id, in
+ * whichever target imports actually go to.
+ *
+ * Dedup and Update both read `game.items` outright, which was right while every
+ * import landed in the world. The `importToCompendium` setting moved the WRITES
+ * and not the READS: in compendium mode the checks looked somewhere nothing is
+ * ever written, so re-importing silently duplicated and Update reported zero on
+ * a world whose entire library sat in the pack. Caught by live testing — the
+ * offline suite has no compendium for it to happen in.
+ *
+ * Cached because dedup is asked once per id across a whole-corpus import, and
+ * loading a compendium's documents per id would be hundreds of round trips.
+ * `rememberImported` keeps the cache honest as new ones are created.
+ */
+let importedCache = null;
+async function importedIndex() {
+  if (importedCache) return importedCache;
+  const pack = await packFor("Item");
+  const collection = pack ? game.packs.get(pack) : null;
+  const docs = collection ? await collection.getDocuments() : [...game.items];
+  const byId = new Map();
+  for (const doc of docs) {
+    const id = doc.getFlag(MODULE_ID, "cookbook")?.id;
+    if (id && !byId.has(id)) byId.set(id, doc);
+  }
+  importedCache = byId;
+  return byId;
+}
+
+/** Record a freshly created import so the next dedup sees it. */
+function rememberImported(id, doc) {
+  if (id && doc && importedCache && !importedCache.has(id)) importedCache.set(id, doc);
+  return doc;
+}
+
+/** Drop the cache — after a bulk delete, or when the target may have changed. */
+export function forgetImportedIndex() {
+  importedCache = null;
+}
+
+/** The already-imported item for this cookbook id, or null. */
+const importedItem = async (id) => (await importedIndex()).get(id) ?? null;
+
+async function ensureFolderPath(type, names) {
+  const pack = await packFor(type);
+  const collection = pack ? game.packs.get(pack)?.folders : game.folders;
+  let parent = null;
+  for (const name of names.filter(Boolean).map((n) => String(n).trim()).filter(Boolean)) {
+    const key = `${type}|${pack ?? "world"}|${parent?.id ?? "root"}|${name}`;
+    // Cache the PROMISE, not the resolved folder: two concurrent importers that
+    // both miss a resolved cache would each create the folder and the world
+    // would end up with duplicates. Awaiting a shared promise means the second
+    // caller waits for the first one's folder instead of making its own — which
+    // is what lets a folder be resolved mid-import (once extraction reveals the
+    // monster's type) rather than having to be pre-created before the fan-out.
+    let pending = folderCache.get(key);
+    if (!pending) {
+      const parentId = parent?.id ?? null;
+      pending = (async () =>
+        (collection ?? game.folders).find(
+          (fo) => fo.type === type && fo.name === name && (fo.folder?.id ?? null) === parentId,
+        ) ??
+        (await Folder.create({ name, type, folder: parentId, sorting: "a" }, pack ? { pack } : {})))();
+      folderCache.set(key, pending);
+    }
+    parent = await pending;
+  }
+  return parent;
+}
+
+const bookFolderName = (bookId) => BOOKS[bookId]?.label ?? bookId;
+/** The folder an entry of this kind belongs in, creating the path as needed. */
+const targetFolder = (type, bookId, group) =>
+  ensureFolderPath(type, [FOLDER_NAME, bookFolderName(bookId), group]);
+
+/**
+ * Every cookbook id this world already holds, in WHICHEVER target is
+ * configured — the sidebar plus, in compendium mode, the pack INDEX (read
+ * with the cookbook flag as an index field, so no document is loaded).
+ */
+async function importedIdSet() {
+  const ids = new Set(game.actors.map((a) => a.getFlag(MODULE_ID, "cookbook")?.id).filter(Boolean));
+  const pack = await packFor("Actor");
+  const collection = pack ? game.packs.get(pack) : null;
+  if (collection) {
+    const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch(() => null);
+    for (const row of index ?? []) {
+      const id = row.flags?.[MODULE_ID]?.cookbook?.id;
+      if (id) ids.add(id);
+    }
+  }
+  return ids;
+}
+
+/** Actors of one type, wherever imports live (sidebar + configured pack). */
+async function importedActorsOfType(type) {
+  const world = game.actors.filter((a) => a.type === type);
+  const pack = await packFor("Actor");
+  const collection = pack ? game.packs.get(pack) : null;
+  if (!collection) return world;
+  const docs = await collection.getDocuments({ type }).catch(() => []);
+  return [...world, ...docs];
+}
+
+/**
+ * Monster TYPE → folder name. The stat block's own taxonomy (Animal, Undead,
+ * Beastman, …) is what a Judge actually browses by; the Monstrous Manual prints
+ * no section groups, so without this its 154 entries pile into one folder.
+ *
+ * Filing by FAMILY was tried first and was wrong: most families have one to
+ * three members, so it produced a folder per creature ("Bat", "Boar", "Cat")
+ * rather than a taxonomy.
+ */
+const TYPE_FOLDER = {
+  animal: "Animals",
+  beastman: "Beastmen",
+  construct: "Constructs",
+  enchanted: "Enchanted",
+  giant: "Giants",
+  humanoid: "Humanoids",
+  incarnation: "Incarnations",
+  monstrosity: "Monstrosities",
+  ooze: "Oozes",
+  plant: "Plants",
+  undead: "Undead",
+  vermin: "Vermin",
+};
+
+/**
+ * The type a block leads with, preferring the SPECIFIC one when it prints
+ * several ("Humanoid, Beastman" files under Beastmen — the useful bucket).
+ */
+const TYPE_PRIORITY = ["beastman", "incarnation", "undead", "construct", "ooze", "plant", "giant", "vermin", "monstrosity", "animal", "humanoid", "enchanted"];
+function primaryTypeOf(node) {
+  const t = node?.fields?.stats?.type;
+  const keys = (t?.keys ?? (t?.key ? [t.key] : [])).map((k) => String(k).toLowerCase());
+  if (!keys.length) return null;
+  for (const p of TYPE_PRIORITY) if (keys.includes(p)) return p;
+  return keys[0];
+}
+
+/** Folder for a type key ("undead" → "Undead"), or null. */
+const typeFolderOf = (key) => (key ? TYPE_FOLDER[String(key).toLowerCase()] ?? null : null);
+
+/** The recorded type of an already-imported actor (our flag, else the FMS extras). */
+function actorTypeFolder(doc) {
+  const own = doc?.getFlag?.(MODULE_ID, "cookbook")?.type;
+  if (own) return typeFolderOf(own);
+  const fms = doc?.getFlag?.("acks-extras", "extras")?.types;
+  const keys = Array.isArray(fms) ? fms.map((k) => String(k).toLowerCase()) : [];
+  if (!keys.length) return null;
+  for (const p of TYPE_PRIORITY) if (keys.includes(p)) return TYPE_FOLDER[p];
+  return TYPE_FOLDER[keys[0]] ?? null;
+}
+
+/**
+ * The display group an actor-kind entry files under: the book's authored
+ * section group, else its stat-block TYPE, else a bucket for the kinds that
+ * have no type at all (generator templates, NPCs).
+ */
+function actorGroupOf(found, id, { doc = null, type = null } = {}) {
+  const authored = found?.entry?.meta?.group;
+  if (authored) return authored;
+  const kind = found?.entry?.kind;
+  // A family/monster TEMPLATE is a generator, not a creature — it has no stat
+  // block to type, and mixing generators in with monsters hides both.
+  if (kind === "kind.monsterFamily" || kind === "kind.monsterTemplate") return "Templates";
+  // `type` is the freshly extracted stat-block type (import time); `doc` is an
+  // actor already in the world (organize time). Either answers the same question.
+  const byType = typeFolderOf(type) ?? actorTypeFolder(doc);
+  if (byType) return byType;
+  if (kind === "kind.npc") return "NPCs";
+  return null;
+}
+
+/**
+ * THE one destination rule for a cookbook ACTOR — used by import AND organize so
+ * they can never disagree again (animals used to import into "Animals" and then
+ * be organized away into "<book> › animal", the raw group key; MM monsters with
+ * no group sat 150 to a folder while their families went unused).
+ */
+function actorFolderFor(id, found = cookbookEntry(id), opts = {}) {
+  if (isAnimalEntry(found?.entry)) return ensureFolderPath("Actor", [FOLDER_NAME, "Animals"]);
+  return targetFolder("Actor", bookOf(found), actorGroupOf(found, id, opts));
+}
+
+/** Pre-create every folder a batch will need, before the workers fan out. */
+async function prepareFolders(type, ids) {
+  const seen = new Set();
+  for (const id of ids) {
+    const found = cookbookEntry(id);
+    const group = type === "Actor" ? actorGroupOf(found, id) : (found?.entry?.meta?.group ?? null);
+    const key = `${bookOf(found)}|${isAnimalEntry(found?.entry) ? "@animal" : (group ?? "")}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (type === "Actor") await actorFolderFor(id, found);
+    else await targetFolder(type, bookOf(found), group);
+  }
+}
+
+async function ensureFolder() {
+  return ensureFolderPath("Actor", [FOLDER_NAME]);
+}
+
+/**
+ * Cookbook ids this world already holds an actor for.
+ *
+ * Unlike an ability, a monster import always CREATES — there is no reuse to fall
+ * back on — so importing the same entry twice leaves two actors claiming one
+ * cookbook id, and anything resolving by id (a companion slot, say) then picks
+ * between them arbitrarily. Every import path filters through this, which is
+ * what makes "import all" safe to press twice.
+ */
+const importedMonsterIds = () =>
+  new Set(game.actors.map((a) => a.getFlag(MODULE_ID, "cookbook")?.id).filter(Boolean));
+
+/**
+ * How many monsters to import at once. Each import is a PIPELINE of work that
+ * uses different resources — pdf.js page extraction (one shared worker), image
+ * decode + PNG encode (main thread), art upload (network), and a document write
+ * (DB) — so running a handful concurrently overlaps stages that would otherwise
+ * idle waiting on each other. The cap is deliberate and small: firing all ~287
+ * at once would pin every page's decoded artwork in memory and flood the single
+ * worker's queue, trading one bottleneck for a worse one. 4 keeps each resource
+ * busy without oversubscribing any.
+ */
+/**
+ * The two prose channels every imported monster gets: the lazy `@PdfText` tag
+ * builder, and the Full Monster Sheet extras (description sections routed
+ * onto its fields + the classification/senses/defenses block). Shared by
+ * importOne and the family importer so a family variant is byte-for-byte the
+ * same creature a direct import produces.
+ */
+function monsterProseChannels(node, id, cite) {
+  const paras = node.fields.description ?? [];
+  const tag = (section) => `<p>@PdfText[${id}${section ? `#${section}` : ""}]{${cite}}</p>`;
+  const ROUTE = {
+    appearance: "appearance", combat: "combat", ecology: "ecology",
+    encounter: "encounterText", lair: "encounterText",
+    lore: "lore", specialRules: "notes", behavior: "notes",
+  };
+  const description = {};
+  for (const sec of [...new Set(paras.map((p) => p.section ?? "appearance"))]) {
+    const field = ROUTE[sec] ?? "notes";
+    description[field] = (description[field] ?? "") + tag(sec);
+  }
+  if (!Object.keys(description).length) description.appearance = tag(null);
+  const fmsFlags = { "acks-extras": { extras: { ...buildExtras(node), description } } };
+  return { tag, fmsFlags };
+}
+
+const IMPORT_CONCURRENCY = 4;
+
+/**
+ * Run a list of entry ids through importOne with a progress bar, bounded to
+ * IMPORT_CONCURRENCY at a time.
+ *
+ * Each import parses pages out of the seat's PDF, so a whole book is minutes of
+ * work: without feedback the client looks hung. Errors are per-entry — one
+ * unreadable page must not abandon the other 286 — and the shared iterator means
+ * a slow entry never blocks a free worker from starting the next.
+ */
+async function importMany(ids, label) {
+  const total = ids.length;
+  const bar = progressBar(label, total);
+  let done = 0;
+  try {
+    // Every id names its OWN book (a batch may span every connected book) and its
+    // own destination folder; the tree is built up front so the workers below
+    // only ever read the cache.
+    await prepareFolders("Actor", ids);
+    const it = ids[Symbol.iterator]();
+    const worker = async () => {
+      for (let n = it.next(); !n.done; n = it.next()) {
+        const id = n.value;
+        const found = cookbookEntry(id);
+        const bookId = bookOf(found);
+        const folder = await actorFolderFor(id, found);
+        const actor = await importOne(bookId, id, folder?.id ?? null).catch(
+          (err) => (console.error(`${MODULE_ID} | import ${id}`, err), null),
+        );
+        if (actor) done++;
+        bar.step(found?.entry?.name ?? id);
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(IMPORT_CONCURRENCY, total || 1) }, worker));
+  } finally {
+    bar.finish(label);
+  }
+  return done;
+}
+
+/**
+ * Actor-kind entry ids across EVERY connected book, in book then page order.
+ * The single-book `openBooks[0]` this replaced meant a seat with three books
+ * open could only ever import from the first one.
+ */
+function actorEntriesAcrossBooks() {
+  const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+  const rows = [];
+  for (const bookId of openBooks) {
+    const cb = data.books.get(bookId);
+    for (const [id, e] of Object.entries(cb.entries)) {
+      if (actorKindOf(e)) rows.push({ id, entry: e, bookId });
+    }
+    // Families ride the same list as synthesized rows (one generator template
+    // per family); their members stay listed too, for direct import.
+    for (const id of Object.keys(cb.families ?? {})) {
+      rows.push({ id, entry: cookbookEntry(id).entry, bookId });
+    }
+  }
+  rows.sort((a, b) => a.bookId.localeCompare(b.bookId) || a.entry.pages[0] - b.entry.pages[0] || a.id.localeCompare(b.id));
+  return { openBooks, rows };
+}
+
+/** Every entry id that is a MEMBER of some family in the given cookbook set. */
+function familyMemberIds() {
+  const members = new Set();
+  for (const cb of data.books.values()) {
+    for (const fam of Object.values(cb.families ?? {})) for (const m of fam.members) members.add(m.id);
+  }
+  return members;
+}
+
+const sysObject = (doc) =>
+  typeof doc?.system?.toObject === "function" ? doc.system.toObject() : foundry.utils.deepClone(doc?.system ?? {});
+
+/**
+ * GM: delete EVERY document this module imported — actors (monsters,
+ * templates, families, NPCs), world abilities, journals, roll tables, and the
+ * folders they were filed in. Identified by our own cookbook flag, so
+ * hand-made documents are never touched. The counterpart to "import all":
+ * a clean slate for re-importing after a recipe change, and the reset the
+ * test cycle needs.
+ *
+ * Art files stay on disk (Foundry exposes no delete API); a re-import reuses
+ * them, which is the point — only a changed recipe needs them cleared by hand.
+ */
+export async function cookbookRemoveImports() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (deletes documents).");
+  const mine = (d) => !!d.getFlag(MODULE_ID, "cookbook");
+  const groups = [
+    ["Actor", game.actors.filter(mine)],
+    ["Item", game.items.filter(mine)],
+    ["JournalEntry", game.journal.filter(mine)],
+    ["RollTable", game.tables.filter(mine)],
+    ["Folder", game.folders.filter(mine)],
+  ];
+  // Compendium imports too: OUR world packs, found by label whatever the
+  // setting says now, so a world that has flipped it still gets a clean slate.
+  const ourPacks = game.packs.filter(
+    (p) => p.metadata.packageType === "world" && String(p.metadata.label ?? "").startsWith(`${FOLDER_NAME} — `),
+  );
+  const packed = ourPacks.reduce((n, p) => n + p.index.size, 0);
+  const total = groups.reduce((n, [, docs]) => n + docs.length, 0) + packed;
+  if (!total) return ui.notifications.info("acks-content | nothing imported by this module to remove.");
+  const lines = [
+    ...groups.filter(([, d]) => d.length).map(([type, d]) => `${d.length} ${type}(s)`),
+    ...(packed ? [`${packed} in ${ourPacks.length} compendium(s)`] : []),
+  ].join(", ");
+  const ok = await foundry.applications.api.DialogV2.confirm({
+    window: { title: "acks-content — Remove Imports" },
+    content: `<p>Delete <strong>${total}</strong> imported document(s): ${lines}?</p>
+      <p class="notes">Only documents this module imported are removed. Extracted art files stay on disk and are reused by the next import.</p>`,
+  });
+  if (!ok) return null;
+  for (const [type, docs] of groups) {
+    if (!docs.length) continue;
+    await foundry.utils.getDocumentClass(type).deleteDocuments(docs.map((d) => d.id)).catch((err) => {
+      console.warn(`${MODULE_ID} | remove ${type}`, err);
+    });
+  }
+  // The packs themselves go — a re-import recreates them, and an empty
+  // "ACKS Cookbook — Actor" left behind is just clutter.
+  for (const p of ourPacks) {
+    await p.deleteCompendium().catch((err) => console.warn(`${MODULE_ID} | remove pack ${p.collection}`, err));
+  }
+  packCache.clear();
+  folderCache.clear();
+  forgetImportedIndex(); // every id it remembers has just been deleted
+  ui.notifications.info(`acks-content | removed ${total} imported document(s).`);
+  return total;
+}
+
+/** Report an import run, naming what was skipped as already present. */
+function reportImport(done, picked, skipped) {
+  ui.notifications.info(
+    game.i18n.format(`${LANG_PREFIX}.ui.cookbookDone`, { done, picked, folder: FOLDER_NAME }) +
+      (skipped ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.cookbookSkipped`, { skipped })}` : ""),
+  );
+}
+
+async function importOne(bookId, id, folderId) {
+  const found = cookbookEntry(id);
+  // Adventure kinds route to their own binders; journals/tables have their own
+  // importers and are never built here.
+  const kind = found?.entry?.kind;
+  if (kind === "kind.npc" || kind === "kind.monsterLegacy") return importAdventureActor(bookId, id, folderId);
+  if (kind === "kind.monsterTemplate") return importTemplate(bookId, id, folderId);
+  if (kind === "kind.monsterFamily") return importFamily(bookId, id, folderId);
+  if (kind && kind !== "kind.monster") return null;
+  const session = ctx.sessionDocs.get(bookId);
+  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  if (!node.ok) {
+    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    return null;
+  }
+  const { system, items, flags, prototypeToken } = bindMonster(node);
+
+  // Prose stays lazy: the actor carries only tags; description reproduces per
+  // seat. Cache this GM's extraction in session memory for instant reveal.
+  const paras = node.fields.description ?? [];
+  cookbookCacheParas(bookId, id, paras);
+  // The Full Monster Sheet is no longer an optional sibling module — it is a
+  // feature of acks-extras, which this module hard-requires. The old branch
+  // wrote the prose to system.details.biography when it was absent; that can no
+  // longer happen, and keeping it would be a second place prose could land.
+  const { fmsFlags } = monsterProseChannels(node, id, found.entry.cite);
+
+  // FILE IT NOW, not on a later Organize pass. The stat block has just told us
+  // the creature's TYPE — the axis monsters are grouped by — so the destination
+  // is resolved here instead of importing into the book root and depending on
+  // the GM pressing Organize afterwards. (ensureFolderPath caches the promise,
+  // so concurrent importers cannot race two folders of the same name.)
+  const typed = primaryTypeOf(node);
+  const folder = (await actorFolderFor(id, found, { type: typed }))?.id ?? folderId;
+
+  // ONE write, not four. create/update/createEmbeddedDocuments/setFlag were each
+  // a separate socket round-trip a bulk import paid per monster; fold the
+  // embedded items, the cookbook id, and the FMS extras into the single create
+  // (measured ~2.6x on the write phase alone). Art follows separately — it needs
+  // the uploaded file path.
+  const actor = await createDoc(Actor, {
+    name: found.entry.name,
+    type: "monster",
+    folder,
+    system,
+    ...(prototypeToken ? { prototypeToken } : {}),
+    // Merge, don't replace: an embedded shared ability keeps its cookbook id
+    // (that id is what resolves its lazy prose and marks it as the shared one).
+    items: items.map((i) => ({
+      ...i,
+      flags: { ...(i.flags ?? {}), [MODULE_ID]: { ...(i.flags?.[MODULE_ID] ?? {}), generated: true } },
+    })),
+    flags: {
+      ...(flags ?? {}),
+      // The stat block's TYPE rides on OUR flag, not only the Full Monster
+      // Sheet's extras: it is the axis monsters are filed by, and a world
+      // without acks-monsters would otherwise have nothing to group on.
+      [MODULE_ID]: {
+        ...((flags ?? {})[MODULE_ID] ?? {}),
+        cookbook: { id, cite: found.entry.cite, ...(typed ? { type: typed } : {}) },
+      },
+      ...fmsFlags,
+    },
+  });
+  // Foundry REPORTS a schema-validation failure and returns undefined rather
+  // than throwing, so without this the next line dereferences nothing and the
+  // real error — already in the console — is buried under a TypeError from
+  // three frames away. One unimportable monster must read as one skipped
+  // monster, not as a crash in the importer.
+  if (!actor) {
+    ui.notifications.warn(`acks-content | ${found.entry.name}: the system rejected the extracted stats — skipped (see console).`);
+    return null;
+  }
+  if (node.fields.art && ctx.importArtForPage) {
+    const artInstr = found.entry.fields?.art ?? {};
+    await ctx.importArtForPage(actor, session.doc, {
+      id,
+      page: artInstr.page ?? found.entry.pages[0],
+      name: artInstr.name ?? node.fields.art.name ?? null,
+      box: artInstr.box ?? null,
+    });
+  }
+  return actor;
+}
+
+/* -------------------------------------------- */
+/*  Template binding (kind.monsterTemplate)     */
+/*  grids -> acks-lib.template generator actor  */
+/* -------------------------------------------- */
+
+/**
+ * ACKS ladders derived by formula rather than read from a page, the
+ * savesForLevel precedent: the monster attack throw improves 1 per HD from
+ * 10+ at 1 HD (the thrall's own printed ladder confirms 11 − HD row by row).
+ */
+const monsterThrowForHd = (hd) => Math.max(11 - Math.max(1, hd), -10);
+
+/** "Adult (51-75 years)" -> "Adult"; smallcap case healed ("Green dragon" ->
+ *  "Green Dragon") — the short piece generated names use. */
+const nameLabelOf = (label) =>
+  String(label ?? "")
+    .replace(/\s*\([^)]*\)\s*/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b[a-z]/g, (c) => c.toUpperCase());
+
+const intFrom = (v) => {
+  const m = /-?\d[\d,]*/.exec(String(v ?? ""));
+  return m ? parseInt(m[0].replace(/,/g, ""), 10) : null;
+};
+
+/** One weapon-item payload, the same shape bindMonster embeds. */
+const weaponPayload = (name, damage, { naturalWeapon = null, damageType = null, attackMode = 0 } = {}) => ({
+  name,
+  type: "weapon",
+  img: "icons/svg/sword.svg",
+  flags: {
+    "acks-extras": {
+      ...(naturalWeapon ? { naturalWeapon } : {}),
+      ...(damageType ? { damageType } : {}),
+      ...(attackMode > 0 ? { attackMode } : {}),
+    },
+  },
+  system: {
+    description: "", damage, bonus: 0, melee: true, missile: false, equipped: attackMode === 0,
+    pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
+  },
+});
+
+/**
+ * Weapon items from a FORM's attack routine + one damage cell, via the shared
+ * attackModel (no parallel parser). The form tables separate attack names with
+ * "/" where stat lines use "," — normalize inside the parenthetical only.
+ * `types` is the form's glyph-mapped damage-type list, in segment order.
+ */
+function weaponsFromRoutine(routine, damageText, types) {
+  if (!routine || !damageText) return [];
+  const normalized = String(routine).replace(/\(([^)]*)\)/g, (_, inner) => `(${inner.replace(/\s*\/\s*/g, ", ")})`);
+  const { modes } = attackModel(normalized, String(damageText));
+  const items = [];
+  let gi = 0;
+  for (const [mi, mode] of modes.entries()) {
+    const seen = {};
+    for (const [j, seg] of (mode.dmgSegs ?? []).entries()) {
+      const ne = mode.names?.[j] ?? mode.names?.[mode.names.length - 1] ?? null;
+      const base = capitalize(ne?.name ?? "Attack");
+      seen[base] = (seen[base] ?? 0) + 1;
+      items.push(
+        weaponPayload(seen[base] > 1 ? `${base} ${seen[base]}` : base, diceOf(seg) || seg, {
+          naturalWeapon: ne?.nw ?? null,
+          damageType: types?.[gi]?.key ?? null,
+          attackMode: mi,
+        })
+      );
+      gi++;
+    }
+  }
+  return items;
+}
+
+/**
+ * Generic color-word → hex vocabulary for token TINTS (a dragon wears its
+ * hide color on the canvas). Purely lexical English mapping — the WORDS come
+ * from the seat's own extracted hideColor text; the first recognized one wins.
+ */
+const COLOR_HEX = {
+  black: "#3a3a3a", charcoal: "#464646", grey: "#8c8c8c", gray: "#8c8c8c", slate: "#708090",
+  white: "#f2f2f2", ivory: "#f5f0dc", pearl: "#eae0c8", snow: "#f7f7f7", cloud: "#e8e8ee",
+  red: "#b22222", flaming: "#c43419", crimson: "#a51c1c", orange: "#d2691e", burnt: "#b35a1f",
+  copper: "#b87333", sandy: "#c9a86a", brown: "#8b5a2b", taupe: "#7a6a58", liver: "#674c47",
+  purple: "#6a4a7a", green: "#3f7a3f", moss: "#5d7d46", olive: "#6b6b3a", forest: "#2e5d34",
+  blue: "#3a5f9e", sky: "#6fa8dc", cerulean: "#2a7fbf", teal: "#2f7f7a", sea: "#3f8f80",
+  bronze: "#cd7f32", silver: "#c0c0c0", electrum: "#d8d4b8", gold: "#d4af37", yellow: "#d4b23a",
+};
+const tintFromColorText = (text) => {
+  for (const word of String(text ?? "").toLowerCase().split(/[^a-z]+/)) {
+    if (COLOR_HEX[word]) return COLOR_HEX[word];
+  }
+  return "";
+};
+
+/** Cell keys shown as note lines on an option (materialized world data). */
+const OPTION_NOTE_KEYS = [
+  "size", "habitat", "hideColor", "breathWeapon", "chanceSpeech", "casterLevel", "spells",
+  "rebukedAs", "abilitiesGained", "speedFly", "speedSwim", "speedClimb", "speedBurrow",
+  "bme", "ccf", "lairChance", "caughtAsleep", "normalLoad", "immunity", "vision",
+  "otherSenses", "xpSpeechless", "xpSpeaking", "attackRoutine",
+];
+
+const fmtCell = (v) =>
+  Array.isArray(v) ? v.map((x) => x?.key ?? x?.text ?? String(x)).join(", ") : String(v);
+
+/** Build one axis option (engine-ready patches) from a merged grid row. */
+function templateOption(ax, row, cells, { id, cite, sections }) {
+  const hitDice = cells.hitDice ?? (ax.keyIsHd && /^\d+$/.test(row.key) ? row.key : undefined);
+  const { system } = bindStatsScalars({
+    armorClass: cells.armorClass,
+    hitDice,
+    save: cells.save,
+    morale: typeof cells.morale === "number" ? cells.morale : undefined,
+    treasureType: cells.treasureType ? String(cells.treasureType).toUpperCase() : undefined,
+    dungeonEnc: cells.dungeonEnc,
+    wildernessEnc: cells.wildernessEnc,
+    speedLand: cells.speedLand,
+    xp: intFrom(cells.xpSpeechless) ?? intFrom(cells.xpSpeaking) ?? intFrom(cells.xp) ?? undefined,
+  });
+
+  // Attack throw: printed on the row (thrall "weapon 10+") outranks the
+  // HD-derived ladder; with neither, the generated actor keeps defaults.
+  const printedThrow = /(-?\d+)\s*\+/.exec(String(cells.attacks ?? ""))?.[1];
+  const hdCount = parseInt(String(hitDice ?? ""), 10);
+  if (printedThrow != null) system.thac0 = { throw: parseInt(printedThrow, 10) };
+  else if (Number.isInteger(hdCount)) system.thac0 = { throw: monsterThrowForHd(hdCount) };
+
+  if (cells.attacks) system.attacks = [cells.attacks, cells.damage].filter(Boolean).join(" — ");
+
+  // A single-axis damage die with no routine (the elemental tiers): one
+  // generic natural attack; forms with routines get their weapons in `cells`.
+  const items = [];
+  if (cells.damage && !cells.attackRoutine && !cells.attacks) {
+    items.push(weaponPayload("Strike", diceOf(cells.damage) || String(cells.damage), { naturalWeapon: "strike" }));
+  }
+
+  const label = capitalize(String(row.label ?? row.key));
+  const secKey = sections.has(row.key) ? row.key : sections.has(`${row.key}s`) ? `${row.key}s` : null;
+  const notes = OPTION_NOTE_KEYS.filter((k) => cells[k] != null && cells[k] !== "").map(
+    (k) => `${k}: ${fmtCell(cells[k])}`
+  );
+  const html =
+    `<p><strong>${label}.</strong>` +
+    `${secKey ? ` @PdfText[${id}#${secKey}]{${cite}}` : ""}` +
+    `${notes.length ? ` <em>${notes.join("; ")}</em>` : ""}</p>`;
+
+  // Presentation channels the page itself prints: an age row's SIZE category
+  // scales the token; a type row's HIDE COLOR tints it.
+  const sizeWord = (/^\s*([A-Za-z-]+)/.exec(String(cells.size ?? ""))?.[1] ?? "").toLowerCase().split("-")[0];
+  const token = TOKEN_SIZE[sizeWord] ? { ...TOKEN_SIZE[sizeWord] } : {};
+
+  return {
+    key: row.key,
+    label,
+    nameLabel: nameLabelOf(row.label ?? row.key),
+    rollMin: null,
+    rollMax: null,
+    menuBudget: ax.budgetCol ? intFrom(cells[ax.budgetCol]) : null,
+    art: "",
+    tint: tintFromColorText(cells.hideColor),
+    merge: system,
+    items,
+    html,
+    token,
+  };
+}
+
+/**
+ * PROSE LEADER ROLES — the general pass, run for EVERY family: the ROLE
+ * variants a member's own prose describes (champions, sub-chieftains,
+ * chieftains, drudges/whelps, shamans, witch doctors) become a second axis.
+ * The MM's sentences are formulaic ("led by a champion with 3 AC, 1 HD, and
+ * 7 hp"), so the regexes are shipped LOCATORS in the defense-scan tradition;
+ * every number is read at import from THIS seat's own extracted prose, per
+ * member. GRACEFUL BY DESIGN: prose that matches nothing adds nothing — a
+ * family without leader sentences simply has no Role axis, a member without
+ * a chieftain sentence lacks that one cell.
+ */
+const proseLeaderRoles = ({ options, memberText, axes, cells, out }) => {
+    // Tolerant of both printed shapes: goblin's "1 HD, and 7 hp" AND gnoll's
+    // "3 HD, 16 hp, and a +2 damage bonus" (the damage clause may follow any
+    // of the three; "and" may sit before hp or before the bonus).
+    const RX = {
+      champion: /led by a champion with (\d+) AC,? (\d+(?:[+-]\d+)?) HD,? (?:and )?(\d+) hp(?:,? and a ([+-]\d+) damage bonus)?/i,
+      subChieftain: /led by a sub-?chieftain with (\d+) AC,? (\d+(?:[+-]\d+)?) HD,? (?:and )?(\d+) hp(?:,? and a ([+-]\d+) damage bonus)?/i,
+      chieftain: /(?:lair|village) will be led by a chieftain with (\d+) AC,? (\d+(?:[+-]\d+)?) HD,? (?:and )?(\d+) hp(?:,? and a ([+-]\d+) damage bonus)?/i,
+      drudgeWhelp: /drudges and whelps have Spd (\d+)['’]?,? AC (\d+),? (\d+) hp,? ML (-?\d+)/i,
+      shaman: /shaman is equivalent to a (champion|sub-?chieftain|chieftain) statistically,? but has (\w+) abilities at level (\d+d\d+|\d+)/i,
+      witchDoctor: /witch doctor is equivalent to a (champion|sub-?chieftain|chieftain) statistically,? but has (\w+) abilities at level (\d+d\d+|\d+)/i,
+    };
+    const statPatch = (option, [ac, hd, hp, dmg], note) => {
+      const hdInt = parseInt(hd, 10);
+      const bonus = /([+-]\d+)/.exec(hd)?.[1] ?? "";
+      const bio = option.merge?.details?.biography ?? "";
+      const notes = [note, dmg ? `${dmg} damage bonus` : ""].filter(Boolean);
+      return {
+        aac: { value: parseInt(ac, 10) },
+        hp: { hd: `${hdInt}d8${bonus}`, value: parseInt(hp, 10), max: parseInt(hp, 10) },
+        thac0: { throw: monsterThrowForHd(hdInt) },
+        ...(notes.length ? { details: { biography: `${bio}<p><em>${notes.join("; ")}</em></p>` } } : {}),
+      };
+    };
+    const roleKeys = [];
+    for (const option of options) {
+      const text = memberText.get(option.key) ?? "";
+      const matched = {};
+      for (const role of ["champion", "subChieftain", "chieftain", "drudgeWhelp"]) {
+        const m = RX[role].exec(text);
+        if (!m) continue;
+        matched[role] =
+          role === "drudgeWhelp"
+            ? {
+                movement: { base: parseInt(m[1], 10) },
+                aac: { value: parseInt(m[2], 10) },
+                hp: { hd: "1d8", value: parseInt(m[3], 10), max: parseInt(m[3], 10) },
+                details: {
+                  morale: parseInt(m[4], 10),
+                  biography: `${option.merge?.details?.biography ?? ""}<p><em>does not fight</em></p>`,
+                },
+                attacks: "none (does not fight)",
+              }
+            : statPatch(option, m.slice(1), "");
+      }
+      // Casters wear another role's stat block plus a class-ability note.
+      for (const role of ["shaman", "witchDoctor"]) {
+        const m = RX[role].exec(text);
+        if (!m) continue;
+        const asKey = /sub/i.test(m[1]) ? "subChieftain" : m[1].toLowerCase();
+        const base = matched[asKey];
+        if (!base) continue;
+        const bio = base.details?.biography ?? option.merge?.details?.biography ?? "";
+        matched[role] = {
+          ...structuredClone(base),
+          details: { ...(base.details ?? {}), biography: `${bio}<p><em>${m[2]} abilities at level ${m[3]}</em></p>` },
+        };
+      }
+      for (const [role, merge] of Object.entries(matched)) {
+        if (!roleKeys.includes(role)) roleKeys.push(role);
+        cells.push({ by: ["variant", "role"], key: `${option.key}|${role}`, merge, items: [] });
+      }
+    }
+    if (!roleKeys.length) return;
+    const LABELS = {
+      champion: "Champion", subChieftain: "Sub-Chieftain", chieftain: "Chieftain",
+      drudgeWhelp: "Drudge / Whelp", shaman: "Shaman", witchDoctor: "Witch Doctor",
+    };
+    axes.push({
+      key: "role",
+      label: "Role",
+      roll: "",
+      derive: { from: "", max: null },
+      options: [
+        { key: "standard", label: "Standard", nameLabel: "" },
+        ...roleKeys.map((k) => ({ key: k, label: LABELS[k], nameLabel: LABELS[k] })),
+      ],
+    });
+    out.nameFormat = "{variant} {role}";
+};
+
+/**
+ * ONE-OFF family enrichments, layered AFTER the general prose-leader pass —
+ * bespoke shapes a specific family needs (framework where it pays, plain
+ * code where a one-off is faster). Each runs inside the same try/catch: a
+ * failing enrichment costs its extras, never the family.
+ */
+const FAMILY_ONE_OFFS = {};
+
+/**
+ * kind.monsterFamily -> ONE `acks-lib.template` generator whose variant axis
+ * options are the family's member creatures, each a COMPLETE preset: the same
+ * bindMonster output a direct import produces (system, weapons, abilities,
+ * FMS extras, token size, per-variant art), packed as engine-ready patches.
+ * "Start with a baseline and select the special case" instead of N top-level
+ * actors; a member can still be imported directly from the dialog. Families
+ * with description-variant prose get ONE-OFF role axes (FAMILY_ONE_OFFS).
+ */
+async function importFamily(bookId, famId, folderId) {
+  const TEMPLATE_TYPE = globalThis.acksExtras?.lib?.TEMPLATE_TYPE;
+  if (!TEMPLATE_TYPE) {
+    ui.notifications.warn(`acks-content | ${famId}: needs acks-lib 0.17+ (template actor type) — skipped.`);
+    return null;
+  }
+  const found = cookbookEntry(famId);
+  const fam = found?.entry?.family;
+  if (!fam) return null;
+  const session = ctx.sessionDocs.get(bookId);
+  const cb = found.cb;
+
+  const options = [];
+  const memberText = new Map();
+  let img = "";
+  for (const member of fam.members) {
+    try {
+    let entry = cb.entries[member.id];
+    if (!entry) continue;
+    // CROSS-BOOK: a member reprinted in another open book binds the NEWER
+    // printing (the per-entry defer rule, applied per variant) — the option
+    // keeps this family's variant label, its stats and lazy tag come from
+    // the revising book, and its cookbook id becomes the revising id so
+    // merge/dedup sees the same creature.
+    let bindId = member.id;
+    let bindCb = cb;
+    let bindDoc = session.doc;
+    const rev = deferTarget(member.id);
+    if (rev) {
+      const revFound = cookbookEntry(rev);
+      const revDoc = ctx.sessionDocs.get(rev.split(".")[0])?.doc;
+      if (revFound && revDoc) {
+        bindId = rev;
+        entry = revFound.entry;
+        bindCb = revFound.cb;
+        bindDoc = revDoc;
+      }
+    }
+    const node = await executeEntry(bindDoc, bindCb, data.registers, bindId);
+    if (!node.ok) {
+      ui.notifications.warn(`acks-content | ${entry.name}: page did not match the cookbook — variant skipped.`);
+      continue;
+    }
+    // Per-member kind dispatch: MM-style monsters bind rich (stats + FMS
+    // extras); legacy appendix blocks bind through their own translator and
+    // carry biography only — the same split the direct importers use.
+    const legacy = entry.kind === "kind.monsterLegacy";
+    const { system, items, flags, prototypeToken } = legacy ? bindLegacyMonster(node) : bindMonster(node);
+    cookbookCacheParas(bindId.split(".")[0], bindId, node.fields.description ?? []);
+    memberText.set(slugLabel(member.variant), (node.fields.description ?? []).map((p) => p.text).join(" "));
+    let fmsFlags = {};
+    if (legacy) {
+      system.details = { ...(system.details ?? {}), biography: pdfTag(bindId, entry.cite) };
+    } else {
+      const channels = monsterProseChannels(node, bindId, entry.cite);
+      fmsFlags = channels.fmsFlags;
+      // Both prose channels ship on the option: biography for the core sheet,
+      // extras flags for the Full Monster Sheet — whichever is active at
+      // GENERATE time uses its own; the other is inert.
+      system.details = { ...(system.details ?? {}), biography: channels.tag(null) };
+    }
+
+    let art = "";
+    if (node.fields.art && ctx.uploadPageArt) {
+      // Hard-bounded, per the render-timeout doctrine: one undecodable image
+      // must cost this variant its portrait, never hang the family import.
+      const artInstr = entry.fields?.art ?? {};
+      const up = await Promise.race([
+        ctx
+          .uploadPageArt(bindDoc, {
+            id: bindId,
+            page: artInstr.page ?? entry.pages[0],
+            name: artInstr.name ?? node.fields.art.name ?? null,
+            box: artInstr.box ?? null,
+          })
+          .catch(() => null),
+        new Promise((r) => setTimeout(() => r(null), 30000)),
+      ]);
+      if (up?.path) art = up.path;
+      if (art && !img) img = art;
+      if (!up) console.warn(`${MODULE_ID} | ${entry.name}: variant art skipped (timeout or extraction failure).`);
+    }
+
+    options.push({
+      key: slugLabel(member.variant),
+      label: member.variant,
+      nameLabel: entry.name, // the generated actor is named exactly as a direct import
+      art,
+      merge: system,
+      items: items.map((i) => ({
+        ...i,
+        flags: { ...(i.flags ?? {}), [MODULE_ID]: { ...(i.flags?.[MODULE_ID] ?? {}), generated: true } },
+      })),
+      html: "",
+      flags: {
+        ...(flags ?? {}),
+        [MODULE_ID]: { ...((flags ?? {})[MODULE_ID] ?? {}), cookbook: { id: bindId, cite: entry.cite } },
+        ...fmsFlags,
+      },
+      token: prototypeToken ?? {},
+    });
+    } catch (err) {
+      // One unreadable member costs one variant, never the family.
+      console.warn(`${MODULE_ID} | ${famId}: member ${member.id} failed — variant skipped.`, err);
+    }
+  }
+  if (!options.length) {
+    ui.notifications.warn(`acks-content | ${fam.name}: no family member could be read — skipped.`);
+    return null;
+  }
+
+  const axes = [{ key: "variant", label: "Variant", roll: "", derive: { from: "", max: null }, options }];
+  const cells = [];
+  const out = { nameFormat: fam.nameFormat ?? "{variant}" };
+  // General prose-leader pass first, then any bespoke one-off; either failing
+  // costs its enrichment, never the family import.
+  try {
+    proseLeaderRoles({ fam, options, memberText, axes, cells, out });
+  } catch (err) {
+    console.warn(`${MODULE_ID} | ${famId}: prose-role pass failed — importing without roles.`, err);
+  }
+  try {
+    FAMILY_ONE_OFFS[famId]?.({ fam, options, memberText, axes, cells, out });
+  } catch (err) {
+    console.warn(`${MODULE_ID} | ${famId}: one-off enrichment failed — importing without its extras.`, err);
+  }
+
+  // CROSS-BOOK MERGE: the same conceptual family already imported (from this
+  // or another book) gains this book's NEW variants instead of a twin. Two
+  // identity signals: a shared member id (revisedBy-deferred variants land on
+  // the revising id, so AX2's Animated Statues match the MM family) and a
+  // shared family suffix ("mm.familyMummy" ↔ "ax2.familyMummy").
+  const optionIdOf = (o) => o.flags?.[MODULE_ID]?.cookbook?.id ?? null;
+  const famSuffix = famId.split(".")[1] ?? famId;
+  const incomingIds = new Set(options.map(optionIdOf).filter(Boolean));
+  // ACKS II names win (the conversion guide's direction): a legacy family
+  // name the guide RENAMES matches its ACKS II family for identity.
+  const canonicalName = (n) => {
+    const conv = convertName(data.registers, String(n ?? ""));
+    return (conv?.status === "renamed" && conv.to ? conv.to : String(n ?? "")).toLowerCase();
+  };
+  const existing = (await importedActorsOfType(TEMPLATE_TYPE)).find((a) => {
+    const aFam = a.getFlag(MODULE_ID, "cookbook")?.id ?? "";
+    if (aFam === famId || (aFam.split(".")[1] ?? aFam) === famSuffix) return true;
+    if (aFam && canonicalName(a.name) === canonicalName(fam.name)) return true;
+    return (a.system.axes ?? []).some(
+      (ax) => ax.key === "variant" && (ax.options ?? []).some((o) => incomingIds.has(optionIdOf(o)))
+    );
+  });
+  if (existing) {
+    const exAxes = sysObject(existing).axes;
+    const vAxis = exAxes.find((a) => a.key === "variant");
+    if (vAxis) {
+      const haveIds = new Set(vAxis.options.map(optionIdOf).filter(Boolean));
+      const haveKeys = new Set(vAxis.options.map((o) => o.key));
+      const added = options.filter((o) => !haveIds.has(optionIdOf(o)) && !haveKeys.has(o.key));
+      const addedKeys = new Set(added.map((o) => o.key));
+      // Their role cells ride along; the incoming role axis unions by key.
+      const addedCells = cells.filter((c) => addedKeys.has(String(c.key).split("|")[0]));
+      const inRole = axes.find((a) => a.key === "role");
+      const exRole = exAxes.find((a) => a.key === "role");
+      if (inRole && exRole) {
+        const roleKeys = new Set(exRole.options.map((o) => o.key));
+        exRole.options.push(...inRole.options.filter((o) => !roleKeys.has(o.key)));
+      } else if (inRole && added.length) {
+        exAxes.push(inRole);
+      }
+      // The ACKS II core printing owns the NAME: an adventure-created template
+      // a core family merges into takes the core family's name and id.
+      const CORE_BOOKS = new Set(["mm", "rr", "jj"]);
+      const exFam = existing.getFlag(MODULE_ID, "cookbook")?.id ?? "";
+      const rename =
+        CORE_BOOKS.has(bookId) && !CORE_BOOKS.has(exFam.split(".")[0] ?? "")
+          ? { name: fam.name, [`flags.${MODULE_ID}.cookbook`]: { id: famId, cite: fam.cite } }
+          : {};
+      if (added.length || Object.keys(rename).length) {
+        vAxis.options.push(...added);
+        const exCells = sysObject(existing).cells ?? [];
+        await existing.update({
+          "system.axes": exAxes,
+          "system.cells": [...exCells, ...addedCells],
+          ...rename,
+        });
+      }
+      if (added.length) {
+        ui.notifications.info(
+          `acks-content | ${fam.name}: ${added.length} variant(s) from ${BOOKS[bookId]?.label ?? bookId} added to the existing template.`
+        );
+      } else {
+        ui.notifications.info(`acks-content | ${fam.name}: the existing template already covers this book's variants.`);
+      }
+      return existing;
+    }
+  }
+
+  const actor = await createDoc(Actor, {
+    name: fam.name,
+    type: TEMPLATE_TYPE,
+    folder: folderId,
+    ...(img ? { img } : {}),
+    system: {
+      output: { actorType: "monster", nameFormat: out.nameFormat },
+      axes,
+      cells,
+    },
+    flags: { [MODULE_ID]: { cookbook: { id: famId, cite: fam.cite } } },
+  });
+  if (!actor) {
+    ui.notifications.warn(`acks-content | ${fam.name}: the system rejected the family template — skipped (see console).`);
+    return null;
+  }
+  return actor;
+}
+
+/**
+ * A GENERATION sub-roll enumerated by an ability's own prose — "roll 1d8 for
+ * the type of aura: 1, arcane; 2, acidic; …" — parsed from THIS seat's
+ * extracted text at import (values persist in world data, the hand-typed
+ * equivalence). Play-time rolls ("roll 1d20 to determine onset time…") are
+ * deliberately NOT matched: the phrase must close with a colon right after
+ * the die / "twice" / a short "for X" qualifier. Returns
+ * `{die, twice?, outcomes: [{min, max, text}]}` or null; an enumeration stops
+ * at the first non-numbered segment. Nested rolls inside an outcome stay
+ * text for the Judge.
+ */
+function subRollFromProse(text) {
+  const m = /\broll (\d*d\d+(?:[+-]\d+)?)( twice)?(?: for [^:]{0,50})?:\s*/i.exec(text ?? "");
+  if (!m) return null;
+  const rest = text.slice(m.index + m[0].length);
+  const outcomes = [];
+  for (const seg of rest.split(";")) {
+    const o = /^\s*(\d+)(?:\s*[-–]\s*(\d+))?[,.]?\s+(.+?)\s*$/.exec(seg);
+    if (!o) break;
+    outcomes.push({ min: parseInt(o[1], 10), max: parseInt(o[2] ?? o[1], 10), text: o[3].replace(/\s+/g, " ") });
+  }
+  if (outcomes.length < 2) return null; // a real enumeration, not a stray match
+  return { die: m[1].toLowerCase(), ...(m[2] ? { twice: true } : {}), outcomes };
+}
+
+/**
+ * kind.monsterTemplate -> an `acks-lib.template` GENERATOR actor.
+ *
+ * All book-parsing intelligence happens HERE, once, at import: grid rows map
+ * through the same scalar binder as full stat blocks, form routines through
+ * the same attackModel, and the template actor stores only engine-ready
+ * patches. acks-lib's roll/resolve then never interprets book content — which
+ * is what keeps one owner per mapping. Values persist in world data (the
+ * hand-typed-table equivalence), prose stays lazy tags.
+ */
+async function importTemplate(bookId, id, folderId) {
+  const TEMPLATE_TYPE = globalThis.acksExtras?.lib?.TEMPLATE_TYPE;
+  if (!TEMPLATE_TYPE) {
+    ui.notifications.warn(`acks-content | ${id}: needs acks-lib 0.16+ (template actor type) — skipped.`);
+    return null;
+  }
+  const found = cookbookEntry(id);
+  const session = ctx.sessionDocs.get(bookId);
+  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  if (!node.ok) {
+    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    return null;
+  }
+  const spec = found.entry.template ?? {};
+  const cite = found.entry.cite;
+  const gridRows = (name) => node.fields.grids?.[name]?.rows ?? [];
+
+  const paras = node.fields.description ?? [];
+  cookbookCacheParas(bookId, id, paras);
+  const sections = new Set(paras.map((p) => p.section).filter(Boolean));
+
+  const axes = [];
+  for (const ax of spec.axes ?? []) {
+    const [firstGrid, ...restGrids] = ax.grids ?? [];
+    const rows = gridRows(firstGrid);
+    const restByKey = restGrids.map((g) => new Map(gridRows(g).map((r) => [r.key, r.cells])));
+    const options = rows.map((row) => {
+      const cells = { ...row.cells };
+      for (const m of restByKey) Object.assign(cells, m.get(row.key) ?? {});
+      return templateOption(ax, row, cells, { id, cite, sections });
+    });
+    if (!options.length) console.warn(`${MODULE_ID} | ${id}: axis "${ax.key}" materialized no options.`);
+    // AUTHORED per-option art (the body-form portraits on the dragon's own
+    // pages, associated by XObject name) — uploaded once, hard-bounded.
+    for (const [optKey, spec2] of Object.entries(ax.art ?? {})) {
+      const option = options.find((o) => o.key === optKey);
+      if (!option || !ctx.uploadPageArt) continue;
+      const up = await Promise.race([
+        ctx.uploadPageArt(session.doc, { id: `${id}-${optKey}`, page: spec2.page, name: spec2.name ?? null, box: spec2.box ?? null }).catch(() => null),
+        new Promise((r) => setTimeout(() => r(null), 30000)),
+      ]);
+      if (up?.path) option.art = up.path;
+    }
+    axes.push({
+      key: ax.key,
+      label: ax.label ?? ax.key,
+      roll: ax.roll ?? "",
+      derive: { from: ax.derive?.from ?? "", max: ax.derive?.max ?? null },
+      options,
+    });
+  }
+
+  // N-dimensional refinements: each 2D damage cell becomes typed weapon items
+  // via the FORM axis's routine + glyph-mapped damage types.
+  const cells = [];
+  for (const c of spec.cells ?? []) {
+    const [aKey, bKey] = c.by ?? [];
+    const bSpec = (spec.axes ?? []).find((x) => x.key === bKey);
+    const formInfo = new Map();
+    for (const g of bSpec?.grids ?? []) {
+      for (const r of gridRows(g)) {
+        const prev = formInfo.get(r.key) ?? {};
+        formInfo.set(r.key, {
+          routine: r.cells.attackRoutine ?? prev.routine,
+          types: r.cells.damageType ?? prev.types,
+        });
+      }
+    }
+    for (const row of gridRows(c.grid)) {
+      for (const [formKey, dmg] of Object.entries(row.cells)) {
+        const info = formInfo.get(formKey) ?? {};
+        cells.push({
+          by: [aKey, bKey],
+          key: `${row.key}|${formKey}`,
+          merge: { attacks: [info.routine, String(dmg)].filter(Boolean).join(" — ") },
+          items: weaponsFromRoutine(info.routine, dmg, info.types),
+        });
+      }
+    }
+  }
+
+  // Section-joined prose, for the sub-roll enumerations each ability may
+  // carry ("roll 1d8 for the type of aura: …" — materialized per seat).
+  const sectionText = new Map();
+  for (const p of paras) {
+    if (!p.section) continue;
+    sectionText.set(p.section, `${sectionText.get(p.section) ?? ""} ${p.text}`.trim());
+  }
+  const menu = {
+    die: spec.menu?.die ?? "",
+    budgetAxis: spec.menu?.budgetAxis ?? "",
+    rows: (spec.menu?.rows ?? []).map((r) => {
+      const sub = r.section ? subRollFromProse(sectionText.get(r.section)) : null;
+      return {
+        min: r.min ?? null,
+        max: r.max ?? null,
+        label: r.label ?? "",
+        cost: r.cost ?? null,
+        html:
+          r.section && sections.has(r.section)
+            ? `<p><strong>${r.label}.</strong> @PdfText[${id}#${r.section}]{${cite}}</p>`
+            : `<p><strong>${r.label}</strong> (${cite})</p>`,
+        ...(sub ? { sub } : {}),
+      };
+    }),
+  };
+
+  const actor = await createDoc(Actor, {
+    name: found.entry.name,
+    type: TEMPLATE_TYPE,
+    folder: folderId,
+    system: {
+      output: { actorType: "monster", nameFormat: spec.nameFormat ?? "" },
+      // The FIXED foundation: rows the template page prints as plain values
+      // ("Type: Monstrosity", vision, morale) bind through the same scalar
+      // binder + sheet-extras mapping as any monster; "varies by …" rows
+      // simply failed their patterns and contribute nothing.
+      base: {
+        merge: bindStatsScalars(node.fields.stats ?? {}).system,
+        flags: { "acks-extras": { extras: buildExtras(node) } },
+      },
+      axes,
+      cells,
+      menu,
+      details: { biography: pdfTag(id, cite) },
+    },
+    flags: { [MODULE_ID]: { cookbook: { id, cite } } },
+  });
+  if (!actor) {
+    ui.notifications.warn(`acks-content | ${found.entry.name}: the system rejected the template — skipped (see console).`);
+    return null;
+  }
+  if (node.fields.art && ctx.importArtForPage) {
+    const artInstr = found.entry.fields?.art ?? {};
+    await ctx.importArtForPage(actor, session.doc, {
+      id,
+      page: artInstr.page ?? found.entry.pages[0],
+      name: artInstr.name ?? node.fields.art.name ?? null,
+      box: artInstr.box ?? null,
+    });
+  }
+  return actor;
+}
+
+/**
+ * Re-read an already-imported monster's stats from this seat's book.
+ *
+ * The counterpart to importOne for an actor that already exists: same
+ * extraction, same binding, but it UPDATES rather than creates. Embedded items
+ * are left alone — a refill that re-added the abilities would duplicate them
+ * on every run, and the stats are what go stale when a recipe improves.
+ *
+ * Returns null when the actor is not ours or its book is not open this
+ * session, so the caller can fall back or explain.
+ */
+export async function refillMonster(actor) {
+  const id = actor?.getFlag(MODULE_ID, "cookbook")?.id;
+  if (!id) return null;
+  const found = cookbookEntry(id);
+  if (!found) return null;
+  const bookId = bookOf(found);
+  const session = ctx.sessionDocs.get(bookId);
+  if (!session) return { ok: false, reason: "book-closed", book: bookId, name: found.entry.name };
+  const node = await executeEntry(session.doc, found.cb, data.registers, found.id);
+  if (!node.ok) return { ok: false, reason: "no-match", book: bookId, name: found.entry.name };
+  const { system, prototypeToken } = bindMonster(node);
+  await actor.update({ system, ...(prototypeToken ? { prototypeToken } : {}) });
+  cookbookCacheParas(bookId, found.id, node.fields.description ?? []);
+  return { ok: true, book: bookId, name: found.entry.name };
+}
+
+/* -------------------------------------------- */
+/*  Abilities (proficiencies / powers / skills) */
+/* -------------------------------------------- */
+
+/**
+ * Map a definition entry (+ its executed node, when the seat owns the book)
+ * onto a core `ability` item. The FULL literal text stays a lazy @PdfText
+ * descriptor; classification and any materialized mechanics persist in
+ * flags["acks-extras"].extras, so the ability stays usable without the book.
+ */
+/* -------------------------------------------- */
+/*  Adventure binding (AX line)                 */
+/*  location -> journal page, rolltable ->      */
+/*  RollTable, npc / monsterLegacy -> Actor     */
+/* -------------------------------------------- */
+
+const ACTOR_KINDS = new Set(["kind.monster", "kind.monsterLegacy", "kind.npc", "kind.monsterTemplate", "kind.monsterFamily"]);
+/** kinds an actor-import flow may enumerate (unknown/absent kind = MM-era monster). */
+const actorKindOf = (e) => !e.kind || ACTOR_KINDS.has(e.kind);
+const ALIGN_WORD = { L: "Lawful", N: "Neutral", C: "Chaotic" };
+
+/** The lazy-prose tag persisted on world documents (never the prose itself). */
+const pdfTag = (id, label) => `<p>@PdfText[${id}]{${label}}</p>`;
+
+/**
+ * Defer-to-newest: an adventure entry reprinted in a book this seat has OPEN
+ * (meta.revisedBy, e.g. ax2.khepri -> mm.khepri) imports from there instead —
+ * the ACKS II printing outranks the adventure's ACKS I block when present.
+ */
+function deferTarget(id) {
+  const rev = cookbookEntry(id)?.entry?.meta?.revisedBy;
+  if (!rev) return null;
+  const revBook = rev.split(".")[0];
+  return ctx.sessionDocs.has(revBook) && cookbookEntry(rev) ? rev : null;
+}
+
+/** Legacy (ACKS I label-column) stats, translated onto the bindMonster surface. */
+function bindLegacyMonster(node) {
+  const s = node.fields.stats ?? {};
+  const morale =
+    typeof s.morale === "string" && /^[+-]?\d+$/.test(s.morale.trim()) ? parseInt(s.morale, 10) : s.morale;
+  const bound = bindMonster({
+    ...node,
+    fields: { ...node.fields, attacks: null, stats: { ...s, morale, speedLand: s.movement } },
+  });
+  const atkText = [s.attacks, s.damage].filter(Boolean).join(" — ");
+  if (atkText) bound.system.attacks = atkText;
+  // One weapon item when the era's "N (name)" attack + dice damage parse.
+  const m = /^\s*\d*\s*\(?\s*([A-Za-z][A-Za-z' -]*)\)?/.exec(String(s.attacks ?? ""));
+  const dmg = diceOf(s.damage);
+  if (m && dmg) {
+    bound.items = [
+      ...(bound.items ?? []),
+      {
+        name: capitalize(m[1].trim()),
+        type: "weapon",
+        img: "icons/svg/sword.svg",
+        system: {
+          description: "", damage: dmg, bonus: 0, melee: true, missile: false, equipped: true,
+          pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
+        },
+      },
+    ];
+  }
+  return bound;
+}
+
+/**
+ * A parsed quick-stat block (the `statline` pattern) onto a monster-type
+ * actor. Values persist in world fields (the GM's hand-typed equivalence);
+ * ability scores and gear notes go to flags — the monster schema has no score
+ * fields — and prose stays a lazy tag.
+ */
+function bindNpc(node) {
+  const sl = node.fields.statline ?? {};
+  const system = {};
+  if (Number.isInteger(sl.ac)) system.aac = { value: sl.ac };
+  if (Number.isInteger(sl.hp)) {
+    const hdCount = parseInt(String(sl.hd ?? sl.class?.level ?? 1), 10) || 1;
+    system.hp = { value: sl.hp, max: sl.hp, hd: `${hdCount}d8` };
+  }
+  // Save row from printed save level (else class level). NOTE: the shared LUT
+  // is the fighter line — the MM approximation this module already uses.
+  const level = sl.save?.level ?? sl.class?.level ?? 0;
+  const row = savesForLevel(level);
+  system.saves = Object.fromEntries(Object.entries(row).map(([k, v]) => [k, { value: v }]));
+  system.saves.breath = { value: row.blast };
+  system.saves.wand = { value: row.implements };
+  system.details = {
+    ...(typeof sl.ml === "number" ? { morale: Math.max(-6, Math.min(4, sl.ml)) } : {}),
+    ...(sl.xp != null ? { xp: sl.xp } : {}),
+    ...(sl.al ? { alignment: ALIGN_WORD[sl.al] ?? sl.al } : {}),
+  };
+  const mv = /(\d+)/.exec(String(sl.mv ?? ""));
+  if (mv) system.movement = { base: parseInt(mv[1], 10) };
+  if (sl.atk?.throw != null) system.thac0 = { throw: sl.atk.throw };
+  if (sl.atk) system.attacks = [sl.atk.count, sl.atk.text ? `(${sl.atk.text})` : "", sl.dmg ? `— ${sl.dmg}` : ""].filter(Boolean).join(" ");
+  const items = [];
+  if (sl.atk?.text) {
+    items.push({
+      name: capitalize(sl.atk.text),
+      type: "weapon",
+      img: "icons/svg/sword.svg",
+      system: {
+        description: "", damage: diceOf(sl.dmg) || "", bonus: 0, melee: true, missile: false, equipped: true,
+        pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
+      },
+    });
+  }
+  return { system, items, statline: sl };
+}
+
+/** Actor import for kind.npc / kind.monsterLegacy (with the defer rule). */
+async function importAdventureActor(bookId, id, folderId) {
+  const target = deferTarget(id);
+  if (target) {
+    // The deferred TARGET id gets its own already-present check — the caller
+    // only filtered on the adventure id, and a world that imported the MM
+    // entry directly must not get a twin.
+    if ((await importedIdSet()).has(target)) {
+      ui.notifications.info(`acks-content | ${id} defers to ${target}, which this world already has — skipped.`);
+      return null;
+    }
+    const tb = target.split(".")[0];
+    ui.notifications.info(`acks-content | ${id} is reprinted in ${BOOKS[tb]?.label ?? tb} — importing ${target} instead.`);
+    // File it under the book it actually came FROM, not the adventure that
+    // pointed at it.
+    const tFolder = await actorFolderFor(target);
+    return importOne(tb, target, tFolder?.id ?? folderId);
+  }
+  const found = cookbookEntry(id);
+  const session = ctx.sessionDocs.get(bookId);
+  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  if (!node.ok) {
+    ui.notifications.warn(`acks-content | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
+    return null;
+  }
+  const kind = found.entry.kind;
+  const bound = kind === "kind.npc" ? bindNpc(node) : bindLegacyMonster(node);
+  const paras = node.fields.description ?? [];
+  cookbookCacheParas(bookId, id, paras);
+  const artInstr = found.entry.fields?.art ?? null;
+  const sl = bound.statline;
+  const classLine = sl?.class ? `<p><em>${sl.class.name} ${sl.class.level}${sl.class.note ? ` (${sl.class.note})` : ""}</em></p>` : "";
+  bound.system.details = {
+    ...(bound.system.details ?? {}),
+    biography: classLine + pdfTag(id, found.entry.cite),
+  };
+  // Proficiency tokens resolve through the shared ability-provider tiers.
+  if (sl?.proficiencies?.length) {
+    const { items: profItems, missing } = await resolveAbilities(sl.proficiencies);
+    bound.items = [...(bound.items ?? []), ...profItems];
+    if (missing.length) console.log(`${MODULE_ID} | ${id}: unresolved proficiencies ${missing.join(", ")}`);
+  }
+  const actor = await createDoc(Actor, {
+    name: found.entry.name,
+    type: "monster",
+    folder: folderId,
+    system: bound.system,
+    items: bound.items ?? [],
+    flags: {
+      [MODULE_ID]: {
+        cookbook: { id, book: bookId, kind },
+        ...(sl
+          ? {
+              npc: {
+                ...(sl.class ? { class: sl.class } : {}),
+                ...(sl.abilities ? { abilities: sl.abilities } : {}),
+                ...(sl.equipment ? { equipment: sl.equipment } : {}),
+                ...(sl.classAbilities ? { classAbilities: sl.classAbilities } : {}),
+                ...(sl.spells ? { spells: sl.spells } : {}),
+                ...(sl.hpEach ? { hpEach: true } : {}),
+              },
+            }
+          : {}),
+      },
+    },
+  });
+  // Same art path as the MM import: the compiled entry names ITS illustration
+  // (associated by placement inside the entry's claimed region), and the seat
+  // extracts + uploads it. A shipped placement BOX needs no runtime XObject
+  // resolution (the AX books' art never registers on page.objs), so the box
+  // alone is enough to proceed.
+  if (actor && artInstr && (artInstr.box || node.fields.art) && ctx.importArtForPage) {
+    await ctx.importArtForPage(actor, session.doc, {
+      id,
+      page: artInstr.page ?? found.entry.pages[0],
+      name: artInstr.name ?? node.fields.art.name ?? null,
+      box: artInstr.box ?? null,
+    });
+  }
+  return actor;
+}
+
+/**
+ * Location journals: one JournalEntry per meta.group, one page per keyed
+ * entry, page body = lazy tag + creature links (the seat-extracted creature
+ * lookups, deferring to the ACKS II entry when the register maps one). Pages
+ * update in place on re-import, so coverage grows without duplicating.
+ */
+export async function cookbookImportJournals() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates journals).");
+  const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+  let made = 0;
+  let updated = 0;
+  // Every page is a fresh extraction from the seat's PDF, so a book's worth of
+  // districts is minutes of work — counted up front so the bar can say how far
+  // through them it is rather than only that it is busy.
+  const bar = progressBar(
+    game.i18n.localize(`${LANG_PREFIX}.ui.progressJournals`),
+    openBooks.reduce((n, b) => n + Object.values(data.books.get(b).entries).filter((e) => e.kind === "kind.location").length, 0),
+  );
+  try {
+    for (const bookId of openBooks) {
+      const cb = data.books.get(bookId);
+      const session = ctx.sessionDocs.get(bookId);
+      const locs = Object.entries(cb.entries).filter(([, e]) => e.kind === "kind.location");
+      if (!locs.length) continue;
+      // The BOOK is the folder now, so the journal itself is named by its group
+      // alone ("A. Entrance Caves") rather than repeating the book on every row.
+      const folder = await ensureFolderPath("JournalEntry", [FOLDER_NAME, bookFolderName(bookId)]);
+      const groups = new Map();
+      for (const [id, e] of locs) {
+        const g = e.meta?.group ?? BOOKS[bookId]?.label ?? bookId;
+        if (!groups.has(g)) groups.set(g, []);
+        groups.get(g).push([id, e]);
+      }
+      for (const [group, list] of groups) {
+        let journal = game.journal.find((j) => j.getFlag(MODULE_ID, "cookbook")?.group === group && j.getFlag(MODULE_ID, "cookbook")?.book === bookId);
+        if (journal) {
+          // Re-file (and re-title) a journal made by an earlier release.
+          const move = {};
+          if (journal.name !== group) move.name = group;
+          if ((journal.folder?.id ?? null) !== folder.id) move.folder = folder.id;
+          if (Object.keys(move).length) await journal.update(move);
+        } else {
+          journal = await createDoc(JournalEntry, {
+            name: group,
+            folder: folder.id,
+            flags: { [MODULE_ID]: { cookbook: { book: bookId, group } } },
+          });
+        }
+        list.sort((a, b) => (a[1].pages[0] - b[1].pages[0]) || a[0].localeCompare(b[0]));
+        let sort = 0;
+        for (const [id, e] of list) {
+          sort += 100;
+          const node = await executeEntry(session.doc, cb, data.registers, id).catch(() => null);
+          if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+          const creatures = Object.values(node?.fields?.creatures ?? {}).filter((c) => c && (c.ref || c.text));
+          const creatureHtml = creatures.length
+            ? `<p><strong>Creatures:</strong> ${creatures
+                .map((c) => (c.ref ? `@PdfText[${c.ref}]{${c.text}}` : c.text))
+                .join(" · ")}</p>`
+            : "";
+          const content = pdfTag(id, e.cite) + creatureHtml;
+          const existing = journal.pages.find((p) => p.getFlag(MODULE_ID, "cookbook")?.id === id);
+          if (existing) {
+            await existing.update({ "text.content": content, sort });
+            updated++;
+          } else {
+            await journal.createEmbeddedDocuments("JournalEntryPage", [
+              {
+                name: e.name,
+                type: "text",
+                sort,
+                text: { content, format: CONST.JOURNAL_ENTRY_PAGE_FORMATS.HTML },
+                flags: { [MODULE_ID]: { cookbook: { id, book: bookId } } },
+              },
+            ]);
+            made++;
+          }
+          bar.step(e.name);
+        }
+      }
+    }
+  } finally {
+    bar.finish();
+  }
+  if (!made && !updated) return ui.notifications.warn("acks-content | no location entries in any open book — connect AX2/AX3 first.");
+  ui.notifications.info(`acks-content | location journals: ${made} page(s) created, ${updated} refreshed, in "${FOLDER_NAME}".`);
+  return { made, updated };
+}
+
+/**
+ * Roll tables: ranges are shipped structure (r<lo> / r<lo>-<hi> sections);
+ * row TEXT materializes from the seat's book at import and persists in the
+ * world — the GM's hand-typed-table equivalence, like imported stat values.
+ * The formula comes from the page (dice locator) or, when the rows start at
+ * 1, mechanically from the shipped range structure.
+ */
+export async function cookbookImportRollTables() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates roll tables).");
+  const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+  const present = new Set(game.tables.map((t) => t.getFlag(MODULE_ID, "cookbook")?.id).filter(Boolean));
+  let made = 0;
+  let skipped = 0;
+  const bar = progressBar(
+    game.i18n.localize(`${LANG_PREFIX}.ui.progressRollTables`),
+    openBooks.reduce((n, b) => n + Object.values(data.books.get(b).entries).filter((e) => e.kind === "kind.rolltable").length, 0),
+  );
+  try {
+    for (const bookId of openBooks) {
+      const cb = data.books.get(bookId);
+      const session = ctx.sessionDocs.get(bookId);
+      const tables = Object.entries(cb.entries).filter(([, e]) => e.kind === "kind.rolltable");
+      if (!tables.length) continue;
+      for (const [id, e] of tables) {
+        // Stepped at the top, not per outcome: every branch below either creates
+        // the table or explains why it could not, and all of them consumed a unit
+        // of the work the bar is measuring.
+        bar.step(e.name);
+        if (present.has(id)) {
+          skipped++;
+          continue;
+        }
+        const node = await executeEntry(session.doc, cb, data.registers, id).catch(() => null);
+        if (!node?.ok) {
+          ui.notifications.warn(`acks-content | ${e.name}: page did not match the cookbook — skipped.`);
+          continue;
+        }
+        const folder = await targetFolder("RollTable", bookId, e.meta?.group);
+        // Rows arrive as section-labelled paragraphs; a row that wrapped columns
+        // has several paras under one section, joined here in order.
+        const rowText = new Map();
+        for (const p of node.fields.rows ?? []) {
+          const key = p.section ?? "";
+          rowText.set(key, rowText.has(key) ? `${rowText.get(key)} ${p.text}` : p.text);
+        }
+        const results = [];
+        for (const [sec, text] of rowText) {
+          const m = /^r([\d,-]+)$/.exec(sec);
+          if (!m) continue;
+          // A section may carry several ranges ("r6,7,16" — one printed truth
+          // covering several rumor rolls); each becomes its own result row.
+          for (const part of m[1].split(",")) {
+            const g = /^(\d+)(?:-(\d+))?$/.exec(part);
+            if (!g) continue;
+            const lo = parseInt(g[1], 10);
+            const hi = g[2] ? parseInt(g[2], 10) : lo;
+            results.push({ type: CONST.TABLE_RESULT_TYPES.TEXT, text, range: [lo, hi] });
+          }
+        }
+        if (!results.length) continue;
+        results.sort((a, b) => a.range[0] - b.range[0]);
+        const lows = results.map((r) => r.range[0]);
+        const his = results.map((r) => r.range[1]);
+        const formula =
+          (typeof node.fields.roll === "string" && node.fields.roll) ||
+          (Math.min(...lows) === 1 ? `1d${Math.max(...his)}` : "");
+        await createDoc(RollTable, {
+          name: e.name,
+          folder: folder?.id ?? null,
+          formula,
+          description: pdfTag(id, e.cite),
+          results,
+          flags: { [MODULE_ID]: { cookbook: { id, book: bookId } } },
+        });
+        made++;
+      }
+    }
+  } finally {
+    bar.finish();
+  }
+  if (!made && !skipped) return ui.notifications.warn("acks-content | no roll-table entries in any open book — connect AX2/AX3 first.");
+  ui.notifications.info(`acks-content | roll tables: ${made} created, ${skipped} already present, in "${FOLDER_NAME}".`);
+  return { made, skipped };
+}
+
+/**
+ * GM: file every already-imported cookbook document into the current folder
+ * tree. Earlier releases dropped everything into one flat "ACKS Cookbook"
+ * folder per type; this moves those documents (and any hand-moved stragglers)
+ * to where a fresh import would put them today. Only documents carrying our
+ * own cookbook flag are touched, and only their folder/name — never content.
+ */
+export async function cookbookOrganize() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (moves documents).");
+  const moved = { Actor: 0, JournalEntry: 0, RollTable: 0, Item: 0 };
+  const failed = [];
+
+  // Every candidate is collected before anything moves, so the bar can measure
+  // the whole job — a world that imported several books has hundreds of them
+  // (572 moved here on the 0.35.0 release), one document write each.
+  const actors = game.actors.filter((a) => a.getFlag(MODULE_ID, "cookbook")?.id);
+  const journals = game.journal.filter((x) => x.getFlag(MODULE_ID, "cookbook")?.group);
+  const tables = game.tables.filter((x) => x.getFlag(MODULE_ID, "cookbook")?.id);
+  const items = game.items.filter((x) => x.getFlag(MODULE_ID, "cookbook")?.id);
+  const bar = progressBar(
+    game.i18n.localize(`${LANG_PREFIX}.ui.progressOrganize`),
+    actors.length + journals.length + tables.length + items.length,
+  );
+
+  // ONE broken document must cost one skip, not the whole run — a legacy actor
+  // whose stored data no longer validates throws from its own update(), and
+  // before this guard that aborted organize entirely (nothing after it moved).
+  const attempt = async (doc, kind, fn) => {
+    try {
+      await fn();
+    } catch (err) {
+      failed.push(`${kind} ${doc.name}`);
+      console.warn(`${MODULE_ID} | organize skipped ${kind} "${doc.name}" — its update failed:`, err);
+    }
+  };
+
+  try {
+    await prepareFolders("Actor", actors.map((a) => a.getFlag(MODULE_ID, "cookbook").id));
+    for (const a of actors) {
+      bar.step(a.name);
+      await attempt(a, "Actor", async () => {
+        const id = a.getFlag(MODULE_ID, "cookbook").id;
+        const found = cookbookEntry(id);
+        // The SAME destination rule the importers use (actorFolderFor), so
+        // organize can never move a document away from where import put it.
+        // An id the loaded cookbooks no longer know falls back to the book
+        // recorded on the flag.
+        const folder = found
+          ? await actorFolderFor(id, found, { doc: a })
+          : await targetFolder("Actor", a.getFlag(MODULE_ID, "cookbook").book, actorTypeFolder(a));
+        if (folder && (a.folder?.id ?? null) !== folder.id) {
+          await a.update({ folder: folder.id });
+          moved.Actor++;
+        }
+      });
+    }
+
+    for (const j of journals) {
+      bar.step(j.name);
+      await attempt(j, "JournalEntry", async () => {
+        const { book, group } = j.getFlag(MODULE_ID, "cookbook");
+        const folder = await ensureFolderPath("JournalEntry", [FOLDER_NAME, bookFolderName(book)]);
+        const patch = {};
+        if (folder && (j.folder?.id ?? null) !== folder.id) patch.folder = folder.id;
+        if (j.name !== group) patch.name = group;
+        if (Object.keys(patch).length) {
+          await j.update(patch);
+          moved.JournalEntry++;
+        }
+      });
+    }
+
+    for (const t of tables) {
+      bar.step(t.name);
+      await attempt(t, "RollTable", async () => {
+        const { id, book } = t.getFlag(MODULE_ID, "cookbook");
+        const found = cookbookEntry(id);
+        const folder = await targetFolder("RollTable", bookOf(found) ?? book, found?.entry?.meta?.group);
+        if (folder && (t.folder?.id ?? null) !== folder.id) {
+          await t.update({ folder: folder.id });
+          moved.RollTable++;
+        }
+      });
+    }
+
+    await prepareItemShelves();
+    for (const i of items) {
+      bar.step(i.name);
+      await attempt(i, "Item", async () => {
+        const folder = await ensureItemFolder(i.getFlag(MODULE_ID, "cookbook").id);
+        if (folder && (i.folder?.id ?? null) !== folder.id) {
+          await i.update({ folder: folder.id });
+          moved.Item++;
+        }
+      });
+    }
+
+    // Sweep folders the moves left EMPTY (the old "<book> › animal" home, a
+    // group whose last member re-filed) — deepest first, repeated until stable
+    // so an empty chain collapses. Only inside each type's ACKS Cookbook tree;
+    // deleting an empty folder loses nothing and a live destination is simply
+    // re-created on the next import. The session folder cache is cleared after,
+    // so a cached reference to a deleted folder can never file a document into
+    // nowhere.
+    for (const type of ["Actor", "JournalEntry", "RollTable", "Item"]) {
+      const root = game.folders.find((f) => f.type === type && f.name === FOLDER_NAME && !f.folder);
+      if (!root) continue;
+      for (let pass = 0; pass < 5; pass++) {
+        const empties = game.folders.filter(
+          (f) =>
+            f.type === type &&
+            f.id !== root.id &&
+            (f.ancestors ?? []).some((an) => an.id === root.id) &&
+            !(f.contents?.length ?? 0) &&
+            !game.folders.some((ch) => ch.folder?.id === f.id),
+        );
+        if (!empties.length) break;
+        for (const f of empties) await f.delete().catch(() => {});
+      }
+    }
+    folderCache.clear();
+  } finally {
+    bar.finish();
+  }
+
+  const total = Object.values(moved).reduce((a, b) => a + b, 0);
+  ui.notifications.info(
+    (total
+      ? `acks-content | organized ${total} document(s): ${Object.entries(moved).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(", ")}.`
+      : `acks-content | every cookbook document is already in place.`) +
+      (failed.length ? ` ${failed.length} document(s) could not be moved (see console).` : ""),
+  );
+  return { ...moved, failed };
+}
+
+/*
+ * NOTE a local `levelValueAt()` used to sit here — a third copy of acks-lib's
+ * LevelValue resolver, needed only because an imported ability's roll target
+ * had to be FLATTENED to a first-level number to fit the core item's single
+ * `rollTarget`. Ladders now travel whole into the acks-abilities flag and are
+ * resolved there against the character, so nothing here has to resolve
+ * anything — this module locates and classifies, it does not evaluate.
+ */
+
+/** "kw:sensingevil" -> "Sensing Evil"-ish, for the system's requirements field. */
+const capabilityLabel = (token) => {
+  const slug = String(token).replace(/^kw:/, "");
+  for (const [id, e] of abilityEntries()) {
+    if (id.split(".").slice(2).join("").toLowerCase() === slug) return e.name;
+  }
+  return slug;
+};
+
+/** The optional icon pack whose niche art beats core for several abilities. */
+const NICHE_ICON_MODULE = "game-icons-net";
+
+/**
+ * Which picture this ability gets.
+ *
+ * Foundry's own 7,100 icons cover most of the corpus, but not the ACKS-shaped
+ * corners of it: Acrobatics, Blind Fighting, Caving and Mapping have no core
+ * icon worth the name, and game-icons.net has all four. So an entry may name
+ * both — `icon` from core, which every seat has, and `iconNiche` from the
+ * optional pack. The niche one wins where the pack is installed and is simply
+ * ignored where it is not, which is the same bring-your-own posture the rest
+ * of this module takes with books.
+ *
+ * Referencing those paths carries no licensing weight for us: the art ships in
+ * THAT module under its own CC BY terms and attribution, and we only point at
+ * it. Nothing is copied here.
+ *
+ * NOTE an item stores its img at creation. Installing the pack later does not
+ * repaint abilities already imported — "Update Abilities" does that.
+ */
+export function abilityIcon(entry) {
+  if (entry?.iconNiche && game.modules?.get?.(NICHE_ICON_MODULE)?.active) return entry.iconNiche;
+  // Falls back to the generic book, so an entry nobody has picked an icon for
+  // looks exactly as it did before rather than breaking.
+  return entry?.icon || "icons/svg/book.svg";
+}
+
+/**
+ * `meta.category` is descriptive metadata a kind may set freely, but the
+ * ability model stores it in a CONSTRAINED choice field. Clamp rather than
+ * trust: an unknown value reached the DataModel and failed validation on every
+ * sheet render (the v0.26.0 equipment leak). Falls back to the model's own
+ * default so the item stays valid and usable.
+ */
+function abilityCategory(value) {
+  const known = globalThis.acksExtras?.lib?.vocab?.ABILITY_CATEGORIES;
+  if (!value) return "proficiency";
+  if (known && !(value in known)) {
+    console.warn(`${MODULE_ID} | "${value}" is not an ability category; storing "proficiency".`);
+    return "proficiency";
+  }
+  return value;
+}
+
+export function bindAbility(entry, node, id, opts = {}) {
+  const meta = entry.meta ?? {};
+  const cite = entry.cite ?? "";
+  // An alias is a DISTINCT ability that shares another entry's rules text, not a
+  // redirect to it. Two names for one capability do not stack, so the relation
+  // ships as a real effect rather than a note the reader has to interpret.
+  const aliasEffects = meta.notStacksWith?.length
+    ? [{ type: "capability", ref: entry.aliasOf ?? meta.notStacksWith[0], notStacksWith: meta.notStacksWith }]
+    : [];
+  const extras = {
+    category: abilityCategory(meta.category),
+    general: !!meta.general,
+    repeatable: !!meta.repeatable,
+    // A retired entry is still imported — an older or converted source may name
+    // it — but carries the flag and a pointer at whatever superseded it.
+    deprecated: !!meta.deprecated,
+    ...(meta.replacedBy ? { replacedBy: meta.replacedBy } : {}),
+    // The build cost is READ FROM THE SEAT'S BOOK, never shipped — so it is
+    // present only once someone with the book imports or updates, like every
+    // other value. `meta.powerValue` remains only as the inherited value an
+    // alias takes from its target.
+    ...(node?.fields?.powerValue != null
+      ? { powerValue: node.fields.powerValue }
+      : meta.powerValue != null
+        ? { powerValue: meta.powerValue }
+        : {}),
+    ...(meta.requires ? { requires: meta.requires } : {}),
+    ...(entry.aliasOf ? { aliasOf: entry.aliasOf } : {}),
+    // Capabilities this ability confers, so a prerequisite written against a
+    // capability resolves no matter which of the same-capability entries the
+    // character actually holds.
+    ...(meta.provides?.length ? { provides: meta.provides } : {}),
+    // No chef has read this entry's full output against the printed page yet.
+    // The scan-classified mechanics still bind — an inert ability helps nobody
+    // — but they present as the machine draft they are: a wrong sign or a
+    // missed bonus must read as unverified, never as the book's ruling. The
+    // flag clears only when the register entry gains its `audited` sign-off.
+    //
+    // Written EXPLICITLY either way, never omitted when audited. Update merges
+    // flags, so an omitted `false` left a stale `true` on every ability
+    // imported before its sign-off — the banner could be raised but never
+    // lowered, which makes the whole gate one-way. Live-caught on this very
+    // batch: twelve entries signed, and Update left them all still marked
+    // machine-classified.
+    unaudited: !entry.audited,
+    // Set when this reference arrived under an older/foreign name: the reader's
+    // source calls it `conversionFrom`, ACKS II calls it `entry.name`.
+    ...(opts.conversionStatus ? { conversionStatus: opts.conversionStatus } : {}),
+    ...(opts.conversionFrom ? { conversionFrom: opts.conversionFrom } : {}),
+    // Structured effects are CLASSIFIED from the seat's own prose (type, target
+    // and value all materialize; the cookbook pre-declares none of them). An
+    // ability the scan can't classify is still valid — name + type + lazy prose.
+    // An alias reads the TARGET's prose through its pre-baked pointer, so it
+    // materializes the same mechanics without the cookbook restating any.
+    //
+    // Without the book there is no prose to classify — but a chef-authored spec
+    // that carries no `from` locator has no value to materialize either. It is
+    // pure structure (a prerequisite, a companion slot), so gating it on the
+    // book would withhold something the cookbook already states. Those apply
+    // either way; anything pointing at a number still waits for the book.
+    effects: [...aliasEffects, ...(node?.fields?.effects ?? materializeEffects(entry.fields?.effects?.specs, []))],
+    // `rolls` is assembled below, after the throws have been classified, and
+    // assigned onto this same object — see the note there for why it goes here
+    // rather than to the core item's single roll field.
+    // Immunity-granting abilities (Divine Health, Wakefulness, Fiery
+    // Resistance…) materialize defenses from the seat's OWN prose via the
+    // executor's vocabulary scan — nothing about which is shipped.
+    ...(node?.fields?.defenses ? { defenses: node.fields.defenses } : {}),
+  };
+  // EVERY throw the extract classified becomes a roll, not just the first. The
+  // recipe's own `rolls` (a chef naming each throw) wins when present;
+  // otherwise the classified `throw` effects are lifted in order. Ladders are
+  // carried WHOLE — acks-abilities resolves them against the character's level
+  // or rank at render time, so nothing is flattened on the way in.
+  //
+  // These go to the acks-abilities flag and NOT to `system.roll` /
+  // `system.rollTarget`. The core item can hold exactly one roll, so writing
+  // there too would mean two stores for the same thing, disagreeing the moment
+  // an ability has more than one throw — and it is the second store that made
+  // the sheet and the chat card roll different numbers. acks-abilities owns
+  // ability rolls and folds core's fields in on read for items it has not
+  // written; nothing needs a shadow copy.
+  const gate = extras.effects.filter((e) => e.type === "requires").flatMap((e) => e.refs ?? []);
+  const thrown = extras.effects.filter((e) => e.type === "throw");
+  extras.rolls =
+    node?.fields?.rolls?.length
+      ? node.fields.rolls
+      : thrown.map((t, i) => ({
+          key: t.key || `throw${i + 1}`,
+          label: t.forWhat || "",
+          formula: t.roll || "1d20",
+          rollType: t.rollType || "above",
+          target: t.value ?? { kind: "flat", flat: 0 },
+          scale: t.value?.on || "level",
+          condition: t.condition || "",
+        }));
+
+  return {
+    name: entry.name,
+    type: "ability",
+    img: abilityIcon(entry),
+    system: {
+      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      proficiencytype: meta.general ? "general" : "class",
+      // `requirements` is plain descriptive text with no second store behind
+      // it, so it still lands on the core field the sheet already shows.
+      ...(gate.length ? { requirements: gate.map(capabilityLabel).join(", ").slice(0, 120) } : {}),
+    },
+    flags: {
+      [MODULE_ID]: { cookbook: { id, cite }, generated: true },
+      "acks-extras": { extras },
+    },
+  };
+}
+
+/**
+ * Items are filed by CONTENT TYPE, not by book: a proficiency spans every book
+ * that prints it, and the whole point of the shared ability item is that one
+ * copy serves every actor. `id` picks the shelf ("def.prof.x" -> Proficiencies).
+ */
+const ITEM_SHELF = {
+  "def.prof": "Proficiencies",
+  "def.power": "Class Powers",
+  // Beastman drawbacks are `kind.power` items but carry their own id namespace
+  // (reclassified off `def.power` in the content audit). Without this line they
+  // fall through itemShelfFor to the root ACKS Cookbook folder, unsorted — so
+  // give them their own shelf beside Class Powers.
+  "def.drawback": "Drawbacks",
+  "def.skill": "Skills",
+  "def.equip": "Equipment",
+  "def.weapon": "Weapons",
+  "def.armor": "Armor",
+};
+const itemShelfFor = (id) => {
+  const key = String(id ?? "").split(".").slice(0, 2).join(".");
+  return ITEM_SHELF[key] ?? null;
+};
+
+/**
+ * Sub-shelves under a top shelf, from the entry's own `meta.group`.
+ *
+ * The equipment chapter is not one list: 147 entries span carried gear,
+ * clothing, animals, structures and vehicles, and a single "Equipment" folder
+ * reproduces the flat pile one level down. The register already records which
+ * group each entry belongs to, so the shelf just reads it — no new data, and a
+ * group nobody declared simply lands on the top shelf.
+ *
+ * Titles are display strings for a folder, not book values.
+ */
+const GROUP_SHELF = {
+  gear: "Adventuring Gear",
+  clothing: "Clothing",
+  animal: "Animals",
+  provisions: "Provisions",
+  lodging: "Lodging",
+  structure: "Structures",
+  vehicle: "Vehicles",
+};
+
+/**
+ * Alphabet bands for a shelf whose SOURCE is a flat alphabetical dictionary —
+ * the JJ class-powers list declares no taxonomy at all, and 316 entries in one
+ * folder is unbrowsable. Bands mirror how the book itself is read (a dictionary
+ * is looked up by letter), inventing nothing.
+ */
+const LETTER_BANDS = [["A", "D"], ["E", "H"], ["I", "L"], ["M", "P"], ["Q", "T"], ["U", "Z"]];
+const letterBand = (name) => {
+  const c = String(name ?? "").trim().charAt(0).toUpperCase();
+  const band = LETTER_BANDS.find(([a, z]) => c >= a && c <= z);
+  return band ? `${band[0]}–${band[1]}` : null;
+};
+
+/** The full folder path for a generated item: root → shelf → sub-shelf. */
+function itemShelfPath(id) {
+  const shelf = itemShelfFor(id);
+  if (!shelf) return [FOLDER_NAME];
+  const entry = cookbookEntry(id)?.entry;
+  // Proficiencies: the RR's OWN split — every proficiency is printed on the
+  // General list, the Class lists, or is one of the combat picks (weapon/
+  // armour/fighting-style). Authored data (`meta.general` + the kind), not
+  // a guess.
+  if (shelf === "Proficiencies") {
+    const sub =
+      entry?.kind === "kind.combatProficiency" ? "Combat"
+      : entry?.meta?.general === true ? "General"
+      : entry?.meta?.general === false ? "Class"
+      : null;
+    return [FOLDER_NAME, shelf, sub];
+  }
+  // Class powers: no authored grouping exists (see letterBand) — file by letter.
+  if (shelf === "Class Powers") return [FOLDER_NAME, shelf, letterBand(entry?.name ?? "")];
+  return [FOLDER_NAME, shelf, GROUP_SHELF[entry?.meta?.group] ?? null];
+}
+
+async function ensureItemFolder(id = null) {
+  return ensureFolderPath("Item", itemShelfPath(id));
+}
+
+/** Create every item shelf (and equipment sub-shelf) before parallel imports. */
+async function prepareItemShelves() {
+  for (const shelf of [null, ...Object.values(ITEM_SHELF)]) await ensureFolderPath("Item", [FOLDER_NAME, shelf]);
+  // Only groups the shipped cookbook actually uses — never the whole table, so
+  // an empty folder is never created for content this world does not have.
+  const groups = new Set();
+  for (const id of cookbookEquipmentIds()) {
+    const entry = cookbookEntry(id)?.entry;
+    // Animals file under Actors when acks-lib is present, so their item shelf
+    // would stand empty — the one thing this loop exists to avoid.
+    if (isAnimalEntry(entry) && canImportAnimals()) continue;
+    const g = entry?.meta?.group;
+    if (GROUP_SHELF[g]) groups.add(GROUP_SHELF[g]);
+  }
+  for (const g of groups) await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.equip"], g]);
+}
+
+/**
+ * Build — or REUSE — the shared ability item for a definition id. Deduped by
+ * cookbook id, so every monster/NPC referencing a proficiency links to the SAME
+ * item instead of minting a per-actor copy. Works bookless: without the citing
+ * book the item still imports with its structure and lazy descriptor.
+ */
+export async function importAbility(id, folderId) {
+  const found = cookbookEntry(id);
+  if (!found) return null;
+  // NOTE an alias gets its OWN item. The books list a name whose rules text is
+  // printed under another entry; that makes it a distinct ability sharing a
+  // passage, not a synonym to redirect away. Its recipe already carries a
+  // pointer to where that text lives, so it extracts and classifies normally —
+  // it just does not stack with the entry it points at.
+  const existing = await importedItem(id);
+  if (existing) return existing;
+
+  const bookId = bookOf(found);
+  const session = ctx.sessionDocs.get(bookId);
+  let node = null;
+  if (session) {
+    node = await executeEntry(session.doc, found.cb, data.registers, id);
+    if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+    else node = null;
+  }
+  const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
+  const doc = bindAbility(found.entry, node, id);
+  const extras = doc.flags["acks-extras"].extras;
+  extras.effects = await resolveCompanions(extras.effects);
+  return rememberImported(id, await createDoc(Item, { ...doc, folder }));
+}
+
+/**
+ * Definition kinds that do NOT bind to an `ability` item.
+ *
+ * A content-type cookbook is not automatically an ABILITY cookbook: equipment
+ * binds to a core inventory item. Every ability path walks the content
+ * cookbooks generically, so a new non-ability kind silently joins the ability
+ * import unless it is excluded here — which is exactly what shipped in
+ * v0.26.0 and produced `category: equipment is not a valid choice` when the
+ * ability sheet tried to validate items that should never have been abilities.
+ */
+const NON_ABILITY_KINDS = new Set(["kind.equipment"]);
+
+/** Does this entry bind to an `ability` item? */
+export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
+
+/** Every [id, entry] pair across the content cookbooks that IS an ability. */
+export function* abilityEntries() {
+  for (const cb of data.content.values()) {
+    for (const [id, entry] of Object.entries(cb.entries)) {
+      if (isAbilityEntry(entry)) yield [id, entry];
+    }
+  }
+}
+
+/** Every definition id the shipped content-type cookbooks carry as an ability. */
+export const cookbookAbilityIds = () => [...abilityEntries()].map(([id]) => id);
+
+/* -------------------------------------------- */
+/*  Equipment                                   */
+/* -------------------------------------------- */
+
+/**
+ * The core item type an equipment entry becomes.
+ *
+ * Everything used to import as `item`, so a sword was a sack: no damage, no
+ * attack, and — because `equipped` lives only on `weapon` and `armor` — nothing
+ * the character could actually wield or wear. The register says which group an
+ * entry belongs to, so the type follows from data rather than from a name scan.
+ *
+ * `animal` is deliberately NOT here: a mule is a creature, not a thing, and it
+ * imports as an actor. See importEquipment.
+ */
+const EQUIPMENT_TYPE = Object.freeze({
+  weapon: "weapon",
+  armor: "armor",
+  shield: "armor", // the system models a shield as armour with type "shield"
+});
+
+/** The core item type for an entry, defaulting to plain inventory. */
+export const equipmentTypeOf = (entry) => EQUIPMENT_TYPE[entry?.meta?.group] ?? "item";
+
+/**
+ * Bind an equipment entry to the core item it should become. Mirrors
+ * bindAbility's posture: the cookbook pre-declares NOTHING the page says —
+ * name + citation always; the descriptor text stays lazy behind @PdfText;
+ * cost and weight materialize only when a chef-authored locator lands on the
+ * register row (none ship yet, so they default to core's 0 and the printed
+ * table governs — the entry says so via its unaudited marker).
+ *
+ * The TYPE-SPECIFIC fields follow the same rule. A weapon's damage and an
+ * armour's AC are page values: absent a locator that read them from the seat's
+ * own book, the item is created with the system's defaults and the printed
+ * table governs. What the type buys even with nothing extracted is the
+ * behaviour — a weapon can be equipped, attacks, and takes a fighting style;
+ * armour can be worn and counts toward AC — which an `item` never could.
+ */
+export function bindEquipment(entry, node, id) {
+  const cite = entry.cite ?? "";
+  const meta = entry.meta ?? {};
+  const f = node?.fields ?? {};
+  let type = equipmentTypeOf(entry);
+
+  // EQUIPMENT ROOT (acks-equipment, optional). "Equipment is just a special
+  // class of item; they should share a root" (user, 2026-07-24) — acks-equipment
+  // owns that root: it classifies a name into the core type + stats it should
+  // carry. So a torch (a 1d4 light-weapon) and a flask of military oil / holy
+  // water (thrown splash flasks) — dual-nature gear the register files under
+  // adventuring equipment — import as WEAPONS, while a lantern/candle stay
+  // light-bearing items. The RULES live once in acks-equipment, never baked
+  // here; absent the module, the register's own type stands.
+  const klass = globalThis.acksExtras?.equipment?.equipmentClass?.(entry.name) ?? null;
+  if (klass?.type) type = klass.type;
+
+  // Fields that exist only on the chosen type. `item` keeps subtype/quantity;
+  // weapon and armor have neither and would fail validation if handed them.
+  const typed = {};
+  if (type === "item") {
+    typed.subtype = meta.subtype === "clothing" ? "clothing" : "item";
+    typed.quantity = { value: 1, max: 0 };
+  } else if (type === "weapon") {
+    // Prefer a page-extracted value; fall back to the equipment root's RAW stat
+    // for gear the weapons table never listed (a torch's 1d4 is a rule, not a
+    // table cell). melee/missile likewise.
+    const damage = f.damage ?? (klass?.damage || undefined);
+    if (damage) typed.damage = damage;
+    if (Number.isFinite(f.bonus)) typed.bonus = f.bonus;
+    const melee = typeof f.melee === "boolean" ? f.melee : klass?.melee;
+    const missile = typeof f.missile === "boolean" ? f.missile : klass?.missile;
+    if (typeof melee === "boolean") typed.melee = melee;
+    if (typeof missile === "boolean") typed.missile = missile;
+    if (f.range) typed.range = f.range;
+    // NB: a weapon-torch is a SINGLE wielded torch — core weapons carry no
+    // `quantity` field, so it cannot be a stack. It is "consumable" only in that
+    // it burns out on its timer (acks-formation). A supply of torches is a
+    // stackable `item`, which keeps its quantity and decrements when lit.
+  } else if (type === "armor") {
+    if (Number.isFinite(f.aac)) typed.aac = { value: f.aac };
+    // The system's armour `type` choices are unarmored/veryLight/light/medium/
+    // heavy/shield. A shield entry is that type by definition; anything else
+    // waits for the page to say so rather than being guessed from its weight.
+    if (meta.group === "shield") typed.type = "shield";
+    else if (f.armorType) typed.type = f.armorType;
+  }
+
+  return {
+    name: entry.name,
+    type,
+    img: abilityIcon(entry),
+    system: {
+      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      ...typed,
+      // Page values — present only when a locator materialized them from the
+      // seat's own book. Absent locators leave core's defaults.
+      ...(Number.isFinite(f.cost) ? { cost: f.cost } : {}),
+      ...(Number.isFinite(f.weight6) ? { weight6: f.weight6 } : {}),
+    },
+    flags: {
+      // Our own provenance. Stays under this module's id: it is bookkeeping for
+      // re-import, update and prune, and nothing outside reads it except by
+      // name (extras resolves definition ids through `cookbook.id`, and flags
+      // of an uninstalled module persist, so that keeps working either way).
+      [MODULE_ID]: {
+        cookbook: { id, cite, unaudited: !entry.audited },
+        generated: true,
+      },
+      // The light marker belongs to acks-extras, not to us: its equipment
+      // feature writes the SAME marker in that scope when it readies a torch
+      // (equipment/actions.mjs), and its sheet and formation layers treat the
+      // item as a holdable light off it. Stamping ours under `acks-importer`
+      // would leave imported torches invisible to both. The rule of WHICH
+      // names are lights is the equipment root's; we only record the verdict.
+      ...(klass?.light ? { "acks-extras": { light: true } } : {}),
+    },
+  };
+}
+
+/**
+ * Bind an `animal` equipment entry to an ACTOR instead of an item.
+ *
+ * The RR equipment chapter prices ten animals because you buy them in a shop,
+ * but a war dog is a creature: it fights, it can be attacked, it has morale,
+ * and it can be ridden. Imported as inventory it was none of those — the system
+ * had it filed next to the rope.
+ *
+ * Requires acks-lib, which supplies the `acks-lib.animal` sub-type. Without it
+ * there is nowhere for a creature to go, so the entry stays an item rather than
+ * failing the import; the caller decides.
+ */
+export function bindAnimal(entry, node, id) {
+  const cite = entry.cite ?? "";
+  const f = node?.fields ?? {};
+  return {
+    name: entry.name,
+    type: globalThis.acksExtras?.lib?.ANIMAL_TYPE ?? "acks-extras.animal",
+    img: abilityIcon(entry),
+    system: {
+      // ONE details object. Spreading a second `details` later would replace
+      // this one wholesale and silently drop the citation.
+      details: {
+        biography: `<p>@PdfText[${id}]{${cite}}</p>`,
+        ...(Number.isFinite(f.morale) ? { morale: f.morale } : {}),
+      },
+      animal: {
+        species: entry.name,
+        // Everything below is a PAGE VALUE: present only if the seat's book
+        // supplied it. Nothing about an animal's price, load or speed ships.
+        ...(Number.isFinite(f.cost) ? { cost: f.cost } : {}),
+        ...(Number.isFinite(f.capacity6) ? { capacity6: f.capacity6 } : {}),
+        ...(Number.isFinite(f.unencumbered6) ? { unencumbered6: f.unencumbered6 } : {}),
+        ...(typeof f.mountable === "boolean" ? { mountable: f.mountable } : {}),
+        ...(f.training ? { training: f.training } : {}),
+      },
+      ...(Number.isFinite(f.movement) ? { movement: { base: f.movement } } : {}),
+    },
+    flags: {
+      [MODULE_ID]: {
+        cookbook: { id, cite, unaudited: !entry.audited },
+        generated: true,
+      },
+    },
+  };
+}
+
+/**
+ * Can this seat file animals as creatures? acks-lib supplies the
+ * `acks-lib.animal` actor sub-type; without it there is nowhere for one to go.
+ */
+const canImportAnimals = () => !!globalThis.acksExtras?.lib?.ANIMAL_TYPE && !!game.actors;
+
+/** Does this entry describe a creature rather than a thing? */
+const isAnimalEntry = (entry) => entry?.meta?.group === "animal";
+
+/**
+ * Import one equipment entry, deduped by cookbook id.
+ *
+ * Most entries become world ITEMS. An animal becomes an ACTOR — a mule is a
+ * creature you buy, not a thing you carry — provided acks-lib is present to
+ * supply the sub-type. Without it the animal falls back to an item rather than
+ * failing the import, because a bookless, lib-less seat should still get the
+ * shop list.
+ *
+ * Bookless seats still get the document — name, icon, citation stub — the same
+ * bring-your-own-book posture as abilities.
+ */
+export async function importEquipment(id, folderId) {
+  const found = cookbookEntry(id);
+  if (!found) return null;
+
+  const asActor = isAnimalEntry(found.entry) && canImportAnimals();
+  const collection = asActor ? game.actors : game.items;
+  const existing = collection.find((d) => d.getFlag(MODULE_ID, "cookbook")?.id === id);
+  if (existing) return existing;
+
+  const bookId = bookOf(found);
+  const session = ctx.sessionDocs.get(bookId);
+  let node = null;
+  if (session) {
+    node = await executeEntry(session.doc, found.cb, data.registers, id);
+    if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+    else node = null;
+  }
+
+  if (asActor) {
+    // Same destination rule organize uses (actorFolderFor → the "Animals" home).
+    const folder = (await actorFolderFor(id, found))?.id ?? null;
+    return createDoc(Actor, { ...bindAnimal(found.entry, node, id), folder });
+  }
+
+  const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
+  const doc = bindEquipment(found.entry, node, id);
+  // Enrich gear/clothing with cost/weight from the RR price grids (p131/p132),
+  // materialized per-seat. A general category with several priced variants
+  // stays unpriced (priceFor returns null) rather than take a guessed variant.
+  if (["gear", "clothing"].includes(found.entry.meta?.group)) {
+    const priced = priceFor(await gearPriceMap(), found.entry.name);
+    if (priced?.cost != null) doc.system.cost = priced.cost;
+    if (priced?.weight6 != null) doc.system.weight6 = priced.weight6;
+  }
+  const item = await createDoc(Item, { ...doc, folder });
+  // acks-equipment owns the RAW annotation layer (container capacities, the
+  // harness, the bowquiver). Its profiles key off the printed name, so a
+  // generated item annotates exactly like a core one. Reuse, never restate.
+  try {
+    await globalThis.acksExtras?.equipment?.annotateItem?.(item);
+  } catch (err) {
+    console.warn(`${MODULE_ID} | equipment annotation skipped for ${item?.name}`, err);
+  }
+  return item;
+}
+
+/** All equipment ids in the shipped cookbook (empty when none compiled). */
+export const cookbookEquipmentIds = () =>
+  [...data.content.values()]
+    .flatMap((cb) => Object.entries(cb.entries))
+    .filter(([, e]) => e.kind === "kind.equipment")
+    .map(([id]) => id);
+
+/**
+ * Remove `ability` items mis-created from equipment entries.
+ *
+ * v0.26.0 let equipment ids into the ability import, so a world that ran
+ * "Import ALL Abilities" holds ability-typed documents for gear. They are
+ * generated artifacts with an invalid category, they fail validation on every
+ * sheet render, and an item's type cannot be changed in place — so they are
+ * deleted and re-created properly by the equipment import. Only OUR generated
+ * documents are touched; a hand-made item is never deleted.
+ * @returns {Promise<number>} how many were removed
+ */
+export async function repairEquipmentAbilities() {
+  const wrong = game.items.filter(
+    (i) =>
+      i.type === "ability" &&
+      i.getFlag(MODULE_ID, "generated") &&
+      String(i.getFlag(MODULE_ID, "cookbook")?.id ?? "").startsWith("def.equip."),
+  );
+  if (!wrong.length) return 0;
+  await Item.deleteDocuments(wrong.map((i) => i.id));
+  console.warn(`${MODULE_ID} | removed ${wrong.length} equipment entr(ies) mis-imported as abilities (v0.26.0 defect).`);
+  return wrong.length;
+}
+
+/**
+ * Remove `item`-typed documents that should now be ANIMAL ACTORS.
+ *
+ * Before animals imported as actors, the ten priced animals became inventory
+ * items — a war dog filed next to the rope. A world that ran the old import
+ * holds those, and an item's type cannot be changed in place, so they are
+ * deleted here and re-created as actors by the equipment import. Exactly the
+ * repairEquipmentAbilities pattern: only OUR generated documents are touched
+ * (the `generated` flag + a `def.equip.` cookbook id whose entry is an animal),
+ * so a hand-made "War Dog" item a table wrote themselves is never deleted.
+ *
+ * A no-op when acks-lib is absent — without the animal sub-type the items are
+ * still the best available representation, so removing them would delete data
+ * with nothing to replace it.
+ *
+ * @returns {Promise<number>} how many were removed
+ */
+export async function repairAnimalItems() {
+  if (!canImportAnimals()) return 0;
+  const animalIds = new Set(
+    [...data.content.values()]
+      .flatMap((cb) => Object.entries(cb.entries))
+      .filter(([, e]) => e.kind === "kind.equipment" && e.meta?.group === "animal")
+      .map(([id]) => id),
+  );
+  const wrong = game.items.filter(
+    (i) => i.getFlag(MODULE_ID, "generated") && animalIds.has(i.getFlag(MODULE_ID, "cookbook")?.id),
+  );
+  if (!wrong.length) return 0;
+  await Item.deleteDocuments(wrong.map((i) => i.id));
+  console.warn(`${MODULE_ID} | removed ${wrong.length} animal(s) mis-imported as items; re-import to recreate them as actors.`);
+  return wrong.length;
+}
+
+/** Bulk import: every equipment entry, shared folder, dedup via importEquipment. */
+export async function importAllEquipment() {
+  const repaired = await repairEquipmentAbilities();
+  // A world imported by an earlier version holds animals as items; drop them so
+  // the loop below recreates them as actors (no-op without acks-lib).
+  const repairedAnimals = await repairAnimalItems();
+  const ids = cookbookEquipmentIds();
+  const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressEquipment`), ids.length);
+  let created = 0;
+  let animals = 0;
+  try {
+    await prepareItemShelves();
+    const folder = null; // per-id shelf
+    for (const id of ids) {
+      const entry = cookbookEntry(id)?.entry;
+      // An animal lands in the ACTOR collection, so "was it already here?" has
+      // to be asked of the collection it actually goes to — asked of items, an
+      // imported animal looks new on every run and the count lies.
+      const asActor = isAnimalEntry(entry) && canImportAnimals();
+      const collection = asActor ? game.actors : game.items;
+      const before = collection.find((d) => d.getFlag(MODULE_ID, "cookbook")?.id === id);
+
+      const doc = await importEquipment(id, folder);
+      if (doc && !before) {
+        created++;
+        if (asActor) animals++;
+      }
+      bar.step(entry?.name ?? id);
+    }
+  } finally {
+    bar.finish();
+  }
+  const weapons = await importWeapons();
+  const armor = await importArmor();
+  return { total: ids.length, created, animals, repaired, repairedAnimals, weapons, armor };
+}
+
+/* -------------------------------------------- */
+/*  Weapon / armour TABLES → items (per-seat)   */
+/* -------------------------------------------- */
+
+/** camelCase cookbook id for a table-materialized weapon. */
+const weaponId = (name) => `def.weapon.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
+
+/**
+ * Materialize the RR weapons TABLE into `weapon` items from the reader's own
+ * book — the clean-break pipeline (see weapon-tables.mjs). Unlike the run-in
+ * gear cookbook, a grid has no lazy prose to reveal, so a bookless seat gets
+ * nothing here. Deduped by cookbook id; each item carries its full set of
+ * attack/damage modes (weapon-tables `damageModes`), which the core compendium
+ * could not express and split into separate items instead.
+ * @returns {Promise<{table:number, created:number}>}
+ */
+export async function importWeapons(folderId) {
+  const session = ctx.sessionDocs.get(WEAPON_TABLE.book);
+  if (!session?.doc) return { table: 0, created: 0, reason: "book not connected" };
+  let rows;
+  try {
+    rows = await extractWeaponsFromDoc(session.doc, pageItems);
+  } catch (err) {
+    console.error(`${MODULE_ID} | weapon-table extraction failed`, err);
+    return { table: 0, created: 0, reason: "extraction error" };
+  }
+  if (!rows.length) return { table: 0, created: 0, reason: "table not found in book" };
+  const folder = folderId ?? (await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.weapon"]]))?.id ?? null;
+  let created = 0;
+  for (const row of rows) {
+    const id = weaponId(row.name);
+    if (await importedItem(id)) continue;
+    const cite = `${BOOKS[WEAPON_TABLE.book]?.short ?? "RR"} p. ${WEAPON_TABLE.page}`;
+    rememberImported(id, await createDoc(Item, { ...bindWeaponRow(row, id, cite), folder }));
+    created++;
+  }
+  return { table: rows.length, created };
+}
+
+/** camelCase cookbook id for a table-materialized armour item. */
+const armorId = (name) => `def.armor.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
+
+/** The RR gear/clothing price map, built once per session from the reader's book. */
+let _priceMap = null;
+async function gearPriceMap() {
+  if (_priceMap && _priceMap.size) return _priceMap;
+  const session = ctx.sessionDocs.get(WEAPON_TABLE.book);
+  if (!session?.doc) return new Map(); // bookless: gear stays unpriced
+  try {
+    _priceMap = await extractPriceMapFromDoc(session.doc, pageItems);
+  } catch (err) {
+    console.error(`${MODULE_ID} | gear price extraction failed`, err);
+    _priceMap = new Map();
+  }
+  return _priceMap;
+}
+
+/**
+ * Materialize the RR armour TABLE (suits, shields, helmets, barding) into
+ * `armor` items from the reader's own book — the sibling of importWeapons.
+ * AC, encumbrance and cost come from the seat's page; a bookless seat gets
+ * nothing (a grid has no lazy prose). Deduped by cookbook id, into ACKS
+ * Cookbook / Armor.
+ * @returns {Promise<{table:number, created:number}>}
+ */
+export async function importArmor(folderId) {
+  const session = ctx.sessionDocs.get(ARMOR_TABLE.book);
+  if (!session?.doc) return { table: 0, created: 0, reason: "book not connected" };
+  let rows;
+  try {
+    rows = await extractArmorFromDoc(session.doc, pageItems);
+  } catch (err) {
+    console.error(`${MODULE_ID} | armour-table extraction failed`, err);
+    return { table: 0, created: 0, reason: "extraction error" };
+  }
+  if (!rows.length) return { table: 0, created: 0, reason: "table not found in book" };
+  const folder = folderId ?? (await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.armor"]]))?.id ?? null;
+  let created = 0;
+  for (const row of rows) {
+    const id = armorId(row.name);
+    if (await importedItem(id)) continue;
+    const cite = `${BOOKS[ARMOR_TABLE.book]?.short ?? "RR"} p. ${ARMOR_TABLE.page}`;
+    rememberImported(id, await createDoc(Item, { ...bindArmorRow(row, id, cite), folder }));
+    created++;
+  }
+  return { table: rows.length, created };
+}
+
+/* -------------------------------------------- */
+/*  Companions                                  */
+/* -------------------------------------------- */
+
+/**
+ * Fill a companion effect's actor slot. `ref` names the monster entry the
+ * ability confers — a pointer the recipe can ship because it is not the book's
+ * text. When that book is connected we import the creature and link it; when it
+ * is not, the slot stays EMPTY on purpose so a GM can drop an actor in, or so
+ * `cookbookFillCompanions()` can fill it once the book loads.
+ *
+ * Abilities whose creature is BUILT rather than named (a totem animal, a
+ * familiar chosen from a list) carry no `ref` at all and keep an empty slot for
+ * good — there is no single entry to point at.
+ */
+async function resolveCompanion(effect) {
+  if (effect?.type !== "companion" || effect.actorUuid || !effect.ref) return effect;
+  const found = cookbookEntry(effect.ref);
+  if (!found) return effect;
+  const existing = game.actors.find((a) => a.getFlag(MODULE_ID, "cookbook")?.id === effect.ref);
+  if (existing) return { ...effect, actorUuid: existing.uuid };
+  const bookId = bookOf(found);
+  if (!ctx.sessionDocs.has(bookId)) return effect; // bookless: leave the bucket
+  const actor = await importOne(bookId, effect.ref, (await ensureFolder())?.id ?? null).catch((err) => {
+    console.error(`${MODULE_ID} | companion ${effect.ref}`, err);
+    return null;
+  });
+  return actor ? { ...effect, actorUuid: actor.uuid } : effect;
+}
+
+/** Resolve every companion slot in an effects array, in order (creates actors). */
+async function resolveCompanions(effects) {
+  if (!effects?.some((e) => e?.type === "companion" && !e.actorUuid && e.ref)) return effects;
+  const out = [];
+  for (const e of effects) out.push(await resolveCompanion(e));
+  return out;
+}
+
+/**
+ * Fill companion slots left empty because the citing book was not connected.
+ * Safe to re-run: a slot already holding an actor is never touched.
+ */
+export async function cookbookFillCompanions() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  let filled = 0;
+  // A slot that resolves IMPORTS the creature from the seat's book, so this is
+  // an actor import wearing a different name — same page extraction, same wait.
+  const all = await allAbilities();
+  const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressCompanions`), all.length);
+  try {
+    for (const { doc, extras } of all) {
+      bar.step(doc.name);
+      const effects = await resolveCompanions(extras.effects);
+      if (effects === extras.effects) continue;
+      await doc.update({ [`flags.acks-extras.extras.effects`]: effects });
+      filled += effects.filter((e, i) => e.actorUuid && !extras.effects[i]?.actorUuid).length;
+    }
+  } finally {
+    bar.finish();
+  }
+  ui.notifications.info(`acks-content | companions: ${filled} slot(s) linked to an actor.`);
+  return filled;
+}
+
+/* -------------------------------------------- */
+/*  Bulk import / update                        */
+/* -------------------------------------------- */
+
+/**
+ * Every ability item the library holds — loose in the import target (world or
+ * compendium) and on actors alike.
+ *
+ * Async because the compendium form has to be loaded; it used to walk
+ * `game.items` only, so on a compendium-mode world Update walked an empty
+ * library and reported that it had nothing to do.
+ */
+async function allAbilities() {
+  const extrasOf = (doc) => doc.getFlag("acks-extras", "extras") ?? {};
+  const out = [];
+  const pack = await packFor("Item");
+  const collection = pack ? game.packs.get(pack) : null;
+  const loose = collection ? await collection.getDocuments() : [...game.items];
+  for (const item of loose) {
+    if (item.type === "ability") out.push({ doc: item, extras: extrasOf(item), on: null });
+  }
+  for (const actor of game.actors) {
+    for (const item of actor.items) {
+      if (item.type === "ability") out.push({ doc: item, extras: extrasOf(item), on: actor });
+    }
+  }
+  return out;
+}
+
+/** Names vary by punctuation and case between sources, so match folded. */
+const nameKey = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/**
+ * Resolve an item name to a definition id. Tries the name as printed, then
+ * again with a trailing throw value stripped: a stat block writes its
+ * proficiencies as "climbing 6+", which is the same proficiency as "Climbing"
+ * with its target number attached. Without this, every monster-embedded
+ * proficiency fails to match and never gets adopted.
+ */
+function idForName(index, name, present) {
+  let ids = index.get(nameKey(name));
+  if (!ids) {
+    const bare = String(name ?? "").replace(/\s*\d+\s*\+?\s*$/, "");
+    ids = bare && bare !== name ? index.get(nameKey(bare)) : undefined;
+  }
+  if (!ids?.length) return null;
+  return preferredId(ids, present);
+}
+
+/**
+ * Folded name -> every definition id printing that name.
+ *
+ * The books reuse names across categories: 14 of them, "Alertness" and
+ * "Climbing" among them, are both a proficiency and a class power. A name is
+ * therefore only a guess at identity, and the index keeps ALL the candidates so
+ * the caller can choose deliberately instead of silently taking the first.
+ */
+function abilityNameIndex() {
+  const index = new Map();
+  const add = (name, id) => {
+    const key = nameKey(name);
+    if (!key) return;
+    const list = index.get(key) ?? index.set(key, []).get(key);
+    if (!list.includes(id)) list.push(id);
+  };
+  for (const [id, e] of abilityEntries()) {
+    add(e.name, id);
+    for (const a of e.aliases ?? []) add(a, id);
+  }
+  return index;
+}
+
+/**
+ * Definition id -> the item already standing for it.
+ *
+ * Doubles as the "which definitions does this world hold" signal that settles a
+ * name collision without guessing. First one wins: duplicates are a world the
+ * GM built by hand, and picking the earliest is at least stable across runs.
+ *
+ * SYNCHRONOUS, so it can only see a compendium library through the warm
+ * `importedIndex()` cache — `bindMonster` is sync and calls this, and making it
+ * async would thread a promise through the whole monster bind. Async callers
+ * should `await importedIndex()` (below) instead; this form falls back to the
+ * world so a cold session still resolves whatever is loose there.
+ */
+function loadedAbilityIndex() {
+  if (importedCache) return importedCache;
+  const byId = new Map();
+  for (const item of game.items) {
+    const id = item.getFlag(MODULE_ID, "cookbook")?.id;
+    if (id && !byId.has(id)) byId.set(id, item);
+  }
+  return byId;
+}
+
+/**
+ * Pick among same-named definitions.
+ *
+ * A collision stops being a guess when only ONE of the candidates is actually
+ * available — a world that imported the proficiency list but not the powers has
+ * already answered the question. So candidates present in the world win outright,
+ * and only when that leaves the choice open (none present, or several) does the
+ * category preference apply: a stat block's proficiency list and a hand-made
+ * ability both far more often mean the PROFICIENCY than the same-named class
+ * power. `ambiguous` reports whether a real guess was made.
+ */
+const CATEGORY_RANK = ["def.prof.", "def.skill.", "def.power.", "def.drawback."];
+const byCategory = (ids) =>
+  [...ids].sort((a, b) => {
+    const r = (x) => {
+      const i = CATEGORY_RANK.findIndex((p) => x.startsWith(p));
+      return i === -1 ? CATEGORY_RANK.length : i;
+    };
+    return r(a) - r(b);
+  })[0];
+
+function preferredId(ids, present) {
+  if (ids.length === 1) return { id: ids[0], ambiguous: false };
+  const here = ids.filter((id) => present.has(id));
+  if (here.length === 1) return { id: here[0], ambiguous: false };
+  return { id: byCategory(here.length ? here : ids), ambiguous: true };
+}
+
+/**
+ * GM: browse every shipped ability and pick which to import.
+ *
+ * The counterpart to the monster import dialog. Works WITHOUT a connected book
+ * — an ability always imports with its name, classification and lazy descriptor
+ * — but the header says whether the citing book is open, because that is the
+ * difference between importing structure and importing structure + mechanics.
+ */
+export async function cookbookImportAbilitiesDialog() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates items).");
+  const rows = [];
+  for (const [id, e] of abilityEntries()) {
+    rows.push({ id, name: e.name, cite: e.cite, book: e.book, category: e.meta?.category ?? "proficiency", alias: !!e.aliasOf, deprecated: !!e.meta?.deprecated });
+  }
+  if (!rows.length) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+  rows.sort((a, b) => a.name.localeCompare(b.name));
+
+  const esc = foundry.utils.escapeHTML ?? ((x) => x);
+  const have = new Set(game.items.filter((i) => i.getFlag(MODULE_ID, "cookbook")?.id).map((i) => i.getFlag(MODULE_ID, "cookbook").id));
+  const openBooks = [...new Set(rows.map((r) => r.book))].filter((b) => ctx.sessionDocs.has(b));
+  const cats = [...new Set(rows.map((r) => r.category))].sort();
+
+  const list = rows
+    .map((r) => {
+      const marks = [
+        r.alias ? `<i class="fa-solid fa-link" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.abilAlias`))}"></i>` : "",
+        r.deprecated ? `<i class="fa-solid fa-triangle-exclamation" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.abilDeprecated`))}"></i>` : "",
+        have.has(r.id) ? `<i class="fa-solid fa-check" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.abilPresent`))}"></i>` : "",
+      ].join("");
+      return `<label class="acks-content-browse-row" data-name="${esc(r.name.toLowerCase())}" data-cat="${esc(r.category)}" data-have="${have.has(r.id) ? 1 : 0}">
+        <input type="checkbox" name="sel" value="${esc(r.id)}">
+        <span>${esc(r.name)}</span><span class="acks-content-marks">${marks}</span>
+        <span class="acks-content-cite">${esc(r.cite)}</span>
+      </label>`;
+    })
+    .join("");
+
+  const catOptions = cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  const content = `
+    <p class="notes">${game.i18n.format(`${LANG_PREFIX}.ui.abilIntro`, {
+      n: rows.length,
+      books: openBooks.length ? openBooks.map((b) => BOOKS[b].short).join(", ") : game.i18n.localize(`${LANG_PREFIX}.ui.abilNoBook`),
+    })}</p>
+    <div class="acks-content-abil-filters">
+      <input type="text" name="filter" placeholder="${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookFilter`)}">
+      <select name="cat"><option value="">${game.i18n.localize(`${LANG_PREFIX}.ui.abilAllCats`)}</option>${catOptions}</select>
+      <label><input type="checkbox" name="hideHave"> ${game.i18n.localize(`${LANG_PREFIX}.ui.abilHidePresent`)}</label>
+    </div>
+    <div class="acks-content-abil-actions">
+      <button type="button" data-act="all">${game.i18n.localize(`${LANG_PREFIX}.ui.abilSelectShown`)}</button>
+      <button type="button" data-act="none">${game.i18n.localize(`${LANG_PREFIX}.ui.abilClear`)}</button>
+      <span class="acks-content-abil-count"></span>
+    </div>
+    <div class="acks-content-browse-list acks-content-abil-list">${list}</div>`;
+
+  return foundry.applications.api.DialogV2.prompt({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.abilTitle`), resizable: true },
+    position: { width: 620, height: 700 },
+    content,
+    render: (event, dialog) => {
+      const root = dialog.element ?? dialog;
+      const listEl = root.querySelector(".acks-content-abil-list");
+      const count = root.querySelector(".acks-content-abil-count");
+      const shown = () => [...listEl.querySelectorAll(".acks-content-browse-row")].filter((r) => r.style.display !== "none");
+      const refresh = () => {
+        const q = root.querySelector('[name="filter"]').value.toLowerCase();
+        const cat = root.querySelector('[name="cat"]').value;
+        const hide = root.querySelector('[name="hideHave"]').checked;
+        for (const r of listEl.querySelectorAll(".acks-content-browse-row")) {
+          const ok = r.dataset.name.includes(q) && (!cat || r.dataset.cat === cat) && (!hide || r.dataset.have === "0");
+          r.style.display = ok ? "" : "none";
+          if (!ok) r.querySelector('input[name="sel"]').checked = false;
+        }
+        tally();
+      };
+      const tally = () => {
+        const n = listEl.querySelectorAll('input[name="sel"]:checked').length;
+        count.textContent = game.i18n.format(`${LANG_PREFIX}.ui.abilCount`, { n, shown: shown().length });
+      };
+      for (const sel of ['[name="filter"]', '[name="cat"]', '[name="hideHave"]']) {
+        root.querySelector(sel).addEventListener("input", refresh);
+      }
+      listEl.addEventListener("change", tally);
+      root.querySelector('[data-act="all"]').addEventListener("click", () => {
+        for (const r of shown()) r.querySelector('input[name="sel"]').checked = true;
+        tally();
+      });
+      root.querySelector('[data-act="none"]').addEventListener("click", () => {
+        for (const r of listEl.querySelectorAll('input[name="sel"]')) r.checked = false;
+        tally();
+      });
+      tally();
+    },
+    ok: {
+      label: game.i18n.localize(`${LANG_PREFIX}.ui.abilGo`),
+      callback: async (event, button) => {
+        const picked = [...button.form.querySelectorAll('input[name="sel"]:checked')].map((el) => el.value);
+        if (!picked.length) return ui.notifications.warn("acks-content | nothing selected.");
+        const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressAbilities`), picked.length);
+        let done = 0;
+        try {
+          await prepareItemShelves();
+          const folder = null; // per-id shelf
+          for (const id of picked) {
+            if (await importAbility(id, folder).catch((err) => (console.error(`${MODULE_ID} | import ${id}`, err), null))) done++;
+            bar.step(cookbookEntry(id)?.entry?.name ?? id);
+          }
+        } finally {
+          bar.finish();
+        }
+        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.abilDone`, { done, picked: picked.length, folder: FOLDER_NAME }));
+      },
+    },
+  });
+}
+
+/** GM: import every shipped ability as a shared, deduped item. */
+export async function cookbookImportAbilities() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  const ids = cookbookAbilityIds();
+  if (!ids.length) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+  const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressAbilities`), ids.length);
+  let made = 0;
+  let reused = 0;
+  try {
+    await prepareItemShelves();
+    const folder = null; // per-id shelf
+    for (const id of ids) {
+      if (await importedItem(id)) reused++;
+      else made++;
+      await importAbility(id, folder).catch((err) => console.error(`${MODULE_ID} | import ${id}`, err));
+      bar.step(cookbookEntry(id)?.entry?.name ?? id);
+    }
+  } finally {
+    bar.finish();
+  }
+  ui.notifications.info(`acks-content | abilities: ${made} imported, ${reused} already present.`);
+  return { made, reused };
+}
+
+/**
+ * GM: refresh every ability already in the world — loose items AND the copies
+ * embedded on actors — against the current cookbook.
+ *
+ * Matched by cookbook id first, then by folded NAME, so abilities made by hand
+ * or imported by an older version get adopted and repaired rather than
+ * duplicated. Only the generated surface is rewritten (the lazy descriptor, the
+ * structured extras, the cookbook id); the item's name and the system fields a
+ * GM may have tuned are left alone.
+ */
+export async function cookbookUpdateAbilities() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  const index = abilityNameIndex();
+  if (!index.size) return ui.notifications.warn("acks-content | no abilities in the shipped cookbook.");
+
+  // Which definitions the world already holds — the signal that resolves a
+  // name collision without guessing.
+  const present = new Set((await importedIndex()).keys());
+  const nodeCache = new Map();
+  let updated = 0;
+  let adopted = 0;
+  let onActors = 0;
+  let guessed = 0;
+  let skipped = 0;
+  // Counted first: this walks every ability in the world, actors included, and
+  // re-extracts each definition it has not seen — hundreds of items on a world
+  // that imported the whole corpus.
+  const all = await allAbilities();
+  const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressUpdate`), all.length);
+  try {
+    for (const { doc, extras, on } of all) {
+      bar.step(doc.name);
+      const flagged = doc.getFlag(MODULE_ID, "cookbook")?.id;
+      const guess = flagged ? null : idForName(index, doc.name, present);
+      const id = flagged ?? guess?.id;
+      if (!id || !cookbookEntry(id)) {
+        skipped++;
+        continue;
+      }
+      if (guess?.ambiguous) {
+        guessed++;
+        console.warn(`${MODULE_ID} | "${doc.name}" matches several definitions; adopted ${id}.`);
+      }
+      const found = cookbookEntry(id);
+      // Re-extract once per definition, not once per copy of it.
+      if (!nodeCache.has(id)) {
+        const session = ctx.sessionDocs.get(bookOf(found));
+        let node = null;
+        if (session) {
+          node = await executeEntry(session.doc, found.cb, data.registers, id).catch(() => null);
+          if (node?.ok) cookbookCacheParas(bookOf(found), id, node.fields.description ?? []);
+          else node = null;
+        }
+        nodeCache.set(id, node);
+      }
+      const built = bindAbility(found.entry, nodeCache.get(id), id, {
+        // A copy that recorded arriving under an older name keeps saying so.
+        ...(extras.conversionStatus ? { conversionStatus: extras.conversionStatus } : {}),
+        ...(extras.conversionFrom ? { conversionFrom: extras.conversionFrom } : {}),
+      });
+      built.flags["acks-extras"].extras.effects = await resolveCompanions(built.flags["acks-extras"].extras.effects);
+      await doc.update({
+        "system.description": built.system.description,
+        [`flags.${MODULE_ID}.cookbook`]: built.flags[MODULE_ID].cookbook,
+        "flags.acks-extras.extras": built.flags["acks-extras"].extras,
+      });
+      updated++;
+      if (!flagged) adopted++;
+      if (on) onActors++;
+    }
+  } finally {
+    bar.finish();
+  }
+  const stale = danglingAbilities().length;
+  ui.notifications.info(
+    `acks-content | abilities updated: ${updated} (${onActors} on actors, ${adopted} matched by name` +
+      `${guessed ? `, ${guessed} of them ambiguous — see console` : ""}), ${skipped} not in the cookbook` +
+      `${stale ? `; ${stale} left over from a withdrawn definition — run Prune` : ""}.`,
+  );
+  return { updated, adopted, onActors, guessed, skipped, stale };
+}
+
+/**
+ * Ability items this module generated whose definition no longer exists.
+ *
+ * A definition can be withdrawn — ten were, once it turned out the harvest had
+ * read the tail of a spaceless heading as an ability of its own. The items it
+ * already created stay behind in every world that imported them, pointing at
+ * nothing. They are unambiguously ours (generated, with a cookbook id that no
+ * longer resolves), which is what makes them safe to offer for removal.
+ */
+export function danglingAbilities() {
+  const out = [];
+  for (const item of game.items) {
+    if (item.type !== "ability") continue;
+    const flags = item.getFlag(MODULE_ID, "cookbook");
+    if (!flags?.id || !item.getFlag(MODULE_ID, "generated")) continue;
+    if (!cookbookEntry(flags.id)) out.push(item);
+  }
+  return out;
+}
+
+/**
+ * GM: remove those items, after showing exactly what will go. Never silent —
+ * deleting documents out of someone's world on a version bump is not a thing to
+ * do quietly, even when they are certainly stale.
+ */
+export async function cookbookPruneAbilities() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  const stale = danglingAbilities();
+  if (!stale.length) return ui.notifications.info(game.i18n.localize(`${LANG_PREFIX}.ui.pruneNone`));
+  const esc = foundry.utils.escapeHTML ?? ((x) => x);
+  const rows = stale
+    .map((i) => `<li>${esc(i.name)} <code>${esc(i.getFlag(MODULE_ID, "cookbook").id)}</code></li>`)
+    .join("");
+  const ok = await foundry.applications.api.DialogV2.confirm({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.pruneTitle`) },
+    content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.prunePrompt`, { n: stale.length })}</p>
+      <ul class="acks-content-browse-list" style="max-height:280px;overflow-y:auto;">${rows}</ul>`,
+  });
+  if (!ok) return null;
+  await Item.deleteDocuments(stale.map((i) => i.id));
+  ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.pruneDone`, { n: stale.length }));
+  return stale.length;
+}
+
+/**
+ * GM-only Import All / Update All buttons at the top of the Item directory.
+ *
+ * Both are idempotent, which is what makes them safe to hand a GM: importing
+ * twice reuses the existing items rather than duplicating them, and updating
+ * only rewrites the generated surface. Buttons disable while running — these
+ * touch every ability in the world and a double-click would interleave.
+ */
+export function registerAbilityDirectoryButtons() {
+  Hooks.on("renderItemDirectory", (app, element) => {
+    if (!game.user.isGM) return;
+    const root = element instanceof HTMLElement ? element : element?.[0];
+    if (!root || root.querySelector(".acks-content-ability-tools")) return;
+
+    const bar = document.createElement("div");
+    bar.className = "acks-content-ability-tools";
+    const button = (labelKey, tipKey, icon, run) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = `<i class="${icon}"></i> ${game.i18n.localize(`${LANG_PREFIX}.ui.${labelKey}`)}`;
+      b.dataset.tooltip = game.i18n.localize(`${LANG_PREFIX}.ui.${tipKey}`);
+      b.addEventListener("click", async () => {
+        for (const x of bar.querySelectorAll("button")) x.disabled = true;
+        try {
+          await run();
+        } catch (err) {
+          console.error(`${MODULE_ID} | ability tools`, err);
+          ui.notifications.error(`acks-content | ${err.message}`);
+        } finally {
+          for (const x of bar.querySelectorAll("button")) x.disabled = false;
+        }
+      });
+      return b;
+    };
+    bar.append(
+      button("browseAbilities", "browseAbilitiesTip", "fa-solid fa-list-check", cookbookImportAbilitiesDialog),
+      button("importAllAbilities", "importAllAbilitiesTip", "fa-solid fa-download", cookbookImportAbilities),
+      button("updateAllAbilities", "updateAllAbilitiesTip", "fa-solid fa-rotate", cookbookUpdateAbilities),
+      button("pruneAbilities", "pruneAbilitiesTip", "fa-solid fa-broom", cookbookPruneAbilities),
+    );
+    (root.querySelector(".directory-header") ?? root).prepend(bar);
+  });
+  // The sidebar renders before this module's `ready` runs, so the hook above
+  // misses that first pass — re-render once to catch it.
+  if (ui.items?.rendered) ui.items.render();
+}
+
+/* -------------------------------------------- */
+/*  Debug window: raw executor output           */
+/* -------------------------------------------- */
+
+/**
+ * GM inspection popout: execute one cookbook entry against the connected book
+ * and show the RAW extract JSON next to nothing — exactly what the binder
+ * receives. Ephemeral (session memory only), so binder errors can be traced to
+ * either the extraction (wrong here) or the binding (right here, wrong on the
+ * actor).
+ */
+export async function cookbookDebug(entryId) {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only.");
+  const esc = foundry.utils.escapeHTML ?? ((x) => x);
+
+  if (!entryId) {
+    const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+    if (!openBooks.length) return ui.notifications.warn("acks-content | connect a cookbook book first (PoC 2 / unlock).");
+    // Every connected book, grouped — debugging one book while three are open
+    // should not mean reconnecting.
+    const rows = openBooks
+      .map((bookId) => {
+        const opts = Object.entries(data.books.get(bookId).entries)
+          .sort((a, b) => a[1].pages[0] - b[1].pages[0])
+          .map(([id, e]) => `<option value="${esc(id)}">${esc(e.name)} — ${esc(e.cite)}</option>`)
+          .join("");
+        return `<optgroup label="${esc(BOOKS[bookId]?.label ?? bookId)}">${opts}</optgroup>`;
+      })
+      .join("");
+    return foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`) },
+      content: `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.debugPick`)}</label>
+        <select name="entry">${rows}</select></div>`,
+      ok: {
+        label: game.i18n.localize(`${LANG_PREFIX}.ui.debugGo`),
+        callback: (event, button) => cookbookDebug(button.form.elements.entry.value),
+      },
+    });
+  }
+
+  const found = cookbookEntry(entryId);
+  if (!found) return ui.notifications.warn(`acks-content | unknown cookbook id "${entryId}".`);
+  const session = ctx.sessionDocs.get(found.cb.book.id);
+  if (!session) return ui.notifications.warn(`acks-content | ${found.cb.book.label} is not open this session.`);
+
+  const node = await executeEntry(session.doc, found.cb, data.registers, entryId);
+  const f = node.fields;
+  const pre = (v) => `<pre class="acks-content-debug-pre">${esc(JSON.stringify(v, null, 1) ?? "null")}</pre>`;
+  const statRows = Object.entries(f.stats ?? {})
+    .map(([k, v]) => `<tr><td>${esc(k)}</td><td><code>${esc(JSON.stringify(v))}</code></td></tr>`)
+    .join("");
+  const paras = (f.description ?? [])
+    .map((p, i) => `<p class="acks-content-debug-para"><b>[${i}]</b> ${esc(p.text)}</p>`)
+    .join("");
+  const content = `<div class="acks-content-debug" style="max-height:70vh;overflow-y:auto;">
+    <p><b>${esc(node.name)}</b> — ${esc(node.cite)} · pages ${esc(JSON.stringify(found.entry.pages))} · ok=${node.ok}</p>
+    <details open><summary>expect</summary>${pre(f.name)}</details>
+    <details open><summary>stats (${Object.keys(f.stats ?? {}).length})</summary>
+      <table class="acks-content-debug-table">${statRows}</table></details>
+    <details open><summary>attacks</summary>${pre(f.attacks ?? null)}</details>
+    <details open><summary>spoils</summary>${pre(f.spoils ?? null)}</details>
+    <details><summary>art</summary>${pre(f.art ?? null)}</details>
+    <details><summary>description (${(f.description ?? []).length} paras — this seat's book, session only)</summary>${paras}</details>
+    <details><summary>misses (${node.misses.length})</summary>${pre(node.misses)}</details>
+  </div>`;
+  return foundry.applications.api.DialogV2.prompt({
+    window: { title: `${game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`)} — ${node.name}`, resizable: true },
+    position: { width: 640, height: 720 },
+    content,
+    ok: { label: game.i18n.localize(`${LANG_PREFIX}.ui.close`) },
+  });
+}
+
+/**
+ * GM/dev: import an explicit id list (QA + scripted tests — the same bounded
+ * pool the dialog and import-all use, folders included).
+ */
+export async function cookbookImportIds(ids) {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  return importMany(ids ?? [], game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
+}
+
+export async function cookbookImport() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+  if (!openBooks.length) {
+    return ui.notifications.warn(
+      `acks-content | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
+    );
+  }
+  const esc = foundry.utils.escapeHTML ?? ((x) => x);
+  const have = await importedIdSet();
+  const { rows: entryRows } = actorEntriesAcrossBooks();
+  // One list across every connected book, with a heading per book so a long
+  // list still says where each block came from. The filter matches the book
+  // label too, so typing "nethercity" narrows to that book.
+  let lastBook = null;
+  let lastGroup = null;
+  const rows = entryRows
+    .map(({ id, entry: e, bookId }) => {
+      let head = "";
+      if (bookId !== lastBook) {
+        lastBook = bookId;
+        lastGroup = null;
+        head += `<div class="acks-content-book-head">${esc(BOOKS[bookId]?.label ?? bookId)}</div>`;
+      }
+      const group = e.meta?.group ?? null;
+      if (group && group !== lastGroup) {
+        lastGroup = group;
+        head += `<div class="acks-content-group-head">${esc(group)}</div>`;
+      }
+      const searchable = `${e.name} ${BOOKS[bookId]?.label ?? bookId} ${group ?? ""}`.toLowerCase();
+      return `${head}<label class="acks-content-browse-row" data-name="${esc(searchable)}" data-have="${have.has(id) ? 1 : 0}">
+        <input type="checkbox" name="sel" value="${esc(id)}">
+        <span>${esc(e.name)}</span>
+        <span class="acks-content-marks">${
+          have.has(id)
+            ? `<i class="fa-solid fa-check" data-tooltip="${esc(game.i18n.localize(`${LANG_PREFIX}.ui.cookbookPresent`))}"></i>`
+            : ""
+        }</span>
+        <span class="acks-content-cite">${esc(e.cite)}</span>
+      </label>`;
+    })
+    .join("");
+  const content = `
+    <p class="notes">${game.i18n.format(`${LANG_PREFIX}.ui.cookbookIntro`, {
+      n: entryRows.length,
+      book: openBooks.map((b) => BOOKS[b]?.short ?? b).join(", "),
+    })}</p>
+    <div class="acks-content-abil-filters">
+      <input type="text" name="filter" placeholder="${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookFilter`)}">
+      <label><input type="checkbox" name="hideHave"> ${game.i18n.localize(`${LANG_PREFIX}.ui.abilHidePresent`)}</label>
+    </div>
+    <div class="acks-content-abil-actions">
+      <button type="button" data-act="all">${game.i18n.localize(`${LANG_PREFIX}.ui.cookbookSelectAll`)}</button>
+      <button type="button" data-act="shown">${game.i18n.localize(`${LANG_PREFIX}.ui.abilSelectShown`)}</button>
+      <button type="button" data-act="none">${game.i18n.localize(`${LANG_PREFIX}.ui.abilClear`)}</button>
+      <span class="acks-content-abil-count"></span>
+    </div>
+    <div class="acks-content-browse-list acks-content-mon-list">${rows}</div>`;
+
+  return foundry.applications.api.DialogV2.prompt({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`), resizable: true },
+    position: { width: 560, height: 700 },
+    content,
+    render: (event, dialog) => {
+      const root = dialog.element ?? dialog;
+      const listEl = root.querySelector(".acks-content-mon-list");
+      const count = root.querySelector(".acks-content-abil-count");
+      const all = () => [...listEl.querySelectorAll(".acks-content-browse-row")];
+      const shown = () => all().filter((r) => r.style.display !== "none");
+      const tally = () => {
+        const n = listEl.querySelectorAll('input[name="sel"]:checked').length;
+        count.textContent = game.i18n.format(`${LANG_PREFIX}.ui.abilCount`, { n, shown: shown().length });
+      };
+      const refresh = () => {
+        const q = root.querySelector('[name="filter"]').value.toLowerCase();
+        const hide = root.querySelector('[name="hideHave"]').checked;
+        for (const r of all()) {
+          const ok = r.dataset.name.includes(q) && (!hide || r.dataset.have === "0");
+          r.style.display = ok ? "" : "none";
+          // A hidden row must not stay selected: what the list shows is the only
+          // honest account of what pressing Import will do.
+          if (!ok) r.querySelector('input[name="sel"]').checked = false;
+        }
+        tally();
+      };
+      const check = (rows_) => {
+        for (const r of rows_) r.querySelector('input[name="sel"]').checked = true;
+        tally();
+      };
+      for (const sel of ['[name="filter"]', '[name="hideHave"]']) {
+        root.querySelector(sel).addEventListener("input", refresh);
+      }
+      listEl.addEventListener("change", tally);
+      // "All" ignores the filter on purpose — it is the whole-book button, and
+      // clearing the filter first would silently change what the user is looking
+      // at. "Shown" is the filtered counterpart.
+      root.querySelector('[data-act="all"]').addEventListener("click", () => {
+        root.querySelector('[name="filter"]').value = "";
+        root.querySelector('[name="hideHave"]').checked = false;
+        refresh();
+        check(all());
+      });
+      root.querySelector('[data-act="shown"]').addEventListener("click", () => check(shown()));
+      root.querySelector('[data-act="none"]').addEventListener("click", () => {
+        for (const el of listEl.querySelectorAll('input[name="sel"]')) el.checked = false;
+        tally();
+      });
+      tally();
+    },
+    ok: {
+      label: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookGo`),
+      callback: async (event, button) => {
+        const picked = [...button.form.querySelectorAll('input[name="sel"]:checked')].map((el) => el.value);
+        if (!picked.length) return ui.notifications.warn("acks-content | nothing selected.");
+        // Re-read rather than trusting the marks drawn when the dialog opened —
+        // an import may have happened in another window since.
+        const present = await importedIdSet();
+        const todo = picked.filter((id) => !present.has(id));
+        const done = await importMany(todo, game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
+        reportImport(done, picked.length, picked.length - todo.length);
+      },
+    },
+  });
+}
+
+/**
+ * GM: import every monster the open book's cookbook ships.
+ *
+ * The counterpart to importing every ability. Skips what the world already has,
+ * so it is a top-up after connecting more of the book, not a duplicator.
+ */
+export async function cookbookImportMonsters() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-content | GM only (creates actors).");
+  const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
+  if (!openBooks.length) {
+    return ui.notifications.warn(
+      `acks-content | no cookbook book is open this session — connect one first (PoC 2 / unlock dialog).`,
+    );
+  }
+  // Family MEMBERS don't import individually here — their family's generator
+  // template covers them (baseline + select the special case). The dialog
+  // still offers members one at a time. GRACEFUL: without acks-lib there is
+  // no template type, so members import flat exactly as they always did.
+  const members = globalThis.acksExtras?.lib?.TEMPLATE_TYPE ? familyMemberIds() : new Set();
+  const ids = actorEntriesAcrossBooks().rows.map((r) => r.id).filter((id) => !members.has(id));
+  const present = await importedIdSet();
+  const todo = ids.filter((id) => !present.has(id));
+  if (!todo.length) {
+    return ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllPresent`, { n: ids.length }));
+  }
+  // Reading a whole book takes minutes and makes hundreds of actors, so say what
+  // is about to happen while it can still be called off.
+  const ok = await foundry.applications.api.DialogV2.confirm({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`) },
+    content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirm`, {
+      n: todo.length,
+      book: openBooks.map((b) => BOOKS[b]?.label ?? b).join(", "),
+      folder: FOLDER_NAME,
+    })}${
+      todo.length < ids.length
+        ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirmSkip`, { skipped: ids.length - todo.length })}`
+        : ""
+    }</p>`,
+  });
+  if (!ok) return null;
+  const done = await importMany(todo, game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
+  reportImport(done, ids.length, ids.length - todo.length);
+  return { done, skipped: ids.length - todo.length };
+}
+
+/**
+ * `ability-provider` (acks-lib service contract v1): resolve proficiency name
+ * tokens into embeddable ability ItemData. Tier 1 reuses the world's own
+ * imported items (the same name index the monster import uses, including its
+ * proficiency-vs-class-power disambiguation); tier 2 imports the definition
+ * from the cookbook; an unresolvable token is reported, never fatal. A
+ * "(specialty)" suffix survives onto the embedded copy's name only.
+ */
+export async function resolveAbilities(tokens) {
+  const items = [];
+  const missing = [];
+  const nameIndex = abilityNameIndex();
+  const loadedById = await importedIndex();
+  const present = new Set(loadedById.keys());
+  for (const raw of tokens ?? []) {
+    const token = String(raw).trim();
+    if (!token) continue;
+    const m = token.match(/^(.*?)\s*\(([^)]+)\)\s*\d*$/);
+    let base = (m ? m[1] : token.replace(/\s*\d+$/, "")).trim();
+    const specialty = m?.[2] ?? null;
+    // The 2nd printing merges Art and Craft into one proficiency; the JJ
+    // occupation packages still print "Craft (X)" / "Art (X)".
+    if (/^(art|craft)$/i.test(base)) base = "Art/Craft";
+    const guess = idForName(nameIndex, base, present);
+    const id = guess?.id ?? null;
+    let item = id ? loadedById.get(id) : null;
+    if (!item && id) item = await importAbility(id).catch(() => null);
+    if (!item) {
+      missing.push(token);
+      continue;
+    }
+    const data = item.toObject();
+    delete data._id;
+    if (specialty) data.name = `${data.name} (${specialty})`;
+    items.push(data);
+  }
+  return { items, missing };
+}

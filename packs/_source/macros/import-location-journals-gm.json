@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacAdvJourn",
+  "_key": "!macros!ackscMacAdvJourn",
+  "name": "Import Location Journals (GM)",
+  "type": "script",
+  "img": "icons/svg/book.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\nif (!api.cookbookImportJournals) return ui.notifications.warn(\"acks-content | location journals need a newer module build.\");\napi.cookbookImportJournals();",
+  "folder": "ackscFldImport00",
+  "sort": 220,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}

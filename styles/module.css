@@ -1,0 +1,186 @@
+/* acks-content styles — every selector scoped under acks-content-*. */
+
+.acks-content-stub {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.acks-content-reveal {
+  margin-left: 0.35em;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  white-space: nowrap;
+}
+
+.acks-content-prose {
+  display: block;
+  margin: 0.35em 0 0.15em;
+  padding: 0.4em 0.6em;
+  border-left: 2px solid var(--color-border-highlight, #782e22);
+  background: rgba(0, 0, 0, 0.06);
+  font-style: normal;
+}
+
+.acks-content-cite {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.acks-content-browse-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-light-tertiary, #999);
+  padding: 4px 6px;
+  margin-bottom: 6px;
+}
+
+.acks-content-browse-row {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.acks-content-browse-row .acks-content-cite {
+  margin-left: auto;
+}
+
+/* Book / group headings inside the monster-import list: one list now spans
+   every connected book, so each block has to say where it came from. Sticky so
+   the heading stays visible while scrolling a long book. */
+.acks-content-book-head,
+.acks-content-group-head {
+  position: sticky;
+  background: var(--color-bg, #f0f0e0);
+  padding: 3px 0 2px;
+}
+
+.acks-content-book-head {
+  top: 0;
+  margin-top: 6px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #999);
+  z-index: 2;
+}
+
+.acks-content-group-head {
+  top: 1.4em;
+  margin-top: 3px;
+  font-size: 0.9em;
+  opacity: 0.75;
+  padding-left: 0.4em;
+  z-index: 1;
+}
+
+/* GM ability tools in the Item directory header. Sits above the search box, so
+   it keeps the directory's own spacing rather than introducing its own. */
+.acks-content-ability-tools {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.acks-content-ability-tools button {
+  flex: 1;
+  font-size: var(--font-size-12, 12px);
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+/* Browse dialogs (abilities and monsters): filters, bulk actions, per-row
+   markers. Named for the ability dialog they were built for; the monster
+   dialog now shares them rather than restating the same rules. */
+.acks-content-abil-filters,
+.acks-content-abil-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.acks-content-abil-filters input[type="text"] {
+  flex: 1;
+}
+
+.acks-content-abil-actions .acks-content-abil-count {
+  margin-left: auto;
+  font-size: var(--font-size-12, 12px);
+  opacity: 0.8;
+}
+
+.acks-content-abil-list,
+.acks-content-mon-list {
+  max-height: 480px;
+}
+
+.acks-content-marks {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+  opacity: 0.75;
+  font-size: var(--font-size-12, 12px);
+}
+
+/* Reconnect dialog: one row per book that could not reopen itself. A row is
+   either a line of explanation (handle/url) or a file picker (the browsers
+   that cannot reopen a file at all), so the rule set has to suit both. */
+.acks-content-reconnect-row {
+  padding: 3px 0;
+  border-top: 1px solid var(--color-border-light-tertiary, #999);
+}
+
+.acks-content-reconnect-row .notes {
+  margin: 2px 0 0;
+  font-size: var(--font-size-12, 12px);
+  opacity: 0.8;
+}
+
+.acks-content-reconnect-head {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.acks-content-reconnect-head strong {
+  flex: 1;
+}
+
+.acks-content-reconnect-head button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.acks-content-reconnect-done {
+  opacity: 0.6;
+}
+
+/* Getting Started dialog: generous but bounded, actions on their own row. */
+.acks-content-gs h3 {
+  margin: 0.6em 0 0.2em;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #999);
+}
+
+.acks-content-gs-action {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  margin: 0.3em 0 0.5em;
+}
+
+.acks-content-gs-action button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.acks-content-gs-action .notes {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.acks-content-gs-dismiss {
+  display: flex;
+  gap: 0.4em;
+  align-items: center;
+  margin-top: 0.5em;
+  font-size: var(--font-size-12, 12px);
+}

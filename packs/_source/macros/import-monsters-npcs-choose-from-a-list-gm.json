@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacCookbook",
+  "_key": "!macros!ackscMacCookbook",
+  "name": "Import Monsters & NPCs — choose from a list (GM)",
+  "type": "script",
+  "img": "icons/svg/mystery-man.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-content | module not ready (is it enabled?).\");\napi.cookbookImport();",
+  "folder": "ackscFldImport00",
+  "sort": 200,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}

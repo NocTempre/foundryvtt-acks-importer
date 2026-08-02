@@ -1,0 +1,74 @@
+{
+  "id": "acks-importer",
+  "title": "ACKS II — Importer",
+  "description": "Imports ACKS II book content into Foundry from the reader's own PDFs: monsters, proficiencies and class powers, equipment and price tables, adventure locations and roll tables. Ships extraction recipes — page geometry and patterns — and never the book text itself. Bring your own book.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "NocTempre"
+    }
+  ],
+  "license": "LICENSE",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.364"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "acks",
+        "type": "system",
+        "compatibility": {
+          "minimum": "14"
+        }
+      }
+    ],
+    "requires": [
+      {
+        "id": "acks-extras",
+        "type": "module",
+        "reason": "Everything imported here lands in structures acks-extras owns: the rules-table registry it feeds through the `ruledata-import` service, the acks-extras.animal and acks-extras.template actor sub-types, the ability effect model, and the Full Monster Sheet stat block. Import writes into the acks-extras flag namespace so the imported world keeps working with this module uninstalled.",
+        "compatibility": {
+          "minimum": "0.1.0"
+        }
+      }
+    ],
+    "recommends": [
+      {
+        "id": "game-icons-net",
+        "type": "module",
+        "reason": "Niche ability icons for the ACKS-shaped corners of the corpus (Acrobatics, Blind Fighting, Caving, Mapping). Optional: without it every ability falls back to a core Foundry icon."
+      }
+    ]
+  },
+  "url": "https://github.com/NocTempre/foundryvtt-acks-importer",
+  "manifest": "https://github.com/NocTempre/foundryvtt-acks-importer/releases/latest/download/module.json",
+  "download": "https://github.com/NocTempre/foundryvtt-acks-importer/releases/latest/download/module.zip",
+  "flags": {
+    "acks-importer": {
+      "idPrefix": "acks"
+    }
+  },
+  "esmodules": [
+    "scripts/module.mjs"
+  ],
+  "styles": [
+    "styles/module.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [
+    {
+      "name": "macros",
+      "label": "ACKS Importer — Macros",
+      "path": "packs/macros",
+      "type": "Macro",
+      "system": "acks"
+    }
+  ]
+}
