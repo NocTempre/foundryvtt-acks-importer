@@ -1,6 +1,6 @@
 {
   "name": "acks-importer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Dev tooling for the ACKS II — Importer Foundry module. Not loaded by Foundry at runtime.",
   "private": true,
   "type": "module",
