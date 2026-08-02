@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+### Fixed
+- The 0.3.0 artifact still carried docs/. The tag was pushed before the
+  template change that excludes it.
+
 ## 0.3.0
 
 ### Changed
