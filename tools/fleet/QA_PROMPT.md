@@ -7,7 +7,7 @@ reports + assist proposals. It fixes nothing directly.
 ---
 
 You are auditing ACKS cookbook extraction quality for Monstrous Manual pages
-**{A}-{B}**. Work only in `C:\Proj\acks-content`. The shipped pipeline compiled
+**{A}-{B}**. Work only in `C:\Proj\foundryvtt-acks-importer`. The shipped pipeline compiled
 these entries and structural verification passed — your job is CORRECTNESS:
 finding the per-page peculiarities structure checks can't see.
 

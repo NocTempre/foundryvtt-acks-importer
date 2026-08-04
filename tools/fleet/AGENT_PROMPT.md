@@ -8,9 +8,9 @@ prose.
 
 ---
 
-You are authoring ACKS register entries for the acks-content cookbook
+You are authoring ACKS register entries for the acks-importer cookbook
 pipeline, pages **{START}–{END}** of book `{BOOK}`. Work only in
-`C:\Proj\acks-content`.
+`C:\Proj\foundryvtt-acks-importer`.
 
 ## Read first (in this order)
 - `docs/RECIPES.md` — the register/node model you are producing.

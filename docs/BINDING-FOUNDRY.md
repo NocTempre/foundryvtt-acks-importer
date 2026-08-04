@@ -13,7 +13,7 @@ other VTTs) while cookbooks stay valid.
   appendix blocks) → the same Actor surface via a stats translation, deferring
   to the entry `meta.revisedBy` names when that book is open on this seat;
   `kind.npc` → Actor from the parsed statline (values persist in world fields,
-  ability scores/gear notes in `flags["acks-content"].npc`, proficiencies
+  ability scores/gear notes in `flags["acks-importer"].npc`, proficiencies
   through the ability-provider tiers); `kind.location` → JournalEntry page
   (one JournalEntry per `meta.group`, body = lazy `@PdfText` tag + creature
   links from the seat-extracted creature lookups — pin the page to a scene to
@@ -27,7 +27,7 @@ other VTTs) while cookbooks stay valid.
 - **Field mapping:** executor output → `system.*` paths (the successor of
   `scripts/stats-map.mjs`). E.g. `stats.armorClass` → `system.aac.value`,
   save class+level → the saves LUT, attacks → weapon Items with
-  `flags.acks-monsters.*` (damageType/naturalWeapon/extraordinary from the
+  `flags.acks-extras.*` (damageType/naturalWeapon/extraordinary from the
   executor's `{key, ref}` triples and glyphColor result).
 - **UI:** the `@PdfText` enricher, lazy tooltip resolution through the node
   graph (citing book for values, defining book for descriptor prose, stubs
