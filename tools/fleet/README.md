@@ -4,7 +4,7 @@ How the Opus orchestrator drives Sonnet workers + the resolver agent to turn
 the ACKS PDF library into the shipped cookbook. Governing specs:
 `docs/RECIPES.md` (pipeline/register), `docs/COOKBOOK.md` (shipped schema +
 frozen instruction set), `docs/BINDING-FOUNDRY.md` (consumer). Everything runs
-from `C:\Proj\acks-content` and needs the LOCAL-ONLY reference PDFs at
+from `C:\Proj\foundryvtt-acks-importer` and needs the LOCAL-ONLY reference PDFs at
 `C:\Proj\acks-reference` (never CI).
 
 ## npm commands

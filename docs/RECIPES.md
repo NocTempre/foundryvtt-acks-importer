@@ -13,7 +13,7 @@ OFFLINE authoring (agents + resolver + ANY tooling, vs the reference library —
    ▼
 COOKBOOK  (ships public; engine-agnostic database; IP-free resultant map:
            explicit instructions + extraction assists — NO prose, NO values)
-   │  consumed by an engine binding (today: the acks-content Foundry module,
+   │  consumed by an engine binding (today: the acks-extras Foundry module,
    │  a DUMB EXECUTOR — no decision trees)
    ▼
 RUNTIME   values AND prose/art materialize from the seat's own PDF exactly as
