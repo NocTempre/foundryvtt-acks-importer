@@ -2816,6 +2816,12 @@
           "from": {
             "pattern": "Temple \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.cloister",
+          "from": {
+            "pattern": "Cloister \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -2969,6 +2975,48 @@
         {
           "ref": "def.power.totemanimal",
           "starting": true
+        },
+        {
+          "ref": "def.power.spiritualRitual",
+          "from": {
+            "pattern": "Spiritual Ritual \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.shapechanging",
+          "from": {
+            "pattern": "Shapechanging \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.spiritwalking",
+          "from": {
+            "pattern": "Spiritwalking \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.medicineLodge",
+          "from": {
+            "pattern": "Medicine Lodge \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.supremeMagicalResearch",
+          "from": {
+            "pattern": "Supreme Magical Research \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -3136,6 +3184,38 @@
           "from": {
             "pattern": "Supreme Magical Research \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.darkPath",
+          "from": {
+            "pattern": "Dark Path II \\((\\d+)"
+          },
+          "note": "II — the path deepens; III–VI follow the same page."
+        },
+        {
+          "ref": "def.prof.theology",
+          "from": {
+            "pattern": "Theology \\((\\d+)"
+          },
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.prof.expandedRepertoire",
+          "from": {
+            "pattern": "Expanded Repertoire \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.sanctum",
+          "from": {
+            "pattern": "Sanctum \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.powerOfSacrifice",
+          "from": {
+            "pattern": "Power of Sacrifice \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -3293,6 +3373,48 @@
         {
           "ref": "def.power.villageWisdom",
           "starting": true
+        },
+        {
+          "ref": "def.power.traditionalMedicine",
+          "from": {
+            "pattern": "Traditional Medicine \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.brewPotions",
+          "from": {
+            "pattern": "Brew Potions \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scribeScrolls",
+          "from": {
+            "pattern": "Scribe Scrolls \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.witchsCottage",
+          "from": {
+            "pattern": "Cottage \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.supremeMagicalResearch",
+          "from": {
+            "pattern": "Supreme Magical Research \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -4187,6 +4309,25 @@
           "from": {
             "pattern": "Hideout \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.arcaneMagic",
+          "from": {
+            "pattern": "Arcane Magic \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.prof.quietMagic",
+          "from": {
+            "pattern": "Quiet Magic \\((\\d+)"
+          },
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -4812,6 +4953,36 @@
           "from": {
             "pattern": "Major Magical Research \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.arcaneMagic",
+          "from": {
+            "pattern": "Arcane Magic \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.arcaneStriking",
+          "from": {
+            "pattern": "Arcane Striking \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.deathHealing",
+          "from": {
+            "pattern": "Death Healing \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.darkCharisma",
+          "from": {
+            "pattern": "Dark Charisma \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.zaharanDarkFortress",
+          "from": {
+            "pattern": "Dark Fortress \\((\\d+)"
+          }
         }
       ],
       "casting": [
@@ -4823,6 +4994,216 @@
           "casterLevel": "casterLevel"
         }
       ]
+    }
+  },
+  {
+    "id": "def.power.cloister",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Cloister",
+    "anchor": {
+      "runin": "Cloister ("
+    },
+    "pages": [
+      67
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.spiritualRitual",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Spiritual Ritual",
+    "anchor": {
+      "runin": "Spiritual Ritual ("
+    },
+    "pages": [
+      73
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.shapechanging",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Shapechanging",
+    "anchor": {
+      "runin": "Shapechanging"
+    },
+    "pages": [
+      73
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.spiritwalking",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Spiritwalking",
+    "anchor": {
+      "runin": "Spiritwalking ("
+    },
+    "pages": [
+      73
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.medicineLodge",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Medicine Lodge",
+    "anchor": {
+      "runin": "Medicine Lodge ("
+    },
+    "pages": [
+      73
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.powerOfSacrifice",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Power of Sacrifice",
+    "anchor": {
+      "runin": "Power of Sacrifice ("
+    },
+    "pages": [
+      75
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.traditionalMedicine",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Traditional Medicine",
+    "anchor": {
+      "runin": "Traditional Medicine ("
+    },
+    "pages": [
+      79
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.brewPotions",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Brew Potions",
+    "anchor": {
+      "runin": "Brew Potions ("
+    },
+    "pages": [
+      79
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.scribeScrolls",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Scribe Scrolls",
+    "anchor": {
+      "runin": "Scribe Scrolls ("
+    },
+    "pages": [
+      79
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.witchsCottage",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Witch's Cottage",
+    "anchor": {
+      "runin": "Witch"
+    },
+    "pages": [
+      79
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.zaharanDarkFortress",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Zaharan Dark Fortress",
+    "anchor": {
+      "runin": "Dark Fortress ("
+    },
+    "pages": [
+      99
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.deathHealing",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Death Healing",
+    "anchor": {
+      "runin": "Death Healing ("
+    },
+    "pages": [
+      99
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.arcaneStriking",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Arcane Striking",
+    "anchor": {
+      "runin": "Arcane Striking ("
+    },
+    "pages": [
+      99
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.darkCharisma",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Dark Charisma",
+    "anchor": {
+      "runin": "Dark Charisma ("
+    },
+    "pages": [
+      99
+    ],
+    "meta": {
+      "category": "classPower"
     }
   }
 ]

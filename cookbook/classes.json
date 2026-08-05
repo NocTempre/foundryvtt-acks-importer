@@ -4171,6 +4171,12 @@
           "from": {
             "pattern": "Temple \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.cloister",
+          "from": {
+            "pattern": "Cloister \\((\\d+)"
+          }
         }
       ],
       "cleaves": {
@@ -4559,6 +4565,48 @@
         {
           "ref": "def.power.totemanimal",
           "starting": true
+        },
+        {
+          "ref": "def.power.spiritualRitual",
+          "from": {
+            "pattern": "Spiritual Ritual \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.shapechanging",
+          "from": {
+            "pattern": "Shapechanging \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.spiritwalking",
+          "from": {
+            "pattern": "Spiritwalking \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.medicineLodge",
+          "from": {
+            "pattern": "Medicine Lodge \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.supremeMagicalResearch",
+          "from": {
+            "pattern": "Supreme Magical Research \\((\\d+)"
+          }
         }
       ],
       "cleaves": {
@@ -4949,6 +4997,38 @@
           "from": {
             "pattern": "Supreme Magical Research \\((\\d+)"
           }
+        },
+        {
+          "ref": "def.power.darkPath",
+          "from": {
+            "pattern": "Dark Path II \\((\\d+)"
+          },
+          "note": "II — the path deepens; III–VI follow the same page."
+        },
+        {
+          "ref": "def.prof.theology",
+          "from": {
+            "pattern": "Theology \\((\\d+)"
+          },
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.prof.expandedRepertoire",
+          "from": {
+            "pattern": "Expanded Repertoire \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.sanctum",
+          "from": {
+            "pattern": "Sanctum \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.powerOfSacrifice",
+          "from": {
+            "pattern": "Power of Sacrifice \\((\\d+)"
+          }
         }
       ],
       "cleaves": {
@@ -5321,6 +5401,48 @@
         {
           "ref": "def.power.villageWisdom",
           "starting": true
+        },
+        {
+          "ref": "def.power.traditionalMedicine",
+          "from": {
+            "pattern": "Traditional Medicine \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.brewPotions",
+          "from": {
+            "pattern": "Brew Potions \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scribeScrolls",
+          "from": {
+            "pattern": "Scribe Scrolls \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.witchsCottage",
+          "from": {
+            "pattern": "Cottage \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.supremeMagicalResearch",
+          "from": {
+            "pattern": "Supreme Magical Research \\((\\d+)"
+          }
         }
       ],
       "cleaves": {
@@ -6490,6 +6612,25 @@
           "ref": "def.skill.hideout",
           "from": {
             "pattern": "Hideout \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.arcaneMagic",
+          "from": {
+            "pattern": "Arcane Magic \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.prof.quietMagic",
+          "from": {
+            "pattern": "Quiet Magic \\((\\d+)"
+          },
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
           }
         }
       ],
@@ -7782,6 +7923,36 @@
           "ref": "def.power.majorMagicalResearch",
           "from": {
             "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.arcaneMagic",
+          "from": {
+            "pattern": "Arcane Magic \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.arcaneStriking",
+          "from": {
+            "pattern": "Arcane Striking \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.deathHealing",
+          "from": {
+            "pattern": "Death Healing \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.darkCharisma",
+          "from": {
+            "pattern": "Dark Charisma \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.zaharanDarkFortress",
+          "from": {
+            "pattern": "Dark Fortress \\((\\d+)"
           }
         }
       ],

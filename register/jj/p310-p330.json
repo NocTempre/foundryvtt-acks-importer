@@ -202,21 +202,6 @@
     }
   },
   {
-    "id": "def.power.arcaneStriking",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Arcane Striking",
-    "anchor": {
-      "runin": "Arcane Striking:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.arenaReputation",
     "kind": "kind.power",
     "book": "jj",
@@ -1119,21 +1104,6 @@
     }
   },
   {
-    "id": "def.power.darkCharisma",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Dark Charisma",
-    "anchor": {
-      "runin": "Dark Charisma:"
-    },
-    "pages": [
-      315
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.deadlyAdditive",
     "kind": "kind.power",
     "book": "jj",
@@ -1155,21 +1125,6 @@
     "name": "Death-Dealing Dance",
     "anchor": {
       "runin": "Death-Dealing Dance:"
-    },
-    "pages": [
-      315
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.deathHealing",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Death Healing",
-    "anchor": {
-      "runin": "Death Healing:"
     },
     "pages": [
       315
@@ -3273,21 +3228,6 @@
     }
   },
   {
-    "id": "def.power.powerOfSacrifice",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Power of Sacrifice",
-    "anchor": {
-      "runin": "Power of Sacrifice:"
-    },
-    "pages": [
-      325
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.preciseShot",
     "kind": "kind.power",
     "book": "jj",
@@ -4183,21 +4123,6 @@
     "name": "Totem Benefit",
     "anchor": {
       "runin": "Totem Benefit:"
-    },
-    "pages": [
-      328
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.traditionalMedicine",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Traditional Medicine",
-    "anchor": {
-      "runin": "Traditional Medicine:"
     },
     "pages": [
       328

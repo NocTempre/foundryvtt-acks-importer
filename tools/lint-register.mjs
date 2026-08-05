@@ -218,6 +218,28 @@ if (fs.existsSync(COOKBOOK)) {
   }
 }
 
+/* --- cross-references: every class award and matrix row names a real def --- */
+if (fs.existsSync(COOKBOOK)) {
+  const defIds = new Set();
+  for (const f of fs.readdirSync(COOKBOOK)) {
+    if (!f.endsWith(".json") || f === "index.json") continue;
+    const cb = readJson(path.join(COOKBOOK, f), `cookbook/${f}`);
+    for (const id of Object.keys(cb?.entries ?? {})) defIds.add(id);
+  }
+  const classes = readJson(path.join(COOKBOOK, "classes.json"), "cookbook/classes.json");
+  for (const [id, e] of Object.entries(classes?.entries ?? {})) {
+    for (const a of e.awards ?? []) {
+      if (a.ref && a.ref.startsWith("def.") && !defIds.has(a.ref)) err(`${id}: award ref "${a.ref}" resolves to no cookbook entry`);
+    }
+  }
+  const matrix = readJson(path.join(REGISTER, "_refs", "power-sources.json"), "_refs/power-sources.json");
+  for (const [cls, rows] of Object.entries(matrix?.table ?? {})) {
+    for (const r of rows ?? []) {
+      if (r.ref && r.ref.startsWith("def.") && !defIds.has(r.ref)) err(`power-sources.${cls}: ref "${r.ref}" resolves to no cookbook entry`);
+    }
+  }
+}
+
 if (errors.length) {
   console.error(`register lint: ${errors.length} problem(s):`);
   for (const e of errors) console.error(`  - ${e}`);
