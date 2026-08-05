@@ -2567,6 +2567,7 @@ const ITEM_SHELF = {
   // give them their own shelf beside Class Powers.
   "def.drawback": "Drawbacks",
   "def.skill": "Skills",
+  "def.class": "Classes",
   "def.equip": "Equipment",
   "def.weapon": "Weapons",
   "def.armor": "Armor",
@@ -2695,10 +2696,261 @@ export async function importAbility(id, folderId) {
  * v0.26.0 and produced `category: equipment is not a valid choice` when the
  * ability sheet tried to validate items that should never have been abilities.
  */
-const NON_ABILITY_KINDS = new Set(["kind.equipment"]);
+const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.powerAppend"]);
 
 /** Does this entry bind to an `ability` item? */
 export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
+
+/* -------------------------------------------- */
+/*  Classes (kind.class → acks-extras.class)    */
+/* -------------------------------------------- */
+
+/** The class Item sub-type acks-extras registers; a hard dependency, but the
+ *  guard keeps a mis-ordered load from minting untyped items. */
+const CLASS_ITEM_TYPE = "acks-extras.class";
+
+/* The book prints WIL where the system's score key is wis. */
+const ATTR_KEY = { STR: "str", INT: "int", WIL: "wis", DEX: "dex", CON: "con", CHA: "cha" };
+
+/** "Key Attribute:.............STR" → "STR" (label and dot leaders off). */
+const stripBullet = (s) => String(s ?? "").replace(/^[^:]*:/, "").replace(/^[.\s]+/, "").trim();
+
+/** Small-caps extraction lowercases a leading cap ("overlord") — restore it. */
+const capFirst = (s) => {
+  const t = String(s ?? "").trim();
+  return t ? t[0].toUpperCase() + t.slice(1) : "";
+};
+
+/** Split a printed list on commas that are not inside parentheses. */
+const splitList = (s) =>
+  String(s ?? "")
+    .split(/,(?![^(]*\))/)
+    .map((x) => x.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+/** fold(name) → def id across every content cookbook (profs, powers, skills). */
+function abilityRefIndex() {
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const index = new Map();
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (NON_ABILITY_KINDS.has(e.kind)) continue;
+      index.set(fold(e.name), defId);
+    }
+  }
+  return index;
+}
+
+/**
+ * Bind one executed class entry to `acks-extras.class` item data. Everything
+ * numeric or listed comes from `node` (the reader's own book); with no book
+ * the item still imports as a stub the constructor sheet explains.
+ */
+export function bindClass(entry, node, id) {
+  const cite = entry.cite ?? "";
+  const f = node?.fields ?? {};
+  const body = Object.entries(f)
+    .filter(([k, v]) => /^body\d+$/.test(k) && typeof v === "string")
+    .map(([, v]) => v)
+    .join(" ");
+
+  const levels = [];
+  const damageValues = [];
+  for (const row of f.progression?.rows ?? []) {
+    const level = intFrom(row.label);
+    if (level == null) continue;
+    levels.push({
+      level,
+      xp: intFrom(row.cells.xp),
+      title: capFirst(row.cells.title),
+      hd: String(row.cells.hd ?? "").replace(/\*/g, "").trim(),
+    });
+    const dmg = row.cells.damageBonus;
+    if (dmg != null) damageValues.push({ atLevel: level, value: intFrom(dmg), text: String(dmg).trim() });
+  }
+  levels.sort((a, b) => a.level - b.level);
+
+  const saves = [];
+  const attack = [];
+  for (const row of f.attackSaves?.rows ?? []) {
+    const band = row.cells.band ?? { min: intFrom(row.label), max: intFrom(row.label) };
+    if (band?.min == null) continue;
+    const minLevel = band.min;
+    const maxLevel = band.max ?? band.min;
+    saves.push({
+      minLevel, maxLevel,
+      paralysis: row.cells.paralysis ?? null,
+      death: row.cells.death ?? null,
+      blast: row.cells.blast ?? null,
+      implements: row.cells.implements ?? null,
+      spells: row.cells.spells ?? null,
+    });
+    if (row.cells.attackThrow != null) attack.push({ minLevel, maxLevel, throw: row.cells.attackThrow });
+  }
+
+  const keyAttributes = stripBullet(f.keyAttribute)
+    .split(/\s+and\s+/i)
+    .map((a) => ATTR_KEY[a.trim().toUpperCase()])
+    .filter(Boolean);
+  const reqText = stripBullet(f.requirements);
+  const requirements = [];
+  if (!/^none\b/i.test(reqText)) {
+    for (const m of reqText.matchAll(/([A-Z]{3})\s*(\d+)/g)) {
+      const attr = ATTR_KEY[m[1].toUpperCase()];
+      if (attr) requirements.push({ attr, min: parseInt(m[2], 10) });
+    }
+  }
+
+  // The printed class list, token-matched against every content cookbook;
+  // what fails to match is KEPT, visibly, on unresolvedProfs.
+  const refIndex = abilityRefIndex();
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const classProfs = [];
+  const unresolvedProfs = [];
+  const listText = String(f.profList ?? "").replace(/^.*?Proficiency List:\s*/i, "");
+  for (const name of splitList(listText)) {
+    const ref = refIndex.get(fold(name.replace(/\([^)]*\)/g, "")));
+    if (ref) classProfs.push(ref);
+    else unresolvedProfs.push(name);
+  }
+
+  // Award grant levels resolve from the reader's own page text; a pattern
+  // that finds nothing leaves the award visible with its level unresolved.
+  const awards = (entry.awards ?? []).map((a) => {
+    let atLevel = a.starting ? 1 : null;
+    if (atLevel == null && a.from?.pattern && body) {
+      const m = new RegExp(a.from.pattern).exec(body);
+      if (m?.[1] != null) atLevel = parseInt(m[1], 10);
+    }
+    return {
+      atLevel: atLevel ?? 1,
+      kind: "fixed",
+      ref: a.ref,
+      name: "",
+      note: atLevel == null ? "level unresolved" : (a.note ?? ""),
+    };
+  });
+
+  let cleaves = {};
+  if (entry.cleaves?.pattern && body) {
+    const m = new RegExp(entry.cleaves.pattern, "i").exec(body);
+    // Extraction joins can drop inter-run spaces, so the phrase folds first.
+    const phrase = (m?.[1] ?? "").toLowerCase().replace(/\s+/g, "");
+    if (phrase.startsWith("classlevel")) cleaves = { kind: "perLevel", base: 1, per: 1 };
+    else if (phrase.includes("twoclasslevels")) cleaves = { kind: "perLevel", base: 0.5, per: 0.5, round: "down" };
+  }
+
+  return {
+    name: entry.name,
+    type: CLASS_ITEM_TYPE,
+    ...(entry.icon ? { img: entry.icon } : {}),
+    system: {
+      key: entry.meta?.key ?? fold(entry.name),
+      source: { book: entry.book ?? "rr", cite, ref: id },
+      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      requirements,
+      keyAttributes,
+      ...(typeof f.maximumLevel === "number" ? { maximumLevel: f.maximumLevel } : {}),
+      hitDie: String(f.hitDie ?? "").trim(),
+      levels,
+      ladders: damageValues.length ? [{ key: "damageBonus", label: "Damage Bonus", values: damageValues }] : [],
+      saveChassis: entry.meta?.chassis?.saves ?? "",
+      attackChassis: entry.meta?.chassis?.attack ?? "",
+      saves,
+      attack,
+      cleaves,
+      inventory: {
+        classProfs,
+        powers: awards.filter((a) => a.ref.startsWith("def.power.")).map((a) => a.ref),
+        skills: [],
+      },
+      unresolvedProfs,
+      awards,
+    },
+    flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true } },
+  };
+}
+
+/** Every kind.class [id, entry] across the content cookbooks. */
+export function* classEntries() {
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (e.kind === "kind.class") yield [defId, e];
+    }
+  }
+}
+
+/**
+ * Import every class document (skip ones already in the world). Values come
+ * from the connected book; a bookless import creates constructor stubs.
+ */
+export async function importClasses() {
+  if (!CONFIG.Item.dataModels?.[CLASS_ITEM_TYPE]) {
+    ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — the class item type is unavailable.`);
+    return [];
+  }
+  const made = [];
+  let skipped = 0;
+  for (const [id, entry] of classEntries()) {
+    if (await importedItem(id)) {
+      skipped++;
+      continue;
+    }
+    const found = cookbookEntry(id);
+    const session = found ? ctx.sessionDocs.get(bookOf(found)) : null;
+    let node = null;
+    if (session) {
+      node = await executeEntry(session.doc, found.cb, data.registers, id);
+      if (!node?.ok) node = null;
+    }
+    const folder = (await ensureItemFolder(id))?.id ?? null;
+    const doc = bindClass(entry, node, id);
+    made.push(rememberImported(id, await createDoc(Item, { ...doc, folder })));
+  }
+  ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
+  return made;
+}
+
+/**
+ * Re-execute and REWRITE every imported class document's generated surface
+ * (name, img, the whole system object). Class documents are wholly generated
+ * in this phase — a hand-tuned document keeps its edits only until Update;
+ * the confirm says so.
+ */
+export async function cookbookUpdateClasses() {
+  const byId = new Map(classEntries());
+  const targets = (game.items ?? []).filter((i) => {
+    const cid = i.flags?.[MODULE_ID]?.cookbook?.id;
+    return i.type === CLASS_ITEM_TYPE && cid && byId.has(cid);
+  });
+  if (!targets.length) {
+    ui.notifications?.info(`${MODULE_ID} | no imported class documents to update.`);
+    return 0;
+  }
+  const ok = await foundry.applications.api.DialogV2.confirm({
+    window: { title: "Update Classes" },
+    content: `<p>Rewrite ${targets.length} imported class document(s) from the connected book? Hand edits on them are replaced.</p>`,
+    modal: true,
+  });
+  if (!ok) return 0;
+  let updated = 0;
+  for (const item of targets) {
+    const id = item.flags[MODULE_ID].cookbook.id;
+    const entry = byId.get(id);
+    const found = cookbookEntry(id);
+    const session = found ? ctx.sessionDocs.get(bookOf(found)) : null;
+    let node = null;
+    if (session) {
+      node = await executeEntry(session.doc, found.cb, data.registers, id);
+      if (!node?.ok) node = null;
+    }
+    const doc = bindClass(entry, node, id);
+    await item.update({ name: doc.name, ...(doc.img ? { img: doc.img } : {}), system: doc.system });
+    updated++;
+  }
+  ui.notifications?.info(`${MODULE_ID} | classes updated: ${updated}.`);
+  return updated;
+}
 
 /** Every [id, entry] pair across the content cookbooks that IS an ability. */
 export function* abilityEntries() {

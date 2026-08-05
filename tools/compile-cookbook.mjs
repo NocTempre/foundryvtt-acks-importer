@@ -1875,12 +1875,270 @@ const AX_COMPILERS = {
 };
 
 /* -------------------------------------------- */
+/*  Class compilation (kind.class)              */
+/* -------------------------------------------- */
+
+/**
+ * kind.class — an RR class spread. The register's `class` block is chef
+ * WIRING, not geometry: table TITLES with column keys, award specs whose
+ * grant levels are from.pattern locators, a cleave phrase pattern, chassis
+ * keys, the proficiency-list label. This compiler resolves every named table
+ * against the reference PDF — title row → header row → data rows → column
+ * spans from header-cell midpoints — and emits v2 `grid` instructions, plus
+ * clipped `value` ops for the four header bullets, the proficiency list, and
+ * per-page raw body text the binder resolves award/cleave patterns against.
+ * Values never ship: every instruction is a box and a pattern.
+ */
+async function compileClass(doc, entry, kindRow) {
+  const spec = entry.class ?? {};
+  const page = entry.pages[0];
+  const pd = await pageItems(doc, page);
+  const cols = detectColumns(pd.items);
+  const fields = {};
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  /* --- anchor / name --- */
+  const anchors = listHeadings(pd).filter((a) => a.mode === "display");
+  const anchor = anchors.find((a) => a.text.toLowerCase().startsWith(entry.anchor.display.toLowerCase()));
+  if (!anchor) throw new Error(`display anchor "${entry.anchor.display}" not found on p.${page}`);
+  const colX = cols[anchor.col];
+  const nextX = cols[anchor.col + 1];
+  const colRight = nextX ? nextX - 6 : pd.width;
+  fields.name = {
+    op: "expect", page,
+    box: { x0: colX - 5, x1: colRight, y0: anchor.y - 16, y1: anchor.y + 6 },
+    text: entry.anchor.display,
+  };
+
+  /* --- tables located by their printed titles --- */
+  const tableEdges = [];
+  const lineRows = (items, tol = 3) => {
+    const by = new Map();
+    for (const it of items) {
+      const k = Math.round(it.y / tol);
+      (by.get(k) ?? by.set(k, []).get(k)).push(it);
+    }
+    return [...by.entries()].sort((a, b) => a[0] - b[0]).map(([, v]) => v.sort((a, b) => a.x - b.x));
+  };
+  const joinRow = (row) => row.map((i) => i.str).join("");
+  const rebuildCells = (row, gap = 3) => {
+    const cells = [];
+    for (const it of row) {
+      const prev = cells[cells.length - 1];
+      if (prev && it.x - (prev.x + (prev.w ?? 0)) < gap) {
+        prev.str += it.str;
+        prev.w = it.x + (it.w ?? 0) - prev.x;
+      } else cells.push({ str: it.str, x: it.x, w: it.w ?? 0, y: it.y });
+    }
+    return cells;
+  };
+  // A data row's leftmost cell: a level number ("7"), a band ("2 – 3", "11 – 12",
+  // "14+"), or an XP figure — never a word.
+  const looksLikeDataStart = (s) => /^\d[\d,]*(?:\s*[–-]\s*\d+)?\+?$/.test(s.trim());
+
+  for (const [tname, t] of Object.entries(spec.tables ?? {})) {
+    const tpd = t.page === page ? pd : await pageItems(doc, t.page);
+    const allRows = lineRows(tpd.items);
+    const titleRowFull = allRows.find((r) => fold(joinRow(r)).startsWith(fold(t.title)));
+    if (!titleRowFull) {
+      warn(`${entry.id}: table title "${t.title}" not found on p.${t.page}`);
+      continue;
+    }
+    // Everything left of the table (the class prose column, interleaved
+    // headings) shares the same y-bands — clip to the table's own x-region,
+    // anchored on where its title starts, before bucketing rows. The rotated
+    // chapter tab in the outer margin and the ~5pt superscript fragments
+    // ("th" ordinals, footnote asterisks) would otherwise form phantom rows
+    // that end the data walk early and bridge adjacent column clusters.
+    const titleX0 = Math.min(...titleRowFull.map((i) => i.x));
+    const rows = lineRows(
+      tpd.items.filter(
+        (i) => i.h >= 7 && i.str.trim() && i.x >= titleX0 - 12 && i.x <= tpd.width - 45,
+      ),
+    );
+    const titleIdx = rows.findIndex((r) => fold(joinRow(r)).startsWith(fold(t.title)));
+    // Header cells pool: the non-data rows between the title and the first
+    // data row — the main header line plus any stacked wrap lines ("Damage"
+    // above, "Bonus" below). Fused at a wider gap so "Hit"+"d"+"ice" is one
+    // cell.
+    const headerCells = [];
+    const dataRows = [];
+    let headerLines = 0;
+    for (const r of rows.slice(titleIdx + 1)) {
+      // Data-start is judged on the row's RAW first run: a wide figure
+      // ("370,000") sits close enough to the title cell beside it that a
+      // fused rebuild would hide the numeric start.
+      const firstRaw = (r[0]?.str ?? "").trim();
+      if (!dataRows.length && !looksLikeDataStart(firstRaw)) {
+        if (++headerLines > 5) break;
+        headerCells.push(...rebuildCells(r, 6));
+        continue;
+      }
+      if (!looksLikeDataStart(firstRaw)) break;
+      if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 20) break;
+      dataRows.push(r);
+    }
+    if (dataRows.length < 5) {
+      warn(`${entry.id}: table "${t.title}" resolved only ${dataRows.length} data row(s)`);
+      continue;
+    }
+    // Authored column order is the REGISTER's; physical order comes from the
+    // matched header x (the label column sits mid-table in a progression).
+    // Spans are assigned per physical index, so the two must be reconciled
+    // here — every header has to match, or the table cannot be ordered.
+    const declared = [{ key: "__label", header: t.labelHeader }, ...(t.cols ?? [])];
+    let unmatched = false;
+    for (const w of declared) {
+      const cell =
+        headerCells.find((c) => fold(c.str) === fold(w.header)) ??
+        headerCells.find((c) => fold(c.str).startsWith(fold(w.header))) ??
+        // A wrapped header prints only its first line on the header row
+        // ("Damage" for "Damage Bonus") — match the authored name's prefix.
+        headerCells.find((c) => fold(c.str).length >= 4 && fold(w.header).startsWith(fold(c.str)));
+      if (!cell) {
+        warn(`${entry.id}: table "${t.title}" missing header "${w.header}"`);
+        unmatched = true;
+      } else w.hx = cell.x;
+    }
+    if (unmatched) continue;
+    const wanted = [...declared].sort((a, b) => a.hx - b.hx);
+    // Column spans come from the DATA, not the headers: headers are
+    // left-aligned while number cells are right-aligned or centred, so header
+    // x lands nowhere near its data — and neighbouring cells can sit within a
+    // word-space of each other, so x-gap clustering under-counts. Instead the
+    // rows whose rebuilt cell count EQUALS the authored column count vote the
+    // spans per index; rows with extra fragments still extract through those
+    // spans at runtime.
+    const idealRows = dataRows.map((r) => rebuildCells(r, 6)).filter((cells) => cells.length === wanted.length);
+    if (idealRows.length < 3) {
+      warn(
+        `${entry.id}: table "${t.title}" — only ${idealRows.length} row(s) match the ${wanted.length}-column shape ` +
+          `(seen: ${[...new Set(dataRows.map((r) => rebuildCells(r, 6).length))].join("/")})`,
+      );
+      continue;
+    }
+    const groups = wanted.map((_, i) => ({
+      x0: Math.min(...idealRows.map((cells) => cells[i].x)),
+      x1: Math.max(...idealRows.map((cells) => cells[i].x + Math.max(cells[i].w ?? 0, 4))),
+    }));
+    const tableX0 = groups[0].x0;
+    const tableX1 = groups[groups.length - 1].x1;
+    const spanOf = (idx) => ({
+      x0: idx === 0 ? tableX0 - 6 : (groups[idx - 1].x1 + groups[idx].x0) / 2,
+      x1: idx === groups.length - 1 ? tableX1 + 10 : (groups[idx].x1 + groups[idx + 1].x0) / 2,
+    });
+    const labelIdx = wanted.findIndex((w) => w.key === "__label");
+    const labelSpan = spanOf(labelIdx);
+    const y0 = dataRows[0][0].y - 4;
+    const y1 = dataRows[dataRows.length - 1][0].y + 5;
+    const gridCols = wanted
+      .map((w, i) => ({ w, i }))
+      .filter(({ w }) => w.key !== "__label")
+      .map(({ w, i }) => ({ key: w.key, ...spanOf(i), ...(w.pattern ? { pattern: w.pattern } : {}) }));
+    if (t.band) gridCols.unshift({ key: "band", ...labelSpan, pattern: "rollBand" });
+    fields[tname] = {
+      op: "grid", page: t.page,
+      box: { x0: tableX0 - 6, x1: tableX1 + 10, y0, y1 },
+      label: labelSpan,
+      cols: gridCols,
+      gapMin: 2,
+    };
+    tableEdges.push({ page: t.page, x0: tableX0 });
+  }
+
+  /* --- header bullets, clipped to the anchor column AND short of any table
+         on the page, so a table's figures cannot bleed into the joined line
+         ("Hit Dice: 1d8" + "8,000" would read as 1d88) --- */
+  const tableLeft = Math.min(colRight, ...tableEdges.filter((e) => e.page === page).map((e) => e.x0 - 12));
+  const HEADER_FIELDS = [
+    ["hitDie", "Hit Dice:", "dice"],
+    ["maximumLevel", "Maximum Level:", "int"],
+    ["keyAttribute", "Key Attribute:", "raw"],
+    ["requirements", "Requirements:", "raw"],
+  ];
+  for (const [key, label, pattern] of HEADER_FIELDS) {
+    const it = pd.items.find(
+      (i) => colOf(i.x, cols) === anchor.col && i.y > anchor.y && i.y < anchor.y + 100 && i.str.trim().startsWith(label),
+    );
+    if (!it) {
+      warn(`${entry.id}: header bullet "${label}" not found on p.${page}`);
+      continue;
+    }
+    fields[key] = {
+      op: "value", page,
+      box: { x0: colX - 5, x1: tableLeft, y0: it.y - 3, y1: it.y + 6 },
+      pattern,
+      dropText: [label],
+    };
+  }
+
+  /* --- the proficiency list: raw text; the binder token-matches names --- */
+  if (spec.profList) {
+    const pPage = spec.profList.page ?? page;
+    const ppd = pPage === page ? pd : await pageItems(doc, pPage);
+    const pcols = detectColumns(ppd.items);
+    const labelIt = ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label)));
+    if (!labelIt) {
+      warn(`${entry.id}: proficiency-list label "${spec.profList.label}" not found on p.${pPage}`);
+    } else {
+      const c = colOf(labelIt.x, pcols);
+      const cx0 = pcols[c] - 6;
+      const cx1 = pcols[c + 1] ? pcols[c + 1] - 6 : ppd.width;
+      const below = ppd.items
+        .filter((i) => colOf(i.x, pcols) === c && i.y >= labelIt.y && i.h < HEADING_MIN_H)
+        .sort((a, b) => a.y - b.y);
+      let stopY = ppd.height;
+      let prevY = labelIt.y;
+      for (const i of below) {
+        if (i.y - prevY > 16) {
+          stopY = prevY + 8;
+          break;
+        }
+        prevY = i.y;
+      }
+      fields.profList = {
+        op: "value", page: pPage,
+        box: { x0: cx0, x1: cx1, y0: labelIt.y - 3, y1: Math.min(stopY, ppd.height) },
+        pattern: "raw",
+        dropText: [spec.profList.label],
+      };
+    }
+  }
+
+  /* --- per-page raw body text: the binder resolves award grant-levels and
+         the cleave phrase against the reader's own words --- */
+  for (const p of entry.pages) {
+    const bpd = p === page ? pd : await pageItems(doc, p);
+    fields[`body${p}`] = {
+      op: "value", page: p,
+      box: { x0: 45, x1: bpd.width - 45, y0: 50, y1: bpd.height },
+      pattern: "raw",
+    };
+  }
+
+  return {
+    kind: entry.kind,
+    name: entry.name,
+    book: entry.book,
+    cite: `${BOOKS[entry.book].short} p.${page}`,
+    pages: entry.pages,
+    ...(entry.icon ? { icon: entry.icon } : {}),
+    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {} },
+    ...(spec.awards?.length ? { awards: spec.awards } : {}),
+    ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
+    fields,
+  };
+}
+
+/* -------------------------------------------- */
 /*  Definition compilation (proficiency/power/skill) */
 /* -------------------------------------------- */
 
 /** Content-type cookbook filename for a definition kind (named by WHAT it
  * extracts, not the source book — a content type spans every book). */
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment" };
+// kind.class routes through compileClass before the definition branch reads
+// this map — its row here feeds only the index's content list.
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -2606,6 +2864,16 @@ async function main() {
       }
       if (entry.status && entry.status !== "active") {
         console.error(`SKIP ${entry.id}: status "${entry.status}" (pending review)`);
+        continue;
+      }
+      if (entry.kind === "kind.class") {
+        try {
+          const compiled = await compileClass(doc, entry, kinds[entry.kind]);
+          (contentOut["classes"] ??= { schema: "acks-cookbook/2", content: "classes", entries: {} }).entries[entry.id] = compiled;
+          console.error(`OK   ${entry.id}: ${Object.keys(compiled.fields).length} instructions [classes]`);
+        } catch (err) {
+          warn(`${entry.id}: ${err.message}`);
+        }
         continue;
       }
       if (kindRow.role === "definition") {

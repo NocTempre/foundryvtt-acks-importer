@@ -1,0 +1,248 @@
+{
+  "schema": "acks-cookbook/2",
+  "content": "classes",
+  "entries": {
+    "def.class.fighter": {
+      "kind": "kind.class",
+      "name": "Fighter",
+      "book": "rr",
+      "cite": "RR p.26",
+      "pages": [
+        26,
+        27
+      ],
+      "icon": "icons/svg/sword.svg",
+      "meta": {
+        "category": "class",
+        "key": "fighter",
+        "chassis": {
+          "saves": "",
+          "attack": ""
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.battlefieldProwess",
+          "from": {
+            "pattern": "Battlefield Prowess \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.castle",
+          "from": {
+            "pattern": "Castle \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 354,
+            "y0": 103,
+            "y1": 125
+          },
+          "text": "Fighter"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 26,
+          "box": {
+            "x0": 318.9722,
+            "x1": 531.0975000000001,
+            "y0": 121.73000000000002,
+            "y1": 279.58950000000004
+          },
+          "label": {
+            "x0": 419.13855,
+            "x1": 449.0964
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 318.9722,
+              "x1": 355.1401
+            },
+            {
+              "key": "title",
+              "x0": 355.1401,
+              "x1": 419.13855
+            },
+            {
+              "key": "hd",
+              "x0": 449.0964,
+              "x1": 499.42765
+            },
+            {
+              "key": "damageBonus",
+              "x0": 499.42765,
+              "x1": 531.0975000000001
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 27,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 111.31010000000003,
+            "y1": 222.36980000000005
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 312.9722,
+            "y0": 153,
+            "y1": 162
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 312.9722,
+            "y0": 163,
+            "y1": 172
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 312.9722,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 312.9722,
+            "y0": 143,
+            "y1": 152
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 27,
+          "box": {
+            "x0": 304,
+            "x1": 612,
+            "y0": 233,
+            "y1": 314
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Fighter Proficiency List:"
+          ]
+        },
+        "body26": {
+          "op": "value",
+          "page": 26,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body27": {
+          "op": "value",
+          "page": 27,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    }
+  }
+}

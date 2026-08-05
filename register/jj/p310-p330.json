@@ -598,21 +598,6 @@
     "icon": "systems/acks/assets/icons/battle-magic.webp"
   },
   {
-    "id": "def.power.battlefieldProwess",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Battlefield Prowess",
-    "anchor": {
-      "runin": "Battlefield Prowess:"
-    },
-    "pages": [
-      312
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.battlePlan",
     "kind": "kind.power",
     "book": "jj",

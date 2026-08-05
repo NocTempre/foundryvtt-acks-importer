@@ -1,0 +1,82 @@
+[
+  {
+    "id": "def.class.fighter",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Fighter",
+    "anchor": {
+      "display": "Fighter"
+    },
+    "pages": [26, 27],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/sword.svg",
+    "class": {
+      "key": "fighter",
+      "chassis": { "saves": "", "attack": "" },
+      "tables": {
+        "progression": {
+          "title": "Fighter Level Progression",
+          "page": 26,
+          "labelHeader": "Level",
+          "cols": [
+            { "key": "xp", "header": "Experience" },
+            { "key": "title", "header": "Title" },
+            { "key": "hd", "header": "Hit Dice" },
+            { "key": "damageBonus", "header": "Damage Bonus" }
+          ]
+        },
+        "attackSaves": {
+          "title": "Fighter Attack and Saving Throws",
+          "page": 27,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            { "key": "paralysis", "header": "Paralysis", "pattern": "intDash" },
+            { "key": "death", "header": "Death", "pattern": "intDash" },
+            { "key": "blast", "header": "Blast", "pattern": "intDash" },
+            { "key": "implements", "header": "Implements", "pattern": "intDash" },
+            { "key": "spells", "header": "Spells", "pattern": "intDash" },
+            { "key": "attackThrow", "header": "Attack Throw", "pattern": "intDash" }
+          ]
+        }
+      },
+      "profList": { "label": "Fighter Proficiency List:", "page": 27 },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        { "ref": "def.prof.manualOfArms", "starting": true, "note": "The class power is one rank of the proficiency; the spread says so." },
+        { "ref": "def.power.battlefieldProwess", "from": { "pattern": "Battlefield Prowess \\((\\d+)" } },
+        { "ref": "def.power.castle", "from": { "pattern": "Castle \\((\\d+)" } }
+      ]
+    }
+  },
+  {
+    "id": "def.power.battlefieldProwess",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Battlefield Prowess",
+    "anchor": {
+      "runin": "Battlefield Prowess ("
+    },
+    "pages": [26],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.castle",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Castle",
+    "anchor": {
+      "runin": "Castle ("
+    },
+    "pages": [26],
+    "meta": {
+      "category": "classPower"
+    }
+  }
+]

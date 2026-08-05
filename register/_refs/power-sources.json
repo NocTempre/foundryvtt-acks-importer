@@ -1,0 +1,11 @@
+{
+  "shape": "table",
+  "note": "Per-power source matrix (RR-primary): which book prints each class power and its disposition — rrPrimary, rrPrimaryJjAppend (kind.powerAppend carries JJ's player-facing extra), jjOnly, profEquivalent (the power is a rank of a proficiency; the class awards the prof ref). Pages are full-PDF indices. Grown class-by-class; the catch-up phase closes the jjOnly tail.",
+  "table": {
+    "fighter": [
+      { "name": "Manual of Arms", "ref": "def.prof.manualOfArms", "rr": 26, "disposition": "profEquivalent" },
+      { "name": "Battlefield Prowess", "ref": "def.power.battlefieldProwess", "rr": 26, "jj": 312, "disposition": "rrPrimary" },
+      { "name": "Castle", "ref": "def.power.castle", "rr": 26, "disposition": "rrPrimary" }
+    ]
+  }
+}

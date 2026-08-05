@@ -1153,7 +1153,7 @@
       "kind": "kind.power",
       "name": "Animal Magnetism",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.26",
       "pages": [
         311
       ],
@@ -1180,43 +1180,30 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 26,
           "paras": [
             {
               "box": {
                 "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
               },
               "fixes": {
                 "joinSpace": [
-                  0,
                   1,
                   2,
                   3,
                   4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
+                  5,
+                  6
                 ],
                 "drop": [
-                  0
-                ]
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
               }
             }
           ]
@@ -1465,7 +1452,7 @@
       "kind": "kind.power",
       "name": "Arena Reputation",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.26",
       "pages": [
         311
       ],
@@ -1492,43 +1479,30 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 26,
           "paras": [
             {
               "box": {
                 "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
               },
               "fixes": {
                 "joinSpace": [
-                  0,
                   1,
                   2,
                   3,
                   4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
+                  5,
+                  6
                 ],
                 "drop": [
-                  0
-                ]
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
               }
             }
           ]
@@ -2168,78 +2142,6 @@
                   3,
                   4,
                   5
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "def.power.battlefieldProwess": {
-      "id": "def.power.battlefieldProwess",
-      "kind": "kind.power",
-      "name": "Battlefield Prowess",
-      "book": "jj",
-      "cite": "JJ p.312",
-      "pages": [
-        312
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:battlefieldprowess"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 312,
-          "box": {
-            "x0": 43,
-            "x1": 119.60899999999998,
-            "y0": 291,
-            "y1": 300
-          },
-          "text": "Battlefield Prowess:"
-        },
-        "description": {
-          "op": "text",
-          "page": 312,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
                 ],
                 "drop": [
                   0
@@ -8118,7 +8020,7 @@
       "kind": "kind.power",
       "name": "Fiery Spirit",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.26",
       "pages": [
         318
       ],
@@ -8145,43 +8047,30 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 26,
           "paras": [
             {
               "box": {
                 "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
               },
               "fixes": {
                 "joinSpace": [
-                  0,
                   1,
                   2,
                   3,
                   4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
+                  5,
+                  6
                 ],
                 "drop": [
-                  0
-                ]
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
               }
             }
           ]
@@ -9621,7 +9510,7 @@
       "kind": "kind.power",
       "name": "Greatness of Soul",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.26",
       "pages": [
         319
       ],
@@ -9648,43 +9537,30 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 26,
           "paras": [
             {
               "box": {
                 "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
               },
               "fixes": {
                 "joinSpace": [
-                  0,
                   1,
                   2,
                   3,
                   4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
+                  5,
+                  6
                 ],
                 "drop": [
-                  0
-                ]
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
               }
             }
           ]
@@ -19753,7 +19629,7 @@
       "kind": "kind.power",
       "name": "Widespread Renown",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.26",
       "pages": [
         330
       ],
@@ -19780,43 +19656,30 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 26,
           "paras": [
             {
               "box": {
                 "x0": 45,
-                "x1": 294,
-                "y0": 293,
-                "y1": 389
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
               },
               "fixes": {
                 "joinSpace": [
-                  0,
                   1,
                   2,
                   3,
                   4,
-                  6,
-                  8,
-                  10,
-                  11,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18,
-                  19,
-                  20,
-                  21,
-                  22,
-                  24,
-                  25,
-                  26,
-                  27
+                  5,
+                  6
                 ],
                 "drop": [
-                  0
-                ]
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
               }
             }
           ]
@@ -20611,6 +20474,216 @@
                 "joinSpace": [
                   0,
                   1
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.battlefieldProwess": {
+      "id": "def.power.battlefieldProwess",
+      "kind": "kind.power",
+      "name": "Battlefield Prowess",
+      "book": "rr",
+      "cite": "RR p.26",
+      "pages": [
+        26
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:battlefieldprowess"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 26,
+          "box": {
+            "x0": 43,
+            "x1": 123.51500000000001,
+            "y0": 571,
+            "y1": 580
+          },
+          "text": "Battlefield Prowess ("
+        },
+        "description": {
+          "op": "text",
+          "page": 26,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 354,
+                "y0": 573,
+                "y1": 619
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "drop": [
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 21
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.castle": {
+      "id": "def.power.castle",
+      "kind": "kind.power",
+      "name": "Castle",
+      "book": "rr",
+      "cite": "RR p.26",
+      "pages": [
+        26
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 26,
+          "box": {
+            "x0": 43,
+            "x1": 79.04509999999999,
+            "y0": 631,
+            "y1": 640
+          },
+          "text": "Castle ("
+        },
+        "description": {
+          "op": "text",
+          "page": 26,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 354,
+                "y0": 633,
+                "y1": 729
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23
+                ],
+                "drop": [
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 355,
+                "x1": 612,
+                "y0": 122.73000000000002,
+                "y1": 289.9116
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  38,
+                  39,
+                  40,
+                  42,
+                  43,
+                  45,
+                  46,
+                  47,
+                  49,
+                  50,
+                  52,
+                  53,
+                  54,
+                  56,
+                  57,
+                  59,
+                  60,
+                  61,
+                  63,
+                  64,
+                  66,
+                  67,
+                  69,
+                  70
+                ],
+                "drop": [
+                  38,
+                  42,
+                  45,
+                  49,
+                  52,
+                  56,
+                  59,
+                  63
                 ]
               }
             }

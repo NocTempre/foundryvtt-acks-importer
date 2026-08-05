@@ -2281,6 +2281,29 @@
         "key": "weapon"
       }
     },
+    "undefined": {
+      "fighter": [
+        {
+          "name": "Manual of Arms",
+          "ref": "def.prof.manualOfArms",
+          "rr": 26,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Battlefield Prowess",
+          "ref": "def.power.battlefieldProwess",
+          "rr": 26,
+          "jj": 312,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Castle",
+          "ref": "def.power.castle",
+          "rr": 26,
+          "disposition": "rrPrimary"
+        }
+      ]
+    },
     "power": {},
     "proficiency": {
       "Alertness": {
