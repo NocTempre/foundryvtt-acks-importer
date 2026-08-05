@@ -3304,5 +3304,1525 @@
         }
       ]
     }
+  },
+  {
+    "id": "def.power.hardyPeople",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Hardy People",
+    "anchor": {
+      "runin": "Hardy"
+    },
+    "pages": [
+      83
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.sensitivityToRockAndStone",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Sensitivity to Rock and Stone",
+    "anchor": {
+      "runin": "Sensitivity to Rock and Stone"
+    },
+    "pages": [
+      83
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.acrobatics",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Acrobatics",
+    "anchor": {
+      "runin": "Acrobatics:"
+    },
+    "pages": [
+      88
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/acrobatics.webp"
+  },
+  {
+    "id": "def.power.attunementToNature",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Attunement to Nature",
+    "anchor": {
+      "runin": "Attunement to Nature"
+    },
+    "pages": [
+      92
+    ],
+    "meta": {
+      "category": "classPower",
+      "provides": [
+        "kw:alertness"
+      ]
+    },
+    "rolls": [
+      {
+        "key": "searchListen",
+        "label": {
+          "pattern": "Adventuring proficiency to (search or listen)"
+        },
+        "target": {
+          "pattern": "search or listen[\\s\\S]{0,80}?proficiency throw of (\\d+)\\+"
+        },
+        "condition": "using Adventuring to search or listen",
+        "note": "Used in place of the usual Adventuring search/listen target, not added to it."
+      }
+    ],
+    "effects": [
+      {
+        "type": "modifier",
+        "target": "surprise",
+        "mode": "add",
+        "condition": "in the wilderness",
+        "from": {
+          "pattern": "\\+(\\d+) bonus to surprise rolls when in the wilderness"
+        }
+      },
+      {
+        "type": "modifies",
+        "refs": [
+          "kw:searching"
+        ],
+        "ifHas": [
+          "kw:searching"
+        ],
+        "target": "proficiencyThrow",
+        "mode": "replace",
+        "from": {
+          "pattern": "proficient in Searching,? they gain a \\+(\\d+) bonus"
+        },
+        "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Searching."
+      },
+      {
+        "type": "modifies",
+        "refs": [
+          "kw:listening"
+        ],
+        "ifHas": [
+          "kw:listening"
+        ],
+        "target": "proficiencyThrow",
+        "mode": "replace",
+        "from": {
+          "pattern": "proficient in Listening,? they gain a \\+(\\d+) bonus"
+        },
+        "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Listening. Distinct from the Searching value above - this is why the entry cannot be an alias of Alertness."
+      }
+    ]
+  },
+  {
+    "id": "def.power.connectionToNature",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Connection to Nature",
+    "anchor": {
+      "runin": "Connection to Nature"
+    },
+    "pages": [
+      93
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.bloodOfKings",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Blood of Kings",
+    "anchor": {
+      "runin": "Blood of Ancient Kings"
+    },
+    "pages": [
+      95
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.favorOfTheGods",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Favor of the Gods",
+    "anchor": {
+      "runin": "Favor of the Empyrean Powers"
+    },
+    "pages": [
+      95
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.longeval",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Longeval",
+    "anchor": {
+      "runin": "Longeval"
+    },
+    "pages": [
+      95
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.divineHealth",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Divine Health",
+    "anchor": {
+      "runin": "Divine Health:"
+    },
+    "pages": [
+      95
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/divine-health.webp"
+  },
+  {
+    "id": "def.power.afterTheFlesh",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "After the Flesh",
+    "anchor": {
+      "runin": "After the Flesh"
+    },
+    "pages": [
+      100
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.ancientPacts",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Ancient Pacts",
+    "anchor": {
+      "runin": "Ancient Pacts"
+    },
+    "pages": [
+      100
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.inexorable",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Inexorable",
+    "anchor": {
+      "runin": "Inexorable"
+    },
+    "pages": [
+      101
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.attentionToDetail",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Attention to Detail",
+    "anchor": {
+      "runin": "Attention to Detail:"
+    },
+    "pages": [
+      82
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.crafting",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Crafting",
+    "anchor": {
+      "runin": "Crafting:"
+    },
+    "pages": [
+      82
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.vault",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Vault",
+    "anchor": {
+      "runin": "Vault ("
+    },
+    "pages": [
+      83
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.fastness",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Fastness",
+    "anchor": {
+      "runin": "Fastness ("
+    },
+    "pages": [
+      92
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.preternaturalQuickening",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Preternatural Quickening",
+    "anchor": {
+      "runin": "Preternatural"
+    },
+    "pages": [
+      99
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.darkSouls",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Dark Souls",
+    "anchor": {
+      "runin": "Dark Souls"
+    },
+    "pages": [
+      100
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.class.dwarvenCraftpriest",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Dwarven Craftpriest",
+    "anchor": {
+      "display": "Dwarven Craftpriest"
+    },
+    "pages": [
+      82,
+      83,
+      84
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/anchor.svg",
+    "class": {
+      "key": "dwarvenCraftpriest",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Craftpriest Level Progression",
+          "page": 82,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "s1",
+              "header": "1",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s2",
+              "header": "2",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s3",
+              "header": "3",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s4",
+              "header": "4",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s5",
+              "header": "5",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Dwarven Craftpriest Attack and Saving Throws",
+          "page": 83,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Dwarven Craftpriest Templates",
+          "page": 84,
+          "kind": "templates",
+          "cols": [
+            {
+              "key": "template",
+              "header": "Template"
+            },
+            {
+              "key": "caste",
+              "header": "Caste"
+            },
+            {
+              "key": "proficiencies",
+              "header": "Proficiencies"
+            },
+            {
+              "key": "equipment",
+              "header": "Starting Equipment"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Dwarven Craftpriest Proficiency List:",
+        "page": 84
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.attentionToDetail",
+          "starting": true
+        },
+        {
+          "ref": "def.power.crafting",
+          "starting": true
+        },
+        {
+          "ref": "def.power.rebukeUndead",
+          "starting": true
+        },
+        {
+          "ref": "def.power.studiousDivineMagic",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.theology",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.giftOfTongues",
+          "starting": true,
+          "note": "Dwarf Tongues — Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.hardyPeople",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.sensitivityToRockAndStone",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.vault",
+          "from": {
+            "pattern": "Vault \\((\\d+)"
+          }
+        }
+      ],
+      "casting": [
+        {
+          "key": "divine",
+          "label": "Divine",
+          "kind": "vancian",
+          "repertoire": "studious"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.dwarvenVaultguard",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Dwarven Vaultguard",
+    "anchor": {
+      "display": "Dwarven Vaultguard"
+    },
+    "pages": [
+      86,
+      87
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/shield.svg",
+    "class": {
+      "key": "dwarvenVaultguard",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Vaultguard Level Progression",
+          "page": 86,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Dwarven Vaultguard Attack and Saving Throws",
+          "page": 87,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Dwarven Vaultguard Templates",
+          "page": 87,
+          "kind": "templates",
+          "cols": [
+            {
+              "key": "template",
+              "header": "Template"
+            },
+            {
+              "key": "caste",
+              "header": "Caste"
+            },
+            {
+              "key": "proficiencies",
+              "header": "Proficiencies"
+            },
+            {
+              "key": "equipment",
+              "header": "Starting Equipment"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Dwarven Vaultguard Proficiency List:",
+        "page": 87
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.giftOfTongues",
+          "starting": true,
+          "note": "Dwarf Tongues — Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.hardyPeople",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.sensitivityToRockAndStone",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.battlefieldProwess",
+          "from": {
+            "pattern": "Battlefield Prowess \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.vault",
+          "from": {
+            "pattern": "Vault \\((\\d+)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.elvenNightblade",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Elven Nightblade",
+    "anchor": {
+      "display": "Elven Nightblade"
+    },
+    "pages": [
+      88,
+      89,
+      90,
+      91
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/eye.svg",
+    "class": {
+      "key": "elvenNightblade",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Nightblade Level Progression",
+          "page": 88,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "s1",
+              "header": "1",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s2",
+              "header": "2",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s3",
+              "header": "3",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s4",
+              "header": "4",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s5",
+              "header": "5",
+              "pattern": "intDash"
+            },
+            {
+              "key": "casterLevel",
+              "header": "Caster"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Elven Nightblade Attack and Saving Throws",
+          "page": 89,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "skillTable": {
+          "title": "Nightblade Skill Progression",
+          "page": 89,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "acrobatics",
+              "header": "Acrobatics"
+            },
+            {
+              "key": "climbing",
+              "header": "Climbing"
+            },
+            {
+              "key": "hiding",
+              "header": "Hiding"
+            },
+            {
+              "key": "sneaking",
+              "header": "Sneaking"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Elven Nightblade Templates",
+          "page": 90,
+          "kind": "templates"
+        }
+      },
+      "profList": {
+        "label": "Elven Nightblade Proficiency List:",
+        "page": 91
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.acrobatics",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.backstabbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.climbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hiding",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.shadowySenses",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.sneaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.streetwise",
+          "starting": true
+        },
+        {
+          "ref": "def.power.giftOfTongues",
+          "starting": true,
+          "note": "Elf Tongues — Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.attunementToNature",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.connectionToNature",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.skill.hideout",
+          "from": {
+            "pattern": "Hideout \\((\\d+)"
+          }
+        }
+      ],
+      "casting": [
+        {
+          "key": "arcane",
+          "label": "Arcane",
+          "kind": "vancian",
+          "repertoire": "arcaneInt",
+          "casterLevel": "casterLevel"
+        }
+      ],
+      "skills": [
+        {
+          "ref": "def.skill.backstabbing"
+        },
+        {
+          "ref": "def.skill.climbing"
+        },
+        {
+          "ref": "def.skill.hiding"
+        },
+        {
+          "ref": "def.skill.sneaking"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.elvenSpellsword",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Elven Spellsword",
+    "anchor": {
+      "display": "Elven Spellsword"
+    },
+    "pages": [
+      92,
+      93
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/sword.svg",
+    "class": {
+      "key": "elvenSpellsword",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Spellsword Level Progression",
+          "page": 92,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            },
+            {
+              "key": "s1",
+              "header": "1",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s2",
+              "header": "2",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s3",
+              "header": "3",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s4",
+              "header": "4",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s5",
+              "header": "5",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Elven Spellsword Attack and Saving Throws",
+          "page": 93,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Elven Spellsword Templates",
+          "page": 93,
+          "kind": "templates"
+        }
+      },
+      "profList": {
+        "label": "Elven Spellsword Proficiency List:",
+        "page": 93
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.arcaneMagic",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.collegiateWizardry",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.giftOfTongues",
+          "starting": true,
+          "note": "Elf Tongues — Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.attunementToNature",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.connectionToNature",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.fastness",
+          "from": {
+            "pattern": "Fastness \\((\\d+)"
+          }
+        }
+      ],
+      "casting": [
+        {
+          "key": "arcane",
+          "label": "Arcane",
+          "kind": "vancian",
+          "repertoire": "arcaneInt"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.nobiranWonderworker",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Nobiran Wonderworker",
+    "anchor": {
+      "display": "Nobiran Wonderworker"
+    },
+    "pages": [
+      94,
+      95,
+      96
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/angel.svg",
+    "class": {
+      "key": "nobiranWonderworker",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Wonderworker Level Progression",
+          "page": 94,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "a1",
+              "header": "1",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "a2",
+              "header": "2",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "a3",
+              "header": "3",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "a4",
+              "header": "4",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "a5",
+              "header": "5",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "a6",
+              "header": "6",
+              "pattern": "intDash",
+              "occurrence": 1
+            },
+            {
+              "key": "d1",
+              "header": "1",
+              "pattern": "intDash",
+              "occurrence": 2
+            },
+            {
+              "key": "d2",
+              "header": "2",
+              "pattern": "intDash",
+              "occurrence": 2
+            },
+            {
+              "key": "d3",
+              "header": "3",
+              "pattern": "intDash",
+              "occurrence": 2
+            },
+            {
+              "key": "d4",
+              "header": "4",
+              "pattern": "intDash",
+              "occurrence": 2
+            },
+            {
+              "key": "d5",
+              "header": "5",
+              "pattern": "intDash",
+              "occurrence": 2
+            },
+            {
+              "key": "d6",
+              "header": "6",
+              "pattern": "intDash",
+              "occurrence": 2
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Nobiran Wonderworker Attack and Saving Throws",
+          "page": 95,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Nobiran Wonderworker Templates",
+          "page": 96,
+          "kind": "templates"
+        }
+      },
+      "profList": {
+        "label": "Nobiran Wonderworker Proficiency List:",
+        "page": 96
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.arcaneMagic",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.collegiateWizardry",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.divineMagic",
+          "starting": true
+        },
+        {
+          "ref": "def.power.wonderworkerLayOnHands",
+          "starting": true
+        },
+        {
+          "ref": "def.power.divineHealth",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.bloodOfKings",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.favorOfTheGods",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.longeval",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.minorMagicalResearch",
+          "from": {
+            "pattern": "Minor Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.supremeMagicalResearch",
+          "from": {
+            "pattern": "Supreme Magical Research \\((\\d+)"
+          }
+        }
+      ],
+      "casting": [
+        {
+          "key": "arcane",
+          "label": "Arcane",
+          "kind": "vancian",
+          "repertoire": "arcaneInt"
+        },
+        {
+          "key": "divine",
+          "label": "Divine",
+          "kind": "vancian",
+          "repertoire": "order"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.zaharanRuinguard",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Zaharan Ruinguard",
+    "anchor": {
+      "display": "Zaharan Ruinguard"
+    },
+    "pages": [
+      98,
+      99,
+      100,
+      101
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/skull.svg",
+    "class": {
+      "key": "zaharanRuinguard",
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
+      "factored": true,
+      "tables": {
+        "progression": {
+          "title": "Ruinguard Level Progression",
+          "page": 98,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "s1",
+              "header": "1",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s2",
+              "header": "2",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s3",
+              "header": "3",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s4",
+              "header": "4",
+              "pattern": "intDash"
+            },
+            {
+              "key": "s5",
+              "header": "5",
+              "pattern": "intDash"
+            },
+            {
+              "key": "casterLevel",
+              "header": "Caster"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Zaharan Ruinguard Attack and Saving Throws",
+          "page": 99,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        },
+        "templates": {
+          "title": "Zaharan Ruinguard Templates",
+          "page": 100,
+          "kind": "templates"
+        }
+      },
+      "profList": {
+        "label": "Zaharan Ruinguard Proficiency List:",
+        "page": 101
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.darkBlessing",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.preternaturalQuickening",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.weaponFocus",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.afterTheFlesh",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.ancientPacts",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.darkSouls",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.inexorable",
+          "starting": true,
+          "note": "Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.giftOfTongues",
+          "starting": true,
+          "note": "Zaharan Tongues — Racial trait; save adjustments are already factored into the printed tables."
+        },
+        {
+          "ref": "def.power.spellStoring",
+          "from": {
+            "pattern": "Spell Storing \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.majorMagicalResearch",
+          "from": {
+            "pattern": "Major Magical Research \\((\\d+)"
+          }
+        }
+      ],
+      "casting": [
+        {
+          "key": "arcane",
+          "label": "Arcane",
+          "kind": "vancian",
+          "repertoire": "arcaneInt",
+          "casterLevel": "casterLevel"
+        }
+      ]
+    }
   }
 ]

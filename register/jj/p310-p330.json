@@ -30,43 +30,12 @@
     }
   },
   {
-    "id": "def.power.acrobatics",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Acrobatics",
-    "anchor": {
-      "runin": "Acrobatics:"
-    },
-    "pages": [
-      310
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/acrobatics.webp"
-  },
-  {
     "id": "def.power.adhesiveToePads",
     "kind": "kind.power",
     "book": "jj",
     "name": "Adhesive Toe Pads",
     "anchor": {
       "runin": "Adhesive Toe Pads:"
-    },
-    "pages": [
-      310
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.afterTheFlesh",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "After the Flesh",
-    "anchor": {
-      "runin": "After the Flesh:"
     },
     "pages": [
       310
@@ -172,21 +141,6 @@
     "name": "Analyze Data",
     "anchor": {
       "runin": "Analyze Data:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.ancientPacts",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Ancient Pacts",
-    "anchor": {
-      "runin": "Ancient Pacts:"
     },
     "pages": [
       311
@@ -318,78 +272,6 @@
     "meta": {
       "category": "classPower"
     }
-  },
-  {
-    "id": "def.power.attunementToNature",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Attunement to Nature",
-    "anchor": {
-      "runin": "Attunement to Nature:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower",
-      "provides": [
-        "kw:alertness"
-      ]
-    },
-    "rolls": [
-      {
-        "key": "searchListen",
-        "label": {
-          "pattern": "Adventuring proficiency to (search or listen)"
-        },
-        "target": {
-          "pattern": "search or listen[\\s\\S]{0,80}?proficiency throw of (\\d+)\\+"
-        },
-        "condition": "using Adventuring to search or listen",
-        "note": "Used in place of the usual Adventuring search/listen target, not added to it."
-      }
-    ],
-    "effects": [
-      {
-        "type": "modifier",
-        "target": "surprise",
-        "mode": "add",
-        "condition": "in the wilderness",
-        "from": {
-          "pattern": "\\+(\\d+) bonus to surprise rolls when in the wilderness"
-        }
-      },
-      {
-        "type": "modifies",
-        "refs": [
-          "kw:searching"
-        ],
-        "ifHas": [
-          "kw:searching"
-        ],
-        "target": "proficiencyThrow",
-        "mode": "replace",
-        "from": {
-          "pattern": "proficient in Searching,? they gain a \\+(\\d+) bonus"
-        },
-        "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Searching."
-      },
-      {
-        "type": "modifies",
-        "refs": [
-          "kw:listening"
-        ],
-        "ifHas": [
-          "kw:listening"
-        ],
-        "target": "proficiencyThrow",
-        "mode": "replace",
-        "from": {
-          "pattern": "proficient in Listening,? they gain a \\+(\\d+) bonus"
-        },
-        "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Listening. Distinct from the Searching value above - this is why the entry cannot be an alias of Alertness."
-      }
-    ]
   },
   {
     "id": "def.power.avoidGettingLost",
@@ -648,21 +530,6 @@
     "name": "Blindsight",
     "anchor": {
       "runin": "Blindsight:"
-    },
-    "pages": [
-      312
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.bloodOfKings",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Blood of Kings",
-    "anchor": {
-      "runin": "Blood of Kings:"
     },
     "pages": [
       312
@@ -1132,21 +999,6 @@
     }
   },
   {
-    "id": "def.power.connectionToNature",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Connection to Nature",
-    "anchor": {
-      "runin": "Connection to Nature:"
-    },
-    "pages": [
-      314
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.consumeSouls",
     "kind": "kind.power",
     "book": "jj",
@@ -1561,22 +1413,6 @@
     "icon": "systems/acks/assets/icons/divine-blessing.webp"
   },
   {
-    "id": "def.power.divineHealth",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Divine Health",
-    "anchor": {
-      "runin": "Divine Health:"
-    },
-    "pages": [
-      316
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/divine-health.webp"
-  },
-  {
     "id": "def.power.divineProficiency",
     "kind": "kind.power",
     "book": "jj",
@@ -1880,21 +1716,6 @@
     "name": "Farseeing",
     "anchor": {
       "runin": "Farseeing:"
-    },
-    "pages": [
-      317
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.favorOfTheGods",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Favor of the Gods",
-    "anchor": {
-      "runin": "Favor of the Gods:"
     },
     "pages": [
       317
@@ -2369,21 +2190,6 @@
     }
   },
   {
-    "id": "def.power.hardyPeople",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Hardy People",
-    "anchor": {
-      "runin": "Hardy People:"
-    },
-    "pages": [
-      320
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.harmonyOfSpirit",
     "kind": "kind.power",
     "book": "jj",
@@ -2519,21 +2325,6 @@
     "name": "Implacable Will",
     "anchor": {
       "runin": "Implacable Will:"
-    },
-    "pages": [
-      320
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.inexorable",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Inexorable",
-    "anchor": {
-      "runin": "Inexorable:"
     },
     "pages": [
       320
@@ -2955,21 +2746,6 @@
     "name": "Loadbearing",
     "anchor": {
       "runin": "Loadbearing:"
-    },
-    "pages": [
-      322
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.longeval",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Longeval",
-    "anchor": {
-      "runin": "Longeval:"
     },
     "pages": [
       322
@@ -3910,21 +3686,6 @@
     "name": "Secrets of Life and Death",
     "anchor": {
       "runin": "Secrets of Life and Death:"
-    },
-    "pages": [
-      326
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.sensitivityToRockAndStone",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Sensitivity to Rock and Stone",
-    "anchor": {
-      "runin": "Sensitivity to Rock and Stone:"
     },
     "pages": [
       326

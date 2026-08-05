@@ -2891,7 +2891,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
 
   const levels = [];
   const ladderMap = new Map(); // colKey → rungs
-  const slotRows = [];
+  const slotRowsBy = {}; // s: single tradition; a/d: the Nobiran's pair
   for (const row of f.progression?.rows ?? []) {
     const level = intFrom(row.label);
     if (level == null) continue;
@@ -2901,14 +2901,18 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       title: capFirst(row.cells.title),
       hd: String(row.cells.hd ?? "").replace(/\*/g, "").trim(),
     });
-    const slots = {};
-    let anySlot = false;
+    // Slot columns: s1..s6 (single tradition) or a1..a6 / d1..d6 (the
+    // Nobiran's arcane and divine groups). Anything else non-fixed is a
+    // named ladder.
+    const perPrefix = { s: {}, a: {}, d: {} };
+    const any = { s: false, a: false, d: false };
     for (const [key, cell] of Object.entries(row.cells)) {
-      if (/^s[1-6]$/.test(key)) {
+      const slotMatch = /^([sad])([1-6])$/.exec(key);
+      if (slotMatch) {
         const n = intFrom(cell);
         if (n != null) {
-          slots[key] = n;
-          anySlot = true;
+          perPrefix[slotMatch[1]][`s${slotMatch[2]}`] = n;
+          any[slotMatch[1]] = true;
         }
         continue;
       }
@@ -2917,7 +2921,21 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       rungs.push({ atLevel: level, value: intFrom(cell), text: String(cell).trim() });
       ladderMap.set(key, rungs);
     }
-    if (anySlot) slotRows.push({ atLevel: level, ...slots });
+    for (const p of ["s", "a", "d"]) {
+      if (any[p]) (slotRowsBy[p] ??= []).push({ atLevel: level, ...perPrefix[p] });
+    }
+  }
+  // A standalone skill-progression table (the nightblade's) contributes its
+  // columns as ladders keyed by column.
+  for (const row of f.skillTable?.rows ?? []) {
+    const level = intFrom(row.label);
+    if (level == null) continue;
+    for (const [key, cell] of Object.entries(row.cells)) {
+      if (key === "band" || FIXED_COLS.has(key)) continue;
+      const rungs = ladderMap.get(key) ?? [];
+      rungs.push({ atLevel: level, value: intFrom(cell), text: String(cell).trim() });
+      ladderMap.set(key, rungs);
+    }
   }
   levels.sort((a, b) => a.level - b.level);
   const ladders = [...ladderMap.entries()].map(([key, values]) => ({
@@ -2951,17 +2969,24 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
   }
 
   // Casting traditions: the chef classifies (key/kind/repertoire — structure);
-  // every slot count comes from the progression grid's numbered columns.
-  const casting = (entry.casting ?? []).map((t) => ({
-    key: t.key ?? "arcane",
-    label: t.label ?? "",
-    kind: t.kind ?? "vancian",
-    repertoire: t.repertoire ?? "",
-    spellList: [],
-    slots: slotRows,
-    pool: [],
-    casterLevel: t.casterLevel ?? "",
-  }));
+  // every slot count comes from the progression grid's numbered columns. With
+  // one tradition the plain columns serve it; the Nobiran's pair each take
+  // their own prefixed group.
+  const casting = (entry.casting ?? []).map((t) => {
+    const key = t.key ?? "arcane";
+    const slots =
+      (key === "arcane" && slotRowsBy.a) || (key === "divine" && slotRowsBy.d) || slotRowsBy.s || [];
+    return {
+      key,
+      label: t.label ?? "",
+      kind: t.kind ?? "vancian",
+      repertoire: t.repertoire ?? "",
+      spellList: [],
+      slots,
+      pool: [],
+      casterLevel: t.casterLevel ?? "",
+    };
+  });
 
   const keyAttributes = stripBullet(f.keyAttribute)
     .split(/\s+and\s+/i)
@@ -3080,6 +3105,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       ladders,
       saveChassis: entry.meta?.chassis?.saves ?? "",
       attackChassis: entry.meta?.chassis?.attack ?? "",
+      factored: !!entry.meta?.factored,
       saves,
       attack,
       cleaves,

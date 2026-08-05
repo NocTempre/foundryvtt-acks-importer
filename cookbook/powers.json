@@ -143,75 +143,6 @@
         }
       }
     },
-    "def.power.acrobatics": {
-      "id": "def.power.acrobatics",
-      "kind": "kind.power",
-      "name": "Acrobatics",
-      "book": "jj",
-      "cite": "JJ p.310",
-      "pages": [
-        310
-      ],
-      "meta": {
-        "category": "classPower"
-      },
-      "icon": "systems/acks/assets/icons/acrobatics.webp",
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 310,
-          "box": {
-            "x0": 299.5,
-            "x1": 538.9709000000003,
-            "y0": 111,
-            "y1": 120
-          },
-          "text": "Acrobatics:"
-        },
-        "description": {
-          "op": "text",
-          "page": 310,
-          "paras": [
-            {
-              "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 113,
-                "y1": 289
-              },
-              "fixes": {
-                "joinSpace": [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  13,
-                  14,
-                  15,
-                  16,
-                  17,
-                  18,
-                  19
-                ],
-                "drop": [
-                  0
-                ],
-                "stripPrefix": {
-                  "1": 1
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.adhesiveToePads": {
       "id": "def.power.adhesiveToePads",
       "kind": "kind.power",
@@ -266,67 +197,12 @@
         }
       }
     },
-    "def.power.afterTheFlesh": {
-      "id": "def.power.afterTheFlesh",
-      "kind": "kind.power",
-      "name": "After the Flesh",
-      "book": "jj",
-      "cite": "JJ p.310",
-      "pages": [
-        310
-      ],
-      "meta": {
-        "category": "classPower"
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 310,
-          "box": {
-            "x0": 299.5,
-            "x1": 362.1275,
-            "y0": 371,
-            "y1": 380
-          },
-          "text": "After the Flesh:"
-        },
-        "description": {
-          "op": "text",
-          "page": 310,
-          "paras": [
-            {
-              "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 373,
-                "y1": 429
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.ageless": {
       "id": "def.power.ageless",
       "kind": "kind.power",
       "name": "Ageless",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "RR p.95",
       "pages": [
         310
       ],
@@ -353,35 +229,163 @@
         },
         "description": {
           "op": "text",
-          "page": 322,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 543,
-                "y1": 619
+                "x0": 325,
+                "x1": 612,
+                "y0": 363,
+                "y1": 409
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
                   2,
-                  4,
+                  3,
+                  5,
+                  6
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 421,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 543,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 573,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 603,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 82.75,
+                "y1": 478.7698
+              },
+              "page": 96,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
                   5,
                   6,
                   7,
+                  8,
                   9,
                   10,
+                  11,
                   12,
                   13,
+                  14,
                   15,
-                  16
-                ],
-                "drop": [
-                  0
+                  16,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
                 ]
               }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 651,
+                "y1": 657
+              },
+              "page": 96
             }
           ]
         }
@@ -751,70 +755,6 @@
                 "stripPrefix": {
                   "1": 1
                 }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "def.power.ancientPacts": {
-      "id": "def.power.ancientPacts",
-      "kind": "kind.power",
-      "name": "Ancient Pacts",
-      "book": "jj",
-      "cite": "JJ p.311",
-      "pages": [
-        311
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:ancientpacts"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 311,
-          "box": {
-            "x0": 70,
-            "x1": 126.08449999999999,
-            "y0": 271,
-            "y1": 280
-          },
-          "text": "Ancient Pacts:"
-        },
-        "description": {
-          "op": "text",
-          "page": 311,
-          "paras": [
-            {
-              "box": {
-                "x0": 65,
-                "x1": 324,
-                "y0": 273,
-                "y1": 329
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14
-                ],
-                "drop": [
-                  0
-                ]
               }
             }
           ]
@@ -1349,7 +1289,7 @@
       "kind": "kind.power",
       "name": "Artificial Youth",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "RR p.95",
       "pages": [
         311
       ],
@@ -1376,78 +1316,14 @@
         },
         "description": {
           "op": "text",
-          "page": 322,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 543,
-                "y1": 619
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  4,
-                  5,
-                  6,
-                  7,
-                  9,
-                  10,
-                  12,
-                  13,
-                  15,
-                  16
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "aliasOf": "def.power.longeval"
-    },
-    "def.power.attunementToNature": {
-      "id": "def.power.attunementToNature",
-      "kind": "kind.power",
-      "name": "Attunement to Nature",
-      "book": "jj",
-      "cite": "JJ p.311",
-      "pages": [
-        311
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:alertness"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 311,
-          "box": {
-            "x0": 326.5,
-            "x1": 412.63009999999997,
-            "y0": 241,
-            "y1": 250
-          },
-          "text": "Attunement to Nature:"
-        },
-        "description": {
-          "op": "text",
-          "page": 311,
+          "page": 95,
           "paras": [
             {
               "box": {
                 "x0": 325,
                 "x1": 612,
-                "y0": 243,
-                "y1": 334.80029999999994
+                "y0": 363,
+                "y1": 409
               },
               "fixes": {
                 "joinSpace": [
@@ -1455,7 +1331,114 @@
                   1,
                   2,
                   3,
-                  4,
+                  5,
+                  6
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 421,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 543,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 573,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 603,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 82.75,
+                "y1": 478.7698
+              },
+              "page": 96,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
                   5,
                   6,
                   7,
@@ -1468,84 +1451,33 @@
                   14,
                   15,
                   16,
-                  17,
+                  18,
                   19,
                   20,
-                  21
-                ],
-                "drop": [
-                  0,
-                  17,
-                  18,
-                  20,
                   21,
-                  22
+                  22,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
                 ]
               }
-            }
-          ]
-        },
-        "effects": {
-          "op": "effects",
-          "specs": [
-            {
-              "type": "modifier",
-              "target": "surprise",
-              "mode": "add",
-              "condition": "in the wilderness",
-              "from": {
-                "pattern": "\\+(\\d+) bonus to surprise rolls when in the wilderness"
-              }
             },
             {
-              "type": "modifies",
-              "refs": [
-                "kw:searching"
-              ],
-              "ifHas": [
-                "kw:searching"
-              ],
-              "target": "proficiencyThrow",
-              "mode": "replace",
-              "from": {
-                "pattern": "proficient in Searching,? they gain a \\+(\\d+) bonus"
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 651,
+                "y1": 657
               },
-              "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Searching."
-            },
-            {
-              "type": "modifies",
-              "refs": [
-                "kw:listening"
-              ],
-              "ifHas": [
-                "kw:listening"
-              ],
-              "target": "proficiencyThrow",
-              "mode": "replace",
-              "from": {
-                "pattern": "proficient in Listening,? they gain a \\+(\\d+) bonus"
-              },
-              "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Listening. Distinct from the Searching value above - this is why the entry cannot be an alias of Alertness."
-            }
-          ]
-        },
-        "rolls": {
-          "op": "rolls",
-          "specs": [
-            {
-              "key": "searchListen",
-              "label": {
-                "pattern": "Adventuring proficiency to (search or listen)"
-              },
-              "target": {
-                "pattern": "search or listen[\\s\\S]{0,80}?proficiency throw of (\\d+)\\+"
-              },
-              "condition": "using Adventuring to search or listen",
-              "note": "Used in place of the usual Adventuring search/listen target, not added to it."
+              "page": 96
             }
           ]
         }
-      }
+      },
+      "aliasOf": "def.power.longeval"
     },
     "def.power.avoidGettingLost": {
       "id": "def.power.avoidGettingLost",
@@ -2549,7 +2481,7 @@
       "kind": "kind.power",
       "name": "Blessing of the Dead",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "RR p.95",
       "pages": [
         312
       ],
@@ -2576,38 +2508,20 @@
         },
         "description": {
           "op": "text",
-          "page": 316,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 583,
-                "y1": 659
+                "x0": 65,
+                "x1": 324,
+                "y0": 363,
+                "y1": 389
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14,
-                  15,
-                  17,
-                  18,
-                  20,
-                  21,
-                  23,
-                  25
+                  2
                 ],
                 "drop": [
                   0
@@ -2662,65 +2576,6 @@
                   3,
                   4,
                   5
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "def.power.bloodOfKings": {
-      "id": "def.power.bloodOfKings",
-      "kind": "kind.power",
-      "name": "Blood of Kings",
-      "book": "jj",
-      "cite": "JJ p.312",
-      "pages": [
-        312
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:bloodofkings"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 312,
-          "box": {
-            "x0": 299.4999,
-            "x1": 360.9799000000001,
-            "y0": 651,
-            "y1": 660
-          },
-          "text": "Blood of Kings:"
-        },
-        "description": {
-          "op": "text",
-          "page": 312,
-          "paras": [
-            {
-              "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 653,
-                "y1": 709
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  9
                 ],
                 "drop": [
                   0
@@ -3102,7 +2957,7 @@
       "kind": "kind.power",
       "name": "Broad Spectrum Inoculations",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "RR p.95",
       "pages": [
         313
       ],
@@ -3129,38 +2984,20 @@
         },
         "description": {
           "op": "text",
-          "page": 316,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 583,
-                "y1": 659
+                "x0": 65,
+                "x1": 324,
+                "y0": 363,
+                "y1": 389
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14,
-                  15,
-                  17,
-                  18,
-                  20,
-                  21,
-                  23,
-                  25
+                  2
                 ],
                 "drop": [
                   0
@@ -3641,7 +3478,7 @@
       "kind": "kind.power",
       "name": "Chthonic Hegemon",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "RR p.100",
       "pages": [
         313
       ],
@@ -3668,14 +3505,14 @@
         },
         "description": {
           "op": "text",
-          "page": 311,
+          "page": 100,
           "paras": [
             {
               "box": {
-                "x0": 65,
-                "x1": 324,
-                "y0": 273,
-                "y1": 329
+                "x0": 295,
+                "x1": 612,
+                "y0": 623,
+                "y1": 689
               },
               "fixes": {
                 "joinSpace": [
@@ -3690,13 +3527,11 @@
                   8,
                   9,
                   10,
-                  11,
-                  12,
-                  14
+                  11
                 ],
-                "drop": [
-                  0
-                ]
+                "stripPrefix": {
+                  "0": 13
+                }
               }
             }
           ]
@@ -4510,63 +4345,6 @@
                   0,
                   1,
                   2
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
-    "def.power.connectionToNature": {
-      "id": "def.power.connectionToNature",
-      "kind": "kind.power",
-      "name": "Connection to Nature",
-      "book": "jj",
-      "cite": "JJ p.314",
-      "pages": [
-        314
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:connectiontonature"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 314,
-          "box": {
-            "x0": 299.5001,
-            "x1": 388.22220000000004,
-            "y0": 481,
-            "y1": 490
-          },
-          "text": "Connection to Nature:"
-        },
-        "description": {
-          "op": "text",
-          "page": 314,
-          "paras": [
-            {
-              "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 483,
-                "y1": 519
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  3,
-                  4,
-                  5,
-                  6,
-                  8
-                ],
-                "drop": [
-                  0
                 ]
               }
             }
@@ -6192,78 +5970,6 @@
         }
       }
     },
-    "def.power.divineHealth": {
-      "id": "def.power.divineHealth",
-      "kind": "kind.power",
-      "name": "Divine Health",
-      "book": "jj",
-      "cite": "JJ p.316",
-      "pages": [
-        316
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:divinehealth"
-        ]
-      },
-      "icon": "systems/acks/assets/icons/divine-health.webp",
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 316,
-          "box": {
-            "x0": 43,
-            "x1": 100.277,
-            "y0": 581,
-            "y1": 590
-          },
-          "text": "Divine Health:"
-        },
-        "description": {
-          "op": "text",
-          "page": 316,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 583,
-                "y1": 659
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14,
-                  15,
-                  17,
-                  18,
-                  20,
-                  21,
-                  23,
-                  25
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.divineProficiency": {
       "id": "def.power.divineProficiency",
       "kind": "kind.power",
@@ -7449,76 +7155,6 @@
           ]
         }
       }
-    },
-    "def.power.favorOfTheGods": {
-      "id": "def.power.favorOfTheGods",
-      "kind": "kind.power",
-      "name": "Favor of the Gods",
-      "book": "jj",
-      "cite": "JJ p.316",
-      "pages": [
-        317
-      ],
-      "meta": {
-        "category": "classPower",
-        "notStacksWith": [
-          "def.power.divineBlessing"
-        ],
-        "provides": [
-          "kw:divineblessing"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 317,
-          "box": {
-            "x0": 326.5,
-            "x1": 396.41209999999995,
-            "y0": 701,
-            "y1": 710
-          },
-          "text": "Favor of the Gods:"
-        },
-        "description": {
-          "op": "text",
-          "page": 316,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 493,
-                "y1": 569
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  11,
-                  12,
-                  14,
-                  16,
-                  17,
-                  19,
-                  20
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "aliasOf": "def.power.divineBlessing"
     },
     "def.power.fellowshipOfAnimals": {
       "id": "def.power.fellowshipOfAnimals",
@@ -9462,58 +9098,6 @@
       },
       "aliasOf": "def.power.savageResilience"
     },
-    "def.power.hardyPeople": {
-      "id": "def.power.hardyPeople",
-      "kind": "kind.power",
-      "name": "Hardy People",
-      "book": "jj",
-      "cite": "JJ p.320",
-      "pages": [
-        320
-      ],
-      "meta": {
-        "category": "classPower"
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 320,
-          "box": {
-            "x0": 43,
-            "x1": 98.6336,
-            "y0": 161,
-            "y1": 170
-          },
-          "text": "Hardy People:"
-        },
-        "description": {
-          "op": "text",
-          "page": 320,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 612,
-                "y0": 163,
-                "y1": 189
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.harmonyOfSpirit": {
       "id": "def.power.harmonyOfSpirit",
       "kind": "kind.power",
@@ -9893,7 +9477,7 @@
       "kind": "kind.power",
       "name": "Horrible Truths",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "RR p.100",
       "pages": [
         320
       ],
@@ -9920,14 +9504,14 @@
         },
         "description": {
           "op": "text",
-          "page": 311,
+          "page": 100,
           "paras": [
             {
               "box": {
-                "x0": 65,
-                "x1": 324,
-                "y0": 273,
-                "y1": 329
+                "x0": 295,
+                "x1": 612,
+                "y0": 623,
+                "y1": 689
               },
               "fixes": {
                 "joinSpace": [
@@ -9942,13 +9526,11 @@
                   8,
                   9,
                   10,
-                  11,
-                  12,
-                  14
+                  11
                 ],
-                "drop": [
-                  0
-                ]
+                "stripPrefix": {
+                  "0": 13
+                }
               }
             }
           ]
@@ -10078,76 +9660,6 @@
           ]
         }
       }
-    },
-    "def.power.inexorable": {
-      "id": "def.power.inexorable",
-      "kind": "kind.power",
-      "name": "Inexorable",
-      "book": "jj",
-      "cite": "JJ p.327",
-      "pages": [
-        320
-      ],
-      "meta": {
-        "category": "classPower",
-        "notStacksWith": [
-          "def.power.strengthOfSpirit"
-        ],
-        "provides": [
-          "kw:strengthofspirit"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 320,
-          "box": {
-            "x0": 43,
-            "x1": 86.57900000000001,
-            "y0": 701,
-            "y1": 710
-          },
-          "text": "Inexorable:"
-        },
-        "description": {
-          "op": "text",
-          "page": 327,
-          "paras": [
-            {
-              "box": {
-                "x0": 325,
-                "x1": 612,
-                "y0": 573,
-                "y1": 629
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  10,
-                  11,
-                  12,
-                  13,
-                  14,
-                  15,
-                  17,
-                  18
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "aliasOf": "def.power.strengthOfSpirit"
     },
     "def.power.infravision": {
       "id": "def.power.infravision",
@@ -11724,69 +11236,6 @@
         }
       }
     },
-    "def.power.longeval": {
-      "id": "def.power.longeval",
-      "kind": "kind.power",
-      "name": "Longeval",
-      "book": "jj",
-      "cite": "JJ p.322",
-      "pages": [
-        322
-      ],
-      "meta": {
-        "category": "classPower",
-        "provides": [
-          "kw:longeval"
-        ]
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 322,
-          "box": {
-            "x0": 43,
-            "x1": 80.5751,
-            "y0": 541,
-            "y1": 550
-          },
-          "text": "Longeval:"
-        },
-        "description": {
-          "op": "text",
-          "page": 322,
-          "paras": [
-            {
-              "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 543,
-                "y1": 619
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  4,
-                  5,
-                  6,
-                  7,
-                  9,
-                  10,
-                  12,
-                  13,
-                  15,
-                  16
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.lordshipOverTheUndead": {
       "id": "def.power.lordshipOverTheUndead",
       "kind": "kind.power",
@@ -13225,7 +12674,7 @@
       "kind": "kind.power",
       "name": "Mystical Bloodline",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "RR p.95",
       "pages": [
         324
       ],
@@ -13252,35 +12701,163 @@
         },
         "description": {
           "op": "text",
-          "page": 322,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 543,
-                "y1": 619
+                "x0": 325,
+                "x1": 612,
+                "y0": 363,
+                "y1": 409
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
                   2,
-                  4,
+                  3,
+                  5,
+                  6
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 421,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 543,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 573,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 603,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 82.75,
+                "y1": 478.7698
+              },
+              "page": 96,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
                   5,
                   6,
                   7,
+                  8,
                   9,
                   10,
+                  11,
                   12,
                   13,
+                  14,
                   15,
-                  16
-                ],
-                "drop": [
-                  0
+                  16,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
                 ]
               }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 651,
+                "y1": 657
+              },
+              "page": 96
             }
           ]
         }
@@ -13657,7 +13234,7 @@
       "kind": "kind.power",
       "name": "Perfection of Body",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "RR p.95",
       "pages": [
         324
       ],
@@ -13684,35 +13261,163 @@
         },
         "description": {
           "op": "text",
-          "page": 322,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 543,
-                "y1": 619
+                "x0": 325,
+                "x1": 612,
+                "y0": 363,
+                "y1": 409
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
                   2,
-                  4,
+                  3,
+                  5,
+                  6
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 421,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 543,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 573,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 603,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 82.75,
+                "y1": 478.7698
+              },
+              "page": 96,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
                   5,
                   6,
                   7,
+                  8,
                   9,
                   10,
+                  11,
                   12,
                   13,
+                  14,
                   15,
-                  16
-                ],
-                "drop": [
-                  0
+                  16,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
                 ]
               }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 651,
+                "y1": 657
+              },
+              "page": 96
             }
           ]
         }
@@ -14413,7 +14118,7 @@
       "kind": "kind.power",
       "name": "Purity of Body and Soul",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "RR p.95",
       "pages": [
         325
       ],
@@ -14440,38 +14145,20 @@
         },
         "description": {
           "op": "text",
-          "page": 316,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 583,
-                "y1": 659
+                "x0": 65,
+                "x1": 324,
+                "y0": 363,
+                "y1": 389
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14,
-                  15,
-                  17,
-                  18,
-                  20,
-                  21,
-                  23,
-                  25
+                  2
                 ],
                 "drop": [
                   0
@@ -14944,7 +14631,7 @@
       "kind": "kind.power",
       "name": "Relentless",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "RR p.93",
       "pages": [
         325
       ],
@@ -14971,27 +14658,326 @@
         },
         "description": {
           "op": "text",
-          "page": 314,
+          "page": 93,
           "paras": [
             {
               "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 483,
-                "y1": 519
+                "x0": 155,
+                "x1": 254,
+                "y0": 193,
+                "y1": 249
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 263,
+                "y1": 279
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 291,
+                "y1": 329
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 342.75,
+                "y1": 348.75
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 381.73,
+                "y1": 405.73
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 415.57,
+                "y1": 439.57
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 449.4099,
+                "y1": 541.0899
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 550.9299,
+                "y1": 574.9299
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 589.2699,
+                "y1": 613.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 627.6099,
+                "y1": 651.6099
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 661.2699,
+                "y1": 740.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 104.9701,
+                "y1": 209
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
                   3,
                   4,
                   5,
                   6,
-                  8
-                ],
-                "drop": [
-                  0
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  29,
+                  35,
+                  36,
+                  38,
+                  40
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 220.00300000000004,
+                "y1": 329
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 381.73,
+                "y1": 683.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  35,
+                  36,
+                  37,
+                  39,
+                  40,
+                  41,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  51,
+                  52,
+                  53,
+                  54,
+                  56,
+                  57,
+                  58,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66
                 ]
               }
             }
@@ -15364,7 +15350,7 @@
       "kind": "kind.power",
       "name": "Scion of Kings",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.95",
       "pages": [
         326
       ],
@@ -15391,30 +15377,25 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 295,
+                "x0": 325,
                 "x1": 612,
-                "y0": 653,
-                "y1": 709
+                "y0": 253,
+                "y1": 289
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
                   2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  9
+                  3
                 ],
-                "drop": [
-                  0
-                ]
+                "stripPrefix": {
+                  "0": 22
+                }
               }
             }
           ]
@@ -15720,61 +15701,6 @@
         }
       }
     },
-    "def.power.sensitivityToRockAndStone": {
-      "id": "def.power.sensitivityToRockAndStone",
-      "kind": "kind.power",
-      "name": "Sensitivity to Rock and Stone",
-      "book": "jj",
-      "cite": "JJ p.326",
-      "pages": [
-        326
-      ],
-      "meta": {
-        "category": "classPower"
-      },
-      "fields": {
-        "name": {
-          "op": "expect",
-          "page": 326,
-          "box": {
-            "x0": 299.5,
-            "x1": 417.39199999999994,
-            "y0": 401,
-            "y1": 410
-          },
-          "text": "Sensitivity to Rock and Stone:"
-        },
-        "description": {
-          "op": "text",
-          "page": 326,
-          "paras": [
-            {
-              "box": {
-                "x0": 295,
-                "x1": 612,
-                "y0": 403,
-                "y1": 469
-              },
-              "fixes": {
-                "joinSpace": [
-                  0,
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7
-                ],
-                "drop": [
-                  0
-                ]
-              }
-            }
-          ]
-        }
-      }
-    },
     "def.power.shapechange": {
       "id": "def.power.shapechange",
       "kind": "kind.power",
@@ -15994,7 +15920,7 @@
       "kind": "kind.power",
       "name": "Soul of the Dragon",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "RR p.95",
       "pages": [
         327
       ],
@@ -16021,30 +15947,25 @@
         },
         "description": {
           "op": "text",
-          "page": 312,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 295,
+                "x0": 325,
                 "x1": 612,
-                "y0": 653,
-                "y1": 709
+                "y0": 253,
+                "y1": 289
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
                   2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  9
+                  3
                 ],
-                "drop": [
-                  0
-                ]
+                "stripPrefix": {
+                  "0": 22
+                }
               }
             }
           ]
@@ -24537,7 +24458,7 @@
       "kind": "kind.power",
       "name": "Sanctified Body",
       "book": "rr",
-      "cite": "JJ p.316",
+      "cite": "RR p.95",
       "pages": [
         63
       ],
@@ -24564,38 +24485,20 @@
         },
         "description": {
           "op": "text",
-          "page": 316,
+          "page": 95,
           "paras": [
             {
               "box": {
-                "x0": 45,
-                "x1": 294,
-                "y0": 583,
-                "y1": 659
+                "x0": 65,
+                "x1": 324,
+                "y0": 363,
+                "y1": 389
               },
               "fixes": {
                 "joinSpace": [
                   0,
                   1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  14,
-                  15,
-                  17,
-                  18,
-                  20,
-                  21,
-                  23,
-                  25
+                  2
                 ],
                 "drop": [
                   0
@@ -26106,6 +26009,1845 @@
         }
       }
     },
+    "def.power.attentionToDetail": {
+      "id": "def.power.attentionToDetail",
+      "kind": "kind.power",
+      "name": "Attention to Detail",
+      "book": "rr",
+      "cite": "RR p.82",
+      "pages": [
+        82
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 82,
+          "box": {
+            "x0": 43,
+            "x1": 119.23010000000002,
+            "y0": 491,
+            "y1": 500
+          },
+          "text": "Attention to Detail:"
+        },
+        "description": {
+          "op": "text",
+          "page": 82,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 493,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.crafting": {
+      "id": "def.power.crafting",
+      "kind": "kind.power",
+      "name": "Crafting",
+      "book": "rr",
+      "cite": "RR p.82",
+      "pages": [
+        82
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 82,
+          "box": {
+            "x0": 43,
+            "x1": 78.083,
+            "y0": 531,
+            "y1": 540
+          },
+          "text": "Crafting:"
+        },
+        "description": {
+          "op": "text",
+          "page": 82,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 533,
+                "y1": 635.3487
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  18,
+                  19,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38,
+                  39,
+                  40,
+                  41,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.hardyPeople": {
+      "id": "def.power.hardyPeople",
+      "kind": "kind.power",
+      "name": "Hardy People",
+      "book": "rr",
+      "cite": "RR p.83",
+      "pages": [
+        83
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 83,
+          "box": {
+            "x0": 70,
+            "x1": 97.226,
+            "y0": 551,
+            "y1": 560
+          },
+          "text": "Hardy"
+        },
+        "description": {
+          "op": "text",
+          "page": 83,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 553,
+                "y1": 599
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "stripPrefix": {
+                  "0": 5
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sensitivityToRockAndStone": {
+      "id": "def.power.sensitivityToRockAndStone",
+      "kind": "kind.power",
+      "name": "Sensitivity to Rock and Stone",
+      "book": "rr",
+      "cite": "RR p.83",
+      "pages": [
+        83
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 83,
+          "box": {
+            "x0": 70,
+            "x1": 180.36710000000002,
+            "y0": 611,
+            "y1": 620
+          },
+          "text": "Sensitivity to Rock and Stone"
+        },
+        "description": {
+          "op": "text",
+          "page": 83,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 613,
+                "y1": 669
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "stripPrefix": {
+                  "0": 29
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 681,
+                "y1": 729
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 112.35000000000002,
+                "y1": 163.70979999999997
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 177.3782,
+                "y1": 209
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 223,
+                "y1": 239
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 253,
+                "y1": 269
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 283,
+                "y1": 339
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 353,
+                "y1": 379
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 393,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 509
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.vault": {
+      "id": "def.power.vault",
+      "kind": "kind.power",
+      "name": "Vault",
+      "book": "rr",
+      "cite": "RR p.83",
+      "pages": [
+        83
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 83,
+          "box": {
+            "x0": 70,
+            "x1": 101.213,
+            "y0": 371,
+            "y1": 380
+          },
+          "text": "Vault ("
+        },
+        "description": {
+          "op": "text",
+          "page": 83,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 373,
+                "y1": 459
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20
+                ],
+                "drop": [
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 7
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 471,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.acrobatics": {
+      "id": "def.power.acrobatics",
+      "kind": "kind.power",
+      "name": "Acrobatics",
+      "book": "rr",
+      "cite": "RR p.88",
+      "pages": [
+        88
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "icon": "systems/acks/assets/icons/acrobatics.webp",
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 88,
+          "box": {
+            "x0": 43,
+            "x1": 86.33599999999998,
+            "y0": 501,
+            "y1": 510
+          },
+          "text": "Acrobatics:"
+        },
+        "description": {
+          "op": "text",
+          "page": 88,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 503,
+                "y1": 669
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  24,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38,
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  50,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66,
+                  67,
+                  68,
+                  69,
+                  70,
+                  71,
+                  72,
+                  73,
+                  74,
+                  75,
+                  76,
+                  77,
+                  78,
+                  79,
+                  80,
+                  81,
+                  82,
+                  85,
+                  86,
+                  87,
+                  88,
+                  89,
+                  90,
+                  91,
+                  92,
+                  93,
+                  94,
+                  95,
+                  96,
+                  97,
+                  98,
+                  99,
+                  100,
+                  101,
+                  102,
+                  103
+                ],
+                "mergeHyphen": [
+                  44
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 675.6839,
+                "y1": 738.1574
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38,
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  44,
+                  47,
+                  48,
+                  49,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57,
+                  58,
+                  59,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  68,
+                  69,
+                  70,
+                  71,
+                  72,
+                  73,
+                  74,
+                  75,
+                  76,
+                  77,
+                  78,
+                  79,
+                  81
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 224,
+                "y0": 83.6291,
+                "y1": 89.6291
+              },
+              "page": 89
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 224,
+                "y0": 112.60900000000004,
+                "y1": 175.30880000000002
+              },
+              "page": 89,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 224,
+                "y0": 187.79020000000003,
+                "y1": 193.79020000000003
+              },
+              "page": 89
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 224,
+                "y0": 216.77009999999996,
+                "y1": 336.1699
+              },
+              "page": 89,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.attunementToNature": {
+      "id": "def.power.attunementToNature",
+      "kind": "kind.power",
+      "name": "Attunement to Nature",
+      "book": "rr",
+      "cite": "RR p.92",
+      "pages": [
+        92
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:alertness"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 92,
+          "box": {
+            "x0": 299.5,
+            "x1": 388.69100000000003,
+            "y0": 481,
+            "y1": 490
+          },
+          "text": "Attunement to Nature"
+        },
+        "description": {
+          "op": "text",
+          "page": 92,
+          "paras": [
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 483,
+                "y1": 539
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "stripPrefix": {
+                  "0": 20
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 618.0123,
+                "y1": 726.0722
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38,
+                  39,
+                  40,
+                  41,
+                  42,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  50,
+                  51,
+                  52,
+                  53,
+                  54,
+                  55,
+                  56,
+                  57,
+                  58,
+                  59,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66,
+                  67,
+                  68,
+                  69,
+                  70,
+                  72,
+                  73,
+                  74,
+                  76,
+                  77,
+                  78,
+                  79,
+                  80,
+                  81
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 75.99009999999998,
+                "y1": 81.99009999999998
+              },
+              "page": 93
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 104.9701,
+                "y1": 179.00990000000002
+              },
+              "page": 93,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            }
+          ]
+        },
+        "effects": {
+          "op": "effects",
+          "specs": [
+            {
+              "type": "modifier",
+              "target": "surprise",
+              "mode": "add",
+              "condition": "in the wilderness",
+              "from": {
+                "pattern": "\\+(\\d+) bonus to surprise rolls when in the wilderness"
+              }
+            },
+            {
+              "type": "modifies",
+              "refs": [
+                "kw:searching"
+              ],
+              "ifHas": [
+                "kw:searching"
+              ],
+              "target": "proficiencyThrow",
+              "mode": "replace",
+              "from": {
+                "pattern": "proficient in Searching,? they gain a \\+(\\d+) bonus"
+              },
+              "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Searching."
+            },
+            {
+              "type": "modifies",
+              "refs": [
+                "kw:listening"
+              ],
+              "ifHas": [
+                "kw:listening"
+              ],
+              "target": "proficiencyThrow",
+              "mode": "replace",
+              "from": {
+                "pattern": "proficient in Listening,? they gain a \\+(\\d+) bonus"
+              },
+              "note": "Replaces the 14+ Adventuring throw for a character separately proficient in Listening. Distinct from the Searching value above - this is why the entry cannot be an alias of Alertness."
+            }
+          ]
+        },
+        "rolls": {
+          "op": "rolls",
+          "specs": [
+            {
+              "key": "searchListen",
+              "label": {
+                "pattern": "Adventuring proficiency to (search or listen)"
+              },
+              "target": {
+                "pattern": "search or listen[\\s\\S]{0,80}?proficiency throw of (\\d+)\\+"
+              },
+              "condition": "using Adventuring to search or listen",
+              "note": "Used in place of the usual Adventuring search/listen target, not added to it."
+            }
+          ]
+        }
+      }
+    },
+    "def.power.fastness": {
+      "id": "def.power.fastness",
+      "kind": "kind.power",
+      "name": "Fastness",
+      "book": "rr",
+      "cite": "RR p.92",
+      "pages": [
+        92
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 92,
+          "box": {
+            "x0": 299.5,
+            "x1": 341.306,
+            "y0": 331,
+            "y1": 340
+          },
+          "text": "Fastness ("
+        },
+        "description": {
+          "op": "text",
+          "page": 92,
+          "paras": [
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 333,
+                "y1": 429
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18
+                ],
+                "drop": [
+                  1
+                ],
+                "stripPrefix": {
+                  "0": 10
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 441,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.connectionToNature": {
+      "id": "def.power.connectionToNature",
+      "kind": "kind.power",
+      "name": "Connection to Nature",
+      "book": "rr",
+      "cite": "RR p.93",
+      "pages": [
+        93
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:connectiontonature"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 93,
+          "box": {
+            "x0": 70,
+            "x1": 158.3261,
+            "y0": 191,
+            "y1": 200
+          },
+          "text": "Connection to Nature"
+        },
+        "description": {
+          "op": "text",
+          "page": 93,
+          "paras": [
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 193,
+                "y1": 249
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 263,
+                "y1": 279
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 291,
+                "y1": 329
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 342.75,
+                "y1": 348.75
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 381.73,
+                "y1": 405.73
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 415.57,
+                "y1": 439.57
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 449.4099,
+                "y1": 541.0899
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 550.9299,
+                "y1": 574.9299
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 589.2699,
+                "y1": 613.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 627.6099,
+                "y1": 651.6099
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 155,
+                "x1": 254,
+                "y0": 661.2699,
+                "y1": 740.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 104.9701,
+                "y1": 209
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  29,
+                  35,
+                  36,
+                  38,
+                  40
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 220.00300000000004,
+                "y1": 329
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 255,
+                "x1": 612,
+                "y0": 381.73,
+                "y1": 683.2699
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  35,
+                  36,
+                  37,
+                  39,
+                  40,
+                  41,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49,
+                  51,
+                  52,
+                  53,
+                  54,
+                  56,
+                  57,
+                  58,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  66
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.bloodOfKings": {
+      "id": "def.power.bloodOfKings",
+      "kind": "kind.power",
+      "name": "Blood of Kings",
+      "book": "rr",
+      "cite": "RR p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:bloodofkings"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 326.5,
+            "x1": 418.72399999999993,
+            "y0": 251,
+            "y1": 260
+          },
+          "text": "Blood of Ancient Kings"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 253,
+                "y1": 289
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "stripPrefix": {
+                  "0": 22
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.favorOfTheGods": {
+      "id": "def.power.favorOfTheGods",
+      "kind": "kind.power",
+      "name": "Favor of the Gods",
+      "book": "rr",
+      "cite": "RR p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 326.5,
+            "x1": 446.3180000000001,
+            "y0": 301,
+            "y1": 310
+          },
+          "text": "Favor of the Empyrean Powers"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 303,
+                "y1": 349
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "stripPrefix": {
+                  "0": 28
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.longeval": {
+      "id": "def.power.longeval",
+      "kind": "kind.power",
+      "name": "Longeval",
+      "book": "rr",
+      "cite": "RR p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:longeval"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 326.5,
+            "x1": 364.0751,
+            "y0": 361,
+            "y1": 370
+          },
+          "text": "Longeval"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 363,
+                "y1": 409
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  5,
+                  6
+                ],
+                "stripPrefix": {
+                  "0": 8
+                }
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 421,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 483,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 529
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 543,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 573,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 603,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 82.75,
+                "y1": 478.7698
+              },
+              "page": 96,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 154,
+                "y0": 651,
+                "y1": 657
+              },
+              "page": 96
+            }
+          ]
+        }
+      }
+    },
+    "def.power.divineHealth": {
+      "id": "def.power.divineHealth",
+      "kind": "kind.power",
+      "name": "Divine Health",
+      "book": "rr",
+      "cite": "RR p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:divinehealth"
+        ]
+      },
+      "icon": "systems/acks/assets/icons/divine-health.webp",
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 70,
+            "x1": 126.305,
+            "y0": 361,
+            "y1": 370
+          },
+          "text": "Divine Health:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 363,
+                "y1": 389
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.wonderworkerLayOnHands": {
       "id": "def.power.wonderworkerLayOnHands",
       "kind": "kind.power",
@@ -26176,6 +27918,291 @@
               "type": "capability",
               "frequency": "perDay",
               "note": "Counts as one rank of the Laying on Hands proficiency; taking that proficiency adds uses per day."
+            }
+          ]
+        }
+      }
+    },
+    "def.power.preternaturalQuickening": {
+      "id": "def.power.preternaturalQuickening",
+      "kind": "kind.power",
+      "name": "Preternatural Quickening",
+      "book": "rr",
+      "cite": "RR p.99",
+      "pages": [
+        99
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 99,
+          "box": {
+            "x0": 70,
+            "x1": 121.77709999999999,
+            "y0": 411,
+            "y1": 420
+          },
+          "text": "Preternatural"
+        },
+        "description": {
+          "op": "text",
+          "page": 99,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 413,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.afterTheFlesh": {
+      "id": "def.power.afterTheFlesh",
+      "kind": "kind.power",
+      "name": "After the Flesh",
+      "book": "rr",
+      "cite": "RR p.100",
+      "pages": [
+        100
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 100,
+          "box": {
+            "x0": 299.5,
+            "x1": 356.912,
+            "y0": 481,
+            "y1": 490
+          },
+          "text": "After the Flesh"
+        },
+        "description": {
+          "op": "text",
+          "page": 100,
+          "paras": [
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 483,
+                "y1": 609
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "stripPrefix": {
+                  "0": 15
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.ancientPacts": {
+      "id": "def.power.ancientPacts",
+      "kind": "kind.power",
+      "name": "Ancient Pacts",
+      "book": "rr",
+      "cite": "RR p.100",
+      "pages": [
+        100
+      ],
+      "meta": {
+        "category": "classPower",
+        "provides": [
+          "kw:ancientpacts"
+        ]
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 100,
+          "box": {
+            "x0": 299.5,
+            "x1": 355.823,
+            "y0": 621,
+            "y1": 630
+          },
+          "text": "Ancient Pacts"
+        },
+        "description": {
+          "op": "text",
+          "page": 100,
+          "paras": [
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 623,
+                "y1": 689
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ],
+                "stripPrefix": {
+                  "0": 13
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.darkSouls": {
+      "id": "def.power.darkSouls",
+      "kind": "kind.power",
+      "name": "Dark Souls",
+      "book": "rr",
+      "cite": "RR p.100",
+      "pages": [
+        100
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 100,
+          "box": {
+            "x0": 299.5,
+            "x1": 345.671,
+            "y0": 701,
+            "y1": 710
+          },
+          "text": "Dark Souls"
+        },
+        "description": {
+          "op": "text",
+          "page": 100,
+          "paras": [
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 703,
+                "y1": 739
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "stripPrefix": {
+                  "0": 10
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.inexorable": {
+      "id": "def.power.inexorable",
+      "kind": "kind.power",
+      "name": "Inexorable",
+      "book": "rr",
+      "cite": "RR p.101",
+      "pages": [
+        101
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 101,
+          "box": {
+            "x0": 70,
+            "x1": 113.57900000000001,
+            "y0": 601,
+            "y1": 610
+          },
+          "text": "Inexorable"
+        },
+        "description": {
+          "op": "text",
+          "page": 101,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 603,
+                "y1": 629
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "stripPrefix": {
+                  "0": 10
+                }
+              }
             }
           ]
         }

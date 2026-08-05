@@ -638,6 +638,318 @@
         "rr": 79,
         "disposition": "rrPrimary"
       }
+    ],
+    "dwarvenCraftpriest": [
+      {
+        "name": "Attention to Detail",
+        "ref": "def.power.attentionToDetail",
+        "rr": 82,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Crafting",
+        "ref": "def.power.crafting",
+        "rr": 82,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Rebuke Undead",
+        "ref": "def.power.rebukeUndead",
+        "rr": 82,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Studious Divine Magic",
+        "ref": "def.power.studiousDivineMagic",
+        "rr": 82,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Theology",
+        "ref": "def.prof.theology",
+        "rr": 83,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Dwarf Tongues",
+        "ref": "def.power.giftOfTongues",
+        "rr": 83,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Hardy",
+        "ref": "def.power.hardyPeople",
+        "rr": 83,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Sensitivity to Rock and Stone",
+        "ref": "def.power.sensitivityToRockAndStone",
+        "rr": 83,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Vault",
+        "ref": "def.power.vault",
+        "rr": 83,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "dwarvenVaultguard": [
+      {
+        "name": "Manual of Arms",
+        "ref": "def.prof.manualOfArms",
+        "rr": 86,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Battlefield Prowess",
+        "ref": "def.power.battlefieldProwess",
+        "rr": 86,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Vault",
+        "ref": "def.power.vault",
+        "rr": 86,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Dwarf Tongues",
+        "ref": "def.power.giftOfTongues",
+        "rr": 86,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Hardy",
+        "ref": "def.power.hardyPeople",
+        "rr": 86,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Sensitivity to Rock and Stone",
+        "ref": "def.power.sensitivityToRockAndStone",
+        "rr": 86,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "elvenNightblade": [
+      {
+        "name": "Acrobatics",
+        "ref": "def.power.acrobatics",
+        "rr": 88,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "backstabbing",
+        "ref": "def.skill.backstabbing",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "climbing",
+        "ref": "def.skill.climbing",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "hiding",
+        "ref": "def.skill.hiding",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "shadowySenses",
+        "ref": "def.skill.shadowySenses",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "sneaking",
+        "ref": "def.skill.sneaking",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "streetwise",
+        "ref": "def.skill.streetwise",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "hideout",
+        "ref": "def.skill.hideout",
+        "rr": 89,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Attunement to Nature",
+        "ref": "def.power.attunementToNature",
+        "rr": 92,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Connection to Nature",
+        "ref": "def.power.connectionToNature",
+        "rr": 93,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Elf Tongues",
+        "ref": "def.power.giftOfTongues",
+        "rr": 91,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "elvenSpellsword": [
+      {
+        "name": "Arcane Magic",
+        "ref": "def.power.arcaneMagic",
+        "rr": 92,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Collegiate Wizardry",
+        "ref": "def.prof.collegiateWizardry",
+        "rr": 92,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Fastness",
+        "ref": "def.power.fastness",
+        "rr": 92,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Attunement to Nature",
+        "ref": "def.power.attunementToNature",
+        "rr": 92,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Connection to Nature",
+        "ref": "def.power.connectionToNature",
+        "rr": 93,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Elf Tongues",
+        "ref": "def.power.giftOfTongues",
+        "rr": 93,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "nobiranWonderworker": [
+      {
+        "name": "Arcane Magic",
+        "ref": "def.power.arcaneMagic",
+        "rr": 94,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Collegiate Wizardry",
+        "ref": "def.prof.collegiateWizardry",
+        "rr": 95,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Divine Magic",
+        "ref": "def.power.divineMagic",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Lay on Hands",
+        "ref": "def.power.wonderworkerLayOnHands",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Divine Health",
+        "ref": "def.power.divineHealth",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Blood of Ancient Kings",
+        "ref": "def.power.bloodOfKings",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Favor of the Empyrean Powers",
+        "ref": "def.power.favorOfTheGods",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Longeval",
+        "ref": "def.power.longeval",
+        "rr": 95,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "zaharanRuinguard": [
+      {
+        "name": "Dark Blessing",
+        "ref": "def.power.darkBlessing",
+        "rr": 99,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Manual of Arms",
+        "ref": "def.prof.manualOfArms",
+        "rr": 99,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Preternatural Quickening",
+        "ref": "def.power.preternaturalQuickening",
+        "rr": 99,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Weapon Focus",
+        "ref": "def.prof.weaponFocus",
+        "rr": 99,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Spell Storing",
+        "ref": "def.power.spellStoring",
+        "rr": 100,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "After the Flesh",
+        "ref": "def.power.afterTheFlesh",
+        "rr": 100,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Ancient Pacts",
+        "ref": "def.power.ancientPacts",
+        "rr": 100,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Dark Souls",
+        "ref": "def.power.darkSouls",
+        "rr": 100,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Inexorable",
+        "ref": "def.power.inexorable",
+        "rr": 101,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Zaharan Tongues",
+        "ref": "def.power.giftOfTongues",
+        "rr": 101,
+        "disposition": "rrPrimary"
+      }
     ]
   }
 }

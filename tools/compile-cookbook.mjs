@@ -1991,12 +1991,10 @@ async function compileClass(doc, entry, kindRow) {
       .filter((o) => o.tablePage === tablePage && o.titleX0 > titleX0 + 10 && Math.abs(o.titleY - titleY) < 40)
       .reduce((min, o) => Math.min(min, o.titleX0), Infinity);
     const clipX1 = Math.min(tpd.width - 45, rightSibling - 10);
-    const rows = lineRows(
-      tpd.items.filter(
-        (i) => i.h >= 7 && i.str.trim() && i.x >= titleX0 - 12 && i.x <= clipX1,
-      ),
-    );
-    const titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
+    const rowsAt = (xMax) =>
+      lineRows(tpd.items.filter((i) => i.h >= 7 && i.str.trim() && i.x >= titleX0 - 12 && i.x <= xMax));
+    let rows = rowsAt(clipX1);
+    let titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
 
     /* --- template tables: 3d6-band-anchored logical rows (v3 rowBands) --- */
     if (t.kind === "templates") {
@@ -2074,24 +2072,59 @@ async function compileClass(doc, entry, kindRow) {
     // apart: a data row carries (nearly) every declared column.
     const dataShaped = (r) =>
       rebuildCells(r, 6).length >= Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7));
-    const headerCells = [];
-    const dataRows = [];
-    let headerLines = 0;
-    for (const r of rows.slice(titleIdx + 1)) {
-      // Data-start is judged on the row's RAW first run: a wide figure
-      // ("370,000") sits close enough to the title cell beside it that a
-      // fused rebuild would hide the numeric start.
-      const firstRaw = (r[0]?.str ?? "").trim();
-      if (!dataRows.length && !(looksLikeDataStart(firstRaw) && dataShaped(r))) {
-        if (++headerLines > 6) break;
-        headerCells.push(...rebuildCells(r, 6));
-        continue;
+    // A spanning-group sub-header line is ALL small integers ("1 2 3 4 5 6",
+    // twice for the Nobiran) — enough cells to pass the shape gate, so it is
+    // recognized by content and stays a header line.
+    const allTinyInts = (r) => {
+      const cells = rebuildCells(r, 6);
+      return cells.length >= 3 && cells.every((c) => /^\d{1,2}$/.test(c.str.trim()) && parseInt(c.str, 10) <= 14);
+    };
+    const walk = (rowSet, startIdx) => {
+      const headerCells = [];
+      const dataRows = [];
+      let headerLines = 0;
+      for (const r of rowSet.slice(startIdx + 1)) {
+        // Data-start is judged on the row's RAW first run: a wide figure
+        // ("370,000") sits close enough to the title cell beside it that a
+        // fused rebuild would hide the numeric start.
+        const firstRaw = (r[0]?.str ?? "").trim();
+        if (!dataRows.length && (!(looksLikeDataStart(firstRaw) && dataShaped(r)) || allTinyInts(r))) {
+          if (++headerLines > 6) break;
+          headerCells.push(...rebuildCells(r, 6));
+          continue;
+        }
+        if (!looksLikeDataStart(firstRaw) || !dataShaped(r)) break;
+        if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 20) break;
+        dataRows.push(r);
       }
-      if (!looksLikeDataStart(firstRaw) || !dataShaped(r)) break;
-      if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 20) break;
-      dataRows.push(r);
+      return { headerCells, dataRows };
+    };
+    let { headerCells, dataRows } = walk(rows, titleIdx);
+    // A narrow table beside a prose column collects the prose into its rows,
+    // so the walk breaks on the first interleaved line. The declared headers
+    // say how wide the table really is — re-clip to their extent and re-walk.
+    {
+      const matchedXs = (t.cols ?? [])
+        .map(
+          (c) =>
+            (
+              headerCells.find((h) => fold(h.str) === fold(c.header) || fold(h.str).startsWith(fold(c.header))) ??
+              headerCells.find((h) => fold(h.str).length >= 4 && fold(c.header).startsWith(fold(h.str)))
+            )?.x,
+        )
+        .filter((x) => x != null);
+      if (matchedXs.length === (t.cols ?? []).length) {
+        const headerRight = Math.max(...matchedXs) + 50;
+        // Only a genuinely NARROW table re-clips — nibbling a full-width
+        // table's last column is worse than tolerating interleave.
+        if (headerRight < clipX1 - 60) {
+          rows = rowsAt(Math.min(clipX1, headerRight));
+          titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
+          ({ headerCells, dataRows } = walk(rows, titleIdx));
+        }
+      }
     }
-    if (dataRows.length < 5) {
+    if (dataRows.length < 4) {
       warn(`${entry.id}: table "${t.title}" resolved only ${dataRows.length} data row(s)`);
       continue;
     }
@@ -2102,8 +2135,11 @@ async function compileClass(doc, entry, kindRow) {
     const declared = [{ key: "__label", header: t.labelHeader }, ...(t.cols ?? [])];
     let unmatched = false;
     for (const w of declared) {
+      // `occurrence` picks the nth exact header match in x order — the
+      // Nobiran prints "1".."6" twice (arcane and divine spell groups).
+      const exact = headerCells.filter((c) => fold(c.str) === fold(w.header)).sort((a, b) => a.x - b.x);
       const cell =
-        headerCells.find((c) => fold(c.str) === fold(w.header)) ??
+        (w.occurrence ? exact[w.occurrence - 1] : exact[0]) ??
         headerCells.find((c) => fold(c.str).startsWith(fold(w.header))) ??
         // A wrapped header prints only its first line on the header row
         // ("Damage" for "Damage Bonus") — match the authored name's prefix.
@@ -2123,17 +2159,25 @@ async function compileClass(doc, entry, kindRow) {
     // spans per index; rows with extra fragments still extract through those
     // spans at runtime.
     const idealRows = dataRows.map((r) => rebuildCells(r, 6)).filter((cells) => cells.length === wanted.length);
-    if (idealRows.length < 3) {
-      warn(
-        `${entry.id}: table "${t.title}" — only ${idealRows.length} row(s) match the ${wanted.length}-column shape ` +
-          `(seen: ${[...new Set(dataRows.map((r) => rebuildCells(r, 6).length))].join("/")})`,
-      );
-      continue;
+    let groups;
+    if (idealRows.length >= 3) {
+      groups = wanted.map((_, i) => ({
+        x0: Math.min(...idealRows.map((cells) => cells[i].x)),
+        x1: Math.max(...idealRows.map((cells) => cells[i].x + Math.max(cells[i].w ?? 0, 4))),
+      }));
+    } else {
+      // Twelve tight single-digit columns (the Nobiran's dual spell groups)
+      // fuse below the declared count in every row — fall back to spans
+      // midway between the matched HEADER positions, which single-digit
+      // centred cells sit under closely enough.
+      warn(`${entry.id}: table "${t.title}" — header-span fallback (${idealRows.length} ideal row(s))`);
+      const hs = wanted.map((w) => w.hx);
+      const dataX1 = Math.max(...dataRows.flat().map((i) => i.x + (i.w ?? 0)));
+      groups = wanted.map((w, i) => ({
+        x0: i === 0 ? Math.min(...dataRows.map((r) => r[0].x)) - 2 : (hs[i - 1] + hs[i]) / 2 + 2,
+        x1: i === wanted.length - 1 ? dataX1 + 4 : (hs[i] + hs[i + 1]) / 2 + 2,
+      }));
     }
-    const groups = wanted.map((_, i) => ({
-      x0: Math.min(...idealRows.map((cells) => cells[i].x)),
-      x1: Math.max(...idealRows.map((cells) => cells[i].x + Math.max(cells[i].w ?? 0, 4))),
-    }));
     const tableX0 = groups[0].x0;
     const tableX1 = groups[groups.length - 1].x1;
     const spanOf = (idx) => ({
@@ -2250,7 +2294,7 @@ async function compileClass(doc, entry, kindRow) {
     cite: `${BOOKS[entry.book].short} p.${page}`,
     pages: entry.pages,
     ...(entry.icon ? { icon: entry.icon } : {}),
-    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {} },
+    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {}, ...(spec.factored ? { factored: true } : {}) },
     ...(spec.awards?.length ? { awards: spec.awards } : {}),
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
     ...(spec.casting?.length ? { casting: spec.casting } : {}),
