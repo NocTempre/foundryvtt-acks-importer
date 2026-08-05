@@ -19,7 +19,7 @@ import { rowsByY, applyCellPattern, slugLabel, joinRuns as joinCellRuns } from "
  * Schema v2 (2026-07-24) is v1 plus the `grid` instruction — nothing existing
  * changed, so every v1 cookbook keeps executing under this executor forever.
  */
-export const COOKBOOK_SCHEMAS = ["acks-cookbook/1", "acks-cookbook/2"];
+export const COOKBOOK_SCHEMAS = ["acks-cookbook/1", "acks-cookbook/2", "acks-cookbook/3"];
 export const COOKBOOK_SCHEMA = "acks-cookbook/2";
 
 /* -------------------------------------------- */
@@ -1326,7 +1326,13 @@ async function execInstruction(instr, ctx) {
     case "grid": {
       const runs = runsIn(pd, { box: instr.box });
       claim(runs, ctx.field);
-      const yRows = rowsByY(runs, instr.rowTol ?? 3);
+      // v3: authored per-row y-bands replace line bucketing — a template row's
+      // equipment cell wraps over several text lines that are ONE logical row.
+      const yRows = instr.rowBands
+        ? instr.rowBands
+            .map((b) => ({ y: b.y0, items: runs.filter((it) => it.y >= b.y0 && it.y <= b.y1).sort((p, q) => p.y - q.y || p.x - q.x) }))
+            .filter((r) => r.items.length)
+        : rowsByY(runs, instr.rowTol ?? 3);
       const spanItems = (items, x0, x1) => items.filter((it) => it.x >= x0 && it.x <= x1);
       const spanRaw = (items, x0, x1) => spanItems(items, x0, x1).map((it) => it.str).join("");
       // Gap-aware joining (authored gapMin, page geometry like every bound):

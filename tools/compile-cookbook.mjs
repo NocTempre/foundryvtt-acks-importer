@@ -1997,6 +1997,73 @@ async function compileClass(doc, entry, kindRow) {
       ),
     );
     const titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
+
+    /* --- template tables: 3d6-band-anchored logical rows (v3 rowBands) --- */
+    if (t.kind === "templates") {
+      const flat = rows.slice(titleIdx + 1).flat();
+      const bandRe = /^\d{1,2}\s*[–-]\s*\d{1,2}$/;
+      const bandLabels = [];
+      for (const r of rows.slice(titleIdx + 1)) {
+        const first = rebuildCells(r, 6)[0];
+        if (first && bandRe.test(first.str.trim())) bandLabels.push({ y: r[0].y, x: first.x });
+      }
+      if (bandLabels.length < 6) {
+        warn(`${entry.id}: table "${t.title}" found only ${bandLabels.length} 3d6 band row(s)`);
+        continue;
+      }
+      // The table ends at its Notes line (or a wide gap when a class has none).
+      const notes = flat.find((i) => i.y > bandLabels[bandLabels.length - 1].y && /^Notes/i.test(i.str.trim()));
+      const yEnd = notes ? notes.y - 4 : Math.max(...flat.map((i) => i.y)) + 6;
+      // Rows are vertically CENTERED on their band label (a five-line
+      // equipment cell starts above it), so bands split at label midpoints.
+      const mid = (a, b) => (a + b) / 2 + 0.5;
+      const firstGap = bandLabels[1].y - bandLabels[0].y;
+      const rowBands = bandLabels.map((b, i) => ({
+        y0: i === 0 ? b.y - firstGap / 2 : mid(bandLabels[i - 1].y, b.y),
+        y1: i === bandLabels.length - 1 ? yEnd : mid(b.y, bandLabels[i + 1].y),
+      }));
+      // Column spans from the header cells (left-aligned prose columns).
+      const headerPool = [];
+      for (const r of rows.slice(titleIdx + 1)) {
+        if (r[0].y >= bandLabels[0].y - 2) break;
+        headerPool.push(...rebuildCells(r, 6));
+      }
+      const headerX = (name) => {
+        const cell =
+          headerPool.find((c) => fold(c.str) === fold(name)) ??
+          headerPool.find((c) => fold(c.str).startsWith(fold(name))) ??
+          headerPool.find((c) => fold(c.str).length >= 3 && fold(name).startsWith(fold(c.str)));
+        return cell?.x ?? null;
+      };
+      const colDefs = (t.cols ?? [
+        { key: "template", header: "Template" },
+        { key: "proficiencies", header: "Proficiencies" },
+        { key: "equipment", header: "Starting Equipment" },
+      ]).map((c) => ({ ...c, hx: headerX(c.header) }));
+      if (colDefs.some((c) => c.hx == null)) {
+        warn(`${entry.id}: table "${t.title}" missing template header(s): ${colDefs.filter((c) => c.hx == null).map((c) => c.header).join(", ")}`);
+        continue;
+      }
+      const orderedT = [...colDefs].sort((a, b) => a.hx - b.hx);
+      const tX1 = Math.max(...flat.filter((i) => i.y >= rowBands[0].y0 && i.y <= yEnd).map((i) => i.x + (i.w ?? 0))) + 8;
+      const spanT = (i) => ({
+        x0: i === 0 ? orderedT[0].hx - 6 : orderedT[i].hx - 6,
+        x1: i === orderedT.length - 1 ? tX1 : orderedT[i + 1].hx - 8,
+      });
+      const labelX1 = orderedT[0].hx - 8;
+      fields[tname] = {
+        op: "grid", page: t.page,
+        box: { x0: titleX0 - 10, x1: tX1, y0: rowBands[0].y0, y1: yEnd },
+        label: { x0: titleX0 - 10, x1: labelX1 },
+        cols: [
+          { key: "band", x0: titleX0 - 10, x1: labelX1, pattern: "rollBand" },
+          ...orderedT.map((c, i) => ({ key: c.key, ...spanT(i) })),
+        ],
+        rowBands,
+        gapMin: 2,
+      };
+      continue;
+    }
     // Header cells pool: the non-data rows between the title and the first
     // data row — the main header line plus any stacked wrap lines ("Damage"
     // above, "Bonus" below). Fused at a wider gap so "Hit"+"d"+"ice" is one
@@ -2188,6 +2255,7 @@ async function compileClass(doc, entry, kindRow) {
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
     ...(spec.casting?.length ? { casting: spec.casting } : {}),
     ...(spec.skills?.length ? { skills: spec.skills } : {}),
+    ...(spec.equipAliases ? { equipAliases: spec.equipAliases } : {}),
     fields,
   };
 }
@@ -2996,7 +3064,7 @@ async function main() {
             entry.kind === "kind.class"
               ? await compileClass(doc, entry, kinds[entry.kind])
               : await compileClassMeta(doc, entry);
-          (contentOut["classes"] ??= { schema: "acks-cookbook/2", content: "classes", entries: {} }).entries[entry.id] = compiled;
+          (contentOut["classes"] ??= { schema: "acks-cookbook/3", content: "classes", entries: {} }).entries[entry.id] = compiled;
           console.error(`OK   ${entry.id}: ${Object.keys(compiled.fields).length} instructions [classes]`);
         } catch (err) {
           warn(`${entry.id}: ${err.message}`);

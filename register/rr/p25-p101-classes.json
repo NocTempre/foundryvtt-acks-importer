@@ -82,11 +82,21 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Fighter Templates",
+          "page": 27,
+          "kind": "templates"
         }
       },
       "profList": {
         "label": "Fighter Proficiency List:",
         "page": 27
+      },
+      "equipAliases": {
+        "scimitar": "name:Short Sword",
+        "francisca": "name:Hand Axe",
+        "long bearded axe": "name:Great Axe"
       },
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
@@ -759,6 +769,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Explorer Templates",
+          "page": 29,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -898,6 +913,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Thief Templates",
+          "page": 35,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -1089,6 +1109,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Venturer Templates",
+          "page": 44,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -1262,6 +1287,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Assassin Templates",
+          "page": 48,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -1402,6 +1432,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Barbarian Templates",
+          "page": 52,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -1540,6 +1575,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Bard Templates",
+          "page": 57,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -1724,6 +1764,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Paladin Templates",
+          "page": 64,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -2171,6 +2216,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Mage Templates",
+          "page": 37,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -2336,6 +2386,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Crusader Templates",
+          "page": 41,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -2508,6 +2563,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Bladedancer Templates",
+          "page": 60,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -2692,6 +2752,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Priestess Templates",
+          "page": 68,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -2874,6 +2939,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Shaman Templates",
+          "page": 72,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -3022,6 +3092,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Warlock Templates",
+          "page": 77,
+          "kind": "templates"
         }
       },
       "profList": {
@@ -3192,6 +3267,11 @@
               "pattern": "intDash"
             }
           ]
+        },
+        "templates": {
+          "title": "Witch Templates",
+          "page": 80,
+          "kind": "templates"
         }
       },
       "profList": {

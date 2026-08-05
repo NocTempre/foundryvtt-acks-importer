@@ -199,7 +199,7 @@ if (fs.existsSync(COOKBOOK)) {
     const label = `cookbook/${f}`;
     const cb = readJson(path.join(COOKBOOK, f), label);
     if (!cb) continue;
-    if (!["acks-cookbook/1", "acks-cookbook/2"].includes(cb.schema)) err(`${label}: bad schema "${cb.schema}"`);
+    if (!["acks-cookbook/1", "acks-cookbook/2", "acks-cookbook/3"].includes(cb.schema)) err(`${label}: bad schema "${cb.schema}"`);
     capStrings(cb, label);
     for (const [id, e] of Object.entries(cb.entries ?? {})) {
       for (const [field, instr] of Object.entries(e.fields ?? {})) {

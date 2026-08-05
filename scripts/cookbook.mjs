@@ -2741,6 +2741,127 @@ function abilityRefIndex() {
   return index;
 }
 
+/** [{name, ref}] for every ability, longest name first — the tokenizer's menu. */
+function abilityNameMenu() {
+  const menu = [];
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (NON_ABILITY_KINDS.has(e.kind)) continue;
+      menu.push({ name: e.name, ref: defId });
+    }
+  }
+  return menu.sort((a, b) => b.name.length - a.name.length);
+}
+
+/** A lenient matcher for one printed name: letters with elastic spacing. */
+const lenientRe = (name) =>
+  new RegExp("^" + String(name).trim().split(/\s+/).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s*"), "i");
+
+/**
+ * Tokenize a template's Proficiencies cell: greedy longest-known-name match,
+ * then an optional rank digit and an optional parenthesized selection.
+ * "Fighting Style Spec. (weapon & shield)Siege Engineering" →
+ * two entries; anything unmatched lands whole on the last entry's note.
+ */
+function tokenizeProfs(cellText, menu) {
+  const out = [];
+  let rest = String(cellText ?? "").replace(/\s+/g, " ").trim();
+  let guard = 40;
+  while (rest && guard-- > 0) {
+    let hit = null;
+    for (const m of menu) {
+      const match = lenientRe(m.name).exec(rest);
+      // "Spec." abbreviations: also try the name cut at its first period.
+      if (match) {
+        hit = { ...m, len: match[0].length };
+        break;
+      }
+      const abbrev = /^([A-Za-z]+ [A-Za-z]+)/.exec(m.name)?.[1];
+      if (abbrev && m.name.length > abbrev.length) {
+        const abbrevMatch = new RegExp("^" + abbrev.replace(/\s+/g, "\\s*") + "\\s*Spec\\.?", "i").exec(rest);
+        if (abbrevMatch) {
+          hit = { ...m, len: abbrevMatch[0].length };
+          break;
+        }
+      }
+    }
+    if (!hit) {
+      // Skip one glyph and keep scanning; the skipped prefix is preserved.
+      const stray = rest[0];
+      rest = rest.slice(1);
+      if (out.length && stray.trim()) out[out.length - 1].tail = (out[out.length - 1].tail ?? "") + stray;
+      continue;
+    }
+    rest = rest.slice(hit.len).trim();
+    const rank = /^(\d)\b/.exec(rest);
+    if (rank) rest = rest.slice(rank[0].length).trim();
+    const sel = /^\(([^)]*)\)/.exec(rest);
+    if (sel) rest = rest.slice(sel[0].length).trim();
+    out.push({
+      ref: hit.ref,
+      name: hit.name,
+      rank: rank ? parseInt(rank[1], 10) : 1,
+      selection: sel ? sel[1].replace(/\s+/g, " ").trim() : "",
+    });
+  }
+  return out.map(({ tail, ...e }) => e);
+}
+
+/** fold(name) → def id over the equipment cookbook, longest names first. */
+function equipmentMenu() {
+  const menu = [];
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (e.kind === "kind.equipment") menu.push({ name: e.name, ref: defId });
+    }
+  }
+  return menu.sort((a, b) => b.name.length - a.name.length);
+}
+
+/**
+ * Parse a template's Starting Equipment cell into item descriptors, coin and
+ * the encumbrance note. Every descriptor resolves against the equipment
+ * cookbook — exact name, contained name, or an authored Notes-equivalence
+ * alias ("long bearded axe" is a great axe) — and keeps its printed wording
+ * as the skin; what resolves to nothing imports as a bare named item.
+ */
+function parseEquipment(cellText, menu, aliases = {}) {
+  let text = String(cellText ?? "").replace(/\s+/g, " ").trim();
+  let enc = "";
+  const encMatch = /\(enc\.[^)]*\)\.?\s*$/i.exec(text);
+  if (encMatch) {
+    enc = encMatch[0].replace(/[().]/g, "").trim();
+    text = text.slice(0, encMatch.index).trim().replace(/,\s*$/, "");
+  }
+  let gp = 0;
+  text = text.replace(/(\d[\d,]*)\s*gp[^,]*/gi, (m, n) => {
+    gp += parseInt(n.replace(/,/g, ""), 10) || 0;
+    return "";
+  });
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const aliasFold = new Map(Object.entries(aliases).map(([k, v]) => [fold(k), v]));
+  const items = [];
+  for (const raw of text.split(/,(?![^(]*\))/)) {
+    const descriptor = raw.replace(/\s+/g, " ").replace(/^and\s+/i, "").trim().replace(/[.]$/, "");
+    if (!descriptor) continue;
+    const qty = parseInt(/^(\d+)\s/.exec(descriptor)?.[1] ?? "1", 10);
+    const f = fold(descriptor);
+    let ref = "";
+    for (const [ak, av] of aliasFold) {
+      if (f.includes(ak)) {
+        ref = av;
+        break;
+      }
+    }
+    if (!ref) {
+      const exact = menu.find((m) => fold(m.name) === f);
+      ref = exact?.ref ?? menu.find((m) => fold(m.name).length >= 6 && f.includes(fold(m.name)))?.ref ?? "";
+    }
+    items.push({ ref, name: descriptor, qty: Number.isFinite(qty) && qty > 0 ? qty : 1, skinName: "", note: "" });
+  }
+  return { items, gp, enc };
+}
+
 /** The Proficiencies Gained per Level row for one class, from the executed
  *  classMeta grid: `{l1: "c+ G", …}` keyed by the class's printed name. */
 export function classGainsFor(gainsNode, className) {
@@ -2919,6 +3040,30 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
     else if (phrase.includes("twoclasslevels")) cleaves = { kind: "perLevel", base: 0.5, per: 0.5, round: "down" };
   }
 
+  // The eight printed starting templates: proficiency cells tokenized against
+  // every known ability name, equipment cells split into skinned descriptors.
+  const tplMenu = abilityNameMenu();
+  const eqMenu = equipmentMenu();
+  const templates = (f.templates?.rows ?? []).map((row) => {
+    const band = row.cells.band ?? {};
+    const rawName = capFirst(String(row.cells.template ?? "").replace(/\s+/g, " ").trim());
+    const ann = /^(.*?)\s*\(([^)]+)\)$/.exec(rawName);
+    const eq = parseEquipment(row.cells.equipment, eqMenu, entry.equipAliases ?? {});
+    return {
+      rollMin: band.min ?? 3,
+      rollMax: band.max ?? band.min ?? 3,
+      name: ann ? ann[1] : rawName,
+      annotation: ann ? ann[2] : "",
+      caste: String(row.cells.caste ?? "").trim(),
+      abilities: tokenizeProfs(row.cells.proficiencies, tplMenu),
+      items: eq.items,
+      spells: [],
+      gp: eq.gp,
+      enc: eq.enc,
+      alt: "",
+    };
+  });
+
   return {
     name: entry.name,
     type: CLASS_ITEM_TYPE,
@@ -2946,6 +3091,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       },
       unresolvedProfs,
       awards,
+      templates,
     },
     flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true } },
   };
