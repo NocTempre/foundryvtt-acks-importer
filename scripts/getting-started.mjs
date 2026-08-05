@@ -15,6 +15,7 @@
  */
 
 import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
+import { dialogContent } from "./module.mjs";
 
 const SETTING_DISMISSED = "gettingStartedDismissed";
 
@@ -102,7 +103,7 @@ export async function showGettingStarted({ force = false } = {}) {
       <button type="button" data-gs-connect><i class="fa-solid fa-book-open"></i> ${t("connectGo")}</button>
     </div>
     ${gmSection}
-    <p class="notes">${t("later", { folder: esc("ACKS Content — Macros") })}</p>
+    <p class="notes">${t("later", { folder: esc("ACKS Importer — Macros") })}</p>
     <label class="acks-importer-gs-dismiss">
       <input type="checkbox" name="dismiss"> ${t("dismiss")}
     </label>
@@ -110,8 +111,9 @@ export async function showGettingStarted({ force = false } = {}) {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: t("title") },
+    classes: ["acks-importer-dialog"],
     position: { width: 460 },
-    content,
+    content: dialogContent(content),
     rejectClose: false,
     ok: { label: t("ok") },
     render: (event, dialog) => {

@@ -1,5 +1,50 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+- **Update Abilities asks before it overwrites what it did not write.** An
+  ability matched only by its name belongs to whoever wrote it, and its
+  description is no longer replaced without a word. Every such match is now
+  listed first, with the text that would be lost shown, and each one is yours to
+  settle: keep your version, or take the book's. Keeping renames yours to
+  "*name* (original)" and creates the module's reference beside it, so the
+  character ends up holding both — the text you wrote, and a working reference
+  with its mechanics. The list defaults to keeping, has **Keep every one** and
+  **Replace every one** for a world with hundreds of matches, and closing it
+  without answering leaves every ability exactly as it was.
+- Running Update Abilities twice does what running it once did: an ability kept
+  and renamed is never picked up again, and the reference standing beside it is
+  refreshed in place. The closing summary now reports what was renamed, what was
+  created, what was replaced on request, and what was left alone.
+
+### Fixed
+- **Connect a book takes the books you choose.** The book list is now a
+  multi-select, and the books you pick are filled from the files you pick, in
+  the order you picked them. Choose more books than files and it names the ones
+  left closed rather than opening one and stopping.
+- **A multi-file picker is one again.** Foundry quietly strips attributes it
+  does not allowlist from a dialog's markup, and `multiple` on a file input is
+  one of them — so on Firefox, or on any seat reached by a network address
+  rather than localhost, the picker had always taken exactly one file however
+  many the module asked for. Every dialog in the module is now built in a form
+  the sanitiser leaves alone. This is why picking several books never worked for
+  the seats it was written for.
+- **A book is recognised by the name it downloaded under.** Files named
+  `ACKS_II_Revised_Rulebook.pdf` or `By.This.Axe.pdf` matched nothing, because
+  only the spaced title was looked for; underscores, hyphens and dots are now
+  read as spaces.
+- **A book reconnected from its own row survives a reload**, as every other way
+  of opening one already did.
+- **Importer windows show what they hold.** They scroll their contents instead
+  of cutting them off, their buttons stay reachable at the bottom, the connect
+  and reconnect windows can be resized, and the ability and monster lists grow
+  with the window rather than stopping at a fixed height. Long file paths wrap
+  instead of running off the edge.
+- The Connect button said **Extract**. The Getting Started panel named a
+  compendium that does not exist — the macros ship as "ACKS Importer — Macros" —
+  and browsed documents landed in a folder named after a development phase.
+
 ## 1.0.0
 
 ### Added

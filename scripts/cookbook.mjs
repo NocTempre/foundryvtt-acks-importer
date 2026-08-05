@@ -1058,6 +1058,7 @@ export async function cookbookRemoveImports() {
   ].join(", ");
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: "acks-importer — Remove Imports" },
+    classes: ["acks-importer-dialog"],
     content: `<p>Delete <strong>${total}</strong> imported document(s): ${lines}?</p>
       <p class="notes">Only documents this module imported are removed. Extracted art files stay on disk and are reused by the next import.</p>`,
   });
@@ -3374,6 +3375,7 @@ export async function cookbookImportAbilitiesDialog() {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.abilTitle`), resizable: true },
+    classes: ["acks-importer-dialog"],
     position: { width: 620, height: 700 },
     content,
     render: (event, dialog) => {
@@ -3458,6 +3460,148 @@ export async function cookbookImportAbilities() {
 }
 
 /**
+ * The generated descriptor: one lazy page reference and nothing else.
+ *
+ * Update writes descriptions in exactly this shape, so an item already carrying
+ * one holds nothing of its owner's — which is what lets a second run pass over
+ * everything the first run settled without asking again.
+ */
+const PDF_DESCRIPTOR_ONLY = /^\s*<p>\s*@PdfText\[[^\]]*\]\{[^}]*\}\s*<\/p>\s*$/;
+
+/**
+ * Does this description hold something this module cannot prove it wrote?
+ *
+ * The test is never "is this worth keeping", it is "is this ours" — empty, or a
+ * bare generated descriptor, and nothing else. Structure-only markup (the empty
+ * paragraph an editor leaves behind) is empty; an image, a heading or a word of
+ * text is someone's work and is never overwritten without being offered first.
+ */
+function handWrittenProse(html) {
+  const s = String(html ?? "");
+  if (!s.trim() || PDF_DESCRIPTOR_ONLY.test(s)) return false;
+  return !!s
+    .replace(/<\/?(?:p|br|div|span)\b[^>]*>/gi, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .trim();
+}
+
+/** A description reduced to one readable line, so a dialog row fits on screen. */
+function proseExcerpt(html, max = 160) {
+  const text = String(html ?? "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+/**
+ * The name a kept-by-its-owner ability moves to.
+ *
+ * The rename is only worth anything if the new name stops folding to the
+ * definition: folded names are how Update adopts an unflagged item, so a marker
+ * that folds away to nothing would let the next run adopt the item again and
+ * take the prose after all. Folding drops case and punctuation, so the marker
+ * has to carry letters. A counter is added in the pathological case where a
+ * shipped definition prints the marked name — bounded because each attempt is a
+ * distinct name and only the finitely many in the index can collide.
+ */
+function asideName(index, present, name) {
+  const marked = (n) => game.i18n.format(`${LANG_PREFIX}.ui.renamedName`, { name: n });
+  let out = marked(name);
+  for (let n = 2; n <= index.size + 2 && idForName(index, out, present); n++) out = marked(`${name} ${n}`);
+  return out;
+}
+
+/**
+ * Ask what happens to each name-adopted ability whose description Update would
+ * replace, and resolve to a row index -> "rename" | "overwrite" map.
+ *
+ * ONE dialog for the whole run, with apply-to-all on both choices: a world that
+ * imported the corpus produces collisions by the hundred, and a per-item prompt
+ * a GM cannot answer in bulk gets clicked through, which is the same data loss
+ * with more steps. Dismissal returns an empty map — every ambiguous item is
+ * then left exactly as it was, because a closed dialog is not consent.
+ */
+async function askAboutAdoptedProse(rows) {
+  const esc = foundry.utils.escapeHTML ?? ((x) => x);
+  const label = {
+    rename: game.i18n.localize(`${LANG_PREFIX}.ui.collideRename`),
+    overwrite: game.i18n.localize(`${LANG_PREFIX}.ui.collideOverwrite`),
+  };
+  const list = rows
+    .map((r, i) => {
+      const excerpt = proseExcerpt(r.prose);
+      return `<div class="acks-importer-collide-row">
+        <div style="display:flex;gap:.5em;align-items:baseline;">
+          <strong>${esc(r.name)}</strong>
+          <span class="acks-importer-cite">${esc(r.where)}${r.cite ? ` · ${esc(r.cite)}` : ""}</span>
+        </div>
+        ${excerpt ? `<div class="acks-importer-cite" style="font-style:italic;">${esc(excerpt)}</div>` : ""}
+        <div style="display:flex;gap:1em;flex-wrap:wrap;">
+          <label><input type="radio" name="c${i}" value="rename" checked> ${esc(label.rename)} "${esc(r.aside)}"</label>
+          <label><input type="radio" name="c${i}" value="overwrite"> ${esc(label.overwrite)}</label>
+        </div>
+      </div>`;
+    })
+    .join("");
+  const content = `
+    <p class="notes">${game.i18n.format(`${LANG_PREFIX}.ui.collideIntro`, { n: rows.length })}</p>
+    <div class="acks-importer-abil-actions">
+      <button type="button" data-act="rename">${game.i18n.localize(`${LANG_PREFIX}.ui.collideAllRename`)}</button>
+      <button type="button" data-act="overwrite">${game.i18n.localize(`${LANG_PREFIX}.ui.collideAllOverwrite`)}</button>
+    </div>
+    <div class="acks-importer-browse-list acks-importer-collide-list">${list}</div>`;
+
+  const picked = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.collideTitle`), resizable: true },
+    classes: ["acks-importer-dialog"],
+    position: { width: 640, height: 700 },
+    content,
+    render: (event, dialog) => {
+      const root = dialog.element ?? dialog;
+      for (const act of ["rename", "overwrite"]) {
+        root.querySelector(`[data-act="${act}"]`).addEventListener("click", () => {
+          for (const input of root.querySelectorAll(`.acks-importer-collide-list input[value="${act}"]`)) {
+            input.checked = true;
+          }
+        });
+      }
+    },
+    buttons: [
+      {
+        action: "apply",
+        default: true,
+        label: game.i18n.localize(`${LANG_PREFIX}.ui.collideApply`),
+        callback: (event, button) => {
+          const out = new Map();
+          for (let i = 0; i < rows.length; i++) {
+            const choice = button.form.querySelector(`input[name="c${i}"]:checked`)?.value;
+            if (choice) out.set(i, choice);
+          }
+          return out;
+        },
+      },
+      { action: "keep", label: game.i18n.localize(`${LANG_PREFIX}.ui.collideKeepAll`), callback: () => new Map() },
+    ],
+    rejectClose: false,
+  });
+  return picked instanceof Map ? picked : new Map();
+}
+
+/**
+ * Put the module's own item for a definition where the original one lives — on
+ * the actor holding it, or in the item library. Never a second copy: a holder
+ * that already carries this definition needs nothing added.
+ */
+async function placeGeneratedBeside(holder, id, built) {
+  if (!holder) return (await importedItem(id)) ? null : importAbility(id, null);
+  if (holder.items.some((i) => i.getFlag(MODULE_ID, "cookbook")?.id === id)) return null;
+  const [made] = await holder.createEmbeddedDocuments("Item", [built]);
+  return made ?? null;
+}
+
+/**
  * GM: refresh every ability already in the world — loose items AND the copies
  * embedded on actors — against the current cookbook.
  *
@@ -3466,6 +3610,18 @@ export async function cookbookImportAbilities() {
  * duplicated. Only the generated surface is rewritten (the lazy descriptor, the
  * structured extras, the cookbook id); the item's name and the system fields a
  * GM may have tuned are left alone.
+ *
+ * An item this module FLAGGED is rewritten outright — that is what Update is
+ * for, and the flag is proof of authorship. An item matched only by NAME is
+ * somebody else's, so its description is never replaced silently: those are
+ * collected during the walk and settled by one dialog afterwards, either by
+ * renaming the original aside and creating the reference next to it, or by
+ * replacing it on the GM's explicit word.
+ *
+ * Both outcomes are idempotent, which is the point of the design: a renamed
+ * item no longer folds to the definition, so no later run re-adopts it, and
+ * every item this run wrote carries the cookbook flag, so a later run rewrites
+ * it to identical content. Running twice leaves the same world as running once.
  */
 export async function cookbookUpdateAbilities() {
   if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
@@ -3481,6 +3637,20 @@ export async function cookbookUpdateAbilities() {
   let onActors = 0;
   let guessed = 0;
   let skipped = 0;
+  let renamed = 0;
+  let created = 0;
+  let overwritten = 0;
+  let kept = 0;
+  // Name-adopted items whose description carries someone else's writing. The
+  // write is held back until the GM has answered for them.
+  const collisions = [];
+  /** Rewrite the generated surface — the descriptor, the cookbook id, the extras. */
+  const writeGenerated = (doc, built) =>
+    doc.update({
+      "system.description": built.system.description,
+      [`flags.${MODULE_ID}.cookbook`]: built.flags[MODULE_ID].cookbook,
+      "flags.acks-extras.extras": built.flags["acks-extras"].extras,
+    });
   // Counted first: this walks every ability in the world, actors included, and
   // re-extracts each definition it has not seen — hundreds of items on a world
   // that imported the whole corpus.
@@ -3498,7 +3668,7 @@ export async function cookbookUpdateAbilities() {
       }
       if (guess?.ambiguous) {
         guessed++;
-        console.warn(`${MODULE_ID} | "${doc.name}" matches several definitions; adopted ${id}.`);
+        console.warn(`${MODULE_ID} | "${doc.name}" matches several definitions; resolved to ${id}.`);
       }
       const found = cookbookEntry(id);
       // Re-extract once per definition, not once per copy of it.
@@ -3518,11 +3688,24 @@ export async function cookbookUpdateAbilities() {
         ...(extras.conversionFrom ? { conversionFrom: extras.conversionFrom } : {}),
       });
       built.flags["acks-extras"].extras.effects = await resolveCompanions(built.flags["acks-extras"].extras.effects);
-      await doc.update({
-        "system.description": built.system.description,
-        [`flags.${MODULE_ID}.cookbook`]: built.flags[MODULE_ID].cookbook,
-        "flags.acks-extras.extras": built.flags["acks-extras"].extras,
-      });
+      // Never overwrite writing this module did not put there. A flagged item is
+      // ours by proof; an item matched by name only is asked about.
+      const prose = doc.system?.description;
+      if (!flagged && handWrittenProse(prose)) {
+        collisions.push({
+          doc,
+          on,
+          id,
+          built,
+          prose,
+          name: doc.name,
+          cite: found.entry?.cite ?? "",
+          where: on ? game.i18n.format(`${LANG_PREFIX}.ui.collideOn`, { actor: on.name }) : game.i18n.localize(`${LANG_PREFIX}.ui.collideWorld`),
+          aside: asideName(index, present, doc.name),
+        });
+        continue;
+      }
+      await writeGenerated(doc, built);
       updated++;
       if (!flagged) adopted++;
       if (on) onActors++;
@@ -3530,13 +3713,45 @@ export async function cookbookUpdateAbilities() {
   } finally {
     bar.finish();
   }
+
+  if (collisions.length) {
+    const choices = await askAboutAdoptedProse(collisions);
+    kept = collisions.length - choices.size;
+    const bar2 = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressResolve`), choices.size);
+    try {
+      for (const [i, choice] of choices) {
+        const row = collisions[i];
+        bar2.step(row.name);
+        if (choice === "overwrite") {
+          await writeGenerated(row.doc, row.built);
+          updated++;
+          adopted++;
+          if (row.on) onActors++;
+          overwritten++;
+          continue;
+        }
+        // The original moves aside with its prose and its own flags untouched;
+        // the reference is created beside it, flagged, so later runs maintain
+        // that one and leave this one alone forever.
+        await row.doc.update({ name: row.aside });
+        renamed++;
+        if (await placeGeneratedBeside(row.on, row.id, row.built)) created++;
+      }
+    } finally {
+      bar2.finish();
+    }
+  }
+
   const stale = danglingAbilities().length;
   ui.notifications.info(
     `acks-importer | abilities updated: ${updated} (${onActors} on actors, ${adopted} matched by name` +
       `${guessed ? `, ${guessed} of them ambiguous — see console` : ""}), ${skipped} not in the cookbook` +
+      `${renamed ? `; ${renamed} of your own renamed aside, ${created} reference(s) created beside them` : ""}` +
+      `${overwritten ? `; ${overwritten} replaced on request` : ""}` +
+      `${kept ? `; ${kept} left untouched` : ""}` +
       `${stale ? `; ${stale} left over from a withdrawn definition — run Prune` : ""}.`,
   );
-  return { updated, adopted, onActors, guessed, skipped, stale };
+  return { updated, adopted, onActors, guessed, skipped, renamed, created, overwritten, kept, stale };
 }
 
 /**
@@ -3574,8 +3789,9 @@ export async function cookbookPruneAbilities() {
     .join("");
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.pruneTitle`) },
+    classes: ["acks-importer-dialog"],
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.prunePrompt`, { n: stale.length })}</p>
-      <ul class="acks-importer-browse-list" style="max-height:280px;overflow-y:auto;">${rows}</ul>`,
+      <ul class="acks-importer-browse-list">${rows}</ul>`,
   });
   if (!ok) return null;
   await Item.deleteDocuments(stale.map((i) => i.id));
@@ -3661,6 +3877,7 @@ export async function cookbookDebug(entryId) {
       .join("");
     return foundry.applications.api.DialogV2.prompt({
       window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`) },
+      classes: ["acks-importer-dialog"],
       content: `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.debugPick`)}</label>
         <select name="entry">${rows}</select></div>`,
       ok: {
@@ -3684,7 +3901,7 @@ export async function cookbookDebug(entryId) {
   const paras = (f.description ?? [])
     .map((p, i) => `<p class="acks-importer-debug-para"><b>[${i}]</b> ${esc(p.text)}</p>`)
     .join("");
-  const content = `<div class="acks-importer-debug" style="max-height:70vh;overflow-y:auto;">
+  const content = `<div class="acks-importer-debug">
     <p><b>${esc(node.name)}</b> — ${esc(node.cite)} · pages ${esc(JSON.stringify(found.entry.pages))} · ok=${node.ok}</p>
     <details open><summary>expect</summary>${pre(f.name)}</details>
     <details open><summary>stats (${Object.keys(f.stats ?? {}).length})</summary>
@@ -3697,6 +3914,7 @@ export async function cookbookDebug(entryId) {
   </div>`;
   return foundry.applications.api.DialogV2.prompt({
     window: { title: `${game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`)} — ${node.name}`, resizable: true },
+    classes: ["acks-importer-dialog"],
     position: { width: 640, height: 720 },
     content,
     ok: { label: game.i18n.localize(`${LANG_PREFIX}.ui.close`) },
@@ -3773,6 +3991,7 @@ export async function cookbookImport() {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`), resizable: true },
+    classes: ["acks-importer-dialog"],
     position: { width: 560, height: 700 },
     content,
     render: (event, dialog) => {
@@ -3866,6 +4085,7 @@ export async function cookbookImportMonsters() {
   // is about to happen while it can still be called off.
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`) },
+    classes: ["acks-importer-dialog"],
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirm`, {
       n: todo.length,
       book: openBooks.map((b) => BOOKS[b]?.label ?? b).join(", "),

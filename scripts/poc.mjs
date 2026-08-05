@@ -4,7 +4,12 @@
  * Persists only @PdfText tags, never prose: the tag resolves per seat at
  * render time from that seat's own extraction.
  */
-const FOLDER_NAME = "ACKS Content PoC";
+/**
+ * Where browse-loaded documents land, beside the cookbook's "ACKS Cookbook".
+ * Named for the module the reader installed, never for a development phase —
+ * a folder in someone's world is a shipped surface.
+ */
+const FOLDER_NAME = "ACKS Importer — Browsed";
 const tagFor = (recipe) => `@PdfText[${recipe.id}]{${recipe.cite}}`;
 
 /**
