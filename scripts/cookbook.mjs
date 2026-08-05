@@ -2696,7 +2696,7 @@ export async function importAbility(id, folderId) {
  * v0.26.0 and produced `category: equipment is not a valid choice` when the
  * ability sheet tried to validate items that should never have been abilities.
  */
-const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.powerAppend"]);
+const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend"]);
 
 /** Does this entry bind to an `ability` item? */
 export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
@@ -2741,12 +2741,22 @@ function abilityRefIndex() {
   return index;
 }
 
+/** The Proficiencies Gained per Level row for one class, from the executed
+ *  classMeta grid: `{l1: "c+ G", …}` keyed by the class's printed name. */
+export function classGainsFor(gainsNode, className) {
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const rows = gainsNode?.fields?.gains?.rows ?? [];
+  return rows.find((r) => fold(r.label) === fold(className))?.cells ?? null;
+}
+
 /**
  * Bind one executed class entry to `acks-extras.class` item data. Everything
  * numeric or listed comes from `node` (the reader's own book); with no book
  * the item still imports as a stub the constructor sheet explains.
+ * `opts.gains` is this class's Proficiencies-Gained-per-Level row — each C
+ * becomes a class-proficiency ChoiceSpec award, each G a general one.
  */
-export function bindClass(entry, node, id) {
+export function bindClass(entry, node, id, { gains = null } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
   const body = Object.entries(f)
@@ -2877,6 +2887,29 @@ export function bindClass(entry, node, id) {
     };
   });
 
+  if (gains) {
+    for (const [key, cell] of Object.entries(gains)) {
+      const atLevel = parseInt(key.slice(1), 10);
+      if (!Number.isInteger(atLevel)) continue;
+      const text = String(cell);
+      if (/c/i.test(text)) {
+        awards.push({
+          atLevel, kind: "choice", ref: "", name: "",
+          choice: { from: "classInventory", filter: "proficiencies", count: 1, refs: [], label: "Class proficiency" },
+          note: "",
+        });
+      }
+      if (/g/i.test(text)) {
+        awards.push({
+          atLevel, kind: "choice", ref: "", name: "",
+          choice: { from: "generalList", filter: "any", count: 1, refs: [], label: "General proficiency" },
+          note: "",
+        });
+      }
+    }
+    awards.sort((a, b) => a.atLevel - b.atLevel);
+  }
+
   let cleaves = {};
   if (entry.cleaves?.pattern && body) {
     const m = new RegExp(entry.cleaves.pattern, "i").exec(body);
@@ -2927,6 +2960,17 @@ export function* classEntries() {
   }
 }
 
+/** Execute the Proficiencies-Gained grid once per run (null without a book). */
+async function executeProfGains() {
+  const id = "def.classmeta.profGains";
+  const found = cookbookEntry(id);
+  if (!found) return null;
+  const session = ctx.sessionDocs.get(bookOf(found));
+  if (!session) return null;
+  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  return node?.ok ? node : null;
+}
+
 /**
  * Import every class document (skip ones already in the world). Values come
  * from the connected book; a bookless import creates constructor stubs.
@@ -2938,6 +2982,7 @@ export async function importClasses() {
   }
   const made = [];
   let skipped = 0;
+  const gainsNode = await executeProfGains();
   for (const [id, entry] of classEntries()) {
     if (await importedItem(id)) {
       skipped++;
@@ -2951,7 +2996,7 @@ export async function importClasses() {
       if (!node?.ok) node = null;
     }
     const folder = (await ensureItemFolder(id))?.id ?? null;
-    const doc = bindClass(entry, node, id);
+    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
     made.push(rememberImported(id, await createDoc(Item, { ...doc, folder })));
   }
   ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
@@ -2981,6 +3026,7 @@ export async function cookbookUpdateClasses() {
   });
   if (!ok) return 0;
   let updated = 0;
+  const gainsNode = await executeProfGains();
   for (const item of targets) {
     const id = item.flags[MODULE_ID].cookbook.id;
     const entry = byId.get(id);
@@ -2991,7 +3037,7 @@ export async function cookbookUpdateClasses() {
       node = await executeEntry(session.doc, found.cb, data.registers, id);
       if (!node?.ok) node = null;
     }
-    const doc = bindClass(entry, node, id);
+    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
     await item.update({ name: doc.name, ...(doc.img ? { img: doc.img } : {}), system: doc.system });
     updated++;
   }

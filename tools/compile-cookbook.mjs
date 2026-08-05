@@ -2192,6 +2192,68 @@ async function compileClass(doc, entry, kindRow) {
   };
 }
 
+/**
+ * kind.classMeta — the Profs chapter's Proficiencies Gained per Level grid:
+ * class-name rows × level columns 1..N, cells "C" / "G" / "C + G" (blank past
+ * a class's maximum level). Rows are keyed by class name, so the walk accepts
+ * word-starting rows; level columns come from the numbered header cells.
+ */
+async function compileClassMeta(doc, entry) {
+  const g = entry.grid ?? {};
+  const page = g.page ?? entry.pages[0];
+  const pd = await pageItems(doc, page);
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const lineRows = (items, tol = 3) => {
+    const by = new Map();
+    for (const it of items) {
+      const k = Math.round(it.y / tol);
+      (by.get(k) ?? by.set(k, []).get(k)).push(it);
+    }
+    return [...by.entries()].sort((a, b) => a[0] - b[0]).map(([, v]) => v.sort((a, b) => a.x - b.x));
+  };
+  const rows = lineRows(pd.items.filter((i) => i.h >= 7 && i.str.trim() && i.x <= pd.width - 45));
+  const titleIdx = rows.findIndex((r) => fold(r.map((i) => i.str).join("")).includes(fold(g.title)));
+  if (titleIdx < 0) throw new Error(`grid title "${g.title}" not found on p.${page}`);
+  const headerRow = rows[titleIdx + 1] ?? [];
+  const levelCells = headerRow.filter((i) => /^\d{1,2}$/.test(i.str.trim()));
+  const levels = g.levels ?? 14;
+  if (levelCells.length < levels) throw new Error(`grid header has ${levelCells.length} level cells (< ${levels})`);
+  const xs = levelCells.map((c) => c.x).sort((a, b) => a - b).slice(0, levels);
+  const tableX0 = Math.min(...headerRow.map((i) => i.x));
+  const span = (i) => ({
+    x0: i === 0 ? (tableX0 + xs[0]) / 2 + 10 : (xs[i - 1] + xs[i]) / 2,
+    x1: i === levels - 1 ? xs[i] + 20 : (xs[i] + xs[i + 1]) / 2,
+  });
+  // Data rows: class names — words, not numbers — until the first gap.
+  const dataRows = [];
+  for (const r of rows.slice(titleIdx + 2)) {
+    const first = (r[0]?.str ?? "").trim();
+    if (!/^[A-Za-z]/.test(first)) break;
+    if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 16) break;
+    dataRows.push(r);
+  }
+  if (dataRows.length < 10) throw new Error(`grid resolved only ${dataRows.length} class row(s)`);
+  const y0 = dataRows[0][0].y - 4;
+  const y1 = dataRows[dataRows.length - 1][0].y + 5;
+  return {
+    kind: entry.kind,
+    name: entry.name,
+    book: entry.book,
+    cite: `${BOOKS[entry.book].short} p.${page}`,
+    pages: entry.pages,
+    meta: { ...(entry.meta ?? {}) },
+    fields: {
+      gains: {
+        op: "grid", page,
+        box: { x0: tableX0 - 6, x1: xs[levels - 1] + 22, y0, y1 },
+        label: { x0: tableX0 - 6, x1: (tableX0 + xs[0]) / 2 + 10 },
+        cols: Array.from({ length: levels }, (_, i) => ({ key: `l${i + 1}`, ...span(i) })),
+        gapMin: 2,
+      },
+    },
+  };
+}
+
 /* -------------------------------------------- */
 /*  Definition compilation (proficiency/power/skill) */
 /* -------------------------------------------- */
@@ -2200,7 +2262,7 @@ async function compileClass(doc, entry, kindRow) {
  * extracts, not the source book — a content type spans every book). */
 // kind.class routes through compileClass before the definition branch reads
 // this map — its row here feeds only the index's content list.
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes" };
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -2928,9 +2990,12 @@ async function main() {
         console.error(`SKIP ${entry.id}: status "${entry.status}" (pending review)`);
         continue;
       }
-      if (entry.kind === "kind.class") {
+      if (entry.kind === "kind.class" || entry.kind === "kind.classMeta") {
         try {
-          const compiled = await compileClass(doc, entry, kinds[entry.kind]);
+          const compiled =
+            entry.kind === "kind.class"
+              ? await compileClass(doc, entry, kinds[entry.kind])
+              : await compileClassMeta(doc, entry);
           (contentOut["classes"] ??= { schema: "acks-cookbook/2", content: "classes", entries: {} }).entries[entry.id] = compiled;
           console.error(`OK   ${entry.id}: ${Object.keys(compiled.fields).length} instructions [classes]`);
         } catch (err) {
