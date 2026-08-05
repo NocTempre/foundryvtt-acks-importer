@@ -1680,7 +1680,7 @@ Hooks.once("ready", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module) module.api = api;
   console.log(
-    `${MODULE_ID} | ready. Macros in the "ACKS Importer — Macros" compendium (folders "1 · Your Book" through "4 · Tools & Maintenance"), or: acksImporter.connectBook() · acksImporter.cookbookImport() · acksImporter.cookbookImportAbilitiesDialog() · acksImporter.cookbookUpdateAbilities() · acksImporter.browseAndLoad().`,
+    `${MODULE_ID} | ready. Macros in the "ACKS Importer — Macros" compendium (folders "1 · Your Book" through "4 · Tools & Maintenance"), or: acksImporter.connectBook() · acksImporter.cookbookImport() · acksImporter.cookbookImportAbilitiesDialog() · acksImporter.cookbookUpdateAbilities() · acksImporter.importClasses() · acksImporter.cookbookUpdateClasses() · acksImporter.browseAndLoad().`,
   );
 
   // Before anything reads bytes: decide whether this page load is a reload

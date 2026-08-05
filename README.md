@@ -80,7 +80,7 @@ of them from **Settings → Ruledata Browser**.
 | Source | Produces |
 |---|---|
 | Monstrous Manual | Monster actors with the full structured stat block, natural weapons, spoils and treasure links |
-| Revised Rulebook | Proficiencies and class powers, equipment, weapon/armour/gear price tables |
+| Revised Rulebook | Character classes (progressions, saves, award ladders, starting templates — `importClasses()`), proficiencies and class powers, equipment, weapon/armour/gear price tables |
 | Judges Journal | Proficiencies, drawbacks, and the rules tables the henchmen market runs on |
 | Adventure line (AX2, AX3) | Locations as journals, roll tables, NPC and legacy-monster actors |
 
