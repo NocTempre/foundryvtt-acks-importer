@@ -3,9 +3,435 @@
   "note": "Per-power source matrix (RR-primary): which book prints each class power and its disposition — rrPrimary, rrPrimaryJjAppend (kind.powerAppend carries JJ's player-facing extra), jjOnly, profEquivalent (the power is a rank of a proficiency; the class awards the prof ref). Pages are full-PDF indices. Grown class-by-class; the catch-up phase closes the jjOnly tail.",
   "table": {
     "fighter": [
-      { "name": "Manual of Arms", "ref": "def.prof.manualOfArms", "rr": 26, "disposition": "profEquivalent" },
-      { "name": "Battlefield Prowess", "ref": "def.power.battlefieldProwess", "rr": 26, "jj": 312, "disposition": "rrPrimary" },
-      { "name": "Castle", "ref": "def.power.castle", "rr": 26, "disposition": "rrPrimary" }
+      {
+        "name": "Manual of Arms",
+        "ref": "def.prof.manualOfArms",
+        "rr": 26,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Battlefield Prowess",
+        "ref": "def.power.battlefieldProwess",
+        "rr": 26,
+        "jj": 312,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Castle",
+        "ref": "def.power.castle",
+        "rr": 26,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "explorer": [
+      {
+        "name": "Alertness",
+        "ref": "def.power.alertness",
+        "rr": 28,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Ambushing",
+        "ref": "def.power.ambushing",
+        "rr": 28,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Animal Reflexes",
+        "ref": "def.power.animalReflexes",
+        "rr": 28,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Endurance",
+        "ref": "def.prof.endurance",
+        "rr": 28,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Evasion",
+        "ref": "def.power.evasion",
+        "rr": 29,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Pathfinding",
+        "ref": "def.power.pathfinding",
+        "rr": 29,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Natural Stealth",
+        "ref": "def.power.naturalStealth",
+        "rr": 29,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Experience and Hardiness",
+        "ref": "def.power.experienceAndHardiness",
+        "rr": 30,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Border Fort",
+        "ref": "def.power.borderFort",
+        "rr": 30,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "thief": [
+      {
+        "name": "backstabbing",
+        "ref": "def.skill.backstabbing",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "climbing",
+        "ref": "def.skill.climbing",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "hiding",
+        "ref": "def.skill.hiding",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "listening",
+        "ref": "def.skill.listening",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "lockpicking",
+        "ref": "def.skill.lockpicking",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "pickpocketing",
+        "ref": "def.skill.pickpocketing",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "searching",
+        "ref": "def.skill.searching",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "shadowySenses",
+        "ref": "def.skill.shadowySenses",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "sneaking",
+        "ref": "def.skill.sneaking",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "streetwise",
+        "ref": "def.skill.streetwise",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "trapbreaking",
+        "ref": "def.skill.trapbreaking",
+        "rr": 32,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Deciphering",
+        "ref": "def.skill.deciphering",
+        "rr": 35,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Hideout",
+        "ref": "def.skill.hideout",
+        "rr": 35,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Scrollreading",
+        "ref": "def.power.scrollreading",
+        "rr": 35,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "venturer": [
+      {
+        "name": "Bribery",
+        "ref": "def.power.bribery",
+        "rr": 42,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Diplomacy",
+        "ref": "def.prof.diplomacy",
+        "rr": 42,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Expert Bargaining",
+        "ref": "def.power.expertBargaining",
+        "rr": 42,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Expert Traveling",
+        "ref": "def.power.expertTraveling",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Mercantile Network",
+        "ref": "def.power.mercantileNetwork",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Multilingual",
+        "ref": "def.power.multilingual",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Treachery",
+        "ref": "def.power.treachery",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Steady Trade Route",
+        "ref": "def.power.steadyTradeRoute",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Rumormongering",
+        "ref": "def.power.rumormongering",
+        "rr": 43,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Access to Capital",
+        "ref": "def.power.accessToCapital",
+        "rr": 44,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Guildhouse",
+        "ref": "def.power.guildhouse",
+        "rr": 45,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Monopoly Power",
+        "ref": "def.power.monopolyPower",
+        "rr": 45,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "assassin": [
+      {
+        "name": "backstabbing",
+        "ref": "def.skill.backstabbing",
+        "rr": 47,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "hiding",
+        "ref": "def.skill.hiding",
+        "rr": 47,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "shadowySenses",
+        "ref": "def.skill.shadowySenses",
+        "rr": 47,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "sneaking",
+        "ref": "def.skill.sneaking",
+        "rr": 47,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "streetwise",
+        "ref": "def.skill.streetwise",
+        "rr": 47,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Hideout",
+        "ref": "def.skill.hideout",
+        "rr": 48,
+        "disposition": "skillRef"
+      }
+    ],
+    "barbarian": [
+      {
+        "name": "Animal Reflexes",
+        "ref": "def.power.animalReflexes",
+        "rr": 50,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Natural Proficiency",
+        "ref": "def.power.naturalProficiency",
+        "rr": 51,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Natural Stealth",
+        "ref": "def.power.naturalStealth",
+        "rr": 51,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Savage Resilience",
+        "ref": "def.power.savageResilience",
+        "rr": 51,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Animal Magnetism",
+        "ref": "def.power.animalMagnetism",
+        "rr": 51,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Chieftains Hall",
+        "ref": "def.power.chieftainsHall",
+        "rr": 51,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "bard": [
+      {
+        "name": "Arcane Dabbling",
+        "ref": "def.power.arcaneDabbling",
+        "rr": 54,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Inspire Courage",
+        "ref": "def.power.inspireCourage",
+        "rr": 55,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Jack of All Trades",
+        "ref": "def.power.jackOfAllTrades",
+        "rr": 55,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Listening",
+        "ref": "def.skill.listening",
+        "rr": 55,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Loremastery",
+        "ref": "def.power.loremastery",
+        "rr": 55,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Multilingual",
+        "ref": "def.power.multilingual",
+        "rr": 55,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Performance",
+        "ref": "def.prof.performance",
+        "rr": 55,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Deciphering",
+        "ref": "def.skill.deciphering",
+        "rr": 55,
+        "disposition": "skillRef"
+      },
+      {
+        "name": "Chronicles of Battle",
+        "ref": "def.power.chroniclesOfBattle",
+        "rr": 55,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Inspire Hope",
+        "ref": "def.power.inspireHope",
+        "rr": 56,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Great Hall",
+        "ref": "def.power.greatHall",
+        "rr": 56,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Scrollreading",
+        "ref": "def.power.scrollreading",
+        "rr": 56,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "paladin": [
+      {
+        "name": "Aura of Protection",
+        "ref": "def.power.paladinAuraOfProtection",
+        "rr": 62,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Lay on Hands",
+        "ref": "def.power.paladinLayOnHands",
+        "rr": 62,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Manual of Arms",
+        "ref": "def.prof.manualOfArms",
+        "rr": 62,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Sanctified Body",
+        "ref": "def.power.sanctifiedBody",
+        "rr": 63,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Sense Evil",
+        "ref": "def.power.senseEvil",
+        "rr": 63,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Holy Fervor",
+        "ref": "def.power.holyFervor",
+        "rr": 63,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Fortress",
+        "ref": "def.power.fortress",
+        "rr": 63,
+        "disposition": "rrPrimary"
+      }
     ]
   }
 }
