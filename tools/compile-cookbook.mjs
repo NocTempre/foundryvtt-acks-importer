@@ -1936,27 +1936,67 @@ async function compileClass(doc, entry, kindRow) {
   // "14+"), or an XP figure — never a word.
   const looksLikeDataStart = (s) => /^\d[\d,]*(?:\s*[–-]\s*\d+)?\+?$/.test(s.trim());
 
+  /**
+   * Find where a label/title STARTS, run-split and shared-row tolerant: scan
+   * reconstructed rows for the folded target and return the run at the match
+   * offset. Titles share rows with the other column's prose, and two tables
+   * printed side by side share one title row — startsWith on a whole row
+   * cannot see either.
+   */
+  const findLabelRun = (items, label) => {
+    const target = fold(label);
+    for (const r of lineRows(items)) {
+      let acc = "";
+      const starts = r.map((it) => {
+        const s = acc.length;
+        acc += fold(it.str);
+        return s;
+      });
+      const at = acc.indexOf(target);
+      if (at < 0) continue;
+      let idx = 0;
+      for (let i = 0; i < starts.length; i++) if (starts[i] <= at) idx = i;
+      return r[idx];
+    }
+    return null;
+  };
+
+  // Pass 1 — locate every table's title run, so side-by-side tables can bound
+  // each other's x-region.
+  const pdCache = new Map([[page, pd]]);
+  const pageOf = async (n) => {
+    if (!pdCache.has(n)) pdCache.set(n, await pageItems(doc, n));
+    return pdCache.get(n);
+  };
+  const located = [];
   for (const [tname, t] of Object.entries(spec.tables ?? {})) {
-    const tpd = t.page === page ? pd : await pageItems(doc, t.page);
-    const allRows = lineRows(tpd.items);
-    const titleRowFull = allRows.find((r) => fold(joinRow(r)).startsWith(fold(t.title)));
-    if (!titleRowFull) {
+    const tpd = await pageOf(t.page);
+    const titleRun = findLabelRun(tpd.items, t.title);
+    if (!titleRun) {
       warn(`${entry.id}: table title "${t.title}" not found on p.${t.page}`);
       continue;
     }
+    located.push({ tname, t, tpd, tablePage: t.page, titleX0: titleRun.x, titleY: titleRun.y });
+  }
+
+  for (const { tname, t, tpd, tablePage, titleX0, titleY } of located) {
     // Everything left of the table (the class prose column, interleaved
     // headings) shares the same y-bands — clip to the table's own x-region,
-    // anchored on where its title starts, before bucketing rows. The rotated
-    // chapter tab in the outer margin and the ~5pt superscript fragments
-    // ("th" ordinals, footnote asterisks) would otherwise form phantom rows
-    // that end the data walk early and bridge adjacent column clusters.
-    const titleX0 = Math.min(...titleRowFull.map((i) => i.x));
+    // anchored on where its title starts. A sibling table printed to the
+    // RIGHT on the same page (the priestess/witch split pair) bounds this
+    // one's right edge. The rotated chapter tab in the outer margin and the
+    // ~5pt superscript fragments would otherwise form phantom rows that end
+    // the data walk early and bridge adjacent column clusters.
+    const rightSibling = located
+      .filter((o) => o.tablePage === tablePage && o.titleX0 > titleX0 + 10 && Math.abs(o.titleY - titleY) < 40)
+      .reduce((min, o) => Math.min(min, o.titleX0), Infinity);
+    const clipX1 = Math.min(tpd.width - 45, rightSibling - 10);
     const rows = lineRows(
       tpd.items.filter(
-        (i) => i.h >= 7 && i.str.trim() && i.x >= titleX0 - 12 && i.x <= tpd.width - 45,
+        (i) => i.h >= 7 && i.str.trim() && i.x >= titleX0 - 12 && i.x <= clipX1,
       ),
     );
-    const titleIdx = rows.findIndex((r) => fold(joinRow(r)).startsWith(fold(t.title)));
+    const titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
     // Header cells pool: the non-data rows between the title and the first
     // data row — the main header line plus any stacked wrap lines ("Damage"
     // above, "Bonus" below). Fused at a wider gap so "Hit"+"d"+"ice" is one
@@ -1965,7 +2005,8 @@ async function compileClass(doc, entry, kindRow) {
     // A caster table's numbered sub-header line ("1 2 3 4 5 6") starts with a
     // digit exactly like a data row — the cell-count gate is what tells them
     // apart: a data row carries (nearly) every declared column.
-    const dataShaped = (r) => rebuildCells(r, 6).length >= Math.max(3, Math.ceil(declaredCount * 0.7));
+    const dataShaped = (r) =>
+      rebuildCells(r, 6).length >= Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7));
     const headerCells = [];
     const dataRows = [];
     let headerLines = 0;
@@ -2062,10 +2103,12 @@ async function compileClass(doc, entry, kindRow) {
     ["keyAttribute", "Key Attribute:", "raw"],
     ["requirements", "Requirements:", "raw"],
   ];
+  const headerWindow = pd.items.filter(
+    (i) => colOf(i.x, cols) === anchor.col && i.y > anchor.y && i.y < anchor.y + 100,
+  );
   for (const [key, label, pattern] of HEADER_FIELDS) {
-    const it = pd.items.find(
-      (i) => colOf(i.x, cols) === anchor.col && i.y > anchor.y && i.y < anchor.y + 100 && i.str.trim().startsWith(label),
-    );
+    const it =
+      headerWindow.find((i) => i.str.trim().startsWith(label)) ?? findLabelRun(headerWindow, label);
     if (!it) {
       warn(`${entry.id}: header bullet "${label}" not found on p.${page}`);
       continue;
@@ -2092,28 +2135,9 @@ async function compileClass(doc, entry, kindRow) {
     // sit mid-row beside the other column's prose — so after the direct and
     // whole-line matches, fall back to the longest word-prefix a single run
     // carries.
-    const labelIt = (() => {
-      const direct = ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label)));
-      if (direct) return direct;
-      // The label splits at word boundaries across runs and shares its row
-      // with the other column's prose — scan whole rows for the folded label
-      // and anchor on the run where the match begins.
-      const target = fold(spec.profList.label);
-      for (const r of lineRows(ppd.items)) {
-        let acc = "";
-        const starts = r.map((it) => {
-          const s = acc.length;
-          acc += fold(it.str);
-          return s;
-        });
-        const at = acc.indexOf(target);
-        if (at < 0) continue;
-        let idx = 0;
-        for (let i = 0; i < starts.length; i++) if (starts[i] <= at) idx = i;
-        return r[idx];
-      }
-      return null;
-    })();
+    const labelIt =
+      ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label))) ??
+      findLabelRun(ppd.items, spec.profList.label);
     if (!labelIt) {
       warn(`${entry.id}: proficiency-list label "${spec.profList.label}" not found on p.${pPage}`);
     } else {

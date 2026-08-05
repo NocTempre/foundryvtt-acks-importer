@@ -4416,28 +4416,6 @@
     }
   },
   {
-    "id": "def.power.totemanimal",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Totem Animal",
-    "anchor": {
-      "runin": "TotemAnimal:"
-    },
-    "pages": [
-      328
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "effects": [
-      {
-        "type": "companion",
-        "amount": 1,
-        "note": "Totem animal"
-      }
-    ]
-  },
-  {
     "id": "def.power.totemBenefit",
     "kind": "kind.power",
     "book": "jj",
@@ -4579,21 +4557,6 @@
     "name": "Utter Domination",
     "anchor": {
       "runin": "Utter Domination:"
-    },
-    "pages": [
-      330
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.villageWisdom",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Village Wisdom",
-    "anchor": {
-      "runin": "Village Wisdom:"
     },
     "pages": [
       330

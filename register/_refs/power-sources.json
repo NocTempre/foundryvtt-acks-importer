@@ -1,6 +1,6 @@
 {
   "shape": "table",
-  "note": "Per-power source matrix (RR-primary): which book prints each class power and its disposition — rrPrimary, rrPrimaryJjAppend (kind.powerAppend carries JJ's player-facing extra), jjOnly, profEquivalent (the power is a rank of a proficiency; the class awards the prof ref). Pages are full-PDF indices. Grown class-by-class; the catch-up phase closes the jjOnly tail.",
+  "note": "Per-power source matrix (RR-primary): which book prints each class power and its disposition - rrPrimary, rrPrimaryJjAppend (kind.powerAppend carries JJ player-facing extras), jjOnly, profEquivalent, skillRef. Pages are full-PDF indices. Grown class-by-class; the catch-up phase closes jjOnly plus the shaman/warlock/witch additional powers.",
   "table": {
     "fighter": [
       {
@@ -430,6 +430,212 @@
         "name": "Fortress",
         "ref": "def.power.fortress",
         "rr": 63,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "mage": [
+      {
+        "name": "Arcane Magic",
+        "ref": "def.power.arcaneMagic",
+        "rr": 36,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Collegiate Wizardry",
+        "ref": "def.prof.collegiateWizardry",
+        "rr": 36,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Minor Magical Research",
+        "ref": "def.power.minorMagicalResearch",
+        "rr": 36,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Major Magical Research",
+        "ref": "def.power.majorMagicalResearch",
+        "rr": 36,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Sanctum",
+        "ref": "def.power.sanctum",
+        "rr": 36,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Supreme Magical Research",
+        "ref": "def.power.supremeMagicalResearch",
+        "rr": 37,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "crusader": [
+      {
+        "name": "Divine Magic",
+        "ref": "def.power.divineMagic",
+        "rr": 38,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Theology",
+        "ref": "def.prof.theology",
+        "rr": 38,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Rebuke Undead",
+        "ref": "def.power.rebukeUndead",
+        "rr": 39,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Fortified Church",
+        "ref": "def.power.fortifiedChurch",
+        "rr": 40,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "bladedancer": [
+      {
+        "name": "Graceful Fighting",
+        "ref": "def.power.bladedancerGracefulFighting",
+        "rr": 58,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Divine Magic",
+        "ref": "def.power.divineMagic",
+        "rr": 58,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Strength of Faith",
+        "ref": "def.power.bladedancerStrengthOfFaith",
+        "rr": 59,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Theology",
+        "ref": "def.prof.theology",
+        "rr": 59,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Weapon Finesse",
+        "ref": "def.power.bladedancerWeaponFinesse",
+        "rr": 59,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Temple",
+        "ref": "def.power.temple",
+        "rr": 59,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "priestess": [
+      {
+        "name": "Consolation",
+        "ref": "def.power.consolation",
+        "rr": 66,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Diplomacy",
+        "ref": "def.prof.diplomacy",
+        "rr": 66,
+        "disposition": "profEquivalent"
+      },
+      {
+        "name": "Divine Magic",
+        "ref": "def.power.divineMagic",
+        "rr": 66,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Lay on Hands",
+        "ref": "def.power.priestessLayOnHands",
+        "rr": 67,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Purity of the Body",
+        "ref": "def.power.purityOfTheBody",
+        "rr": 67,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Theology",
+        "ref": "def.prof.theology",
+        "rr": 67,
+        "disposition": "profEquivalent"
+      }
+    ],
+    "shaman": [
+      {
+        "name": "Commune with Spirits",
+        "ref": "def.power.communeWithSpirits",
+        "rr": 70,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Divine Magic",
+        "ref": "def.power.divineMagic",
+        "rr": 71,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Tribal Traditions",
+        "ref": "def.power.tribalTraditions",
+        "rr": 71,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Totem Animal",
+        "ref": "def.power.totemanimal",
+        "rr": 71,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "warlock": [
+      {
+        "name": "Arcane Magic",
+        "ref": "def.power.arcaneMagic",
+        "rr": 74,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Dark Path",
+        "ref": "def.power.darkPath",
+        "rr": 75,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Occultism",
+        "ref": "def.power.occultism",
+        "rr": 75,
+        "disposition": "rrPrimary"
+      }
+    ],
+    "witch": [
+      {
+        "name": "Studious Divine Magic",
+        "ref": "def.power.studiousDivineMagic",
+        "rr": 78,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Tradition",
+        "ref": "def.power.witchTradition",
+        "rr": 78,
+        "disposition": "rrPrimary"
+      },
+      {
+        "name": "Village Wisdom",
+        "ref": "def.power.villageWisdom",
+        "rr": 79,
         "disposition": "rrPrimary"
       }
     ]

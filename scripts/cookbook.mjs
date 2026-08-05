@@ -2866,8 +2866,10 @@ export function bindClass(entry, node, id) {
       const m = new RegExp(a.from.pattern).exec(body);
       if (m?.[1] != null) atLevel = parseInt(m[1], 10);
     }
+    // A pattern that finds nothing parks the award at level 0 — visible and
+    // never auto-granted — rather than silently landing at 1st.
     return {
-      atLevel: atLevel ?? 1,
+      atLevel: atLevel ?? 0,
       kind: "fixed",
       ref: a.ref,
       name: "",
