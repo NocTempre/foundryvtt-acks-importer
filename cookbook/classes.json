@@ -155,7 +155,7 @@
           "page": 26,
           "box": {
             "x0": 45,
-            "x1": 312.9722,
+            "x1": 213,
             "y0": 153,
             "y1": 162
           },
@@ -169,7 +169,7 @@
           "page": 26,
           "box": {
             "x0": 45,
-            "x1": 312.9722,
+            "x1": 213,
             "y0": 163,
             "y1": 172
           },
@@ -183,7 +183,7 @@
           "page": 26,
           "box": {
             "x0": 45,
-            "x1": 312.9722,
+            "x1": 213,
             "y0": 133,
             "y1": 142
           },
@@ -197,7 +197,7 @@
           "page": 26,
           "box": {
             "x0": 45,
-            "x1": 312.9722,
+            "x1": 213,
             "y0": 143,
             "y1": 152
           },
@@ -234,6 +234,2119 @@
         "body27": {
           "op": "value",
           "page": 27,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.explorer": {
+      "kind": "kind.class",
+      "name": "Explorer",
+      "book": "rr",
+      "cite": "RR p.28",
+      "pages": [
+        28,
+        29,
+        30
+      ],
+      "icon": "icons/svg/target.svg",
+      "meta": {
+        "category": "class",
+        "key": "explorer",
+        "chassis": {
+          "saves": "fighter",
+          "attack": "fighter"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.power.alertness",
+          "starting": true
+        },
+        {
+          "ref": "def.power.ambushing",
+          "starting": true
+        },
+        {
+          "ref": "def.power.animalReflexes",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.endurance",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.evasion",
+          "starting": true
+        },
+        {
+          "ref": "def.power.pathfinding",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalStealth",
+          "starting": true
+        },
+        {
+          "ref": "def.power.experienceAndHardiness",
+          "from": {
+            "pattern": "Experience and Hardiness \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.borderFort",
+          "from": {
+            "pattern": "Border Fort \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 354,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Explorer"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 28,
+          "box": {
+            "x0": 317.9726,
+            "x1": 532.0784000000001,
+            "y0": 121.73000000000002,
+            "y1": 279.58950000000004
+          },
+          "label": {
+            "x0": 419.7643,
+            "x1": 452.3272
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 317.9726,
+              "x1": 354.14045
+            },
+            {
+              "key": "title",
+              "x0": 354.14045,
+              "x1": 419.7643
+            },
+            {
+              "key": "hd",
+              "x0": 452.3272,
+              "x1": 501.3981
+            },
+            {
+              "key": "damageBonus",
+              "x0": 501.3981,
+              "x1": 532.0784000000001
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 29,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 111.73000000000002,
+            "y1": 222.78970000000004
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 30,
+          "box": {
+            "x0": 294,
+            "x1": 612,
+            "y0": 563,
+            "y1": 644
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Explorer Proficiency List:"
+          ]
+        },
+        "body28": {
+          "op": "value",
+          "page": 28,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body29": {
+          "op": "value",
+          "page": 29,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body30": {
+          "op": "value",
+          "page": 30,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.thief": {
+      "kind": "kind.class",
+      "name": "Thief",
+      "book": "rr",
+      "cite": "RR p.32",
+      "pages": [
+        32,
+        33,
+        34,
+        35
+      ],
+      "icon": "icons/svg/eye.svg",
+      "meta": {
+        "category": "class",
+        "key": "thief",
+        "chassis": {
+          "saves": "thief",
+          "attack": "thief"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.skill.backstabbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.climbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hiding",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.listening",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.lockpicking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.pickpocketing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.searching",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.shadowySenses",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.sneaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.streetwise",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.trapbreaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.deciphering",
+          "from": {
+            "pattern": "Deciphering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.skill.hideout",
+          "from": {
+            "pattern": "Hideout \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scrollreading",
+          "from": {
+            "pattern": "Scrollreading \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "skills": [
+        {
+          "ref": "def.skill.backstabbing"
+        },
+        {
+          "ref": "def.skill.climbing"
+        },
+        {
+          "ref": "def.skill.hiding"
+        },
+        {
+          "ref": "def.skill.listening"
+        },
+        {
+          "ref": "def.skill.lockpicking"
+        },
+        {
+          "ref": "def.skill.pickpocketing"
+        },
+        {
+          "ref": "def.skill.searching"
+        },
+        {
+          "ref": "def.skill.shadowySenses"
+        },
+        {
+          "ref": "def.skill.sneaking"
+        },
+        {
+          "ref": "def.skill.streetwise"
+        },
+        {
+          "ref": "def.skill.trapbreaking"
+        }
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 334,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Thief"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 32,
+          "box": {
+            "x0": 297.9121,
+            "x1": 533.6850000000001,
+            "y0": 111.56989999999996,
+            "y1": 269.66970000000003
+          },
+          "label": {
+            "x0": 414.97595,
+            "x1": 449.90635
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 297.9121,
+              "x1": 334.08
+            },
+            {
+              "key": "title",
+              "x0": 334.08,
+              "x1": 414.97595
+            },
+            {
+              "key": "hd",
+              "x0": 449.90635,
+              "x1": 498.6739
+            },
+            {
+              "key": "backstab",
+              "x0": 498.6739,
+              "x1": 533.6850000000001
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 33,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 111.31010000000003,
+            "y1": 188.34990000000005
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 35,
+          "box": {
+            "x0": 304,
+            "x1": 612,
+            "y0": 233,
+            "y1": 304
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Thief Proficiency List:"
+          ]
+        },
+        "body32": {
+          "op": "value",
+          "page": 32,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body33": {
+          "op": "value",
+          "page": 33,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body34": {
+          "op": "value",
+          "page": 34,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body35": {
+          "op": "value",
+          "page": 35,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.venturer": {
+      "kind": "kind.class",
+      "name": "Venturer",
+      "book": "rr",
+      "cite": "RR p.42",
+      "pages": [
+        42,
+        43,
+        44,
+        45
+      ],
+      "icon": "icons/svg/coins.svg",
+      "meta": {
+        "category": "class",
+        "key": "venturer",
+        "chassis": {
+          "saves": "thief",
+          "attack": "thief"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.power.bribery",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.diplomacy",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.expertBargaining",
+          "starting": true
+        },
+        {
+          "ref": "def.power.expertTraveling",
+          "starting": true
+        },
+        {
+          "ref": "def.power.mercantileNetwork",
+          "starting": true
+        },
+        {
+          "ref": "def.power.multilingual",
+          "starting": true
+        },
+        {
+          "ref": "def.power.pathfinding",
+          "starting": true
+        },
+        {
+          "ref": "def.power.treachery",
+          "starting": true
+        },
+        {
+          "ref": "def.power.steadyTradeRoute",
+          "from": {
+            "pattern": "Steady Trade Route \\((\\d+)"
+          },
+          "note": "Upgrades again at higher levels; the page states them."
+        },
+        {
+          "ref": "def.power.rumormongering",
+          "from": {
+            "pattern": "Rumormongering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.accessToCapital",
+          "from": {
+            "pattern": "Access to Capital \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.guildhouse",
+          "from": {
+            "pattern": "Guildhouse \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.monopolyPower",
+          "from": {
+            "pattern": "Monopoly Power \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 354,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Venturer"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 42,
+          "box": {
+            "x0": 316.8121,
+            "x1": 543.2628,
+            "y0": 110.98990000000003,
+            "y1": 268.84939999999995
+          },
+          "label": {
+            "x0": 451.42150000000004,
+            "x1": 495.59135
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 316.8121,
+              "x1": 352.98005
+            },
+            {
+              "key": "title",
+              "x0": 352.98005,
+              "x1": 451.42150000000004
+            },
+            {
+              "key": "hd",
+              "x0": 495.59135,
+              "x1": 543.2628
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 43,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 111.73000000000002,
+            "y1": 188.76980000000003
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 45,
+          "box": {
+            "x0": 324,
+            "x1": 612,
+            "y0": 153,
+            "y1": 792
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Venturer Proficiency List:"
+          ]
+        },
+        "body42": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body43": {
+          "op": "value",
+          "page": 43,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body44": {
+          "op": "value",
+          "page": 44,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body45": {
+          "op": "value",
+          "page": 45,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.assassin": {
+      "kind": "kind.class",
+      "name": "Assassin",
+      "book": "rr",
+      "cite": "RR p.46",
+      "pages": [
+        46,
+        47,
+        48
+      ],
+      "icon": "icons/svg/blood.svg",
+      "meta": {
+        "category": "class",
+        "key": "assassin",
+        "chassis": {
+          "saves": "fighter",
+          "attack": "fighter"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.skill.backstabbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hiding",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.shadowySenses",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.sneaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.streetwise",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hideout",
+          "from": {
+            "pattern": "Hideout \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "skills": [
+        {
+          "ref": "def.skill.backstabbing"
+        },
+        {
+          "ref": "def.skill.hiding"
+        },
+        {
+          "ref": "def.skill.shadowySenses"
+        },
+        {
+          "ref": "def.skill.sneaking"
+        },
+        {
+          "ref": "def.skill.streetwise"
+        }
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 114,
+            "y0": 103,
+            "y1": 125
+          },
+          "text": "Assassin"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 46,
+          "box": {
+            "x0": 79.0321,
+            "x1": 529.2044,
+            "y0": 571.2665,
+            "y1": 729.1263
+          },
+          "label": {
+            "x0": 232.15859999999998,
+            "x1": 280.6164
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 79.0321,
+              "x1": 115.20005
+            },
+            {
+              "key": "title",
+              "x0": 115.20005,
+              "x1": 232.15859999999998
+            },
+            {
+              "key": "hd",
+              "x0": 280.6164,
+              "x1": 335.61765
+            },
+            {
+              "key": "damageBonus",
+              "x0": 335.61765,
+              "x1": 377.5796
+            },
+            {
+              "key": "backstab",
+              "x0": 377.5796,
+              "x1": 431.47035
+            },
+            {
+              "key": "hiding",
+              "x0": 431.47035,
+              "x1": 485.4267
+            },
+            {
+              "key": "sneaking",
+              "x0": 485.4267,
+              "x1": 529.2044
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 47,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 110.61000000000001,
+            "y1": 221.66970000000003
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 153,
+            "y1": 162
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 163,
+            "y1": 172
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 143,
+            "y1": 152
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 48,
+          "box": {
+            "x0": 294,
+            "x1": 612,
+            "y0": 153,
+            "y1": 224
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Assassin Proficiency List:"
+          ]
+        },
+        "body46": {
+          "op": "value",
+          "page": 46,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body47": {
+          "op": "value",
+          "page": 47,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body48": {
+          "op": "value",
+          "page": 48,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.barbarian": {
+      "kind": "kind.class",
+      "name": "Barbarian",
+      "book": "rr",
+      "cite": "RR p.50",
+      "pages": [
+        50,
+        51,
+        52
+      ],
+      "icon": "icons/svg/bones.svg",
+      "meta": {
+        "category": "class",
+        "key": "barbarian",
+        "chassis": {
+          "saves": "fighter",
+          "attack": "fighter"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.power.animalReflexes",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalProficiency",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalStealth",
+          "starting": true
+        },
+        {
+          "ref": "def.power.savageResilience",
+          "starting": true
+        },
+        {
+          "ref": "def.power.animalMagnetism",
+          "from": {
+            "pattern": "Animal Magnetism \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.chieftainsHall",
+          "from": {
+            "pattern": "Chieftain.s Hall \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 294,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Barbarian"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 50,
+          "box": {
+            "x0": 318.9726,
+            "x1": 533.0784000000001,
+            "y0": 120.73000000000002,
+            "y1": 277.1495
+          },
+          "label": {
+            "x0": 429.1517,
+            "x1": 453.3272
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 318.9726,
+              "x1": 355.14045
+            },
+            {
+              "key": "title",
+              "x0": 355.14045,
+              "x1": 429.1517
+            },
+            {
+              "key": "hd",
+              "x0": 453.3272,
+              "x1": 502.3981
+            },
+            {
+              "key": "damageBonus",
+              "x0": 502.3981,
+              "x1": 533.0784000000001
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 51,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 110.82590000000005,
+            "y1": 221.88559999999995
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 52,
+          "box": {
+            "x0": 284,
+            "x1": 612,
+            "y0": 473,
+            "y1": 792
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Barbarian Proficiency List:"
+          ]
+        },
+        "body50": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body51": {
+          "op": "value",
+          "page": 51,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body52": {
+          "op": "value",
+          "page": 52,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.bard": {
+      "kind": "kind.class",
+      "name": "Bard",
+      "book": "rr",
+      "cite": "RR p.54",
+      "pages": [
+        54,
+        55,
+        56,
+        57
+      ],
+      "icon": "icons/svg/sound.svg",
+      "meta": {
+        "category": "class",
+        "key": "bard",
+        "chassis": {
+          "saves": "fighter",
+          "attack": "fighter"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.power.arcaneDabbling",
+          "starting": true
+        },
+        {
+          "ref": "def.power.inspireCourage",
+          "starting": true
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.listening",
+          "starting": true
+        },
+        {
+          "ref": "def.power.loremastery",
+          "starting": true
+        },
+        {
+          "ref": "def.power.multilingual",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.performance",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades II \\((\\d+)"
+          },
+          "note": "II"
+        },
+        {
+          "ref": "def.skill.deciphering",
+          "from": {
+            "pattern": "Deciphering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.chroniclesOfBattle",
+          "from": {
+            "pattern": "Chronicles of Battle \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades III \\((\\d+)"
+          },
+          "note": "III"
+        },
+        {
+          "ref": "def.power.inspireHope",
+          "from": {
+            "pattern": "Inspire Hope \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades IV \\((\\d+)"
+          },
+          "note": "IV"
+        },
+        {
+          "ref": "def.power.greatHall",
+          "from": {
+            "pattern": "Great Hall \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scrollreading",
+          "from": {
+            "pattern": "Scrollreading \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades V \\((\\d+)"
+          },
+          "note": "V"
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 114,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Bard"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 54,
+          "box": {
+            "x0": 79.0321,
+            "x1": 523.4442,
+            "y0": 571.2591,
+            "y1": 727.6789
+          },
+          "label": {
+            "x0": 204.8759,
+            "x1": 269.0963
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 79.0321,
+              "x1": 115.19999999999999
+            },
+            {
+              "key": "title",
+              "x0": 115.19999999999999,
+              "x1": 204.8759
+            },
+            {
+              "key": "hd",
+              "x0": 269.0963,
+              "x1": 324.09755
+            },
+            {
+              "key": "damageBonus",
+              "x0": 324.09755,
+              "x1": 367.21825
+            },
+            {
+              "key": "arcaneDabbling",
+              "x0": 367.21825,
+              "x1": 418.7915
+            },
+            {
+              "key": "listening",
+              "x0": 418.7915,
+              "x1": 476.78655000000003
+            },
+            {
+              "key": "loremastery",
+              "x0": 476.78655000000003,
+              "x1": 523.4442
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 55,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 110.61000000000001,
+            "y1": 221.66970000000003
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 57,
+          "box": {
+            "x0": 314,
+            "x1": 612,
+            "y0": 493,
+            "y1": 792
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Bard Proficiency List:"
+          ]
+        },
+        "body54": {
+          "op": "value",
+          "page": 54,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body55": {
+          "op": "value",
+          "page": 55,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body56": {
+          "op": "value",
+          "page": 56,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body57": {
+          "op": "value",
+          "page": 57,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
+    "def.class.paladin": {
+      "kind": "kind.class",
+      "name": "Paladin",
+      "book": "rr",
+      "cite": "RR p.62",
+      "pages": [
+        62,
+        63,
+        64
+      ],
+      "icon": "icons/svg/shield.svg",
+      "meta": {
+        "category": "class",
+        "key": "paladin",
+        "chassis": {
+          "saves": "fighter",
+          "attack": "fighter"
+        }
+      },
+      "awards": [
+        {
+          "ref": "def.power.paladinAuraOfProtection",
+          "starting": true
+        },
+        {
+          "ref": "def.power.paladinLayOnHands",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.sanctifiedBody",
+          "starting": true
+        },
+        {
+          "ref": "def.power.senseEvil",
+          "starting": true
+        },
+        {
+          "ref": "def.power.holyFervor",
+          "from": {
+            "pattern": "Holy Fervor \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.fortress",
+          "from": {
+            "pattern": "Fortress \\((\\d+)"
+          }
+        }
+      ],
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 612,
+            "y0": 73,
+            "y1": 95
+          },
+          "text": "Paladin"
+        },
+        "progression": {
+          "op": "grid",
+          "page": 62,
+          "box": {
+            "x0": 294.9722,
+            "x1": 529.8825,
+            "y0": 130.73000000000002,
+            "y1": 288.5895
+          },
+          "label": {
+            "x0": 408.30899999999997,
+            "x1": 446.93645000000004
+          },
+          "cols": [
+            {
+              "key": "xp",
+              "x0": 294.9722,
+              "x1": 331.1401
+            },
+            {
+              "key": "title",
+              "x0": 331.1401,
+              "x1": 408.30899999999997
+            },
+            {
+              "key": "hd",
+              "x0": 446.93645000000004,
+              "x1": 497.6052
+            },
+            {
+              "key": "damageBonus",
+              "x0": 497.6052,
+              "x1": 529.8825
+            }
+          ],
+          "gapMin": 2
+        },
+        "attackSaves": {
+          "op": "grid",
+          "page": 63,
+          "box": {
+            "x0": 78.2065,
+            "x1": 546.1426,
+            "y0": 110.82590000000005,
+            "y1": 221.88559999999995
+          },
+          "label": {
+            "x0": 78.2065,
+            "x1": 130.6454
+          },
+          "cols": [
+            {
+              "key": "band",
+              "x0": 78.2065,
+              "x1": 130.6454,
+              "pattern": "rollBand"
+            },
+            {
+              "key": "paralysis",
+              "x0": 130.6454,
+              "x1": 195.51659999999998,
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "x0": 195.51659999999998,
+              "x1": 269.7133,
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "x0": 269.7133,
+              "x1": 343.90995,
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "x0": 343.90995,
+              "x1": 418.1066,
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "x0": 418.1066,
+              "x1": 492.30325000000005,
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "x0": 492.30325000000005,
+              "x1": 546.1426,
+              "pattern": "intDash"
+            }
+          ],
+          "gapMin": 2
+        },
+        "hitDie": {
+          "op": "value",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 123,
+            "y1": 132
+          },
+          "pattern": "dice",
+          "dropText": [
+            "Hit Dice:"
+          ]
+        },
+        "maximumLevel": {
+          "op": "value",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 133,
+            "y1": 142
+          },
+          "pattern": "int",
+          "dropText": [
+            "Maximum Level:"
+          ]
+        },
+        "keyAttribute": {
+          "op": "value",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 103,
+            "y1": 112
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Key Attribute:"
+          ]
+        },
+        "requirements": {
+          "op": "value",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 213,
+            "y0": 113,
+            "y1": 122
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Requirements:"
+          ]
+        },
+        "profList": {
+          "op": "value",
+          "page": 64,
+          "box": {
+            "x0": 254,
+            "x1": 612,
+            "y0": 83,
+            "y1": 164
+          },
+          "pattern": "raw",
+          "dropText": [
+            "Paladin Proficiency List:"
+          ]
+        },
+        "body62": {
+          "op": "value",
+          "page": 62,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body63": {
+          "op": "value",
+          "page": 63,
+          "box": {
+            "x0": 45,
+            "x1": 567,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body64": {
+          "op": "value",
+          "page": 64,
           "box": {
             "x0": 45,
             "x1": 567,

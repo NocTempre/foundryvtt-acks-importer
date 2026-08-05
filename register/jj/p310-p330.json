@@ -15,21 +15,6 @@
     }
   },
   {
-    "id": "def.power.accessToCapital",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Access to Capital",
-    "anchor": {
-      "runin": "Access to Capital:"
-    },
-    "pages": [
-      310
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.accuracy",
     "kind": "kind.power",
     "book": "jj",
@@ -104,22 +89,6 @@
     "meta": {
       "category": "classPower"
     }
-  },
-  {
-    "id": "def.power.alertness",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Alertness",
-    "anchor": {
-      "runin": "Alertness:"
-    },
-    "pages": [
-      310
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/alertness.webp"
   },
   {
     "id": "def.power.alienBeings",
@@ -197,22 +166,6 @@
     }
   },
   {
-    "id": "def.power.ambushing",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Ambushing",
-    "anchor": {
-      "runin": "Ambushing:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/ambushing.webp"
-  },
-  {
     "id": "def.power.analyzeData",
     "kind": "kind.power",
     "book": "jj",
@@ -280,36 +233,6 @@
     }
   },
   {
-    "id": "def.power.animalMagnetism",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Animal Magnetism",
-    "anchor": {
-      "runin": "Animal Magnetism:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.animalReflexes",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Animal Reflexes",
-    "anchor": {
-      "runin": "Animal Reflexes:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.antennaeForPotions",
     "kind": "kind.power",
     "book": "jj",
@@ -323,22 +246,6 @@
     "meta": {
       "category": "classPower"
     }
-  },
-  {
-    "id": "def.power.arcaneDabbling",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Arcane Dabbling",
-    "anchor": {
-      "runin": "Arcane Dabbling:"
-    },
-    "pages": [
-      311
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/arcane-dabbling.webp"
   },
   {
     "id": "def.power.arcaneStriking",
@@ -872,22 +779,6 @@
     }
   },
   {
-    "id": "def.power.bribery",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Bribery",
-    "anchor": {
-      "runin": "Bribery:"
-    },
-    "pages": [
-      313
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/bribery.webp"
-  },
-  {
     "id": "def.power.brightLore",
     "kind": "kind.power",
     "book": "jj",
@@ -1014,21 +905,6 @@
     "name": "Chosen Weapon",
     "anchor": {
       "runin": "ChosenWeapon:"
-    },
-    "pages": [
-      313
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.chroniclesOfBattle",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Chronicles of Battle",
-    "anchor": {
-      "runin": "Chronicles of Battle:"
     },
     "pages": [
       313
@@ -1923,36 +1799,6 @@
     }
   },
   {
-    "id": "def.power.experienceAndHardiness",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Experience and Hardiness",
-    "anchor": {
-      "runin": "Experience and Hardiness:"
-    },
-    "pages": [
-      317
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.expertBargaining",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Expert Bargaining",
-    "anchor": {
-      "runin": "Expert Bargaining:"
-    },
-    "pages": [
-      317
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.expertTraveler",
     "kind": "kind.power",
     "book": "jj",
@@ -2635,21 +2481,6 @@
     ]
   },
   {
-    "id": "def.power.holyFervor",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Holy Fervor",
-    "anchor": {
-      "runin": "Holy Fervor:"
-    },
-    "pages": [
-      320
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.horribleTruths",
     "kind": "kind.power",
     "book": "jj",
@@ -2787,21 +2618,6 @@
     }
   },
   {
-    "id": "def.power.inspireCourage",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Inspire Courage",
-    "anchor": {
-      "runin": "Inspire Courage:"
-    },
-    "pages": [
-      321
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.inspireDread",
     "kind": "kind.power",
     "book": "jj",
@@ -2823,21 +2639,6 @@
     "name": "Inspire Exceptional Performance",
     "anchor": {
       "runin": "Inspire Exceptional Performance:"
-    },
-    "pages": [
-      321
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.inspireHope",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Inspire Hope",
-    "anchor": {
-      "runin": "Inspire Hope:"
     },
     "pages": [
       321
@@ -3191,22 +2992,6 @@
     "meta": {
       "category": "classPower"
     }
-  },
-  {
-    "id": "def.power.loremastery",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Loremastery",
-    "anchor": {
-      "runin": "Loremastery:"
-    },
-    "pages": [
-      322
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "icon": "systems/acks/assets/icons/loremastery.webp"
   },
   {
     "id": "def.power.loreOfStarsAndSpheres",
@@ -3589,36 +3374,6 @@
     }
   },
   {
-    "id": "def.power.multilingual",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Multilingual",
-    "anchor": {
-      "runin": "Multilingual:"
-    },
-    "pages": [
-      324
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.naturalStealth",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Natural Stealth",
-    "anchor": {
-      "runin": "Natural Stealth:"
-    },
-    "pages": [
-      324
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.necrosporing",
     "kind": "kind.power",
     "book": "jj",
@@ -3682,21 +3437,6 @@
     }
   },
   {
-    "id": "def.power.pathfinding",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Pathfinding",
-    "anchor": {
-      "runin": "Pathfinding:"
-    },
-    "pages": [
-      324
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.perceiveIntentions",
     "kind": "kind.power",
     "book": "jj",
@@ -3733,21 +3473,6 @@
     "name": "Personal Talisman",
     "anchor": {
       "runin": "Personal Talisman:"
-    },
-    "pages": [
-      324
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.monopolyPower",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Monopoly Power",
-    "anchor": {
-      "runin": "Monopoly Power:"
     },
     "pages": [
       324
@@ -4074,36 +3799,6 @@
     }
   },
   {
-    "id": "def.power.rumormongering",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Rumormongering",
-    "anchor": {
-      "runin": "Rumormongering:"
-    },
-    "pages": [
-      326
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.savageResilience",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Savage Resilience",
-    "anchor": {
-      "runin": "Savage Resilience:"
-    },
-    "pages": [
-      326
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
     "id": "def.power.scalyHide",
     "kind": "kind.power",
     "book": "jj",
@@ -4299,24 +3994,6 @@
     }
   },
   {
-    "id": "def.power.sanctifiedBody",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Sanctified Body",
-    "anchor": {
-      "runin": "Sanctified Body:"
-    },
-    "pages": [
-      326
-    ],
-    "meta": {
-      "category": "classPower"
-    },
-    "assists": {
-      "aliasOf": "def.power.divineHealth"
-    }
-  },
-  {
     "id": "def.power.soulOfTheDragon",
     "kind": "kind.power",
     "book": "jj",
@@ -4505,21 +4182,6 @@
     "name": "Stalwart Soul",
     "anchor": {
       "runin": "Stalwart Soul:"
-    },
-    "pages": [
-      327
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.steadyTradeRoute",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Steady Trade Route",
-    "anchor": {
-      "runin": "Steady Trade Route:"
     },
     "pages": [
       327
@@ -4797,21 +4459,6 @@
     "name": "Traditional Medicine",
     "anchor": {
       "runin": "Traditional Medicine:"
-    },
-    "pages": [
-      328
-    ],
-    "meta": {
-      "category": "classPower"
-    }
-  },
-  {
-    "id": "def.power.treachery",
-    "kind": "kind.power",
-    "book": "jj",
-    "name": "Treachery",
-    "anchor": {
-      "runin": "Treachery:"
     },
     "pages": [
       328

@@ -2754,8 +2754,13 @@ export function bindClass(entry, node, id) {
     .map(([, v]) => v)
     .join(" ");
 
+  /* Fixed column vocabulary; anything else a progression table carries is a
+   * named LADDER (AC bonus, backstab dice, the assassin/bard skill columns). */
+  const FIXED_COLS = new Set(["xp", "title", "hd", "band", "paralysis", "death", "blast", "implements", "spells", "attackThrow", "s1", "s2", "s3", "s4", "s5", "s6"]);
+
   const levels = [];
-  const damageValues = [];
+  const ladderMap = new Map(); // colKey → rungs
+  const slotRows = [];
   for (const row of f.progression?.rows ?? []) {
     const level = intFrom(row.label);
     if (level == null) continue;
@@ -2765,28 +2770,67 @@ export function bindClass(entry, node, id) {
       title: capFirst(row.cells.title),
       hd: String(row.cells.hd ?? "").replace(/\*/g, "").trim(),
     });
-    const dmg = row.cells.damageBonus;
-    if (dmg != null) damageValues.push({ atLevel: level, value: intFrom(dmg), text: String(dmg).trim() });
+    const slots = {};
+    let anySlot = false;
+    for (const [key, cell] of Object.entries(row.cells)) {
+      if (/^s[1-6]$/.test(key)) {
+        const n = intFrom(cell);
+        if (n != null) {
+          slots[key] = n;
+          anySlot = true;
+        }
+        continue;
+      }
+      if (FIXED_COLS.has(key)) continue;
+      const rungs = ladderMap.get(key) ?? [];
+      rungs.push({ atLevel: level, value: intFrom(cell), text: String(cell).trim() });
+      ladderMap.set(key, rungs);
+    }
+    if (anySlot) slotRows.push({ atLevel: level, ...slots });
   }
   levels.sort((a, b) => a.level - b.level);
+  const ladders = [...ladderMap.entries()].map(([key, values]) => ({
+    key,
+    label: key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase()),
+    values,
+  }));
 
+  // One combined attack-and-saves table, or the split pair the priestess and
+  // witch print (crusader saves beside mage attacks) — read whichever exists.
   const saves = [];
   const attack = [];
-  for (const row of f.attackSaves?.rows ?? []) {
-    const band = row.cells.band ?? { min: intFrom(row.label), max: intFrom(row.label) };
-    if (band?.min == null) continue;
-    const minLevel = band.min;
-    const maxLevel = band.max ?? band.min;
-    saves.push({
-      minLevel, maxLevel,
-      paralysis: row.cells.paralysis ?? null,
-      death: row.cells.death ?? null,
-      blast: row.cells.blast ?? null,
-      implements: row.cells.implements ?? null,
-      spells: row.cells.spells ?? null,
-    });
-    if (row.cells.attackThrow != null) attack.push({ minLevel, maxLevel, throw: row.cells.attackThrow });
+  for (const tableKey of ["attackSaves", "savesTable", "attackTable"]) {
+    for (const row of f[tableKey]?.rows ?? []) {
+      const band = row.cells.band ?? { min: intFrom(row.label), max: intFrom(row.label) };
+      if (band?.min == null) continue;
+      const minLevel = band.min;
+      const maxLevel = band.max ?? band.min;
+      if (row.cells.paralysis != null || row.cells.death != null) {
+        saves.push({
+          minLevel, maxLevel,
+          paralysis: row.cells.paralysis ?? null,
+          death: row.cells.death ?? null,
+          blast: row.cells.blast ?? null,
+          implements: row.cells.implements ?? null,
+          spells: row.cells.spells ?? null,
+        });
+      }
+      if (row.cells.attackThrow != null) attack.push({ minLevel, maxLevel, throw: row.cells.attackThrow });
+    }
   }
+
+  // Casting traditions: the chef classifies (key/kind/repertoire — structure);
+  // every slot count comes from the progression grid's numbered columns.
+  const casting = (entry.casting ?? []).map((t) => ({
+    key: t.key ?? "arcane",
+    label: t.label ?? "",
+    kind: t.kind ?? "vancian",
+    repertoire: t.repertoire ?? "",
+    spellList: [],
+    slots: slotRows,
+    pool: [],
+    casterLevel: t.casterLevel ?? "",
+  }));
 
   const keyAttributes = stripBullet(f.keyAttribute)
     .split(/\s+and\s+/i)
@@ -2853,16 +2897,17 @@ export function bindClass(entry, node, id) {
       ...(typeof f.maximumLevel === "number" ? { maximumLevel: f.maximumLevel } : {}),
       hitDie: String(f.hitDie ?? "").trim(),
       levels,
-      ladders: damageValues.length ? [{ key: "damageBonus", label: "Damage Bonus", values: damageValues }] : [],
+      ladders,
       saveChassis: entry.meta?.chassis?.saves ?? "",
       attackChassis: entry.meta?.chassis?.attack ?? "",
       saves,
       attack,
       cleaves,
+      casting,
       inventory: {
         classProfs,
         powers: awards.filter((a) => a.ref.startsWith("def.power.")).map((a) => a.ref),
-        skills: [],
+        skills: (entry.skills ?? []).map((s) => ({ ref: s.ref, ladderKey: s.ladderKey ?? "" })),
       },
       unresolvedProfs,
       awards,

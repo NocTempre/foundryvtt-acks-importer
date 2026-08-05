@@ -7,24 +7,42 @@
     "anchor": {
       "display": "Fighter"
     },
-    "pages": [26, 27],
+    "pages": [
+      26,
+      27
+    ],
     "meta": {
       "category": "class"
     },
     "icon": "icons/svg/sword.svg",
     "class": {
       "key": "fighter",
-      "chassis": { "saves": "", "attack": "" },
+      "chassis": {
+        "saves": "",
+        "attack": ""
+      },
       "tables": {
         "progression": {
           "title": "Fighter Level Progression",
           "page": 26,
           "labelHeader": "Level",
           "cols": [
-            { "key": "xp", "header": "Experience" },
-            { "key": "title", "header": "Title" },
-            { "key": "hd", "header": "Hit Dice" },
-            { "key": "damageBonus", "header": "Damage Bonus" }
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            }
           ]
         },
         "attackSaves": {
@@ -33,23 +51,64 @@
           "labelHeader": "Level",
           "band": true,
           "cols": [
-            { "key": "paralysis", "header": "Paralysis", "pattern": "intDash" },
-            { "key": "death", "header": "Death", "pattern": "intDash" },
-            { "key": "blast", "header": "Blast", "pattern": "intDash" },
-            { "key": "implements", "header": "Implements", "pattern": "intDash" },
-            { "key": "spells", "header": "Spells", "pattern": "intDash" },
-            { "key": "attackThrow", "header": "Attack Throw", "pattern": "intDash" }
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
           ]
         }
       },
-      "profList": { "label": "Fighter Proficiency List:", "page": 27 },
+      "profList": {
+        "label": "Fighter Proficiency List:",
+        "page": 27
+      },
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
       "awards": [
-        { "ref": "def.prof.manualOfArms", "starting": true, "note": "The class power is one rank of the proficiency; the spread says so." },
-        { "ref": "def.power.battlefieldProwess", "from": { "pattern": "Battlefield Prowess \\((\\d+)" } },
-        { "ref": "def.power.castle", "from": { "pattern": "Castle \\((\\d+)" } }
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.battlefieldProwess",
+          "from": {
+            "pattern": "Battlefield Prowess \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.castle",
+          "from": {
+            "pattern": "Castle \\((\\d+)"
+          }
+        }
       ]
     }
   },
@@ -61,7 +120,9 @@
     "anchor": {
       "runin": "Battlefield Prowess ("
     },
-    "pages": [26],
+    "pages": [
+      26
+    ],
     "meta": {
       "category": "classPower"
     }
@@ -74,9 +135,1639 @@
     "anchor": {
       "runin": "Castle ("
     },
-    "pages": [26],
+    "pages": [
+      26
+    ],
     "meta": {
       "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.alertness",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Alertness",
+    "anchor": {
+      "runin": "Alertness:"
+    },
+    "pages": [
+      28
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/alertness.webp"
+  },
+  {
+    "id": "def.power.ambushing",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Ambushing",
+    "anchor": {
+      "runin": "Ambushing:"
+    },
+    "pages": [
+      28
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/ambushing.webp"
+  },
+  {
+    "id": "def.power.animalReflexes",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Animal Reflexes",
+    "anchor": {
+      "runin": "Animal Reflexes:"
+    },
+    "pages": [
+      28
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.pathfinding",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Pathfinding",
+    "anchor": {
+      "runin": "Pathfinding:"
+    },
+    "pages": [
+      29
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.naturalStealth",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Natural Stealth",
+    "anchor": {
+      "runin": "Natural Stealth:"
+    },
+    "pages": [
+      29
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.experienceAndHardiness",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Experience and Hardiness",
+    "anchor": {
+      "runin": "Experience and Hardiness ("
+    },
+    "pages": [
+      30
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.bribery",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Bribery",
+    "anchor": {
+      "runin": "Bribery:"
+    },
+    "pages": [
+      42
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/bribery.webp"
+  },
+  {
+    "id": "def.power.expertBargaining",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Expert Bargaining",
+    "anchor": {
+      "runin": "Expert Bargaining:"
+    },
+    "pages": [
+      42
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.multilingual",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Multilingual",
+    "anchor": {
+      "runin": "Multilingual:"
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.treachery",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Treachery",
+    "anchor": {
+      "runin": "Treachery:"
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.steadyTradeRoute",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Steady Trade Route",
+    "anchor": {
+      "runin": "Steady Trade Route ("
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.rumormongering",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Rumormongering",
+    "anchor": {
+      "runin": "Rumormongering ("
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.accessToCapital",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Access to Capital",
+    "anchor": {
+      "runin": "Access to Capital ("
+    },
+    "pages": [
+      44
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.monopolyPower",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Monopoly Power",
+    "anchor": {
+      "runin": "Monopoly Power ("
+    },
+    "pages": [
+      45
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.savageResilience",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Savage Resilience",
+    "anchor": {
+      "runin": "Savage Resilience:"
+    },
+    "pages": [
+      51
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.animalMagnetism",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Animal Magnetism",
+    "anchor": {
+      "runin": "Animal Magnetism ("
+    },
+    "pages": [
+      51
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.arcaneDabbling",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Arcane Dabbling",
+    "anchor": {
+      "runin": "Arcane Dabbling:"
+    },
+    "pages": [
+      54
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/arcane-dabbling.webp"
+  },
+  {
+    "id": "def.power.inspireCourage",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Inspire Courage",
+    "anchor": {
+      "runin": "Inspire Courage:"
+    },
+    "pages": [
+      55
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.loremastery",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Loremastery",
+    "anchor": {
+      "runin": "Loremastery:"
+    },
+    "pages": [
+      55
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "icon": "systems/acks/assets/icons/loremastery.webp"
+  },
+  {
+    "id": "def.power.chroniclesOfBattle",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Chronicles of Battle",
+    "anchor": {
+      "runin": "Chronicles of Battle ("
+    },
+    "pages": [
+      55
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.inspireHope",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Inspire Hope",
+    "anchor": {
+      "runin": "Inspire Hope ("
+    },
+    "pages": [
+      56
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.sanctifiedBody",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Sanctified Body",
+    "anchor": {
+      "runin": "Sanctified Body:"
+    },
+    "pages": [
+      63
+    ],
+    "meta": {
+      "category": "classPower"
+    },
+    "assists": {
+      "aliasOf": "def.power.divineHealth"
+    }
+  },
+  {
+    "id": "def.power.holyFervor",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Holy Fervor",
+    "anchor": {
+      "runin": "Holy Fervor ("
+    },
+    "pages": [
+      63
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.evasion",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Evasion",
+    "anchor": {
+      "runin": "Evasion:"
+    },
+    "pages": [
+      29
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.borderFort",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Border Fort",
+    "anchor": {
+      "runin": "Border Fort ("
+    },
+    "pages": [
+      30
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.scrollreading",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Scrollreading",
+    "anchor": {
+      "runin": "Scrollreading ("
+    },
+    "pages": [
+      35
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.expertTraveling",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Expert Traveling",
+    "anchor": {
+      "runin": "Expert Traveling:"
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.mercantileNetwork",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Mercantile Network",
+    "anchor": {
+      "runin": "Mercantile Network:"
+    },
+    "pages": [
+      43
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.guildhouse",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Guildhouse",
+    "anchor": {
+      "runin": "Guildhouse ("
+    },
+    "pages": [
+      45
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.naturalProficiency",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Natural Proficiency",
+    "anchor": {
+      "runin": "Natural Proficiency:"
+    },
+    "pages": [
+      51
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.chieftainsHall",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Chieftain's Hall",
+    "anchor": {
+      "runin": "Chieftain"
+    },
+    "pages": [
+      51
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.jackOfAllTrades",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Jack of All Trades",
+    "anchor": {
+      "runin": "Jack of All Trades:"
+    },
+    "pages": [
+      55
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.greatHall",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Great Hall",
+    "anchor": {
+      "runin": "Great Hall ("
+    },
+    "pages": [
+      56
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.senseEvil",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Sense Evil",
+    "anchor": {
+      "runin": "Sense Evil:"
+    },
+    "pages": [
+      63
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.fortress",
+    "kind": "kind.power",
+    "book": "rr",
+    "name": "Fortress",
+    "anchor": {
+      "runin": "Fortress ("
+    },
+    "pages": [
+      63
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.class.explorer",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Explorer",
+    "anchor": {
+      "display": "Explorer"
+    },
+    "pages": [
+      28,
+      29,
+      30
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/target.svg",
+    "class": {
+      "key": "explorer",
+      "chassis": {
+        "saves": "fighter",
+        "attack": "fighter"
+      },
+      "tables": {
+        "progression": {
+          "title": "Explorer Level Progression",
+          "page": 28,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Explorer (Fighter) Attack and Saving Throws",
+          "page": 29,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Explorer Proficiency List:",
+        "page": 30
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.alertness",
+          "starting": true
+        },
+        {
+          "ref": "def.power.ambushing",
+          "starting": true
+        },
+        {
+          "ref": "def.power.animalReflexes",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.endurance",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.evasion",
+          "starting": true
+        },
+        {
+          "ref": "def.power.pathfinding",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalStealth",
+          "starting": true
+        },
+        {
+          "ref": "def.power.experienceAndHardiness",
+          "from": {
+            "pattern": "Experience and Hardiness \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.borderFort",
+          "from": {
+            "pattern": "Border Fort \\((\\d+)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.thief",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Thief",
+    "anchor": {
+      "display": "Thief"
+    },
+    "pages": [
+      32,
+      33,
+      34,
+      35
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/eye.svg",
+    "class": {
+      "key": "thief",
+      "chassis": {
+        "saves": "thief",
+        "attack": "thief"
+      },
+      "tables": {
+        "progression": {
+          "title": "Thief Level Progression",
+          "page": 32,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "backstab",
+              "header": "Backstab"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Thief Attack and Saving Throws",
+          "page": 33,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Thief Proficiency List:",
+        "page": 35
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.skill.backstabbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.climbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hiding",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.listening",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.lockpicking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.pickpocketing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.searching",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.shadowySenses",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.sneaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.streetwise",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.trapbreaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.deciphering",
+          "from": {
+            "pattern": "Deciphering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.skill.hideout",
+          "from": {
+            "pattern": "Hideout \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scrollreading",
+          "from": {
+            "pattern": "Scrollreading \\((\\d+)"
+          }
+        }
+      ],
+      "skills": [
+        {
+          "ref": "def.skill.backstabbing"
+        },
+        {
+          "ref": "def.skill.climbing"
+        },
+        {
+          "ref": "def.skill.hiding"
+        },
+        {
+          "ref": "def.skill.listening"
+        },
+        {
+          "ref": "def.skill.lockpicking"
+        },
+        {
+          "ref": "def.skill.pickpocketing"
+        },
+        {
+          "ref": "def.skill.searching"
+        },
+        {
+          "ref": "def.skill.shadowySenses"
+        },
+        {
+          "ref": "def.skill.sneaking"
+        },
+        {
+          "ref": "def.skill.streetwise"
+        },
+        {
+          "ref": "def.skill.trapbreaking"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.venturer",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Venturer",
+    "anchor": {
+      "display": "Venturer"
+    },
+    "pages": [
+      42,
+      43,
+      44,
+      45
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/coins.svg",
+    "class": {
+      "key": "venturer",
+      "chassis": {
+        "saves": "thief",
+        "attack": "thief"
+      },
+      "tables": {
+        "progression": {
+          "title": "Venturer Level Progression",
+          "page": 42,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Venturer (Thief) Attack and Saving Throws",
+          "page": 43,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Venturer Proficiency List:",
+        "page": 45
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.bribery",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.diplomacy",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.expertBargaining",
+          "starting": true
+        },
+        {
+          "ref": "def.power.expertTraveling",
+          "starting": true
+        },
+        {
+          "ref": "def.power.mercantileNetwork",
+          "starting": true
+        },
+        {
+          "ref": "def.power.multilingual",
+          "starting": true
+        },
+        {
+          "ref": "def.power.pathfinding",
+          "starting": true
+        },
+        {
+          "ref": "def.power.treachery",
+          "starting": true
+        },
+        {
+          "ref": "def.power.steadyTradeRoute",
+          "from": {
+            "pattern": "Steady Trade Route \\((\\d+)"
+          },
+          "note": "Upgrades again at higher levels; the page states them."
+        },
+        {
+          "ref": "def.power.rumormongering",
+          "from": {
+            "pattern": "Rumormongering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.accessToCapital",
+          "from": {
+            "pattern": "Access to Capital \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.guildhouse",
+          "from": {
+            "pattern": "Guildhouse \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.monopolyPower",
+          "from": {
+            "pattern": "Monopoly Power \\((\\d+)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.assassin",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Assassin",
+    "anchor": {
+      "display": "Assassin"
+    },
+    "pages": [
+      46,
+      47,
+      48
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/blood.svg",
+    "class": {
+      "key": "assassin",
+      "chassis": {
+        "saves": "fighter",
+        "attack": "fighter"
+      },
+      "tables": {
+        "progression": {
+          "title": "Assassin Level Progression",
+          "page": 46,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            },
+            {
+              "key": "backstab",
+              "header": "Backstab"
+            },
+            {
+              "key": "hiding",
+              "header": "Hiding"
+            },
+            {
+              "key": "sneaking",
+              "header": "Sneaking"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Assassin (Fighter) Attack and Saving Throws",
+          "page": 47,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Assassin Proficiency List:",
+        "page": 48
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.skill.backstabbing",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hiding",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.shadowySenses",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.sneaking",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.streetwise",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.hideout",
+          "from": {
+            "pattern": "Hideout \\((\\d+)"
+          }
+        }
+      ],
+      "skills": [
+        {
+          "ref": "def.skill.backstabbing"
+        },
+        {
+          "ref": "def.skill.hiding"
+        },
+        {
+          "ref": "def.skill.shadowySenses"
+        },
+        {
+          "ref": "def.skill.sneaking"
+        },
+        {
+          "ref": "def.skill.streetwise"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.barbarian",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Barbarian",
+    "anchor": {
+      "display": "Barbarian"
+    },
+    "pages": [
+      50,
+      51,
+      52
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/bones.svg",
+    "class": {
+      "key": "barbarian",
+      "chassis": {
+        "saves": "fighter",
+        "attack": "fighter"
+      },
+      "tables": {
+        "progression": {
+          "title": "Barbarian Level Progression",
+          "page": 50,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Barbarian (Fighter) Attack and Saving Throws",
+          "page": 51,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Barbarian Proficiency List:",
+        "page": 52
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.animalReflexes",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalProficiency",
+          "starting": true
+        },
+        {
+          "ref": "def.power.naturalStealth",
+          "starting": true
+        },
+        {
+          "ref": "def.power.savageResilience",
+          "starting": true
+        },
+        {
+          "ref": "def.power.animalMagnetism",
+          "from": {
+            "pattern": "Animal Magnetism \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.chieftainsHall",
+          "from": {
+            "pattern": "Chieftain.s Hall \\((\\d+)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.bard",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Bard",
+    "anchor": {
+      "display": "Bard"
+    },
+    "pages": [
+      54,
+      55,
+      56,
+      57
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/sound.svg",
+    "class": {
+      "key": "bard",
+      "chassis": {
+        "saves": "fighter",
+        "attack": "fighter"
+      },
+      "tables": {
+        "progression": {
+          "title": "Bard Level Progression",
+          "page": 54,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Damage Bonus"
+            },
+            {
+              "key": "arcaneDabbling",
+              "header": "Arcane Dabbling"
+            },
+            {
+              "key": "listening",
+              "header": "Listening"
+            },
+            {
+              "key": "loremastery",
+              "header": "Loremastery"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Bard (Fighter) Attack and Saving Throws",
+          "page": 55,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Bard Proficiency List:",
+        "page": 57
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.arcaneDabbling",
+          "starting": true
+        },
+        {
+          "ref": "def.power.inspireCourage",
+          "starting": true
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "starting": true
+        },
+        {
+          "ref": "def.skill.listening",
+          "starting": true
+        },
+        {
+          "ref": "def.power.loremastery",
+          "starting": true
+        },
+        {
+          "ref": "def.power.multilingual",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.performance",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades II \\((\\d+)"
+          },
+          "note": "II"
+        },
+        {
+          "ref": "def.skill.deciphering",
+          "from": {
+            "pattern": "Deciphering \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.chroniclesOfBattle",
+          "from": {
+            "pattern": "Chronicles of Battle \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades III \\((\\d+)"
+          },
+          "note": "III"
+        },
+        {
+          "ref": "def.power.inspireHope",
+          "from": {
+            "pattern": "Inspire Hope \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades IV \\((\\d+)"
+          },
+          "note": "IV"
+        },
+        {
+          "ref": "def.power.greatHall",
+          "from": {
+            "pattern": "Great Hall \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.scrollreading",
+          "from": {
+            "pattern": "Scrollreading \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.jackOfAllTrades",
+          "from": {
+            "pattern": "Jack of All Trades V \\((\\d+)"
+          },
+          "note": "V"
+        }
+      ]
+    }
+  },
+  {
+    "id": "def.class.paladin",
+    "kind": "kind.class",
+    "book": "rr",
+    "name": "Paladin",
+    "anchor": {
+      "display": "Paladin"
+    },
+    "pages": [
+      62,
+      63,
+      64
+    ],
+    "meta": {
+      "category": "class"
+    },
+    "icon": "icons/svg/shield.svg",
+    "class": {
+      "key": "paladin",
+      "chassis": {
+        "saves": "fighter",
+        "attack": "fighter"
+      },
+      "tables": {
+        "progression": {
+          "title": "Paladin Level Progression",
+          "page": 62,
+          "labelHeader": "Level",
+          "cols": [
+            {
+              "key": "xp",
+              "header": "Experience"
+            },
+            {
+              "key": "title",
+              "header": "Title"
+            },
+            {
+              "key": "hd",
+              "header": "Hit Dice"
+            },
+            {
+              "key": "damageBonus",
+              "header": "Melee Damage Bonus"
+            }
+          ]
+        },
+        "attackSaves": {
+          "title": "Paladin (Fighter) Attack and Saving Throws",
+          "page": 63,
+          "labelHeader": "Level",
+          "band": true,
+          "cols": [
+            {
+              "key": "paralysis",
+              "header": "Paralysis",
+              "pattern": "intDash"
+            },
+            {
+              "key": "death",
+              "header": "Death",
+              "pattern": "intDash"
+            },
+            {
+              "key": "blast",
+              "header": "Blast",
+              "pattern": "intDash"
+            },
+            {
+              "key": "implements",
+              "header": "Implements",
+              "pattern": "intDash"
+            },
+            {
+              "key": "spells",
+              "header": "Spells",
+              "pattern": "intDash"
+            },
+            {
+              "key": "attackThrow",
+              "header": "Attack Throw",
+              "pattern": "intDash"
+            }
+          ]
+        }
+      },
+      "profList": {
+        "label": "Paladin Proficiency List:",
+        "page": 64
+      },
+      "cleaves": {
+        "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "awards": [
+        {
+          "ref": "def.power.paladinAuraOfProtection",
+          "starting": true
+        },
+        {
+          "ref": "def.power.paladinLayOnHands",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.manualOfArms",
+          "starting": true,
+          "note": "The class power is one rank of the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.sanctifiedBody",
+          "starting": true
+        },
+        {
+          "ref": "def.power.senseEvil",
+          "starting": true
+        },
+        {
+          "ref": "def.power.holyFervor",
+          "from": {
+            "pattern": "Holy Fervor \\((\\d+)"
+          }
+        },
+        {
+          "ref": "def.power.fortress",
+          "from": {
+            "pattern": "Fortress \\((\\d+)"
+          }
+        }
+      ]
     }
   }
 ]

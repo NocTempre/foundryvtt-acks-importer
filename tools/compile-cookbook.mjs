@@ -1961,6 +1961,11 @@ async function compileClass(doc, entry, kindRow) {
     // data row — the main header line plus any stacked wrap lines ("Damage"
     // above, "Bonus" below). Fused at a wider gap so "Hit"+"d"+"ice" is one
     // cell.
+    const declaredCount = (t.cols?.length ?? 0) + 1;
+    // A caster table's numbered sub-header line ("1 2 3 4 5 6") starts with a
+    // digit exactly like a data row — the cell-count gate is what tells them
+    // apart: a data row carries (nearly) every declared column.
+    const dataShaped = (r) => rebuildCells(r, 6).length >= Math.max(3, Math.ceil(declaredCount * 0.7));
     const headerCells = [];
     const dataRows = [];
     let headerLines = 0;
@@ -1969,12 +1974,12 @@ async function compileClass(doc, entry, kindRow) {
       // ("370,000") sits close enough to the title cell beside it that a
       // fused rebuild would hide the numeric start.
       const firstRaw = (r[0]?.str ?? "").trim();
-      if (!dataRows.length && !looksLikeDataStart(firstRaw)) {
-        if (++headerLines > 5) break;
+      if (!dataRows.length && !(looksLikeDataStart(firstRaw) && dataShaped(r))) {
+        if (++headerLines > 6) break;
         headerCells.push(...rebuildCells(r, 6));
         continue;
       }
-      if (!looksLikeDataStart(firstRaw)) break;
+      if (!looksLikeDataStart(firstRaw) || !dataShaped(r)) break;
       if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 20) break;
       dataRows.push(r);
     }
@@ -2043,13 +2048,14 @@ async function compileClass(doc, entry, kindRow) {
       cols: gridCols,
       gapMin: 2,
     };
-    tableEdges.push({ page: t.page, x0: tableX0 });
+    tableEdges.push({ page: t.page, x0: tableX0, y0, y1 });
   }
 
   /* --- header bullets, clipped to the anchor column AND short of any table
-         on the page, so a table's figures cannot bleed into the joined line
-         ("Hit Dice: 1d8" + "8,000" would read as 1d88) --- */
-  const tableLeft = Math.min(colRight, ...tableEdges.filter((e) => e.page === page).map((e) => e.x0 - 12));
+         that shares their LINES, so a beside-the-header table's figures cannot
+         bleed into the joined text ("Hit Dice: 1d8" + "8,000" reads as 1d88).
+         A full-width table at the page bottom shares no lines and must not
+         collapse the boxes. --- */
   const HEADER_FIELDS = [
     ["hitDie", "Hit Dice:", "dice"],
     ["maximumLevel", "Maximum Level:", "int"],
@@ -2064,9 +2070,14 @@ async function compileClass(doc, entry, kindRow) {
       warn(`${entry.id}: header bullet "${label}" not found on p.${page}`);
       continue;
     }
+    // The value trails its label on the same line within the header block —
+    // a fixed reach beats detectColumns here, which sees phantom columns on
+    // pages whose progression table is full-width.
+    const overlapping = tableEdges.filter((e) => e.page === page && it.y >= e.y0 - 12 && it.y <= e.y1 + 4);
+    const bulletRight = Math.min(it.x + 150, pd.width, ...overlapping.map((e) => e.x0 - 12));
     fields[key] = {
       op: "value", page,
-      box: { x0: colX - 5, x1: tableLeft, y0: it.y - 3, y1: it.y + 6 },
+      box: { x0: colX - 5, x1: bulletRight, y0: it.y - 3, y1: it.y + 6 },
       pattern,
       dropText: [label],
     };
@@ -2077,7 +2088,32 @@ async function compileClass(doc, entry, kindRow) {
     const pPage = spec.profList.page ?? page;
     const ppd = pPage === page ? pd : await pageItems(doc, pPage);
     const pcols = detectColumns(ppd.items);
-    const labelIt = ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label)));
+    // The label can split across runs ("Venturer Proficiency" + "List:") and
+    // sit mid-row beside the other column's prose — so after the direct and
+    // whole-line matches, fall back to the longest word-prefix a single run
+    // carries.
+    const labelIt = (() => {
+      const direct = ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label)));
+      if (direct) return direct;
+      // The label splits at word boundaries across runs and shares its row
+      // with the other column's prose — scan whole rows for the folded label
+      // and anchor on the run where the match begins.
+      const target = fold(spec.profList.label);
+      for (const r of lineRows(ppd.items)) {
+        let acc = "";
+        const starts = r.map((it) => {
+          const s = acc.length;
+          acc += fold(it.str);
+          return s;
+        });
+        const at = acc.indexOf(target);
+        if (at < 0) continue;
+        let idx = 0;
+        for (let i = 0; i < starts.length; i++) if (starts[i] <= at) idx = i;
+        return r[idx];
+      }
+      return null;
+    })();
     if (!labelIt) {
       warn(`${entry.id}: proficiency-list label "${spec.profList.label}" not found on p.${pPage}`);
     } else {
@@ -2126,6 +2162,8 @@ async function compileClass(doc, entry, kindRow) {
     meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {} },
     ...(spec.awards?.length ? { awards: spec.awards } : {}),
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
+    ...(spec.casting?.length ? { casting: spec.casting } : {}),
+    ...(spec.skills?.length ? { skills: spec.skills } : {}),
     fields,
   };
 }
