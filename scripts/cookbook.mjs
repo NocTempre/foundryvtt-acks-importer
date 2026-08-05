@@ -1058,7 +1058,7 @@ export async function cookbookRemoveImports() {
   ].join(", ");
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: "acks-importer — Remove Imports" },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     content: `<p>Delete <strong>${total}</strong> imported document(s): ${lines}?</p>
       <p class="notes">Only documents this module imported are removed. Extracted art files stay on disk and are reused by the next import.</p>`,
   });
@@ -3375,7 +3375,7 @@ export async function cookbookImportAbilitiesDialog() {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.abilTitle`), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 620, height: 700 },
     content,
     render: (event, dialog) => {
@@ -3555,7 +3555,7 @@ async function askAboutAdoptedProse(rows) {
 
   const picked = await foundry.applications.api.DialogV2.wait({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.collideTitle`), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 640, height: 700 },
     content,
     render: (event, dialog) => {
@@ -3789,7 +3789,7 @@ export async function cookbookPruneAbilities() {
     .join("");
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.pruneTitle`) },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.prunePrompt`, { n: stale.length })}</p>
       <ul class="acks-importer-browse-list">${rows}</ul>`,
   });
@@ -3877,7 +3877,7 @@ export async function cookbookDebug(entryId) {
       .join("");
     return foundry.applications.api.DialogV2.prompt({
       window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`) },
-      classes: ["acks-importer-dialog"],
+      classes: ["acks-ui", "acks-importer-dialog"],
       content: `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.debugPick`)}</label>
         <select name="entry">${rows}</select></div>`,
       ok: {
@@ -3914,7 +3914,7 @@ export async function cookbookDebug(entryId) {
   </div>`;
   return foundry.applications.api.DialogV2.prompt({
     window: { title: `${game.i18n.localize(`${LANG_PREFIX}.ui.debugTitle`)} — ${node.name}`, resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 640, height: 720 },
     content,
     ok: { label: game.i18n.localize(`${LANG_PREFIX}.ui.close`) },
@@ -3991,7 +3991,7 @@ export async function cookbookImport() {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 560, height: 700 },
     content,
     render: (event, dialog) => {
@@ -4085,7 +4085,7 @@ export async function cookbookImportMonsters() {
   // is about to happen while it can still be called off.
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.cookbookTitle`) },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirm`, {
       n: todo.length,
       book: openBooks.map((b) => BOOKS[b]?.label ?? b).join(", "),

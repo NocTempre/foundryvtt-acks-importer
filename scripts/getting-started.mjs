@@ -111,7 +111,7 @@ export async function showGettingStarted({ force = false } = {}) {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: t("title") },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 460 },
     content: dialogContent(content),
     rejectClose: false,

@@ -652,7 +652,7 @@ async function connectBookDialog(capture) {
     // dialog class gives the content a scroll region, and the handle is how a
     // short screen gets more of it into view.
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.connectTitle`), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     content: dialogContent(content),
     render: (event, dialog) => capture(dialog),
     ok: {
@@ -1011,7 +1011,7 @@ async function offerReconnectDialog(pending, capture) {
     // One row per waiting book, so the height is the reader's library, not a
     // constant: scroll region from the dialog class, handle from `resizable`.
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectTitle`), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 480 },
     content: dialogContent(`<p>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectBody`)}</p>${bulk}${rows}`),
     // Dismissing this is a legitimate answer ("not tonight"), not an error to
@@ -1239,7 +1239,7 @@ async function browseAndLoad() {
 
   await foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.browseTitle`) },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     content: dialogContent(step1),
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.browseGo`),
@@ -1287,7 +1287,7 @@ async function pickHeadings(bookId, page) {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.format(`${LANG_PREFIX}.ui.browsePick`, { book: BOOKS[bookId].label, page }), resizable: true },
-    classes: ["acks-importer-dialog"],
+    classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 480 },
     content: dialogContent(content),
     ok: {

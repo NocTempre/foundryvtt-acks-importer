@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+- **The importer's windows are ACKS windows.** Every dialog this module opens —
+  the book loader, the cookbook screens, Getting Started — now wears the same
+  frame as the rest of the family: the porphyry running head, square rules, and
+  the burgundy-and-black palette the books are printed in. It follows your seat,
+  light or dark, and answers to the ACKS colour scheme setting that acks-extras
+  provides. Nothing about importing changed; only what it looks like while it
+  runs.
+
+### Fixed
+- **A dark seat is drawn in dark-seat colours.** The dialogs asked Foundry for
+  their rules and their hint text through variables Foundry defines only once,
+  for a light client, so on a dark seat they came back as light-theme grey.
+
 ## 1.1.0
 
 ### Added
