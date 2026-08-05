@@ -551,6 +551,35 @@ async function cookbookImportTables() {
 const fsaAvailable = () => typeof window.showOpenFilePicker === "function";
 
 /* -------------------------------------------- */
+/*  Dialog markup                               */
+/* -------------------------------------------- */
+
+/**
+ * Hand DialogV2 markup it will not rewrite.
+ *
+ * A STRING `content` goes through `foundry.utils.cleanHTML`, which rebuilds
+ * every element and copies only allowlisted attributes: `accept` is on no list
+ * at all, and `multiple` is allowed on `<select>` but NOT on `<input>`. A
+ * multi-file picker therefore arrives as a single-file one, and every branch
+ * behind it becomes unreachable — silently, since the markup is never wrong,
+ * only rewritten. An attribute-less `<div>` is treated as trusted and its
+ * innerHTML used verbatim (DialogV2 rejects any other tag, and rejects the div
+ * if it carries a single attribute).
+ *
+ * Every DialogV2 in this module is built through here, whether or not its
+ * current markup happens to survive cleaning — otherwise the next attribute
+ * added to a dialog decides for itself whether the dialog still works.
+ *
+ * Declared as a function rather than a const so getting-started.mjs can import
+ * it across the module cycle without meeting it in its temporal dead zone.
+ */
+export function dialogContent(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div;
+}
+
+/* -------------------------------------------- */
 /*  One dialog of a kind at a time              */
 /* -------------------------------------------- */
 
@@ -606,57 +635,118 @@ async function connectBookDialog(capture) {
     : `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFile`)}</label>
          <input type="file" name="pdf" accept="application/pdf" multiple></div>
        <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectNote`)}</p>`;
+  // The list is multi-select because one trip through the dialog can connect
+  // several books, and the reader naming them is the only pairing that cannot
+  // be wrong. `size` alone does not make it a list: core CSS pins every select
+  // to one input-height row and stretches its line-height to match, so the
+  // height and line-height are released here too — inline, because a squashed
+  // list reads as the single-choice dropdown it used to be and the control has
+  // to work whatever the stylesheet says.
   const content = `
     <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectBook`)}</label>
-      <select name="book">${options}</select></div>
+      <select class="acks-importer-book-select" name="book" multiple size="${Math.min(Object.keys(BOOKS).length, 6)}">${options}</select></div>
     <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectBulkNote`)}</p>
     ${fileRow}`;
   return foundry.applications.api.DialogV2.prompt({
-    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.connectTitle`) },
-    content,
+    // Resizable because the book list grows with the shipped book count: the
+    // dialog class gives the content a scroll region, and the handle is how a
+    // short screen gets more of it into view.
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.connectTitle`), resizable: true },
+    classes: ["acks-importer-dialog"],
+    content: dialogContent(content),
     render: (event, dialog) => capture(dialog),
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.connectGo`),
       callback: async (event, button) => {
         const form = button.form;
-        const bookId = form.elements.book.value;
+        // Reading the form and guarding it stays synchronous, and the picker is
+        // the first thing awaited: the click's transient user activation is
+        // spent by any await before it, and a picker asked for afterwards never
+        // opens and never says why.
+        const bookIds = [...form.elements.book.selectedOptions].map((option) => option.value);
+        if (!bookIds.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.connectNoBook`));
         if (fsa) {
+          let handles;
           try {
-            const handles = await window.showOpenFilePicker({
+            handles = await window.showOpenFilePicker({
               multiple: true,
               types: [{ description: "PDF", accept: { "application/pdf": [".pdf"] } }],
             });
-            if (handles.length === 1) {
-              const [handle] = handles;
-              const file = await handle.getFile();
-              await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
-              await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size });
-              ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.locationSaved`, { book: BOOKS[bookId].label }));
-            } else if (handles.length > 1) {
-              const picks = [];
-              for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
-              await connectSeveral(picks);
-            }
           } catch (err) {
+            // Dismissing the OS picker is an answer, not a failure.
             if (err?.name !== "AbortError") throw err;
+            return;
           }
-        } else {
-          const files = [...(form.elements.pdf.files ?? [])];
-          if (!files.length) return ui.notifications.warn("acks-importer | no file chosen — nothing read.");
-          if (files.length > 1) return connectSeveral(files.map((file) => ({ file })));
-          const file = files[0];
-          await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
-          // All this browser will let us keep is which file it was. That is
-          // still worth keeping: next session says the name and offers the
-          // picker instead of leaving the seat to work it out.
-          await rememberFile(bookId, file);
-          ui.notifications.info(
-            game.i18n.format(`${LANG_PREFIX}.ui.locationNameOnly`, { book: BOOKS[bookId].label, name: file.name }),
-          );
+          const picks = [];
+          for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
+          return connectPicks(bookIds, picks);
         }
+        const files = [...(form.elements.pdf.files ?? [])];
+        if (!files.length) return ui.notifications.warn("acks-importer | no file chosen — nothing read.");
+        return connectPicks(bookIds, files.map((file) => ({ file })));
       },
     },
   });
+}
+
+/**
+ * Read the picked files into the named books, IN PICK ORDER: the first book the
+ * reader selected takes the first file they picked, and so on.
+ *
+ * Naming is the one pairing signal that cannot be wrong, so it settles every
+ * book it covers before the filename matcher is consulted at all. Surplus files
+ * — more PDFs than books named — go to `connectSeveral`, which may only compete
+ * for the books that were NOT named; a hand-named book is never re-read from a
+ * file the matcher preferred.
+ *
+ * Each book is then remembered in the strongest form this seat supports: the
+ * FSA handle when the pick came through `showOpenFilePicker` (one-click reopen
+ * next session), name-only otherwise. Reads are sequential — several ACKS PDFs
+ * parsed at once is hundreds of megabytes in flight. One file that fails to open
+ * is reported against its own book and costs the others nothing.
+ *
+ * @param {string[]} bookIds  book ids in selection order
+ * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  picks in pick order
+ */
+async function connectPicks(bookIds, picks) {
+  const paired = Math.min(bookIds.length, picks.length);
+  for (let i = 0; i < paired; i++) {
+    const bookId = bookIds[i];
+    const { file, handle } = picks[i];
+    try {
+      await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
+      if (handle) {
+        await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size });
+        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.locationSaved`, { book: BOOKS[bookId].label }));
+      } else {
+        // All this browser will let us keep is which file it was. That is still
+        // worth keeping: next session says the name and offers the picker
+        // instead of leaving the seat to work it out.
+        await rememberFile(bookId, file);
+        ui.notifications.info(
+          game.i18n.format(`${LANG_PREFIX}.ui.locationNameOnly`, { book: BOOKS[bookId].label, name: file.name }),
+        );
+      }
+    } catch (err) {
+      console.error(`${MODULE_ID} | connect ${bookId} from ${file.name}`, err);
+      ui.notifications.error(`${BOOKS[bookId].label}: ${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`)}`);
+    }
+  }
+  // Fewer files than books named: say which books are still closed, or the
+  // reader is left to notice for themselves that two of the three they asked
+  // for never opened.
+  const unfilled = bookIds.slice(paired);
+  if (unfilled.length) {
+    ui.notifications.warn(
+      game.i18n.format(`${LANG_PREFIX}.ui.connectUnfilled`, {
+        books: unfilled.map((id) => BOOKS[id]?.label ?? id).join(", "),
+      }),
+    );
+  }
+  const surplus = picks.slice(paired);
+  if (!surplus.length) return;
+  const named = new Set(bookIds.slice(0, paired));
+  return connectSeveral(surplus, Object.keys(BOOKS).filter((id) => !named.has(id)));
 }
 
 /**
@@ -745,6 +835,19 @@ async function restoreBooks() {
 }
 
 /**
+ * A filename with its separators read as spaces, for testing a book's title
+ * against it.
+ *
+ * The titles in BOOKS are the spaced, printed ones and stay that way — they are
+ * the source of truth, and loosening every regex to tolerate every separator
+ * would loosen what a match MEANS. A saved download, meanwhile, is as likely to
+ * be `ACKS_II_Revised_Rulebook.pdf` or `acks-ii-revised-rulebook.pdf` as the
+ * spaced form, so the candidate is normalized instead: underscores, hyphens and
+ * dots become spaces and runs collapse.
+ */
+const spacedName = (name) => name.replace(/[_.-]+/g, " ").replace(/\s+/g, " ").trim();
+
+/**
  * Work out which picked file answers which waiting book.
  *
  * A seat that must re-pick its books by hand is doing so because the browser
@@ -759,7 +862,8 @@ async function restoreBooks() {
  *      copy — DTRPG watermarks per customer, but not per download);
  *   3. the book's own title in the filename, which is how the stock DTRPG
  *      filenames read and the only rule that can match a book this seat has
- *      never opened.
+ *      never opened. The candidate is normalized first (see `spacedName`) —
+ *      the pattern is the printed title, and a real download rarely is.
  *
  * Passes run in that order over the whole set, so a confident match never
  * loses its file to a speculative one. Anything unmatched is reported rather
@@ -778,7 +882,7 @@ function matchFilesToBooks(files, pendingIds, records) {
       const size = records.get(bookId)?.size;
       return Number.isFinite(size) && size > 0 && size === file.size;
     },
-    (bookId, file) => BOOKS[bookId]?.titleRe?.test(file.name) ?? false,
+    (bookId, file) => BOOKS[bookId]?.titleRe?.test(spacedName(file.name)) ?? false,
   ];
   for (const test of tests) {
     for (const bookId of pendingIds) {
@@ -793,22 +897,27 @@ function matchFilesToBooks(files, pendingIds, records) {
 }
 
 /**
- * First-time linking, several files in one trip through Connect Your Book.
+ * First-time linking by filename, for the files left over after the books the
+ * reader named have been paired off (see `connectPicks`).
  *
- * Files are matched against EVERY book this build reads — first-time linking
- * is the whole point, so there may be no remembered record to lean on and the
+ * `candidates` is what those files may still be claimed by — every book this
+ * build reads, less anything already spoken for. First-time linking is the
+ * whole point, so there may be no remembered record to lean on and the
  * title-in-filename pass does most of the work. Each match is read and then
  * remembered in the strongest form this seat supports: the FSA handle when the
  * pick came through `showOpenFilePicker` (silent-ish reopen next session),
  * name-only otherwise. Reads are sequential for the same reason the reconnect
  * picker's are — several ACKS PDFs parsed at once is hundreds of megabytes in
  * flight. Anything unmatched is named, never guessed: the remedy is the same
- * dialog again, one file, with the Book dropdown saying which slot it fills.
+ * dialog again, with those books selected in the list so no guessing is needed.
+ *
+ * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  files, each with its handle where there is one
+ * @param {string[]} [candidates]  book ids these files may fill
  */
-async function connectSeveral(picks) {
+async function connectSeveral(picks, candidates = Object.keys(BOOKS)) {
   const remembered = await locations();
   const byFile = new Map(picks.map((pick) => [pick.file, pick]));
-  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], Object.keys(BOOKS), remembered);
+  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], candidates, remembered);
   const done = [];
   for (const [bookId, file] of matched) {
     const handle = byFile.get(file)?.handle ?? null;
@@ -899,9 +1008,12 @@ async function offerReconnectDialog(pending, capture) {
       : "";
 
   return foundry.applications.api.DialogV2.prompt({
-    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectTitle`) },
+    // One row per waiting book, so the height is the reader's library, not a
+    // constant: scroll region from the dialog class, handle from `resizable`.
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectTitle`), resizable: true },
+    classes: ["acks-importer-dialog"],
     position: { width: 480 },
-    content: `<p>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectBody`)}</p>${bulk}${rows}`,
+    content: dialogContent(`<p>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectBody`)}</p>${bulk}${rows}`),
     // Dismissing this is a legitimate answer ("not tonight"), not an error to
     // throw out of the ready hook.
     rejectClose: false,
@@ -996,7 +1108,11 @@ async function offerReconnectDialog(pending, capture) {
           if (!file) return;
           input.disabled = true;
           try {
-            await ingestBook(bookId, await file.arrayBuffer());
+            // Bridged like every other read: this row exists for the seat that
+            // cannot reopen a file by itself, which is the seat the refresh
+            // bridge is for — dropping the cache here costs it the file picker
+            // again on the very next reload.
+            await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
             await rememberFile(bookId, file); // may be a different copy than last time
             settle(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
           } catch (err) {
@@ -1123,7 +1239,8 @@ async function browseAndLoad() {
 
   await foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.browseTitle`) },
-    content: step1,
+    classes: ["acks-importer-dialog"],
+    content: dialogContent(step1),
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.browseGo`),
       callback: async (event, button) => {
@@ -1170,8 +1287,9 @@ async function pickHeadings(bookId, page) {
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.format(`${LANG_PREFIX}.ui.browsePick`, { book: BOOKS[bookId].label, page }), resizable: true },
+    classes: ["acks-importer-dialog"],
     position: { width: 480 },
-    content,
+    content: dialogContent(content),
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.browseLoad`),
       callback: async (event, button) => {

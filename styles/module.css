@@ -1,5 +1,83 @@
 /* acks-importer styles — every selector scoped under acks-importer-*. */
 
+/* -------------------------------------------- */
+/*  Dialog contract                             */
+/* -------------------------------------------- */
+
+/* Every dialog this module opens carries `acks-importer-dialog`, and this is
+   what the class buys: one scroll region inside the content, with the buttons
+   pinned below it. A new dialog inherits the fix by wearing the class.
+
+   Core caps the frame at `calc(100vh - 1.5 * var(--hotbar-height))` and gives
+   `.application .window-content` `overflow: hidden`. The frame, the content,
+   the dialog form and the dialog body are all column flex boxes whose items
+   resolve `min-height` to `auto`, so nothing in that chain may shrink: the
+   frame stops at the cap, the surplus is clipped, and the footer — last in the
+   column — is the first thing to vanish, with no scrollbar to say so. Every
+   rung therefore has to be told it may shrink, down to the one that scrolls.
+
+   Specificity is not decoration here. Core's `.application .window-content`
+   is (0,2,0), so a single class never outranks it — which is why core's own
+   `.scrollable` cannot reach it. Module sheets load unlayered today and would
+   win on the cascade alone, but core's layer list reserves a `modules` layer,
+   so each rule carries its own weight instead of borrowing that. The module
+   class leads the selector because the namespacing check reads the first
+   class on the line. */
+.acks-importer-dialog.application .window-content {
+  min-height: 0;
+}
+
+.acks-importer-dialog.application .dialog-form {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* The scroller. Core's own `.scrollable` idiom: a stable gutter so the layout
+   does not jump the moment content passes the fold, pulled back out of the
+   padding so text keeps the window's right edge. `overflow-wrap: anywhere`
+   rather than `break-word` because it also lowers min-content width — a
+   remembered path or a joined file list is one unbreakable token, and it is
+   the intrinsic width that would otherwise push the window sideways into the
+   horizontal clip. */
+.acks-importer-dialog.application .dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  --scroll-margin: 0.75rem;
+  margin-right: calc(-1 * var(--scroll-margin));
+  padding-right: var(--scroll-margin);
+  overflow: hidden auto;
+  scrollbar-gutter: stable;
+  overflow-wrap: anywhere;
+}
+
+/* The buttons are the way out of the dialog: they keep their height whatever
+   the content does. */
+.acks-importer-dialog.application .form-footer {
+  flex: 0 0 auto;
+}
+
+/* A select's intrinsic width is its longest option, and a book row can name a
+   remembered path. The window has no horizontal scroll to recover from that,
+   so the control is allowed to shrink and clip its own text instead. */
+.acks-importer-dialog select {
+  min-width: 0;
+}
+
+/* `.notes` is an AppV1 class: core styles it only under `body.game .app form`,
+   and a DialogV2 root is `.application`, never `.app` — so an unstyled hint
+   renders as body text at 14px with a paragraph's own margins. Core's v14
+   spelling is `.hint`; both are matched here so markup written either way
+   lands the same. `flex` is deliberately left alone: these paragraphs sit in a
+   COLUMN flex box, where core's `flex: 0 0 100%` would mean "as tall as the
+   dialog". Margins are zero because the standard-form gap owns the rhythm;
+   a hint nested inside a row sets its own. */
+.acks-importer-dialog :is(.notes, .hint) {
+  margin: 0;
+  font-size: var(--font-size-12, 0.75rem);
+  line-height: var(--line-height-16, 1rem);
+  color: var(--color-form-hint, inherit);
+}
+
 .acks-importer-stub {
   font-style: italic;
   opacity: 0.85;
@@ -26,12 +104,19 @@
   opacity: 0.8;
 }
 
+/* The elastic part of every browse dialog: the list takes whatever height the
+   window has left, so dragging the window taller shows more rows rather than
+   more empty space — which is exactly what a fixed pixel cap cannot do. The
+   floor keeps a few rows readable when the filters and buttons above have
+   claimed the rest, and the list stays its own scroller so the sticky book and
+   group headings have something to stick to. Spacing below is the
+   standard-form gap's job, not a margin's. */
 .acks-importer-browse-list {
-  max-height: 320px;
+  flex: 1 1 auto;
+  min-height: 6em;
   overflow-y: auto;
   border: 1px solid var(--color-border-light-tertiary, #999);
   padding: 4px 6px;
-  margin-bottom: 6px;
 }
 
 .acks-importer-browse-row {
@@ -95,7 +180,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  margin-bottom: 4px;
+  flex: 0 0 auto;
 }
 
 .acks-importer-abil-filters input[type="text"] {
@@ -106,11 +191,6 @@
   margin-left: auto;
   font-size: var(--font-size-12, 12px);
   opacity: 0.8;
-}
-
-.acks-importer-abil-list,
-.acks-importer-mon-list {
-  max-height: 480px;
 }
 
 .acks-importer-marks {
@@ -129,10 +209,10 @@
   border-top: 1px solid var(--color-border-light-tertiary, #999);
 }
 
+/* Nested in a row rather than in the dialog's own column, so this one carries
+   its own spacing; size and colour come from the dialog contract. */
 .acks-importer-reconnect-row .notes {
   margin: 2px 0 0;
-  font-size: var(--font-size-12, 12px);
-  opacity: 0.8;
 }
 
 .acks-importer-reconnect-head {
@@ -183,4 +263,35 @@
   align-items: center;
   margin-top: 0.5em;
   font-size: var(--font-size-12, 12px);
+}
+
+/* Entry dump: one JSON line can be longer than the window, and `pre` neither
+   wraps nor answers to the dialog's `overflow-wrap`, so it is wrapped here
+   explicitly rather than widening the window into the horizontal clip. */
+.acks-importer-debug-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Core pins every `select` to one input-height row, which collapses a multiple
+   select to a single visible option however many rows its `size` asks for. The
+   book list states its own height, so the chooser reads as a list to pick
+   several from rather than a dropdown that happens to allow it. */
+.acks-importer-dialog .acks-importer-book-select {
+  height: auto;
+  min-height: 6rem;
+  line-height: normal;
+  overflow-y: auto;
+}
+
+/* One row per ability whose description would be replaced: its name and choice
+   on one line, the text that would be lost underneath. */
+.acks-importer-collide-row {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #999);
+}
+
+.acks-importer-collide-row:last-child {
+  border-bottom: none;
 }
