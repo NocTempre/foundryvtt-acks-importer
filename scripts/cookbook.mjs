@@ -3161,11 +3161,13 @@ export async function importClasses() {
       continue;
     }
     const found = cookbookEntry(id);
-    const session = found ? ctx.sessionDocs.get(bookOf(found)) : null;
+    const bookId = found ? bookOf(found) : null;
+    const session = bookId ? ctx.sessionDocs.get(bookId) : null;
     let node = null;
     if (session) {
       node = await executeEntry(session.doc, found.cb, data.registers, id);
-      if (!node?.ok) node = null;
+      if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+      else node = null;
     }
     const folder = (await ensureItemFolder(id))?.id ?? null;
     const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
@@ -3203,11 +3205,13 @@ export async function cookbookUpdateClasses() {
     const id = item.flags[MODULE_ID].cookbook.id;
     const entry = byId.get(id);
     const found = cookbookEntry(id);
-    const session = found ? ctx.sessionDocs.get(bookOf(found)) : null;
+    const bookId = found ? bookOf(found) : null;
+    const session = bookId ? ctx.sessionDocs.get(bookId) : null;
     let node = null;
     if (session) {
       node = await executeEntry(session.doc, found.cb, data.registers, id);
-      if (!node?.ok) node = null;
+      if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+      else node = null;
     }
     const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
     await item.update({ name: doc.name, ...(doc.img ? { img: doc.img } : {}), system: doc.system });

@@ -297,6 +297,20 @@
             "Fighter Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 26,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 354,
+                "y0": 174.3782,
+                "y1": 245.12959999999998
+              }
+            }
+          ]
+        },
         "body26": {
           "op": "value",
           "page": 26,
@@ -634,6 +648,20 @@
           "pattern": "raw",
           "dropText": [
             "Explorer Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 28,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 354,
+                "y0": 142.4099,
+                "y1": 222.4497
+              }
+            }
           ]
         },
         "body28": {
@@ -1043,6 +1071,20 @@
             "Thief Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 32,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 334,
+                "y0": 143.58979999999997,
+                "y1": 270.66970000000003
+              }
+            }
+          ]
+        },
         "body32": {
           "op": "value",
           "page": 32,
@@ -1434,6 +1476,20 @@
             "Mage Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 36,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 147.20979999999997,
+                "y1": 249.92960000000005
+              }
+            }
+          ]
+        },
         "body36": {
           "op": "value",
           "page": 36,
@@ -1807,6 +1863,20 @@
           "pattern": "raw",
           "dropText": [
             "Crusader Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 38,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 146.70979999999997,
+                "y1": 272.1095
+              }
+            }
           ]
         },
         "body38": {
@@ -2189,6 +2259,20 @@
             "Venturer Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 42,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 354,
+                "y0": 143.00980000000004,
+                "y1": 245.72950000000003
+              }
+            }
+          ]
+        },
         "body42": {
           "op": "value",
           "page": 42,
@@ -2567,6 +2651,20 @@
             "Assassin Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 46,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 114,
+                "y0": 174.3782,
+                "y1": 242
+              }
+            }
+          ]
+        },
         "body46": {
           "op": "value",
           "page": 46,
@@ -2902,6 +3000,20 @@
           "pattern": "raw",
           "dropText": [
             "Barbarian Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 50,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 150,
+                "y1": 232
+              }
+            }
           ]
         },
         "body50": {
@@ -3316,6 +3428,20 @@
             "Bard Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 54,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 114,
+                "y0": 150,
+                "y1": 232
+              }
+            }
+          ]
+        },
         "body54": {
           "op": "value",
           "page": 54,
@@ -3725,6 +3851,20 @@
             "Bladedancer Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 58,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 150,
+                "y1": 222
+              }
+            }
+          ]
+        },
         "body58": {
           "op": "value",
           "page": 58,
@@ -4065,6 +4205,20 @@
           "pattern": "raw",
           "dropText": [
             "Paladin Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 62,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 140.06989999999996,
+                "y1": 276.80960000000005
+              }
+            }
           ]
         },
         "body62": {
@@ -4494,6 +4648,20 @@
             "Priestess Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 66,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 145.86990000000003,
+                "y1": 312
+              }
+            }
+          ]
+        },
         "body66": {
           "op": "value",
           "page": 66,
@@ -4899,6 +5067,20 @@
           "pattern": "raw",
           "dropText": [
             "Shaman Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 70,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 145.62739999999997,
+                "y1": 352
+              }
+            }
           ]
         },
         "body70": {
@@ -5321,6 +5503,20 @@
           "pattern": "raw",
           "dropText": [
             "Warlock Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 74,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 274,
+                "y0": 145.86990000000003,
+                "y1": 332
+              }
+            }
           ]
         },
         "body74": {
@@ -5760,6 +5956,20 @@
             "Witch Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 78,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 147.77610000000004,
+                "y1": 362
+              }
+            }
+          ]
+        },
         "body78": {
           "op": "value",
           "page": 78,
@@ -6173,6 +6383,20 @@
             "Dwarven Craftpriest Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 82,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 200,
+                "y1": 282
+              }
+            }
+          ]
+        },
         "body82": {
           "op": "value",
           "page": 82,
@@ -6517,6 +6741,20 @@
           "pattern": "raw",
           "dropText": [
             "Dwarven Vaultguard Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 86,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 150,
+                "y1": 222
+              }
+            }
           ]
         },
         "body86": {
@@ -6977,6 +7215,20 @@
             "Elven Nightblade Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 88,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 150,
+                "y1": 262
+              }
+            }
+          ]
+        },
         "body88": {
           "op": "value",
           "page": 88,
@@ -7375,6 +7627,20 @@
           "pattern": "raw",
           "dropText": [
             "Elven Spellsword Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 92,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 150,
+                "y1": 242
+              }
+            }
           ]
         },
         "body92": {
@@ -7812,6 +8078,20 @@
             "Nobiran Wonderworker Proficiency List:"
           ]
         },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 104,
+                "y0": 140,
+                "y1": 262
+              }
+            }
+          ]
+        },
         "body94": {
           "op": "value",
           "page": 94,
@@ -8246,6 +8526,20 @@
           "pattern": "raw",
           "dropText": [
             "Zaharan Ruinguard Proficiency List:"
+          ]
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 612,
+                "y0": 150,
+                "y1": 482
+              }
+            }
           ]
         },
         "body98": {

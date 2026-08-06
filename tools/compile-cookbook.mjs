@@ -2276,6 +2276,30 @@ async function compileClass(doc, entry, kindRow) {
     }
   }
 
+  /* --- the intro prose: everything in the anchor column between the header
+         bullets and the first section heading, as claimed paragraphs the
+         lazy @PdfText tag resolves per seat --- */
+  {
+    const stopHeadings = ["Combat Characteristics", "Starting Class Powers", "Class Proficiencies"];
+    // Below the four header bullets (they end ~50px under the anchor), above
+    // the first section heading — heading runs are display-size, so the stop
+    // search must not pre-filter on body height.
+    const colAll = pd.items
+      .filter((i) => colOf(i.x, cols) === anchor.col && i.y > anchor.y + 55 && i.str.trim())
+      .sort((a, b) => a.y - b.y);
+    const stop = colAll.find((i) => stopHeadings.some((h) => fold(i.str).startsWith(fold(h))));
+    const intro = colAll.filter((i) => i.h < HEADING_MIN_H && i.y < (stop?.y ?? anchor.y + 300) - 3);
+    if (intro.length >= 3) {
+      fields.description = {
+        op: "text",
+        page,
+        paras: [{ box: { x0: colX - 5, x1: colRight, y0: intro[0].y - 6, y1: intro[intro.length - 1].y + 6 } }],
+      };
+    } else {
+      warn(`${entry.id}: intro prose not captured (${intro.length} line(s) before the first section)`);
+    }
+  }
+
   /* --- per-page raw body text: the binder resolves award grant-levels and
          the cleave phrase against the reader's own words --- */
   for (const p of entry.pages) {
