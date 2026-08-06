@@ -11,7 +11,7 @@ raw PNG path, so those links survive the next refresh.
 |---|---|---|---|
 | Connect a book | The book loader, with the books this seat can open | [guide](guides/connect-a-book.md) | [v2.0.0](releases/v2.0.0/book-loader.png) |
 | Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v2.0.0](releases/v2.0.0/getting-started.png) |
-| Import classes | A class read whole from the reader's book: progressions, awards, templates | [guide](guides/import-from-the-cookbook.md) | [v2.0.0](releases/v2.0.0/classes-import.png) |
+| Import classes | A By This Axe class read whole from the reader's book: progressions, awards, caste templates | [guide](guides/import-from-the-cookbook.md) | [v2.1.0](releases/v2.1.0/classes-bta-import.png) |
 | Browse and audit | The entry picker — the abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v2.0.0](releases/v2.0.0/cookbook-import.png) |
 
 Snapshots are captured during the live-verification session of a release

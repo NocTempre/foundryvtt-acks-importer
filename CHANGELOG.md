@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+- **By This Axe deals its classes.** Connect the By This Axe PDF and Import
+  Character Classes brings in its ten dwarven classes — Delver, Earthforger,
+  Excavator, Furnacewife, Fury, Machinist, Pugilist, Rhetor, Sporecaster,
+  Tombsealer — read whole from your book: level progressions, their own
+  factored attack and saving throw tables, skill ladders, starting caste
+  templates from the templates chapter, class powers at their printed levels,
+  and gnostic casting for the earthforger and furnacewife (the Maximum
+  Invocation Level ladder rides the class document). The five proficiencies
+  only that book defines import with the rest, and the class proficiency
+  pick schedule is read from each spread's own Proficiency Progression
+  paragraph.
+- The craftpriest and vaultguard stay the Revised Rulebook's: By This Axe
+  reprints them, and the source matrix records where the printings differ.
+  Powers the Judges Journal already defines keep their entries — a world
+  without By This Axe loses nothing.
+- The By This Axe dwarven-caste split and its scavenged-parts equipment
+  tables now import with the rules tables.
+
+## 2.0.0
+
+### Added
+- **Your book deals the classes.** Import Character Classes reads all
+  twenty-one Revised Rulebook classes from a connected PDF into class
+  documents acks-extras plays: progressions, saves and attack throws, award
+  ladders, starting templates, spell slots, and per-class proficiency lists.
+  (Released 2026-08-05; recorded here with 2.1.0.)
+
 ## 1.2.0
 
 ### Changed
