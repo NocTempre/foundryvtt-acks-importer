@@ -1,0 +1,698 @@
+[
+ {
+  "id": "def.power.dwarvenThroatSinging",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Dwarven Throat-Singing",
+  "anchor": {
+   "runin": "Dwarven Throat-Singing:"
+  },
+  "pages": [
+   63
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.gnosticMagic",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Gnostic Magic",
+  "anchor": {
+   "runin": "Gnostic Magic:"
+  },
+  "pages": [
+   63,
+   64
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.deepKnowledge",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Deep Knowledge",
+  "anchor": {
+   "runin": "Deep Knowledge:"
+  },
+  "pages": [
+   63
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.earthforgerSigil",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Sigil Invocation",
+  "anchor": {
+   "runin": "Sigil Invocation:"
+  },
+  "pages": [
+   65
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.greaterGnosis",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Greater Gnosis",
+  "anchor": {
+   "runin": "Greater Gnosis ("
+  },
+  "pages": [
+   63,
+   64
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.masterGnosis",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Master Gnosis",
+  "anchor": {
+   "runin": "Master Gnosis ("
+  },
+  "pages": [
+   64
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.earthforgerRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   64
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.mineManagement",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Mine Management",
+  "anchor": {
+   "runin": "Mine Management ("
+  },
+  "pages": [
+   69
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.industrialism",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Industrialism",
+  "anchor": {
+   "runin": "Industrialism ("
+  },
+  "pages": [
+   69
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.excavatorRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   69
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.skill.dowsing",
+  "kind": "kind.skill",
+  "book": "bta",
+  "name": "Dowsing",
+  "anchor": {
+   "runin": "Dowsing ("
+  },
+  "pages": [
+   68
+  ],
+  "meta": {
+   "category": "classSkill"
+  }
+ },
+ {
+  "id": "def.power.fieryTorch",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Fiery Torch",
+  "anchor": {
+   "runin": "Fiery Torch:"
+  },
+  "pages": [
+   71
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.trinketsOfPower",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Trinkets of Power",
+  "anchor": {
+   "runin": "Trinkets of Power:"
+  },
+  "pages": [
+   71
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.fieryAura",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Fiery Aura",
+  "anchor": {
+   "runin": "Fiery Aura ("
+  },
+  "pages": [
+   71
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.fieryBlessing",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Fiery Blessing",
+  "anchor": {
+   "runin": "Fiery Blessing ("
+  },
+  "pages": [
+   72
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.furnacewifeRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   72
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.superiorFleshRunes",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Superior Flesh-Runes",
+  "anchor": {
+   "runin": "Superior Flesh-Runes ("
+  },
+  "pages": [
+   75
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.delverRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   62
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.mechanicKnowledge",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Mechanic Knowledge",
+  "anchor": {
+   "runin": "Mechanic Knowledge:"
+  },
+  "pages": [
+   77
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.personalAutomaton",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Personal Automaton",
+  "anchor": {
+   "runin": "Personal Automaton:"
+  },
+  "pages": [
+   77,
+   78
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.machinistRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   78
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.oldManBones",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Old Man Bones",
+  "anchor": {
+   "runin": "Old Man Bones ("
+  },
+  "pages": [
+   80
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.eyeOfTheTiger",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Eye of the Tiger",
+  "anchor": {
+   "runin": "Eye of the Tiger ("
+  },
+  "pages": [
+   80,
+   81
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.pugilistRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   81
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.secondWind",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Second Wind",
+  "anchor": {
+   "runin": "Second Wind ("
+  },
+  "pages": [
+   81
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.unyieldingSpirit",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Unyielding Spirit",
+  "anchor": {
+   "runin": "Unyielding Spirit ("
+  },
+  "pages": [
+   81
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.jurisprudence",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Jurisprudence",
+  "anchor": {
+   "runin": "Jurisprudence:"
+  },
+  "pages": [
+   83
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.ruleOfLaw",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Rule of Law",
+  "anchor": {
+   "runin": "Rule of Law ("
+  },
+  "pages": [
+   84
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.rhetoricalTraining",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Rhetorical Training",
+  "anchor": {
+   "runin": "Rhetorical Training ("
+  },
+  "pages": [
+   84
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.tireless",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Tireless",
+  "anchor": {
+   "runin": "Tireless ("
+  },
+  "pages": [
+   84
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.rhetorRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   84
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.bloomingSpores",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Blooming Spores",
+  "anchor": {
+   "runin": "Blooming Spores ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.fungalHumors",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Fungal Humors",
+  "anchor": {
+   "runin": "Fungal Humors ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.blossomingSpores",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Blossoming Spores",
+  "anchor": {
+   "runin": "Blossoming Spores ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.billowingSpores",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Billowing Spores",
+  "anchor": {
+   "runin": "Billowing Spores ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sporeServitude",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Spore Servitude",
+  "anchor": {
+   "runin": "Spore Servitude ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.mushroomMutation",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Mushroom Mutation",
+  "anchor": {
+   "runin": "Mushroom Mutation ("
+  },
+  "pages": [
+   87,
+   88,
+   89
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sporecasterRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   87
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.lesserRiteOfSealing",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Lesser Rite of Sealing",
+  "anchor": {
+   "runin": "Lesser Rite of Sealing:"
+  },
+  "pages": [
+   90
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.riteOfDiscovery",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Rite of Discovery",
+  "anchor": {
+   "runin": "Rite of Discovery ("
+  },
+  "pages": [
+   91
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.tombsealerRenown",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Renown",
+  "anchor": {
+   "runin": "Renown ("
+  },
+  "pages": [
+   91
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.prof.inventing",
+  "kind": "kind.proficiency",
+  "book": "bta",
+  "name": "Inventing",
+  "anchor": {
+   "runin": "Inventing"
+  },
+  "pages": [
+   93
+  ],
+  "meta": {
+   "category": "proficiency"
+  }
+ },
+ {
+  "id": "def.prof.juryRigging",
+  "kind": "kind.proficiency",
+  "book": "bta",
+  "name": "Jury-Rigging",
+  "anchor": {
+   "runin": "Jury-Rigging"
+  },
+  "pages": [
+   93
+  ],
+  "meta": {
+   "category": "proficiency"
+  }
+ },
+ {
+  "id": "def.prof.mechanicalEngineering",
+  "kind": "kind.proficiency",
+  "book": "bta",
+  "name": "Mechanical Engineering",
+  "anchor": {
+   "runin": "Mechanical Engineering"
+  },
+  "pages": [
+   93
+  ],
+  "meta": {
+   "category": "proficiency"
+  }
+ },
+ {
+  "id": "def.prof.scavenging",
+  "kind": "kind.proficiency",
+  "book": "bta",
+  "name": "Scavenging",
+  "anchor": {
+   "runin": "Scavenging"
+  },
+  "pages": [
+   94
+  ],
+  "meta": {
+   "category": "proficiency"
+  }
+ },
+ {
+  "id": "def.prof.tinkering",
+  "kind": "kind.proficiency",
+  "book": "bta",
+  "name": "Tinkering",
+  "anchor": {
+   "runin": "Tinkering"
+  },
+  "pages": [
+   94
+  ],
+  "meta": {
+   "category": "proficiency"
+  }
+ }
+]

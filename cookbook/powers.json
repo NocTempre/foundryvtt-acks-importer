@@ -2,6 +2,2765 @@
   "schema": "acks-cookbook/2",
   "content": "powers",
   "entries": {
+    "def.power.delverRenown": {
+      "id": "def.power.delverRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.62",
+      "pages": [
+        62
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 62,
+          "box": {
+            "x0": 52,
+            "x1": 92.86999999999999,
+            "y0": 547,
+            "y1": 556
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 62,
+          "paras": [
+            {
+              "box": {
+                "x0": 49,
+                "x1": 318,
+                "y0": 549,
+                "y1": 651
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  17,
+                  18,
+                  22,
+                  23,
+                  26,
+                  27,
+                  29,
+                  30,
+                  33,
+                  34,
+                  35
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 49,
+                "x1": 318,
+                "y0": 681,
+                "y1": 699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.dwarvenThroatSinging": {
+      "id": "def.power.dwarvenThroatSinging",
+      "kind": "kind.power",
+      "name": "Dwarven Throat-Singing",
+      "book": "bta",
+      "cite": "BTA p.63",
+      "pages": [
+        63
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 63,
+          "box": {
+            "x0": 304,
+            "x1": 412.55000000000047,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Dwarven Throat-Singing:"
+        },
+        "description": {
+          "op": "text",
+          "page": 63,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 81,
+                "y1": 159
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9,
+                  10,
+                  12
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.gnosticMagic": {
+      "id": "def.power.gnosticMagic",
+      "kind": "kind.power",
+      "name": "Gnostic Magic",
+      "book": "bta",
+      "cite": "BTA p.63",
+      "pages": [
+        63,
+        64
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 63,
+          "box": {
+            "x0": 304,
+            "x1": 368.0100000000002,
+            "y0": 175,
+            "y1": 184
+          },
+          "text": "Gnostic Magic:"
+        },
+        "description": {
+          "op": "text",
+          "page": 63,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 177,
+                "y1": 291
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  11
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.deepKnowledge": {
+      "id": "def.power.deepKnowledge",
+      "kind": "kind.power",
+      "name": "Deep Knowledge",
+      "book": "bta",
+      "cite": "BTA p.63",
+      "pages": [
+        63
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 63,
+          "box": {
+            "x0": 34,
+            "x1": 143.64260000000002,
+            "y0": 619,
+            "y1": 628
+          },
+          "text": "Deep Knowledge:"
+        },
+        "description": {
+          "op": "text",
+          "page": 63,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 621,
+                "y1": 723
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  19,
+                  20,
+                  22,
+                  23,
+                  24
+                ],
+                "drop": [
+                  0,
+                  1
+                ],
+                "stripPrefix": {
+                  "2": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.greaterGnosis": {
+      "id": "def.power.greaterGnosis",
+      "kind": "kind.power",
+      "name": "Greater Gnosis",
+      "book": "bta",
+      "cite": "BTA p.63",
+      "pages": [
+        63,
+        64
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 63,
+          "box": {
+            "x0": 304,
+            "x1": 377.38000000000034,
+            "y0": 619,
+            "y1": 628
+          },
+          "text": "Greater Gnosis ("
+        },
+        "description": {
+          "op": "text",
+          "page": 63,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 621,
+                "y1": 735
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 80.7106,
+                "y1": 246.6794
+              },
+              "page": 64,
+              "fixes": {
+                "joinSpace": [
+                  4,
+                  13,
+                  24,
+                  28,
+                  32,
+                  36,
+                  41,
+                  43,
+                  46,
+                  48,
+                  51,
+                  53,
+                  56,
+                  58,
+                  61,
+                  63,
+                  66,
+                  68,
+                  71,
+                  73,
+                  76,
+                  78,
+                  81,
+                  83,
+                  89
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 262.15060000000005,
+                "y1": 348.5
+              },
+              "page": 64,
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  4,
+                  6,
+                  10,
+                  12,
+                  16,
+                  21,
+                  23,
+                  25,
+                  28,
+                  30,
+                  31,
+                  33,
+                  35,
+                  38,
+                  40,
+                  41,
+                  43,
+                  45,
+                  48,
+                  50,
+                  51,
+                  53,
+                  55,
+                  56,
+                  58,
+                  60,
+                  62,
+                  64,
+                  65
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.masterGnosis": {
+      "id": "def.power.masterGnosis",
+      "kind": "kind.power",
+      "name": "Master Gnosis",
+      "book": "bta",
+      "cite": "BTA p.64",
+      "pages": [
+        64
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 64,
+          "box": {
+            "x0": 52,
+            "x1": 124.10999999999993,
+            "y0": 439,
+            "y1": 448
+          },
+          "text": "Master Gnosis ("
+        },
+        "description": {
+          "op": "text",
+          "page": 64,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 441,
+                "y1": 459
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.earthforgerRenown": {
+      "id": "def.power.earthforgerRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.64",
+      "pages": [
+        64
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 64,
+          "box": {
+            "x0": 52,
+            "x1": 93.00999999999999,
+            "y0": 571,
+            "y1": 580
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 64,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 573,
+                "y1": 675
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 119.34000000000003,
+                "y1": 161.34000000000003
+              },
+              "page": 65,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.earthforgerSigil": {
+      "id": "def.power.earthforgerSigil",
+      "kind": "kind.power",
+      "name": "Sigil Invocation",
+      "book": "bta",
+      "cite": "BTA p.65",
+      "pages": [
+        65
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 65,
+          "box": {
+            "x0": 34,
+            "x1": 103.23899999999999,
+            "y0": 175,
+            "y1": 184
+          },
+          "text": "Sigil Invocation:"
+        },
+        "description": {
+          "op": "text",
+          "page": 65,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 177,
+                "y1": 195
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.mineManagement": {
+      "id": "def.power.mineManagement",
+      "kind": "kind.power",
+      "name": "Mine Management",
+      "book": "bta",
+      "cite": "BTA p.69",
+      "pages": [
+        69
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 69,
+          "box": {
+            "x0": 34,
+            "x1": 122.54899999999995,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Mine Management ("
+        },
+        "description": {
+          "op": "text",
+          "page": 69,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 81,
+                "y1": 159
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.industrialism": {
+      "id": "def.power.industrialism",
+      "kind": "kind.power",
+      "name": "Industrialism",
+      "book": "bta",
+      "cite": "BTA p.69",
+      "pages": [
+        69
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 69,
+          "box": {
+            "x0": 34,
+            "x1": 106.3035,
+            "y0": 607,
+            "y1": 616
+          },
+          "text": "Industrialism ("
+        },
+        "description": {
+          "op": "text",
+          "page": 69,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 609,
+                "y1": 663
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "drop": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.excavatorRenown": {
+      "id": "def.power.excavatorRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.69",
+      "pages": [
+        69
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 69,
+          "box": {
+            "x0": 34,
+            "x1": 75.94999999999999,
+            "y0": 679,
+            "y1": 688
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 69,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 681,
+                "y1": 735
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  10,
+                  11,
+                  12,
+                  13,
+                  16,
+                  17,
+                  21,
+                  22,
+                  25
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 81,
+                "y1": 123
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.fieryTorch": {
+      "id": "def.power.fieryTorch",
+      "kind": "kind.power",
+      "name": "Fiery Torch",
+      "book": "bta",
+      "cite": "BTA p.71",
+      "pages": [
+        71
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 71,
+          "box": {
+            "x0": 34,
+            "x1": 88.65999999999998,
+            "y0": 367,
+            "y1": 376
+          },
+          "text": "Fiery Torch:"
+        },
+        "description": {
+          "op": "text",
+          "page": 71,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 369,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  6,
+                  9
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.trinketsOfPower": {
+      "id": "def.power.trinketsOfPower",
+      "kind": "kind.power",
+      "name": "Trinkets of Power",
+      "book": "bta",
+      "cite": "BTA p.71",
+      "pages": [
+        71
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 71,
+          "box": {
+            "x0": 34,
+            "x1": 114.19999999999996,
+            "y0": 667,
+            "y1": 676
+          },
+          "text": "Trinkets of Power:"
+        },
+        "description": {
+          "op": "text",
+          "page": 71,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 669,
+                "y1": 723
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.fieryAura": {
+      "id": "def.power.fieryAura",
+      "kind": "kind.power",
+      "name": "Fiery Aura",
+      "book": "bta",
+      "cite": "BTA p.71",
+      "pages": [
+        71
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 71,
+          "box": {
+            "x0": 304,
+            "x1": 355.73000000000013,
+            "y0": 499,
+            "y1": 508
+          },
+          "text": "Fiery Aura ("
+        },
+        "description": {
+          "op": "text",
+          "page": 71,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 501,
+                "y1": 603
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.fieryBlessing": {
+      "id": "def.power.fieryBlessing",
+      "kind": "kind.power",
+      "name": "Fiery Blessing",
+      "book": "bta",
+      "cite": "BTA p.72",
+      "pages": [
+        72
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 72,
+          "box": {
+            "x0": 52,
+            "x1": 121.53999999999992,
+            "y0": 391,
+            "y1": 400
+          },
+          "text": "Fiery Blessing ("
+        },
+        "description": {
+          "op": "text",
+          "page": 72,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 393,
+                "y1": 471
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.furnacewifeRenown": {
+      "id": "def.power.furnacewifeRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.72",
+      "pages": [
+        72
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 72,
+          "box": {
+            "x0": 52,
+            "x1": 92.71499999999997,
+            "y0": 523,
+            "y1": 532
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 72,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 525,
+                "y1": 627
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  10,
+                  11,
+                  12,
+                  13,
+                  16,
+                  17,
+                  21,
+                  22,
+                  25,
+                  26,
+                  27,
+                  29,
+                  30,
+                  33,
+                  34,
+                  35
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 94.5,
+                "y1": 112.5
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.superiorFleshRunes": {
+      "id": "def.power.superiorFleshRunes",
+      "kind": "kind.power",
+      "name": "Superior Flesh-Runes",
+      "book": "bta",
+      "cite": "BTA p.75",
+      "pages": [
+        75
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 75,
+          "box": {
+            "x0": 34,
+            "x1": 131.00999999999996,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Superior Flesh-Runes ("
+        },
+        "description": {
+          "op": "text",
+          "page": 75,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 612,
+                "y0": 81,
+                "y1": 123
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ],
+                "mergeHyphen": [
+                  6
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 35,
+                "x1": 612,
+                "y0": 153,
+                "y1": 171
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.mechanicKnowledge": {
+      "id": "def.power.mechanicKnowledge",
+      "kind": "kind.power",
+      "name": "Mechanic Knowledge",
+      "book": "bta",
+      "cite": "BTA p.77",
+      "pages": [
+        77
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 77,
+          "box": {
+            "x0": 34,
+            "x1": 175.06989999999996,
+            "y0": 571,
+            "y1": 580
+          },
+          "text": "Mechanic Knowledge:"
+        },
+        "description": {
+          "op": "text",
+          "page": 77,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 573,
+                "y1": 627
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 645,
+                "y1": 747
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 81,
+                "y1": 147
+              },
+              "page": 78,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 165,
+                "y1": 183
+              },
+              "page": 78,
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.personalAutomaton": {
+      "id": "def.power.personalAutomaton",
+      "kind": "kind.power",
+      "name": "Personal Automaton",
+      "book": "bta",
+      "cite": "BTA p.77",
+      "pages": [
+        77,
+        78
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 77,
+          "box": {
+            "x0": 34,
+            "x1": 125.14499999999998,
+            "y0": 643,
+            "y1": 652
+          },
+          "text": "Personal Automaton:"
+        },
+        "description": {
+          "op": "text",
+          "page": 77,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 645,
+                "y1": 747
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 81,
+                "y1": 147
+              },
+              "page": 78,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 165,
+                "y1": 183
+              },
+              "page": 78,
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.machinistRenown": {
+      "id": "def.power.machinistRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.78",
+      "pages": [
+        78
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 78,
+          "box": {
+            "x0": 52,
+            "x1": 94.65499999999999,
+            "y0": 367,
+            "y1": 376
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 78,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 369,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  8,
+                  9,
+                  13,
+                  16,
+                  17
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 81,
+                "y1": 219
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  4,
+                  5,
+                  6,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 249,
+                "y1": 267
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.oldManBones": {
+      "id": "def.power.oldManBones",
+      "kind": "kind.power",
+      "name": "Old Man Bones",
+      "book": "bta",
+      "cite": "BTA p.80",
+      "pages": [
+        80
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 80,
+          "box": {
+            "x0": 52,
+            "x1": 123.23999999999995,
+            "y0": 667,
+            "y1": 676
+          },
+          "text": "Old Man Bones ("
+        },
+        "description": {
+          "op": "text",
+          "page": 80,
+          "paras": [
+            {
+              "box": {
+                "x0": -5,
+                "x1": 612,
+                "y0": 669,
+                "y1": 747
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  12,
+                  13,
+                  14,
+                  15,
+                  18,
+                  19,
+                  21,
+                  24,
+                  25,
+                  27,
+                  30,
+                  31,
+                  33,
+                  36,
+                  37
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.eyeOfTheTiger": {
+      "id": "def.power.eyeOfTheTiger",
+      "kind": "kind.power",
+      "name": "Eye of the Tiger",
+      "book": "bta",
+      "cite": "BTA p.80",
+      "pages": [
+        80,
+        81
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 80,
+          "box": {
+            "x0": 322,
+            "x1": 403.7650000000002,
+            "y0": 439,
+            "y1": 448
+          },
+          "text": "Eye of the Tiger ("
+        },
+        "description": {
+          "op": "text",
+          "page": 80,
+          "paras": [
+            {
+              "box": {
+                "x0": -5,
+                "x1": 612,
+                "y0": 441,
+                "y1": 747
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  11,
+                  12,
+                  13,
+                  14,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  28,
+                  29,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  41,
+                  44,
+                  48,
+                  49,
+                  50,
+                  51,
+                  54,
+                  55,
+                  56,
+                  59,
+                  60,
+                  61,
+                  62,
+                  63,
+                  64,
+                  65,
+                  67,
+                  68,
+                  69,
+                  71,
+                  72,
+                  75,
+                  76,
+                  79,
+                  80,
+                  83,
+                  84,
+                  87,
+                  88,
+                  90,
+                  93,
+                  94,
+                  95,
+                  98,
+                  99,
+                  100,
+                  101,
+                  102,
+                  103,
+                  104,
+                  105,
+                  108,
+                  109,
+                  110,
+                  111,
+                  114,
+                  115,
+                  117,
+                  120,
+                  121,
+                  123,
+                  126,
+                  127,
+                  129,
+                  132,
+                  133
+                ],
+                "drop": [
+                  2
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.pugilistRenown": {
+      "id": "def.power.pugilistRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.81",
+      "pages": [
+        81
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 81,
+          "box": {
+            "x0": 34,
+            "x1": 74.20999999999998,
+            "y0": 391,
+            "y1": 400
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 81,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 393,
+                "y1": 495
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  11,
+                  12,
+                  13,
+                  14,
+                  17,
+                  18,
+                  22,
+                  23,
+                  24,
+                  27,
+                  28,
+                  29
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.secondWind": {
+      "id": "def.power.secondWind",
+      "kind": "kind.power",
+      "name": "Second Wind",
+      "book": "bta",
+      "cite": "BTA p.81",
+      "pages": [
+        81
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 81,
+          "box": {
+            "x0": 34,
+            "x1": 95.75999999999999,
+            "y0": 511,
+            "y1": 520
+          },
+          "text": "Second Wind ("
+        },
+        "description": {
+          "op": "text",
+          "page": 81,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 513,
+                "y1": 567
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.unyieldingSpirit": {
+      "id": "def.power.unyieldingSpirit",
+      "kind": "kind.power",
+      "name": "Unyielding Spirit",
+      "book": "bta",
+      "cite": "BTA p.81",
+      "pages": [
+        81
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 81,
+          "box": {
+            "x0": 34,
+            "x1": 112.51999999999994,
+            "y0": 583,
+            "y1": 592
+          },
+          "text": "Unyielding Spirit ("
+        },
+        "description": {
+          "op": "text",
+          "page": 81,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 585,
+                "y1": 711
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  14,
+                  15,
+                  16,
+                  19,
+                  22
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 94.5,
+                "y1": 112.5
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.jurisprudence": {
+      "id": "def.power.jurisprudence",
+      "kind": "kind.power",
+      "name": "Jurisprudence",
+      "book": "bta",
+      "cite": "BTA p.83",
+      "pages": [
+        83
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 83,
+          "box": {
+            "x0": 34,
+            "x1": 96.58999999999996,
+            "y0": 367,
+            "y1": 376
+          },
+          "text": "Jurisprudence:"
+        },
+        "description": {
+          "op": "text",
+          "page": 83,
+          "paras": [
+            {
+              "box": {
+                "x0": 31,
+                "x1": 300,
+                "y0": 369,
+                "y1": 447
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  16
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.ruleOfLaw": {
+      "id": "def.power.ruleOfLaw",
+      "kind": "kind.power",
+      "name": "Rule of Law",
+      "book": "bta",
+      "cite": "BTA p.84",
+      "pages": [
+        84
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 84,
+          "box": {
+            "x0": 322,
+            "x1": 383.5700000000002,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Rule of Law ("
+        },
+        "description": {
+          "op": "text",
+          "page": 84,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 81,
+                "y1": 183
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 213,
+                "y1": 231
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.rhetoricalTraining": {
+      "id": "def.power.rhetoricalTraining",
+      "kind": "kind.power",
+      "name": "Rhetorical Training",
+      "book": "bta",
+      "cite": "BTA p.84",
+      "pages": [
+        84
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 84,
+          "box": {
+            "x0": 52,
+            "x1": 141.63999999999993,
+            "y0": 451,
+            "y1": 460
+          },
+          "text": "Rhetorical Training ("
+        },
+        "description": {
+          "op": "text",
+          "page": 84,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 453,
+                "y1": 471
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.tireless": {
+      "id": "def.power.tireless",
+      "kind": "kind.power",
+      "name": "Tireless",
+      "book": "bta",
+      "cite": "BTA p.84",
+      "pages": [
+        84
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 84,
+          "box": {
+            "x0": 52,
+            "x1": 92.46999999999997,
+            "y0": 487,
+            "y1": 496
+          },
+          "text": "Tireless ("
+        },
+        "description": {
+          "op": "text",
+          "page": 84,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 489,
+                "y1": 531
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.rhetorRenown": {
+      "id": "def.power.rhetorRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.84",
+      "pages": [
+        84
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 84,
+          "box": {
+            "x0": 52,
+            "x1": 92.83999999999999,
+            "y0": 583,
+            "y1": 592
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 84,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 585,
+                "y1": 687
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  17,
+                  18,
+                  22,
+                  23,
+                  26,
+                  27,
+                  29,
+                  30,
+                  33,
+                  34,
+                  35
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.bloomingSpores": {
+      "id": "def.power.bloomingSpores",
+      "kind": "kind.power",
+      "name": "Blooming Spores",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34,
+            "x1": 110.93999999999994,
+            "y0": 139,
+            "y1": 148
+          },
+          "text": "Blooming Spores ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 141,
+                "y1": 231
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  9,
+                  10,
+                  11,
+                  12,
+                  14
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.fungalHumors": {
+      "id": "def.power.fungalHumors",
+      "kind": "kind.power",
+      "name": "Fungal Humors",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34,
+            "x1": 103.88999999999997,
+            "y0": 247,
+            "y1": 256
+          },
+          "text": "Fungal Humors ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 249,
+                "y1": 279
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.blossomingSpores": {
+      "id": "def.power.blossomingSpores",
+      "kind": "kind.power",
+      "name": "Blossoming Spores",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34,
+            "x1": 120.91999999999996,
+            "y0": 295,
+            "y1": 304
+          },
+          "text": "Blossoming Spores ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 297,
+                "y1": 339
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  7
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.billowingSpores": {
+      "id": "def.power.billowingSpores",
+      "kind": "kind.power",
+      "name": "Billowing Spores",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34.0001,
+            "x1": 110.57009999999995,
+            "y0": 475,
+            "y1": 484
+          },
+          "text": "Billowing Spores ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 477,
+                "y1": 519
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  7
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sporeServitude": {
+      "id": "def.power.sporeServitude",
+      "kind": "kind.power",
+      "name": "Spore Servitude",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34.0001,
+            "x1": 115.01009999999994,
+            "y0": 535,
+            "y1": 544
+          },
+          "text": "Spore Servitude ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 537,
+                "y1": 651
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.mushroomMutation": {
+      "id": "def.power.mushroomMutation",
+      "kind": "kind.power",
+      "name": "Mushroom Mutation",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87,
+        88,
+        89
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 34.0001,
+            "x1": 155.60299999999998,
+            "y0": 667,
+            "y1": 676
+          },
+          "text": "Mushroom Mutation ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 669,
+                "y1": 747
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "mergeHyphen": [
+                  9
+                ],
+                "drop": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "stripPrefix": {
+                  "4": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sporecasterRenown": {
+      "id": "def.power.sporecasterRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.87",
+      "pages": [
+        87
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 87,
+          "box": {
+            "x0": 304,
+            "x1": 346.0300000000001,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 87,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 81,
+                "y1": 279
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  9,
+                  10,
+                  12,
+                  14,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  24,
+                  25,
+                  26,
+                  28,
+                  30,
+                  31,
+                  32,
+                  33,
+                  34,
+                  35,
+                  36,
+                  37,
+                  38,
+                  39,
+                  40,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48,
+                  49
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.lesserRiteOfSealing": {
+      "id": "def.power.lesserRiteOfSealing",
+      "kind": "kind.power",
+      "name": "Lesser Rite of Sealing",
+      "book": "bta",
+      "cite": "BTA p.90",
+      "pages": [
+        90
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 90,
+          "box": {
+            "x0": 322,
+            "x1": 417.50000000000045,
+            "y0": 391,
+            "y1": 400
+          },
+          "text": "Lesser Rite of Sealing:"
+        },
+        "description": {
+          "op": "text",
+          "page": 90,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 393,
+                "y1": 531
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.riteOfDiscovery": {
+      "id": "def.power.riteOfDiscovery",
+      "kind": "kind.power",
+      "name": "Rite of Discovery",
+      "book": "bta",
+      "cite": "BTA p.91",
+      "pages": [
+        91
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 91,
+          "box": {
+            "x0": 34,
+            "x1": 116.32999999999996,
+            "y0": 595,
+            "y1": 604
+          },
+          "text": "Rite of Discovery ("
+        },
+        "description": {
+          "op": "text",
+          "page": 91,
+          "paras": [
+            {
+              "box": {
+                "x0": 505,
+                "x1": 612,
+                "y0": 597,
+                "y1": 735
+              },
+              "fixes": {
+                "joinSpace": [
+                  4,
+                  5,
+                  6
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 81,
+                "y1": 111
+              },
+              "page": 92,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 141,
+                "y1": 159
+              },
+              "page": 92,
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.tombsealerRenown": {
+      "id": "def.power.tombsealerRenown",
+      "kind": "kind.power",
+      "name": "Renown",
+      "book": "bta",
+      "cite": "BTA p.91",
+      "pages": [
+        91
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 91,
+          "box": {
+            "x0": 304,
+            "x1": 345.05000000000007,
+            "y0": 679,
+            "y1": 688
+          },
+          "text": "Renown ("
+        },
+        "description": {
+          "op": "text",
+          "page": 91,
+          "paras": [
+            {
+              "box": {
+                "x0": 505,
+                "x1": 612,
+                "y0": 681,
+                "y1": 735
+              },
+              "fixes": {
+                "joinSpace": [
+                  4,
+                  5,
+                  6
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 81,
+                "y1": 111
+              },
+              "page": 92,
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 141,
+                "y1": 159
+              },
+              "page": 92,
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.abominableMutation": {
       "id": "def.power.abominableMutation",
       "kind": "kind.power",

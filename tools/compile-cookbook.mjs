@@ -55,7 +55,15 @@ const HEADING_MIN_H = 12; // mirrors extract.mjs
 // Definition bodies are 9pt prose (+ ~5pt superscript ordinals). Italic
 // pull-quote/maxim blocks between entries print at ~10.5pt and are NOT part of
 // the entry, so definition body collection caps below them.
-const DEF_BODY_MAX_H = 10;
+// The ceiling is PER BOOK: RR/JJ table headers print at exactly 10 and must
+// stay out of RR/JJ bodies (at a global 10.5 the fighter's progression header
+// row leaked into Castle's continuation paragraph), while BTA sets its whole
+// body at exactly 10 — at a global 10 no BTA item survived the gate and no
+// BTA run-in anchored. The definition dispatcher sets the working value from
+// the entry's book; compilation is strictly sequential, so the module-level
+// slot never sees two entries at once.
+const DEF_BODY_MAX_H_BY_BOOK = { bta: 10.5 };
+let DEF_BODY_MAX_H = 10;
 // Body text starts below the running head; definition blocks are COLUMN-FLOWED,
 // so one that reaches the bottom of its column continues at the top of the next.
 const DEF_TOP_BAND = 60;
@@ -1890,6 +1898,10 @@ const AX_COMPILERS = {
  * Values never ship: every instruction is a box and a pattern.
  */
 async function compileClass(doc, entry, kindRow) {
+  // Same per-book body ceiling as compileDefinition: defColumns' run-in
+  // fallback reads it, and a stale value from the previous book's entry
+  // leaves a table-dominated BTA page unrecovered at one column.
+  DEF_BODY_MAX_H = DEF_BODY_MAX_H_BY_BOOK[entry.book] ?? 10;
   const spec = entry.class ?? {};
   const page = entry.pages[0];
   const pd = await pageItems(doc, page);
@@ -1898,8 +1910,10 @@ async function compileClass(doc, entry, kindRow) {
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
 
   /* --- anchor / name --- */
+  // Folded on both sides: a heading's glyph runs may join with no spaces at
+  // all ("DWarVenDelVer"), which a space-sensitive compare never matches.
   const anchors = listHeadings(pd).filter((a) => a.mode === "display");
-  const anchor = anchors.find((a) => a.text.toLowerCase().startsWith(entry.anchor.display.toLowerCase()));
+  const anchor = anchors.find((a) => fold(a.text).startsWith(fold(entry.anchor.display)));
   if (!anchor) throw new Error(`display anchor "${entry.anchor.display}" not found on p.${page}`);
   const colX = cols[anchor.col];
   const nextX = cols[anchor.col + 1];
@@ -1921,6 +1935,12 @@ async function compileClass(doc, entry, kindRow) {
     return [...by.entries()].sort((a, b) => a[0] - b[0]).map(([, v]) => v.sort((a, b) => a.x - b.x));
   };
   const joinRow = (row) => row.map((i) => i.str).join("");
+  // One glue width cannot serve every book: BTA's right-aligned XP figures
+  // sit 6-8px from their Title neighbours (RR's sit wider), while BTA's own
+  // intra-cell fragments stay under 4px apart. At 6 the two columns fused
+  // into one cell, no data row matched the declared count, and every BTA
+  // progression fell to the header-span fallback.
+  const cellGap = entry.book === "bta" ? 4 : 6;
   const rebuildCells = (row, gap = 3) => {
     const cells = [];
     for (const it of row) {
@@ -1943,8 +1963,9 @@ async function compileClass(doc, entry, kindRow) {
    * printed side by side share one title row — startsWith on a whole row
    * cannot see either.
    */
-  const findLabelRun = (items, label) => {
+  const findLabelRun = (items, label, { last = false } = {}) => {
     const target = fold(label);
+    let found = null;
     for (const r of lineRows(items)) {
       let acc = "";
       const starts = r.map((it) => {
@@ -1956,9 +1977,10 @@ async function compileClass(doc, entry, kindRow) {
       if (at < 0) continue;
       let idx = 0;
       for (let i = 0; i < starts.length; i++) if (starts[i] <= at) idx = i;
-      return r[idx];
+      if (!last) return r[idx];
+      found = r[idx];
     }
-    return null;
+    return found;
   };
 
   // Pass 1 — locate every table's title run, so side-by-side tables can bound
@@ -2002,7 +2024,7 @@ async function compileClass(doc, entry, kindRow) {
       const bandRe = /^\d{1,2}\s*[–-]\s*\d{1,2}$/;
       const bandLabels = [];
       for (const r of rows.slice(titleIdx + 1)) {
-        const first = rebuildCells(r, 6)[0];
+        const first = rebuildCells(r, cellGap)[0];
         if (first && bandRe.test(first.str.trim())) bandLabels.push({ y: r[0].y, x: first.x });
       }
       if (bandLabels.length < 6) {
@@ -2028,7 +2050,7 @@ async function compileClass(doc, entry, kindRow) {
       const headerPool = [];
       for (const r of rows.slice(titleIdx + 1)) {
         if (r[0].y >= bandLabels[0].y - 2) break;
-        headerPool.push(...rebuildCells(r, 6));
+        headerPool.push(...rebuildCells(r, cellGap));
       }
       const headerX = (name) => {
         const cell =
@@ -2078,12 +2100,12 @@ async function compileClass(doc, entry, kindRow) {
     // digit exactly like a data row — the cell-count gate is what tells them
     // apart: a data row carries (nearly) every declared column.
     const dataShaped = (r) =>
-      rebuildCells(r, 6).length >= Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7));
+      rebuildCells(r, cellGap).length >= Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7));
     // A spanning-group sub-header line is ALL small integers ("1 2 3 4 5 6",
     // twice for the Nobiran) — enough cells to pass the shape gate, so it is
     // recognized by content and stays a header line.
     const allTinyInts = (r) => {
-      const cells = rebuildCells(r, 6);
+      const cells = rebuildCells(r, cellGap);
       return cells.length >= 3 && cells.every((c) => /^\d{1,2}$/.test(c.str.trim()) && parseInt(c.str, 10) <= 14);
     };
     const walk = (rowSet, startIdx) => {
@@ -2097,7 +2119,7 @@ async function compileClass(doc, entry, kindRow) {
         const firstRaw = (r[0]?.str ?? "").trim();
         if (!dataRows.length && (!(looksLikeDataStart(firstRaw) && dataShaped(r)) || allTinyInts(r))) {
           if (++headerLines > 6) break;
-          headerCells.push(...rebuildCells(r, 6));
+          headerCells.push(...rebuildCells(r, cellGap));
           continue;
         }
         if (!looksLikeDataStart(firstRaw) || !dataShaped(r)) break;
@@ -2150,7 +2172,13 @@ async function compileClass(doc, entry, kindRow) {
         headerCells.find((c) => fold(c.str).startsWith(fold(w.header))) ??
         // A wrapped header prints only its first line on the header row
         // ("Damage" for "Damage Bonus") — match the authored name's prefix.
-        headerCells.find((c) => fold(c.str).length >= 4 && fold(w.header).startsWith(fold(c.str)));
+        // The length gate admits "Hit" (for "Hit Dice") but still refuses
+        // one- and two-glyph fragments that would prefix half the register.
+        headerCells.find((c) => fold(c.str).length >= 3 && fold(w.header).startsWith(fold(c.str))) ??
+        // Tight settings can still glue a header to its neighbour into one
+        // rebuilt cell, which no prefix rule reaches — as a last resort take
+        // a cell that CONTAINS the authored name whole.
+        headerCells.find((c) => fold(w.header).length >= 4 && fold(c.str).includes(fold(w.header)));
       if (!cell) {
         warn(`${entry.id}: table "${t.title}" missing header "${w.header}"`);
         unmatched = true;
@@ -2165,7 +2193,7 @@ async function compileClass(doc, entry, kindRow) {
     // rows whose rebuilt cell count EQUALS the authored column count vote the
     // spans per index; rows with extra fragments still extract through those
     // spans at runtime.
-    const idealRows = dataRows.map((r) => rebuildCells(r, 6)).filter((cells) => cells.length === wanted.length);
+    const idealRows = dataRows.map((r) => rebuildCells(r, cellGap)).filter((cells) => cells.length === wanted.length);
     let groups;
     if (idealRows.length >= 3) {
       groups = wanted.map((_, i) => ({
@@ -2215,20 +2243,30 @@ async function compileClass(doc, entry, kindRow) {
          bleed into the joined text ("Hit Dice: 1d8" + "8,000" reads as 1d88).
          A full-width table at the page bottom shares no lines and must not
          collapse the boxes. --- */
+  // A field's label varies by book ("Key Attribute:" is RR vocabulary; BTA
+  // prints "Prime Requisite:") — each row lists every accepted label and the
+  // first one found wins, so a miss warns only when NO label matches.
   const HEADER_FIELDS = [
-    ["hitDie", "Hit Dice:", "dice"],
-    ["maximumLevel", "Maximum Level:", "int"],
-    ["keyAttribute", "Key Attribute:", "raw"],
-    ["requirements", "Requirements:", "raw"],
+    ["hitDie", ["Hit Dice:"], "dice"],
+    ["maximumLevel", ["Maximum Level:"], "int"],
+    ["keyAttribute", ["Key Attribute:", "Prime Requisite:"], "raw"],
+    ["requirements", ["Requirements:"], "raw"],
   ];
   const headerWindow = pd.items.filter(
     (i) => colOf(i.x, cols) === anchor.col && i.y > anchor.y && i.y < anchor.y + 100,
   );
-  for (const [key, label, pattern] of HEADER_FIELDS) {
-    const it =
-      headerWindow.find((i) => i.str.trim().startsWith(label)) ?? findLabelRun(headerWindow, label);
+  for (const [key, labels, pattern] of HEADER_FIELDS) {
+    let it = null;
+    let label = labels[0];
+    for (const l of labels) {
+      it = headerWindow.find((i) => i.str.trim().startsWith(l)) ?? findLabelRun(headerWindow, l);
+      if (it) {
+        label = l;
+        break;
+      }
+    }
     if (!it) {
-      warn(`${entry.id}: header bullet "${label}" not found on p.${page}`);
+      warn(`${entry.id}: header bullet "${labels.join('" / "')}" not found on p.${page}`);
       continue;
     }
     // The value trails its label on the same line within the header block —
@@ -2248,14 +2286,28 @@ async function compileClass(doc, entry, kindRow) {
   if (spec.profList) {
     const pPage = spec.profList.page ?? page;
     const ppd = pPage === page ? pd : await pageItems(doc, pPage);
-    const pcols = detectColumns(ppd.items);
+    // The gentler defColumns, not the raw detector: a class page is dominated
+    // by its tables, which starve the histogram into reporting one column —
+    // and a one-column read boxes the list across the FULL page width,
+    // sweeping in the neighbouring column's prose. Then drop any detected
+    // start closer than 150px to its predecessor: the list's own
+    // comma-aligned entries can vote a phantom column mid-list, which would
+    // clip every line's tail — a real text column is never that narrow.
+    const pcols = defColumns(ppd).filter((x, i, a) => i === 0 || x - a[i - 1] >= 150);
     // The label can split across runs ("Venturer Proficiency" + "List:") and
     // sit mid-row beside the other column's prose — so after the direct and
     // whole-line matches, fall back to the longest word-prefix a single run
     // carries.
-    const labelIt =
-      ppd.items.find((i) => fold(i.str).startsWith(fold(spec.profList.label))) ??
-      findLabelRun(ppd.items, spec.profList.label);
+    // A generic label ("Proficiency List:") also occurs as a PHRASE inside
+    // the Proficiency Progression sentence above it ("…from their class
+    // proficiency list and one general…"), and a wrapped line can even start
+    // with it. The printed label is always the LOWEST occurrence — the list
+    // follows the progression paragraph in every spread — so both clauses
+    // prefer the bottom-most match.
+    const startRuns = ppd.items.filter((i) => fold(i.str).startsWith(fold(spec.profList.label)));
+    const labelIt = startRuns.length
+      ? startRuns.reduce((a, b) => (b.y > a.y ? b : a))
+      : findLabelRun(ppd.items, spec.profList.label, { last: true });
     if (!labelIt) {
       warn(`${entry.id}: proficiency-list label "${spec.profList.label}" not found on p.${pPage}`);
     } else {
@@ -2274,6 +2326,13 @@ async function compileClass(doc, entry, kindRow) {
         }
         prevY = i.y;
       }
+      // A section heading under the list also ends it — and because heading
+      // glyphs are tall, the cut must clear the heading's TOP, or the box
+      // catches its ascenders even when the baseline sits below y1.
+      const headBelow = ppd.items
+        .filter((i) => colOf(i.x, pcols) === c && i.h >= HEADING_MIN_H && i.y > labelIt.y + 2)
+        .sort((a, b) => a.y - b.y)[0];
+      if (headBelow) stopY = Math.min(stopY, headBelow.y - (headBelow.h ?? 12) - 2);
       fields.profList = {
         op: "value", page: pPage,
         box: { x0: cx0, x1: cx1, y0: labelIt.y - 3, y1: Math.min(stopY, ppd.height) },
@@ -2308,14 +2367,30 @@ async function compileClass(doc, entry, kindRow) {
   }
 
   /* --- per-page raw body text: the binder resolves award grant-levels and
-         the cleave phrase against the reader's own words --- */
+         the cleave phrase against the reader's own words. One op PER COLUMN,
+         not per page: a full-page box joins the two print columns line by
+         line, interleaving their sentences — which breaks any pattern longer
+         than a line fragment. The binder concatenates every body field in
+         emission order (page, then column), preserving reading order. The
+         >=150px filter drops phantom columns a table's cell alignment can
+         vote into the histogram — a real text column is never that narrow. --- */
   for (const p of entry.pages) {
     const bpd = p === page ? pd : await pageItems(doc, p);
-    fields[`body${p}`] = {
-      op: "value", page: p,
-      box: { x0: 45, x1: bpd.width - 45, y0: 50, y1: bpd.height },
-      pattern: "raw",
-    };
+    // Margins at 30, not 45: BTA's recto pages set their left column at x36,
+    // and a 45 margin silently dropped that whole column from the body — every
+    // award printed there parked level-unresolved, and a pattern could then
+    // match the SAME phrase in a neighbouring class's column instead.
+    const bcols = defColumns(bpd).filter((x, i, a) => i === 0 || x - a[i - 1] >= 150);
+    const edges = [...bcols.slice(1).map((x) => x - 6), bpd.width - 30];
+    let bx0 = 30;
+    edges.forEach((bx1, ci) => {
+      fields[`body${p}c${ci}`] = {
+        op: "value", page: p,
+        box: { x0: bx0, x1: bx1, y0: 50, y1: bpd.height },
+        pattern: "raw",
+      };
+      bx0 = bx1;
+    });
   }
 
   return {
@@ -2485,6 +2560,7 @@ const joinBody = (items) =>
  * per-entry assists (emitted later — descriptor first).
  */
 async function compileDefinition(doc, entry, kindRow) {
+  DEF_BODY_MAX_H = DEF_BODY_MAX_H_BY_BOOK[entry.book] ?? 10;
   const assists = entry.assists ?? {};
   const page = entry.pages[0];
   const pd = await pageItems(doc, page);
@@ -2496,7 +2572,10 @@ async function compileDefinition(doc, entry, kindRow) {
   // every other entry printed on the same page.
   const cols = assists.columns ?? defColumns(pd);
   const tabs = marginTabs(pd); // dropped from every paragraph (see marginTabs)
-  const mode = kindRow.fields.name.locate;
+  // An entry declaring a runin anchor takes the runin path regardless of the
+  // kind's default: the same kind can print as display headings in one book
+  // and body-size run-ins in another (BTA sets its proficiencies as run-ins).
+  const mode = entry.anchor?.runin ? "runin" : kindRow.fields.name.locate;
   const fields = {};
   let bodyText = "";
 
@@ -2513,8 +2592,10 @@ async function compileDefinition(doc, entry, kindRow) {
     for (let i = words.length - 1; i >= 1; i--) candidates.push(words.slice(0, i).join(" "));
     let anchor = null;
     let matched = want;
+    // Folded compare: heading runs may join with no inter-word spaces at all.
+    const foldAnchor = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
     for (const c of candidates.filter(Boolean)) {
-      anchor = heads.find((a) => a.text.toLowerCase().startsWith(c.toLowerCase()));
+      anchor = heads.find((a) => foldAnchor(a.text).startsWith(foldAnchor(c)));
       if (anchor) {
         matched = c;
         break;
@@ -2636,13 +2717,18 @@ async function compileDefinition(doc, entry, kindRow) {
       // The PDF splits some headings across runs ("Discern" + "Evil:"), so no
       // single run starts with the name. Match the JOINED line instead — PER
       // COLUMN, since lines at the same y span both columns of a spread.
+      // Runs may also join with NO spaces between words ("FieryTorch:"), so
+      // the compare squashes spaces on both sides — but keeps punctuation,
+      // because the trailing colon is what separates a run-in heading from a
+      // body sentence that happens to open with the same words.
+      const squash = (s) => String(s).toLowerCase().replace(/\s+/g, "");
       const bodyItems = pd.items.filter((it) => it.h < DEF_BODY_MAX_H);
       search: for (let c = 0; c < cols.length; c++) {
         const colItems = bodyItems.filter((it) => colOf(it.x, cols) === c);
         for (const ln of toLines(colItems)) {
           const sorted = [...ln.items].sort((a, b) => a.x - b.x);
           const joined = sorted.map((i) => i.str).join("").replace(/\s+/g, " ").trim();
-          if (joined.toLowerCase().startsWith(want.toLowerCase())) {
+          if (squash(joined).startsWith(squash(want))) {
             anchor = sorted[0];
             break search;
           }

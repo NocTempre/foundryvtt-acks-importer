@@ -2710,7 +2710,8 @@ export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
 const CLASS_ITEM_TYPE = "acks-extras.class";
 
 /* The book prints WIL where the system's score key is wis. */
-const ATTR_KEY = { STR: "str", INT: "int", WIL: "wis", DEX: "dex", CON: "con", CHA: "cha" };
+// WIL is the ACKS II print vocabulary; BTA (and classic sources) print WIS.
+const ATTR_KEY = { STR: "str", INT: "int", WIL: "wis", WIS: "wis", DEX: "dex", CON: "con", CHA: "cha" };
 
 /** "Key Attribute:.............STR" → "STR" (label and dot leaders off). */
 const stripBullet = (s) => String(s ?? "").replace(/^[^:]*:/, "").replace(/^[.\s]+/, "").trim();
@@ -2884,6 +2885,37 @@ export function classGainsFor(gainsNode, className) {
 }
 
 /**
+ * The same `{l4: "C", l5: "G", …}` cell shape parsed from a spread's own
+ * "Proficiency Progression" prose. The RR grid names only RR's classes;
+ * another book's class states its schedule in sentences — "select one class
+ * proficiency … at 4th and 8th level" — so the levels come out of the
+ * reader's text. Extraction joins can drop or add spaces around digits,
+ * hence the loose \s* seams.
+ */
+export function proseGainSchedule(body) {
+  const text = String(body ?? "");
+  const cells = {};
+  const add = (lvl, tag) => {
+    if (!Number.isInteger(lvl) || lvl < 1) return;
+    const key = `l${lvl}`;
+    if (!String(cells[key] ?? "").includes(tag)) cells[key] = cells[key] ? `${cells[key]}+${tag}` : tag;
+  };
+  // Anchored to the SELECT sentence — plain "at 1st level" also opens damage-
+  // ladder sentences ("+1 at 1st level, and an additional +1 at 3rd…").
+  const start = /at\s*1\s*st\s*level\s*,?[^.]{0,40}?select\s*one[^.]{0,240}/i.exec(text)?.[0] ?? "";
+  if (/one\s*class\s*proficienc/i.test(start)) add(1, "C");
+  if (/one\s*general\s*proficienc/i.test(start)) add(1, "G");
+  // The level list runs to four entries on the longer classes ("at 3rd, 6th,
+  // 9th, and 12th level") — capture the whole span, then read every number.
+  const later = /additional\s*(class|general)\s*proficienc\w*\s*at\s*((?:\d+\s*(?:st|nd|rd|th)\s*(?:,|and|\s)*)+)level/gi;
+  for (const m of text.matchAll(later)) {
+    const tag = m[1].toLowerCase() === "class" ? "C" : "G";
+    for (const g of m[2].matchAll(/\d+/g)) add(parseInt(g[0], 10), tag);
+  }
+  return Object.keys(cells).length ? cells : null;
+}
+
+/**
  * Bind one executed class entry to `acks-extras.class` item data. Everything
  * numeric or listed comes from `node` (the reader's own book); with no book
  * the item still imports as a stub the constructor sheet explains.
@@ -2893,14 +2925,16 @@ export function classGainsFor(gainsNode, className) {
 export function bindClass(entry, node, id, { gains = null } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
+  // Body fields arrive one per page (`body61`) or one per page-column
+  // (`body61c0`, `body61c1`) — emission order is reading order either way.
   const body = Object.entries(f)
-    .filter(([k, v]) => /^body\d+$/.test(k) && typeof v === "string")
+    .filter(([k, v]) => /^body\d+(?:c\d+)?$/.test(k) && typeof v === "string")
     .map(([, v]) => v)
     .join(" ");
 
   /* Fixed column vocabulary; anything else a progression table carries is a
    * named LADDER (AC bonus, backstab dice, the assassin/bard skill columns). */
-  const FIXED_COLS = new Set(["xp", "title", "hd", "band", "paralysis", "death", "blast", "implements", "spells", "attackThrow", "s1", "s2", "s3", "s4", "s5", "s6"]);
+  const FIXED_COLS = new Set(["xp", "title", "hd", "band", "attackBand", "paralysis", "death", "blast", "implements", "spells", "attackThrow", "s1", "s2", "s3", "s4", "s5", "s6"]);
 
   const levels = [];
   const ladderMap = new Map(); // colKey → rungs
@@ -2959,6 +2993,9 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
 
   // One combined attack-and-saves table, or the split pair the priestess and
   // witch print (crusader saves beside mage attacks) — read whichever exists.
+  // A table may also print the attack sub-table with its OWN level column
+  // (`attackBand`, the BTA gnostic classes): the attack rows band by it, and
+  // where it is dashed out the save band still stands on its own.
   const saves = [];
   const attack = [];
   for (const tableKey of ["attackSaves", "savesTable", "attackTable"]) {
@@ -2977,7 +3014,10 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
           spells: row.cells.spells ?? null,
         });
       }
-      if (row.cells.attackThrow != null) attack.push({ minLevel, maxLevel, throw: row.cells.attackThrow });
+      const aband = "attackBand" in row.cells ? row.cells.attackBand : band;
+      if (row.cells.attackThrow != null && aband?.min != null) {
+        attack.push({ minLevel: aband.min, maxLevel: aband.max ?? aband.min, throw: row.cells.attackThrow });
+      }
     }
   }
 
@@ -3001,8 +3041,10 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
     };
   });
 
+  // RR joins key attributes with "and"; BTA's plural form lists them with
+  // commas ("Prime Requisites: INT, WIS") — split on either.
   const keyAttributes = stripBullet(f.keyAttribute)
-    .split(/\s+and\s+/i)
+    .split(/\s*,\s*|\s+and\s+/i)
     .map((a) => ATTR_KEY[a.trim().toUpperCase()])
     .filter(Boolean);
   const reqText = stripBullet(f.requirements);
@@ -3046,8 +3088,11 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
     };
   });
 
-  if (gains) {
-    for (const [key, cell] of Object.entries(gains)) {
+  // Grid row when the RR grid knows the class; otherwise the schedule parsed
+  // from the spread's own Proficiency Progression prose.
+  const gainCells = gains ?? proseGainSchedule(body);
+  if (gainCells) {
+    for (const [key, cell] of Object.entries(gainCells)) {
       const atLevel = parseInt(key.slice(1), 10);
       if (!Number.isInteger(atLevel)) continue;
       const text = String(cell);

@@ -2,6 +2,300 @@
   "schema": "acks-cookbook/2",
   "content": "proficiencies",
   "entries": {
+    "def.prof.inventing": {
+      "id": "def.prof.inventing",
+      "kind": "kind.proficiency",
+      "name": "Inventing",
+      "book": "bta",
+      "cite": "BTA p.93",
+      "pages": [
+        93
+      ],
+      "meta": {
+        "category": "proficiency"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 93,
+          "box": {
+            "x0": 34,
+            "x1": 77.38999999999999,
+            "y0": 151,
+            "y1": 160
+          },
+          "text": "Inventing"
+        },
+        "description": {
+          "op": "text",
+          "page": 93,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 153,
+                "y1": 207
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "stripPrefix": {
+                  "0": 9
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.prof.juryRigging": {
+      "id": "def.prof.juryRigging",
+      "kind": "kind.proficiency",
+      "name": "Jury-Rigging",
+      "book": "bta",
+      "cite": "BTA p.93",
+      "pages": [
+        93
+      ],
+      "meta": {
+        "category": "proficiency"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 93,
+          "box": {
+            "x0": 34,
+            "x1": 90.33999999999997,
+            "y0": 223,
+            "y1": 232
+          },
+          "text": "Jury-Rigging"
+        },
+        "description": {
+          "op": "text",
+          "page": 93,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 225,
+                "y1": 315
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9,
+                  10,
+                  11,
+                  14,
+                  15,
+                  16
+                ],
+                "stripPrefix": {
+                  "0": 12
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.prof.mechanicalEngineering": {
+      "id": "def.prof.mechanicalEngineering",
+      "kind": "kind.proficiency",
+      "name": "Mechanical Engineering",
+      "book": "bta",
+      "cite": "BTA p.93",
+      "pages": [
+        93
+      ],
+      "meta": {
+        "category": "proficiency"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 93,
+          "box": {
+            "x0": 304,
+            "x1": 416.6900000000004,
+            "y0": 139,
+            "y1": 148
+          },
+          "text": "Mechanical Engineering"
+        },
+        "description": {
+          "op": "text",
+          "page": 93,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 141,
+                "y1": 219
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  9,
+                  10,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18
+                ],
+                "drop": [
+                  0,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.prof.scavenging": {
+      "id": "def.prof.scavenging",
+      "kind": "kind.proficiency",
+      "name": "Scavenging",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "proficiency"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 52,
+            "x1": 102.47999999999996,
+            "y0": 151,
+            "y1": 160
+          },
+          "text": "Scavenging"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 153,
+                "y1": 255
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  11
+                ],
+                "stripPrefix": {
+                  "0": 10
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.prof.tinkering": {
+      "id": "def.prof.tinkering",
+      "kind": "kind.proficiency",
+      "name": "Tinkering",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "proficiency"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 52,
+            "x1": 97.75999999999996,
+            "y0": 451,
+            "y1": 460
+          },
+          "text": "Tinkering"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 453,
+                "y1": 507
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ],
+                "stripPrefix": {
+                  "0": 9
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.prof.weaponProficiency": {
       "id": "def.prof.weaponProficiency",
       "kind": "kind.combatProficiency",
@@ -5758,7 +6052,7 @@
             "y0": 73,
             "y1": 109
           },
-          "text": "Mastery of Conjuration"
+          "text": "Mastery of Conjuration &"
         },
         "description": {
           "op": "text",
@@ -5821,7 +6115,7 @@
             "y0": 263,
             "y1": 299
           },
-          "text": "Mastery of Enchantments"
+          "text": "Mastery of Enchantments &"
         },
         "description": {
           "op": "text",
