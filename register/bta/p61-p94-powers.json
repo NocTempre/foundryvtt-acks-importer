@@ -662,7 +662,8 @@
    93
   ],
   "meta": {
-   "category": "proficiency"
+   "category": "proficiency",
+   "repeatable": true
   }
  },
  {
@@ -677,7 +678,8 @@
    94
   ],
   "meta": {
-   "category": "proficiency"
+   "category": "proficiency",
+   "repeatable": true
   }
  },
  {

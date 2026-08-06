@@ -82,6 +82,7 @@ of them from **Settings → Ruledata Browser**.
 | Monstrous Manual | Monster actors with the full structured stat block, natural weapons, spoils and treasure links |
 | Revised Rulebook | Character classes (progressions, saves, award ladders, starting templates — `importClasses()`), proficiencies and class powers, equipment, weapon/armour/gear price tables |
 | Judges Journal | Proficiencies, drawbacks, and the rules tables the henchmen market runs on |
+| By This Axe | Ten more dwarven classes — with gnostic casting, caste templates, and the proficiencies only it defines |
 | Adventure line (AX2, AX3) | Locations as journals, roll tables, NPC and legacy-monster actors |
 
 ---
@@ -119,6 +120,7 @@ Autarch LLC.
 
 **Requires:** legitimate copies of the ACKS II publications you import from —
 the **ACKS II Revised Rulebook**, **ACKS II Judges Journal**, **ACKS II
-Monstrous Manual**, and the adventure volumes for their content. This app streams
-prose only from PDFs you already own and publishes no ACKS II content itself. It
-is not a substitute for the books, and is free to use.
+Monstrous Manual**, **By This Axe**, and the adventure volumes for their
+content. This app streams prose only from PDFs you already own and publishes no
+ACKS II content itself. It is not a substitute for the books, and is free to
+use.

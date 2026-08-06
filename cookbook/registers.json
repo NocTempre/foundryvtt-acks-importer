@@ -2924,55 +2924,65 @@
           "name": "Attention to Detail",
           "ref": "def.power.attentionToDetail",
           "rr": 82,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59,
+          "note": "BTA reprints the spread (its p.59) with identical values. Level titles there carry a 'Dwarven' prefix; one template name is spelled differently. RR is primary."
         },
         {
           "name": "Crafting",
           "ref": "def.power.crafting",
           "rr": 82,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Rebuke Undead",
           "ref": "def.power.rebukeUndead",
           "rr": 82,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Studious Divine Magic",
           "ref": "def.power.studiousDivineMagic",
           "rr": 82,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Theology",
           "ref": "def.prof.theology",
           "rr": 83,
-          "disposition": "profEquivalent"
+          "disposition": "profEquivalent",
+          "bta": 59
         },
         {
           "name": "Dwarf Tongues",
           "ref": "def.power.giftOfTongues",
           "rr": 83,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Hardy",
           "ref": "def.power.hardyPeople",
           "rr": 83,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Sensitivity to Rock and Stone",
           "ref": "def.power.sensitivityToRockAndStone",
           "rr": 83,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         },
         {
           "name": "Vault",
           "ref": "def.power.vault",
           "rr": 83,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 59
         }
       ],
       "dwarvenVaultguard": [
@@ -2980,37 +2990,44 @@
           "name": "Manual of Arms",
           "ref": "def.prof.manualOfArms",
           "rr": 86,
-          "disposition": "profEquivalent"
+          "disposition": "profEquivalent",
+          "bta": 57,
+          "note": "BTA reprints the spread (its p.57). Two mid-table XP thresholds (5th, 6th) differ between the books - RR is primary. Same template set; one template name is spelled differently."
         },
         {
           "name": "Battlefield Prowess",
           "ref": "def.power.battlefieldProwess",
           "rr": 86,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 57
         },
         {
           "name": "Vault",
           "ref": "def.power.vault",
           "rr": 86,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 57
         },
         {
           "name": "Dwarf Tongues",
           "ref": "def.power.giftOfTongues",
           "rr": 86,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 57
         },
         {
           "name": "Hardy",
           "ref": "def.power.hardyPeople",
           "rr": 86,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 57
         },
         {
           "name": "Sensitivity to Rock and Stone",
           "ref": "def.power.sensitivityToRockAndStone",
           "rr": 86,
-          "disposition": "rrPrimary"
+          "disposition": "rrPrimary",
+          "bta": 57
         }
       ],
       "elvenNightblade": [
@@ -4869,6 +4886,810 @@
           "ref": "def.power.underfoot",
           "jj": 330,
           "disposition": "jjOnly"
+        }
+      ],
+      "dwarvenDelver": [
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "rr": 82,
+          "bta": 61,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Backstabbing",
+          "ref": "def.skill.backstabbing",
+          "rr": 32,
+          "bta": 61,
+          "disposition": "skillRef"
+        },
+        {
+          "name": "Endurance",
+          "ref": "def.prof.endurance",
+          "rr": 112,
+          "bta": 61,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Expert Caving",
+          "ref": "def.prof.caving",
+          "rr": 110,
+          "bta": 61,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Shadowy Senses",
+          "ref": "def.skill.shadowySenses",
+          "rr": 34,
+          "bta": 61,
+          "disposition": "skillRef"
+        },
+        {
+          "name": "Thief Skills",
+          "ref": "def.skill.hiding",
+          "rr": 33,
+          "bta": 61,
+          "disposition": "skillRef"
+        },
+        {
+          "name": "Underdark Lore",
+          "ref": "def.prof.naturalism",
+          "rr": 118,
+          "bta": 61,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.delverRenown",
+          "bta": 61,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 61,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 61,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 61,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenEarthforger": [
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "rr": 82,
+          "bta": 63,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Dwarven Throat-Singing",
+          "ref": "def.power.dwarvenThroatSinging",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Gnostic Magic",
+          "ref": "def.power.gnosticMagic",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Deep Knowledge",
+          "ref": "def.power.deepKnowledge",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Sigil Invocation",
+          "ref": "def.power.earthforgerSigil",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Greater Gnosis",
+          "ref": "def.power.greaterGnosis",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Master Gnosis",
+          "ref": "def.power.masterGnosis",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Minor Magical Research",
+          "ref": "def.power.minorMagicalResearch",
+          "rr": 36,
+          "bta": 63,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Major Magical Research",
+          "ref": "def.power.majorMagicalResearch",
+          "rr": 36,
+          "bta": 63,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.earthforgerRenown",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 63,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 63,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 63,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenExcavator": [
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "rr": 82,
+          "bta": 67,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Prospecting",
+          "ref": "def.prof.prospecting",
+          "rr": 119,
+          "bta": 67,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Pyroclastics",
+          "ref": "def.power.pyroclastics",
+          "jj": 325,
+          "bta": 67,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Dowsing",
+          "ref": "def.skill.dowsing",
+          "bta": 67,
+          "disposition": "skillRef"
+        },
+        {
+          "name": "Mine Management",
+          "ref": "def.power.mineManagement",
+          "bta": 67,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Engineering",
+          "ref": "def.prof.engineering",
+          "rr": 112,
+          "bta": 67,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Industrialism",
+          "ref": "def.power.industrialism",
+          "bta": 67,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.excavatorRenown",
+          "bta": 67,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 67,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 67,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 67,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenFurnacewife": [
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "rr": 82,
+          "bta": 70,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Fiery Resistance",
+          "ref": "def.power.fieryResistance",
+          "jj": 318,
+          "bta": 70,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Crafting",
+          "ref": "def.power.crafting",
+          "rr": 82,
+          "bta": 70,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Gnostic Magic",
+          "ref": "def.power.gnosticMagic",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fiery Torch",
+          "ref": "def.power.fieryTorch",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Trinkets of Power",
+          "ref": "def.power.trinketsOfPower",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fiery Aura",
+          "ref": "def.power.fieryAura",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fiery Blessing",
+          "ref": "def.power.fieryBlessing",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Major Magical Research",
+          "ref": "def.power.majorMagicalResearch",
+          "rr": 36,
+          "bta": 70,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.furnacewifeRenown",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 70,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 70,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 70,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenFury": [
+        {
+          "name": "Flesh-Runes",
+          "ref": "def.power.fleshRunes",
+          "jj": 318,
+          "bta": 73,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Intimidation",
+          "ref": "def.prof.intimidation",
+          "rr": 114,
+          "bta": 73,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Savage Resilience",
+          "ref": "def.power.savageResilience",
+          "rr": 51,
+          "bta": 73,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Superior Flesh-Runes",
+          "ref": "def.power.superiorFleshRunes",
+          "bta": 73,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 73,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 73,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 73,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenMachinist": [
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "rr": 82,
+          "bta": 76,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Ballistics Expertise",
+          "ref": "def.power.ballisticsExpertise",
+          "jj": 312,
+          "bta": 76,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Design, Build, and Repair Automatons",
+          "ref": "def.power.designBuildAndRepairAutomatons",
+          "jj": 315,
+          "bta": 76,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Mechanic Knowledge",
+          "ref": "def.power.mechanicKnowledge",
+          "bta": 76,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Personal Automaton",
+          "ref": "def.power.personalAutomaton",
+          "bta": 76,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Siege Engineering",
+          "ref": "def.prof.siegeEngineering",
+          "rr": 120,
+          "bta": 76,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.machinistRenown",
+          "bta": 76,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 76,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 76,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 76,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenPugilist": [
+        {
+          "name": "Intimidation",
+          "ref": "def.prof.intimidation",
+          "rr": 114,
+          "bta": 79,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Pugilism",
+          "ref": "def.power.pugilism",
+          "jj": 325,
+          "bta": 79,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Legwork",
+          "ref": "def.power.legwork",
+          "jj": 322,
+          "bta": 79,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Old Man Bones",
+          "ref": "def.power.oldManBones",
+          "bta": 79,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Eye of the Tiger",
+          "ref": "def.power.eyeOfTheTiger",
+          "bta": 79,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.pugilistRenown",
+          "bta": 79,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Second Wind",
+          "ref": "def.power.secondWind",
+          "bta": 79,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Unyielding Spirit",
+          "ref": "def.power.unyieldingSpirit",
+          "bta": 79,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 79,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 79,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 79,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenRhetor": [
+        {
+          "name": "Endurance",
+          "ref": "def.prof.endurance",
+          "rr": 112,
+          "bta": 82,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Jurisprudence",
+          "ref": "def.power.jurisprudence",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Loremastery",
+          "ref": "def.power.loremastery",
+          "rr": 55,
+          "bta": 82,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Performance",
+          "ref": "def.prof.performance",
+          "rr": 118,
+          "bta": 82,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Inspire Courage",
+          "ref": "def.power.inspireCourage",
+          "rr": 55,
+          "bta": 82,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Rhetorical Training",
+          "ref": "def.power.rhetoricalTraining",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Tireless",
+          "ref": "def.power.tireless",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.rhetorRenown",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Rule of Law",
+          "ref": "def.power.ruleOfLaw",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 82,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 82,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 82,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenSporecaster": [
+        {
+          "name": "Necrosporing",
+          "ref": "def.power.necrosporing",
+          "jj": 324,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Dwarven Brewing",
+          "ref": "def.prof.dwarvenBrewing",
+          "rr": 112,
+          "bta": 85,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Alchemy",
+          "ref": "def.prof.alchemy",
+          "rr": 107,
+          "bta": 85,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Fungal Friendship",
+          "ref": "def.power.fungalFriendship",
+          "jj": 319,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Fungal Immunity",
+          "ref": "def.power.fungalImmunity",
+          "jj": 319,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Blooming Spores",
+          "ref": "def.power.bloomingSpores",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fungal Humors",
+          "ref": "def.power.fungalHumors",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Blossoming Spores",
+          "ref": "def.power.blossomingSpores",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Mushroom Management",
+          "ref": "def.power.mushroomManagement",
+          "jj": 324,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Billowing Spores",
+          "ref": "def.power.billowingSpores",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Spore Servitude",
+          "ref": "def.power.sporeServitude",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Mushroom Mutation",
+          "ref": "def.power.mushroomMutation",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fungal Spawn (10)",
+          "ref": "def.power.fungalSpawn",
+          "jj": 319,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.sporecasterRenown",
+          "bta": 85,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 85,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 85,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 85,
+          "disposition": "rrPrimary"
+        }
+      ],
+      "dwarvenTombsealer": [
+        {
+          "name": "Undead Slaying",
+          "ref": "def.power.undeadslaying",
+          "jj": 330,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Manual of Arms",
+          "ref": "def.prof.manualOfArms",
+          "rr": 116,
+          "bta": 90,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Detect Evil",
+          "ref": "def.power.detectEvil",
+          "jj": 316,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Lesser Rite of Sealing",
+          "ref": "def.power.lesserRiteOfSealing",
+          "bta": 90,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Aura of Protection",
+          "ref": "def.power.auraOfProtection",
+          "jj": 311,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Battlefield Prowess",
+          "ref": "def.power.battlefieldProwess",
+          "rr": 26,
+          "bta": 90,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Stalwart Soul",
+          "ref": "def.power.stalwartSoul",
+          "jj": 327,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Rite of Discovery",
+          "ref": "def.power.riteOfDiscovery",
+          "bta": 90,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Greater Rite of Sealing",
+          "ref": "def.power.greaterRiteOfSealing",
+          "jj": 319,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Renown",
+          "ref": "def.power.tombsealerRenown",
+          "bta": 90,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Dwarf Tongues",
+          "ref": "def.power.giftOfTongues",
+          "jj": 319,
+          "bta": 90,
+          "disposition": "jjPrimary"
+        },
+        {
+          "name": "Hardy",
+          "ref": "def.power.hardyPeople",
+          "rr": 83,
+          "bta": 90,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Sensitivity to Rock and Stone",
+          "ref": "def.power.sensitivityToRockAndStone",
+          "rr": 83,
+          "bta": 90,
+          "disposition": "rrPrimary"
         }
       ]
     },

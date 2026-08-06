@@ -1,7 +1,7 @@
 {
   "id": "kind.class",
   "role": "definition",
-  "note": "RR class spreads (full-PDF p.25-101). Display anchor = class name; header bullets become value ops clipped to column 0. 'class' block is chef wiring: tables located by printed TITLE (compiler resolves geometry), awards with from.pattern grant levels (starting:true = 1st), chassis keys, cleave phrase pattern, prof-list label. Binds to acks-extras.class; only geometry+patterns ship.",
+  "note": "Class spreads (RR full-PDF p.25-101; BTA p.57-92, templates in its ch.4). Display anchor = class name; header bullets become value ops. 'class' block is chef wiring: tables located by printed TITLE, awards with from.pattern grant levels (starting:true = 1st), chassis keys, cleave pattern, prof-list label. Binds to acks-extras.class; only geometry+patterns ship.",
   "fields": {
     "name": { "locate": "display" },
     "description": { "locate": "displayBlock", "type": "blocks" }

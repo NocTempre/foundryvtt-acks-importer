@@ -125,7 +125,8 @@
         93
       ],
       "meta": {
-        "category": "proficiency"
+        "category": "proficiency",
+        "repeatable": true
       },
       "fields": {
         "name": {
@@ -189,7 +190,8 @@
         94
       ],
       "meta": {
-        "category": "proficiency"
+        "category": "proficiency",
+        "repeatable": true
       },
       "fields": {
         "name": {
