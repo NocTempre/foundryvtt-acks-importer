@@ -11,9 +11,9 @@ raw PNG path, so those links survive the next refresh.
 |---|---|---|---|
 | Connect a book | The book loader, with the books this seat can open | [guide](guides/connect-a-book.md) | [v2.0.0](releases/v2.0.0/book-loader.png) |
 | Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v2.0.0](releases/v2.0.0/getting-started.png) |
-| Import classes | A class's award ladder as imported: fixed grants and the dark-path pick among listed options | [guide](guides/import-from-the-cookbook.md) | [v2.2.0](releases/v2.2.0/classes-award-choice.png) |
+| Import classes | A class doc's Templates pane: the spellbook's contents split onto the spell list | [guide](guides/import-from-the-cookbook.md) | [v2.4.0](releases/v2.4.0/classes-template-spells.png) |
 | Browse and audit | The entry picker — the abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v2.0.0](releases/v2.0.0/cookbook-import.png) |
-| Import equipment | A template's gear applied: skins over imported base items, contents split from their container | [guide](guides/import-from-the-cookbook.md) | [v2.3.0](releases/v2.3.0/template-inventory.png) |
+| Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v2.4.0](releases/v2.4.0/equipment-prose-price.png) |
 
 Snapshots are captured during the live-verification session of a release
 (`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged afterwards. The

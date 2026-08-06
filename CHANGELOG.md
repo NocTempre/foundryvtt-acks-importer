@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.4.0
+
+### Added
+- **A spellbook's contents become the template's spells.** Where a starting
+  package prints "spellbook with sleep and magic missile", the book imports
+  under its own name with a note of what it holds, and the named spells land
+  on the class template's spell list — so chargen can grant them as spell
+  items. Already-imported classes pick this up on the next Update Classes
+  run.
+- **An item priced only in prose still gets its numbers.** Equipment whose
+  entry states its cost, weight in stone, or damage die in the paragraph
+  rather than a price grid — most of the dwarven chapter — now reads those
+  values out of its own text at import: "Cost: 2,000gp" fills the price,
+  "weighs two stones" the weight, "dealing 1d8" a weapon's damage.
+
 ## 2.3.0
 
 ### Added
