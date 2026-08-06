@@ -25,17 +25,6 @@ The pattern is proven — the defence and effect scans already do exactly this, 
 
 ---
 
-## The earthforger's sigils and the sporecaster's mutations as choices
-
-Both classes offer a pick the way the warlock's Dark Path does: the sigil (and
-the mutation menu at 9th) is a player choice among printed options. Today one
-definition anchors the family and the award notes say the choice is the
-player's; the options themselves are prose. Modeling each option as its own
-selectable entry — and surfacing the pick through the extras chooser — follows
-the same route the warlock and witch tradition paths are waiting on.
-
----
-
 ## Gnostic invocations as documents
 
 The Earthforger and Furnacewife casting entries carry the gnosis kind and the
