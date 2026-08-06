@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacClassAll",
+  "_key": "!macros!ackscMacClassAll",
+  "name": "Import Character Classes (GM)",
+  "type": "script",
+  "img": "icons/svg/pawn.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importClasses) return ui.notifications.warn(\"acks-importer | class import needs a newer module build.\");\napi.importClasses();",
+  "folder": "ackscFldImport00",
+  "sort": 215,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}

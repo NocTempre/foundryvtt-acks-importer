@@ -128,6 +128,16 @@ api.cookbookRemoveImports();`,
       FOLDERS.import,
     ),
     macro(
+      "ackscMacClassAll",
+      "Import Character Classes (GM)",
+      "icons/svg/pawn.svg",
+      GUARD +
+        `if (!api.importClasses) return ui.notifications.warn("acks-importer | class import needs a newer module build.");
+api.importClasses();`,
+      215,
+      FOLDERS.import,
+    ),
+    macro(
       "ackscMacAdvJourn",
       "Import Location Journals (GM)",
       "icons/svg/book.svg",
@@ -211,6 +221,16 @@ ui.notifications.info(\`acks-importer | equipment: \${r.created} created, \${r.t
       "icons/svg/pawprint.svg",
       GUARD + `api.cookbookFillCompanions();`,
       340,
+      FOLDERS.abilities,
+    ),
+    macro(
+      "ackscMacClassUpd",
+      "Update Classes in World (GM)",
+      "icons/svg/regen.svg",
+      GUARD +
+        `if (!api.cookbookUpdateClasses) return ui.notifications.warn("acks-importer | class update needs a newer module build.");
+api.cookbookUpdateClasses();`,
+      335,
       FOLDERS.abilities,
     ),
 
