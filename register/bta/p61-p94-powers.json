@@ -49,12 +49,75 @@
   "id": "def.power.earthforgerSigil",
   "kind": "kind.power",
   "book": "bta",
-  "name": "Sigil Invocation",
+  "name": "Sigils of Creation",
   "anchor": {
-   "runin": "Sigil Invocation:"
+   "runin": "Master Sigil Feature ("
+  },
+  "pages": [
+   64
+  ],
+  "assists": {
+   "columns": [36, 306]
+  },
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sigilOfTheMountainsBones",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Sigil of the Mountain's Bones",
+  "anchor": {
+   "display": "Sigil of the Mountain's Bones"
   },
   "pages": [
    65
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sigilOfTheEternalForge",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Sigil of the Eternal Forge",
+  "anchor": {
+   "display": "Sigil of the Eternal Forge"
+  },
+  "pages": [
+   65
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sigilOfTheIronCrucible",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Sigil of the Iron Crucible",
+  "anchor": {
+   "display": "Sigil of the Iron Crucible"
+  },
+  "pages": [
+   65
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.sigilOfTheOpenGate",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Sigil of the Open Gate",
+  "anchor": {
+   "display": "Sigil of the Open Gate"
+  },
+  "pages": [
+   66
   ],
   "meta": {
    "category": "classPower"

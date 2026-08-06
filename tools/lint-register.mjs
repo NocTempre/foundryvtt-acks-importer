@@ -230,6 +230,10 @@ if (fs.existsSync(COOKBOOK)) {
   for (const [id, e] of Object.entries(classes?.entries ?? {})) {
     for (const a of e.awards ?? []) {
       if (a.ref && a.ref.startsWith("def.") && !defIds.has(a.ref)) err(`${id}: award ref "${a.ref}" resolves to no cookbook entry`);
+      // A choice award names its options as refs — each must resolve too.
+      for (const ref of a.choice?.refs ?? []) {
+        if (ref.startsWith("def.") && !defIds.has(ref)) err(`${id}: choice option ref "${ref}" resolves to no cookbook entry`);
+      }
     }
   }
   const matrix = readJson(path.join(REGISTER, "_refs", "power-sources.json"), "_refs/power-sources.json");

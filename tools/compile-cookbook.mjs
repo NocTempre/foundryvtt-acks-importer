@@ -2572,15 +2572,31 @@ async function compileDefinition(doc, entry, kindRow) {
   // every other entry printed on the same page.
   const cols = assists.columns ?? defColumns(pd);
   const tabs = marginTabs(pd); // dropped from every paragraph (see marginTabs)
-  // An entry declaring a runin anchor takes the runin path regardless of the
-  // kind's default: the same kind can print as display headings in one book
-  // and body-size run-ins in another (BTA sets its proficiencies as run-ins).
-  const mode = entry.anchor?.runin ? "runin" : kindRow.fields.name.locate;
+  // An entry's declared anchor style beats the kind's default: the same kind
+  // can print as display headings in one book and body-size run-ins in
+  // another (BTA sets its proficiencies as run-ins, and its sigils as
+  // display heads on a kind whose default is runin).
+  const mode = entry.anchor?.runin ? "runin" : entry.anchor?.display ? "display" : kindRow.fields.name.locate;
   const fields = {};
   let bodyText = "";
 
   if (mode === "display") {
-    const heads = listHeadings(pd).filter((a) => a.mode === "display");
+    // Heads regrouped over >=150px columns, not the raw detection: a phantom
+    // mid-column (voted by table cells or tight comma alignment) splits one
+    // heading's glyph runs into two half-headings no candidate can match —
+    // and the fallback prefix then anchors a DIFFERENT heading that shares
+    // the split's opening words.
+    const hcols = defColumns(pd).filter((x, i, a) => i === 0 || x - a[i - 1] >= 150);
+    const hlines = {};
+    for (const it of pd.items.filter((i) => (i.h ?? 0) >= HEADING_MIN_H)) {
+      const c = colOf(it.x, hcols);
+      (hlines[`${c}:${Math.round(it.y / 3)}`] ??= []).push(it);
+    }
+    const heads = Object.values(hlines)
+      .map((arr) => arr.sort((a, b) => a.x - b.x))
+      .map((arr) => ({ text: arr.map((a) => a.str).join("").replace(/\s+/g, " ").trim(), y: arr[0].y, col: colOf(arr[0].x, hcols) }))
+      .filter((h) => h.text.length > 2)
+      .sort((a, b) => a.col - b.col || a.y - b.y);
     const want = assists.anchor ?? entry.anchor?.display ?? entry.name;
     const noParen = want.replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").trim();
     // A long name WRAPS onto a second display line ("Fighting Style" /
@@ -2602,8 +2618,11 @@ async function compileDefinition(doc, entry, kindRow) {
       }
     }
     if (!anchor) throw new Error(`display anchor "${want}" not found on p.${page}`);
-    const colX = cols[anchor.col];
-    const nextX = cols[anchor.col + 1];
+    // Everything below indexes the SAME filtered columns the heads were
+    // grouped over — mixing them with the raw detection would clip boxes at
+    // the phantom gutter the regrouping just erased.
+    const colX = hcols[anchor.col];
+    const nextX = hcols[anchor.col + 1];
     const box = { x0: colX - 5, x1: nextX ? nextX - 6 : pd.width };
     // Absorb a wrapped 2-line heading into the anchor block.
     let endY = anchor.y;
@@ -2622,7 +2641,7 @@ async function compileDefinition(doc, entry, kindRow) {
       .filter(
         (it) =>
           it.h < DEF_BODY_MAX_H &&
-          colOf(it.x, cols) === anchor.col &&
+          colOf(it.x, hcols) === anchor.col &&
           it.y > anchor.y + 2 &&
           /\bProgression\s*$/i.test(it.str.trim()),
       )
@@ -2636,7 +2655,7 @@ async function compileDefinition(doc, entry, kindRow) {
     // the page edge, where the vertical chapter-tab glyphs live ("Pro/FI/c/IE"),
     // and those would otherwise join the heading text and fail the check.
     const headItems = pd.items.filter(
-      (it) => it.h >= HEADING_MIN_H && colOf(it.x, cols) === anchor.col && it.y >= anchor.y - 2 && it.y <= endY + 2,
+      (it) => it.h >= HEADING_MIN_H && colOf(it.x, hcols) === anchor.col && it.y >= anchor.y - 2 && it.y <= endY + 2,
     );
     const headX1 = headItems.length ? Math.max(...headItems.map((it) => it.x + (it.w ?? 0))) + 2 : box.x1;
     fields.name = {
@@ -2652,13 +2671,13 @@ async function compileDefinition(doc, entry, kindRow) {
     // A table below the entry ends it just as a heading would, so it must also
     // suppress the column flow — otherwise the block runs on into the next
     // column and absorbs whichever proficiency is printed there.
-    const cont = columnFlow(pd, cols, anchor.col, later.length > 0 || !!tableTitle, (it) => it.h >= HEADING_MIN_H);
+    const cont = columnFlow(pd, hcols, anchor.col, later.length > 0 || !!tableTitle, (it) => it.h >= HEADING_MIN_H);
     if (cont.length) {
-      const cx0 = cols[anchor.col + 1] - 5;
-      const cx1 = cols[anchor.col + 2] ? cols[anchor.col + 2] - 6 : pd.width;
+      const cx0 = hcols[anchor.col + 1] - 5;
+      const cx1 = hcols[anchor.col + 2] ? hcols[anchor.col + 2] - 6 : pd.width;
       paras.push(...paragraphBoxes(toLines(cont), cx0, cx1).map((p) => withFixes(p, pd, tabs)));
       bodyText = `${bodyText} ${joinBody(cont)}`.trim();
-    } else if (!later.length && !tableTitle && anchor.col + 1 >= cols.length) {
+    } else if (!later.length && !tableTitle && anchor.col + 1 >= hcols.length) {
       const pf = await pageFlow(doc, page, (it) => it.h >= HEADING_MIN_H);
       if (pf?.items.length) {
         const px0 = pf.cols[0] - 5;

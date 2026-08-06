@@ -519,7 +519,19 @@
         {
           "ref": "def.power.earthforgerSigil",
           "starting": true,
-          "note": "The sigil's invocation and lesser feature; the choice of sigil is the player's."
+          "note": "The rules of sigils; the specific sigil is the pick below."
+        },
+        {
+          "choice": {
+            "label": "Sigil",
+            "refs": [
+              "def.power.sigilOfTheMountainsBones",
+              "def.power.sigilOfTheEternalForge",
+              "def.power.sigilOfTheIronCrucible",
+              "def.power.sigilOfTheOpenGate"
+            ]
+          },
+          "starting": true
         },
         {
           "ref": "def.power.earthforgerSigil",
@@ -7441,6 +7453,18 @@
           "from": {
             "pattern": "Chieftain.s Hall \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Tribal origin",
+            "refs": [
+              "def.power.barbarianOriginJutland",
+              "def.power.barbarianOriginSkysostan",
+              "def.power.barbarianOriginIvoryKingdoms"
+            ]
+          },
+          "starting": true,
+          "note": "The origin bounds which combat proficiencies are traditional; the row is the record."
         }
       ],
       "cleaves": {
@@ -9993,6 +10017,17 @@
           "from": {
             "pattern": "Power of Sacrifice \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Dark path",
+            "refs": [
+              "def.power.darkPathDemonology",
+              "def.power.darkPathNecromancy",
+              "def.power.darkPathTransmogrification"
+            ]
+          },
+          "starting": true
         }
       ],
       "cleaves": {
@@ -10454,6 +10489,17 @@
           "from": {
             "pattern": "Supreme Magical Research \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Tradition",
+            "refs": [
+              "def.power.witchTraditionAntiquarian",
+              "def.power.witchTraditionChthonic",
+              "def.power.witchTraditionSylvan"
+            ]
+          },
+          "starting": true
         }
       ],
       "cleaves": {

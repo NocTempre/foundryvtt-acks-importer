@@ -313,6 +313,24 @@
     "ref": "def.power.chieftainsHall",
     "rr": 51,
     "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tribal Origin: Jutland",
+    "ref": "def.power.barbarianOriginJutland",
+    "rr": 50,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tribal Origin: Skysostan",
+    "ref": "def.power.barbarianOriginSkysostan",
+    "rr": 50,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tribal Origin: Ivory Kingdoms",
+    "ref": "def.power.barbarianOriginIvoryKingdoms",
+    "rr": 50,
+    "disposition": "rrPrimary"
    }
   ],
   "bard": [
@@ -617,6 +635,24 @@
     "ref": "def.power.occultism",
     "rr": 75,
     "disposition": "rrPrimary"
+   },
+   {
+    "name": "Dark Path: Demonology",
+    "ref": "def.power.darkPathDemonology",
+    "rr": 75,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Dark Path: Necromancy",
+    "ref": "def.power.darkPathNecromancy",
+    "rr": 75,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Dark Path: Transmogrification",
+    "ref": "def.power.darkPathTransmogrification",
+    "rr": 75,
+    "disposition": "rrPrimary"
    }
   ],
   "witch": [
@@ -635,6 +671,24 @@
    {
     "name": "Village Wisdom",
     "ref": "def.power.villageWisdom",
+    "rr": 79,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tradition: Antiquarian",
+    "ref": "def.power.witchTraditionAntiquarian",
+    "rr": 79,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tradition: Chthonic",
+    "ref": "def.power.witchTraditionChthonic",
+    "rr": 79,
+    "disposition": "rrPrimary"
+   },
+   {
+    "name": "Tradition: Sylvan",
+    "ref": "def.power.witchTraditionSylvan",
     "rr": 79,
     "disposition": "rrPrimary"
    }
@@ -2713,7 +2767,7 @@
     "disposition": "btaPrimary"
    },
    {
-    "name": "Sigil Invocation",
+    "name": "Sigils of Creation",
     "ref": "def.power.earthforgerSigil",
     "bta": 63,
     "disposition": "btaPrimary"
@@ -2770,6 +2824,30 @@
     "rr": 83,
     "bta": 63,
     "disposition": "rrPrimary"
+   },
+   {
+    "name": "Sigil of the Mountain's Bones",
+    "ref": "def.power.sigilOfTheMountainsBones",
+    "bta": 65,
+    "disposition": "btaPrimary"
+   },
+   {
+    "name": "Sigil of the Eternal Forge",
+    "ref": "def.power.sigilOfTheEternalForge",
+    "bta": 65,
+    "disposition": "btaPrimary"
+   },
+   {
+    "name": "Sigil of the Iron Crucible",
+    "ref": "def.power.sigilOfTheIronCrucible",
+    "bta": 65,
+    "disposition": "btaPrimary"
+   },
+   {
+    "name": "Sigil of the Open Gate",
+    "ref": "def.power.sigilOfTheOpenGate",
+    "bta": 66,
+    "disposition": "btaPrimary"
    }
   ],
   "dwarvenExcavator": [

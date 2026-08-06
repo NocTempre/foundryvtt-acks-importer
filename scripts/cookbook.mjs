@@ -3079,6 +3079,25 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       const m = new RegExp(a.from.pattern).exec(body);
       if (m?.[1] != null) atLevel = parseInt(m[1], 10);
     }
+    // A chef CHOICE award: a pick among named refs (the warlock's dark path,
+    // the witch's tradition, the earthforger's sigil) — the chooser offers
+    // exactly the listed options and grants the one taken.
+    if (a.choice?.refs?.length) {
+      return {
+        atLevel: atLevel ?? 0,
+        kind: "choice",
+        ref: "",
+        name: "",
+        choice: {
+          from: "custom",
+          filter: "",
+          count: a.choice.count ?? 1,
+          refs: a.choice.refs,
+          label: a.choice.label ?? "",
+        },
+        note: atLevel == null ? "level unresolved" : (a.note ?? ""),
+      };
+    }
     // A pattern that finds nothing parks the award at level 0 — visible and
     // never auto-granted — rather than silently landing at 1st.
     return {

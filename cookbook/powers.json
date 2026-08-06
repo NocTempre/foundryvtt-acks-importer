@@ -419,6 +419,275 @@
         }
       }
     },
+    "def.power.earthforgerSigil": {
+      "id": "def.power.earthforgerSigil",
+      "kind": "kind.power",
+      "name": "Sigils of Creation",
+      "book": "bta",
+      "cite": "BTA p.64",
+      "pages": [
+        64
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 64,
+          "box": {
+            "x0": 52,
+            "x1": 141.89999999999992,
+            "y0": 403,
+            "y1": 412
+          },
+          "text": "Master Sigil Feature ("
+        },
+        "description": {
+          "op": "text",
+          "page": 64,
+          "paras": [
+            {
+              "box": {
+                "x0": 31,
+                "x1": 300,
+                "y0": 405,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 31,
+                "x1": 300,
+                "y0": 441,
+                "y1": 507
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 31,
+                "x1": 300,
+                "y0": 525,
+                "y1": 555
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 31,
+                "x1": 300,
+                "y0": 573,
+                "y1": 675
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  10,
+                  11,
+                  12,
+                  13,
+                  16,
+                  17,
+                  21,
+                  22,
+                  25,
+                  26,
+                  27,
+                  29,
+                  30,
+                  33,
+                  34,
+                  35
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 80.7106,
+                "y1": 233.40949999999998
+              },
+              "fixes": {
+                "joinSpace": [
+                  4,
+                  13,
+                  24,
+                  28,
+                  32,
+                  36,
+                  41,
+                  43,
+                  46,
+                  48,
+                  51,
+                  53,
+                  56,
+                  58,
+                  61,
+                  63,
+                  66,
+                  68,
+                  71,
+                  73,
+                  76,
+                  78,
+                  81,
+                  83,
+                  89
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 276.15049999999997,
+                "y1": 348.5
+              },
+              "fixes": {
+                "joinSpace": [
+                  4,
+                  6,
+                  8,
+                  12,
+                  14,
+                  18,
+                  24,
+                  26,
+                  28,
+                  31,
+                  33,
+                  35,
+                  37,
+                  39,
+                  42,
+                  44,
+                  46,
+                  48,
+                  50,
+                  53,
+                  55,
+                  57,
+                  59,
+                  61,
+                  62,
+                  64,
+                  66,
+                  68,
+                  70,
+                  71
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 382.5,
+                "y1": 400.5
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 417,
+                "y1": 447
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 465,
+                "y1": 519
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  5,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 301,
+                "x1": 612,
+                "y0": 537,
+                "y1": 603
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.masterGnosis": {
       "id": "def.power.masterGnosis",
       "kind": "kind.power",
@@ -524,10 +793,10 @@
         }
       }
     },
-    "def.power.earthforgerSigil": {
-      "id": "def.power.earthforgerSigil",
+    "def.power.sigilOfTheMountainsBones": {
+      "id": "def.power.sigilOfTheMountainsBones",
       "kind": "kind.power",
-      "name": "Sigil Invocation",
+      "name": "Sigil of the Mountain's Bones",
       "book": "bta",
       "cite": "BTA p.65",
       "pages": [
@@ -541,17 +810,32 @@
           "op": "expect",
           "page": 65,
           "box": {
-            "x0": 34,
-            "x1": 103.23899999999999,
-            "y0": 175,
-            "y1": 184
+            "x0": 35,
+            "x1": 208.44800000000012,
+            "y0": 92,
+            "y1": 114
           },
-          "text": "Sigil Invocation:"
+          "text": "Sigil of the Mountain's Bones"
         },
         "description": {
           "op": "text",
           "page": 65,
           "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 119.34000000000003,
+                "y1": 161.34000000000003
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
             {
               "box": {
                 "x0": 35,
@@ -563,9 +847,419 @@
                 "joinSpace": [
                   0,
                   1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 213,
+                "y1": 243
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 261,
+                "y1": 303
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 321,
+                "y1": 339
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sigilOfTheEternalForge": {
+      "id": "def.power.sigilOfTheEternalForge",
+      "kind": "kind.power",
+      "name": "Sigil of the Eternal Forge",
+      "book": "bta",
+      "cite": "BTA p.65",
+      "pages": [
+        65
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 65,
+          "box": {
+            "x0": 305,
+            "x1": 460.23999999999955,
+            "y0": 68,
+            "y1": 90
+          },
+          "text": "Sigil of the Eternal Forge"
+        },
+        "description": {
+          "op": "text",
+          "page": 65,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 95.34000000000003,
+                "y1": 173.34000000000003
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 189,
+                "y1": 207
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 225,
+                "y1": 267
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 285,
+                "y1": 315
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 333,
+                "y1": 375
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sigilOfTheIronCrucible": {
+      "id": "def.power.sigilOfTheIronCrucible",
+      "kind": "kind.power",
+      "name": "Sigil of the Iron Crucible",
+      "book": "bta",
+      "cite": "BTA p.65",
+      "pages": [
+        65
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 65,
+          "box": {
+            "x0": 305,
+            "x1": 458.6719999999995,
+            "y0": 380,
+            "y1": 402
+          },
+          "text": "Sigil of the Iron Crucible"
+        },
+        "description": {
+          "op": "text",
+          "page": 65,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 407.34,
+                "y1": 461.34
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 477,
+                "y1": 495
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 513,
+                "y1": 543
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 561,
+                "y1": 591
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 609,
+                "y1": 723
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  12,
+                  14,
+                  15
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.sigilOfTheOpenGate": {
+      "id": "def.power.sigilOfTheOpenGate",
+      "kind": "kind.power",
+      "name": "Sigil of the Open Gate",
+      "book": "bta",
+      "cite": "BTA p.66",
+      "pages": [
+        66
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 66,
+          "box": {
+            "x0": 45,
+            "x1": 183.7760000000001,
+            "y0": 380,
+            "y1": 402
+          },
+          "text": "Sigil of the Open Gate"
+        },
+        "description": {
+          "op": "text",
+          "page": 66,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 407.34,
+                "y1": 473.34
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 489,
+                "y1": 507
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 525,
+                "y1": 603
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 621,
+                "y1": 699
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 81,
+                "y1": 183
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  10,
+                  12,
+                  13,
+                  14
                 ],
-                "drop": [
-                  0
+                "mergeHyphen": [
+                  9
                 ]
               }
             }
@@ -25405,6 +26099,258 @@
         }
       }
     },
+    "def.power.barbarianOriginJutland": {
+      "id": "def.power.barbarianOriginJutland",
+      "kind": "kind.power",
+      "name": "Tribal Origin: Jutland",
+      "book": "rr",
+      "cite": "RR p.50",
+      "pages": [
+        50
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 50,
+          "box": {
+            "x0": 43,
+            "x1": 211.9562,
+            "y0": 601.8701,
+            "y1": 610.8701
+          },
+          "text": "Barbarian Combat Proficiencies"
+        },
+        "description": {
+          "op": "text",
+          "page": 50,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 644.2900999999999,
+                "y1": 668.2900999999999
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 676.51,
+                "y1": 700.51
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 708.73,
+                "y1": 732.73
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.barbarianOriginSkysostan": {
+      "id": "def.power.barbarianOriginSkysostan",
+      "kind": "kind.power",
+      "name": "Tribal Origin: Skysostan",
+      "book": "rr",
+      "cite": "RR p.50",
+      "pages": [
+        50
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 50,
+          "box": {
+            "x0": 43,
+            "x1": 211.9562,
+            "y0": 601.8701,
+            "y1": 610.8701
+          },
+          "text": "Barbarian Combat Proficiencies"
+        },
+        "description": {
+          "op": "text",
+          "page": 50,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 644.2900999999999,
+                "y1": 668.2900999999999
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 676.51,
+                "y1": 700.51
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 708.73,
+                "y1": 732.73
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.barbarianOriginIvoryKingdoms": {
+      "id": "def.power.barbarianOriginIvoryKingdoms",
+      "kind": "kind.power",
+      "name": "Tribal Origin: Ivory Kingdoms",
+      "book": "rr",
+      "cite": "RR p.50",
+      "pages": [
+        50
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 50,
+          "box": {
+            "x0": 43,
+            "x1": 211.9562,
+            "y0": 601.8701,
+            "y1": 610.8701
+          },
+          "text": "Barbarian Combat Proficiencies"
+        },
+        "description": {
+          "op": "text",
+          "page": 50,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 644.2900999999999,
+                "y1": 668.2900999999999
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 676.51,
+                "y1": 700.51
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 294,
+                "y0": 708.73,
+                "y1": 732.73
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.savageResilience": {
       "id": "def.power.savageResilience",
       "kind": "kind.power",
@@ -28545,6 +29491,186 @@
         }
       }
     },
+    "def.power.darkPathDemonology": {
+      "id": "def.power.darkPathDemonology",
+      "kind": "kind.power",
+      "name": "Dark Path: Demonology",
+      "book": "rr",
+      "cite": "RR p.75",
+      "pages": [
+        75
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 75,
+          "box": {
+            "x0": 70,
+            "x1": 111.98960000000001,
+            "y0": 181,
+            "y1": 190
+          },
+          "text": "Dark Path:"
+        },
+        "description": {
+          "op": "text",
+          "page": 75,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 183,
+                "y1": 259
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  6,
+                  8,
+                  10,
+                  15,
+                  21,
+                  22,
+                  23,
+                  24
+                ],
+                "drop": [
+                  0,
+                  17
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.darkPathNecromancy": {
+      "id": "def.power.darkPathNecromancy",
+      "kind": "kind.power",
+      "name": "Dark Path: Necromancy",
+      "book": "rr",
+      "cite": "RR p.75",
+      "pages": [
+        75
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 75,
+          "box": {
+            "x0": 70,
+            "x1": 111.98960000000001,
+            "y0": 181,
+            "y1": 190
+          },
+          "text": "Dark Path:"
+        },
+        "description": {
+          "op": "text",
+          "page": 75,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 183,
+                "y1": 259
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  6,
+                  8,
+                  10,
+                  15,
+                  21,
+                  22,
+                  23,
+                  24
+                ],
+                "drop": [
+                  0,
+                  17
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.darkPathTransmogrification": {
+      "id": "def.power.darkPathTransmogrification",
+      "kind": "kind.power",
+      "name": "Dark Path: Transmogrification",
+      "book": "rr",
+      "cite": "RR p.75",
+      "pages": [
+        75
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 75,
+          "box": {
+            "x0": 70,
+            "x1": 111.98960000000001,
+            "y0": 181,
+            "y1": 190
+          },
+          "text": "Dark Path:"
+        },
+        "description": {
+          "op": "text",
+          "page": 75,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 183,
+                "y1": 259
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  6,
+                  8,
+                  10,
+                  15,
+                  21,
+                  22,
+                  23,
+                  24
+                ],
+                "drop": [
+                  0,
+                  17
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.studiousDivineMagic": {
       "id": "def.power.studiousDivineMagic",
       "kind": "kind.power",
@@ -29157,6 +30283,1101 @@
                 "stripPrefix": {
                   "0": 5
                 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.witchTraditionAntiquarian": {
+      "id": "def.power.witchTraditionAntiquarian",
+      "kind": "kind.power",
+      "name": "Tradition: Antiquarian",
+      "book": "rr",
+      "cite": "RR p.79",
+      "pages": [
+        79
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 79,
+          "box": {
+            "x0": 70,
+            "x1": 165.0032,
+            "y0": 194.75,
+            "y1": 203.75
+          },
+          "text": "Witch Traditions"
+        },
+        "description": {
+          "op": "text",
+          "page": 79,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 225.73000000000002,
+                "y1": 281.4099
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  13
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 300.003,
+                "y1": 369
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 381,
+                "y1": 409
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 420.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 450.003,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 480.003,
+                "y1": 489
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 500.003,
+                "y1": 629
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  23,
+                  25,
+                  26,
+                  27,
+                  28
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 640.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 670.003,
+                "y1": 719
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 96.00009999999997,
+                "y1": 186.33979999999997
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 301,
+                "y1": 307
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 330.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 453,
+                "y1": 539
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 550.0029999999999,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 600.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 670.003,
+                "y1": 739
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.witchTraditionChthonic": {
+      "id": "def.power.witchTraditionChthonic",
+      "kind": "kind.power",
+      "name": "Tradition: Chthonic",
+      "book": "rr",
+      "cite": "RR p.79",
+      "pages": [
+        79
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 79,
+          "box": {
+            "x0": 70,
+            "x1": 165.0032,
+            "y0": 194.75,
+            "y1": 203.75
+          },
+          "text": "Witch Traditions"
+        },
+        "description": {
+          "op": "text",
+          "page": 79,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 225.73000000000002,
+                "y1": 281.4099
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  13
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 300.003,
+                "y1": 369
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 381,
+                "y1": 409
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 420.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 450.003,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 480.003,
+                "y1": 489
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 500.003,
+                "y1": 629
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  23,
+                  25,
+                  26,
+                  27,
+                  28
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 640.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 670.003,
+                "y1": 719
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 96.00009999999997,
+                "y1": 186.33979999999997
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 301,
+                "y1": 307
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 330.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 453,
+                "y1": 539
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 550.0029999999999,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 600.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 670.003,
+                "y1": 739
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.witchTraditionSylvan": {
+      "id": "def.power.witchTraditionSylvan",
+      "kind": "kind.power",
+      "name": "Tradition: Sylvan",
+      "book": "rr",
+      "cite": "RR p.79",
+      "pages": [
+        79
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 79,
+          "box": {
+            "x0": 70,
+            "x1": 165.0032,
+            "y0": 194.75,
+            "y1": 203.75
+          },
+          "text": "Witch Traditions"
+        },
+        "description": {
+          "op": "text",
+          "page": 79,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 225.73000000000002,
+                "y1": 281.4099
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  7,
+                  8,
+                  10,
+                  11,
+                  13
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 300.003,
+                "y1": 369
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 381,
+                "y1": 409
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 420.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 450.003,
+                "y1": 469
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 480.003,
+                "y1": 489
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 500.003,
+                "y1": 629
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  8,
+                  10,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  18,
+                  20,
+                  21,
+                  22,
+                  23,
+                  25,
+                  26,
+                  27,
+                  28
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 640.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 670.003,
+                "y1": 719
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 96.00009999999997,
+                "y1": 186.33979999999997
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 301,
+                "y1": 307
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 330.003,
+                "y1": 439
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 453,
+                "y1": 539
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 550.0029999999999,
+                "y1": 589
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 600.0029999999999,
+                "y1": 659
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 670.003,
+                "y1": 739
+              },
+              "fixes": {
+                "joinSpace": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
               }
             }
           ]

@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.2.0
+
+### Added
+- **A printed either-or imports as a real pick.** Four classes' choose-one
+  powers now come in as choices on the class document, offered at character
+  creation and granted as the option taken: the warlock's dark path, the
+  witch's tradition (the traditions table, whole, behind each option), the
+  barbarian's tribal origin (the regional combat-proficiencies table
+  likewise), and the By This Axe earthforger's sigil — four sigils, each
+  read from its own section of the book. Every option is its own document
+  with the page's text behind the per-seat reveal, and the source matrix
+  seats each one under its class.
+
 ## 2.1.0
 
 ### Added

@@ -371,7 +371,19 @@
     {
      "ref": "def.power.earthforgerSigil",
      "starting": true,
-     "note": "The sigil's invocation and lesser feature; the choice of sigil is the player's."
+     "note": "The rules of sigils; the specific sigil is the pick below."
+    },
+    {
+     "choice": {
+      "label": "Sigil",
+      "refs": [
+       "def.power.sigilOfTheMountainsBones",
+       "def.power.sigilOfTheEternalForge",
+       "def.power.sigilOfTheIronCrucible",
+       "def.power.sigilOfTheOpenGate"
+      ]
+     },
+     "starting": true
     },
     {
      "ref": "def.power.earthforgerSigil",

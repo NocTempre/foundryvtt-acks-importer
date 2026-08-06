@@ -1,0 +1,83 @@
+[
+ {
+  "id": "def.power.darkPathDemonology",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Dark Path: Demonology",
+  "anchor": { "runin": "Dark Path:" },
+  "pages": [75],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.darkPathNecromancy",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Dark Path: Necromancy",
+  "anchor": { "runin": "Dark Path:" },
+  "pages": [75],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.darkPathTransmogrification",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Dark Path: Transmogrification",
+  "anchor": { "runin": "Dark Path:" },
+  "pages": [75],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.witchTraditionAntiquarian",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tradition: Antiquarian",
+  "anchor": { "runin": "Witch Traditions" },
+  "pages": [79],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.witchTraditionChthonic",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tradition: Chthonic",
+  "anchor": { "runin": "Witch Traditions" },
+  "pages": [79],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.witchTraditionSylvan",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tradition: Sylvan",
+  "anchor": { "runin": "Witch Traditions" },
+  "pages": [79],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.barbarianOriginJutland",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tribal Origin: Jutland",
+  "anchor": { "runin": "Barbarian Combat Proficiencies" },
+  "pages": [50],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.barbarianOriginSkysostan",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tribal Origin: Skysostan",
+  "anchor": { "runin": "Barbarian Combat Proficiencies" },
+  "pages": [50],
+  "meta": { "category": "classPower" }
+ },
+ {
+  "id": "def.power.barbarianOriginIvoryKingdoms",
+  "kind": "kind.power",
+  "book": "rr",
+  "name": "Tribal Origin: Ivory Kingdoms",
+  "anchor": { "runin": "Barbarian Combat Proficiencies" },
+  "pages": [50],
+  "meta": { "category": "classPower" }
+ }
+]

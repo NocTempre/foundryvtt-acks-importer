@@ -1478,6 +1478,18 @@
           "from": {
             "pattern": "Chieftain.s Hall \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Tribal origin",
+            "refs": [
+              "def.power.barbarianOriginJutland",
+              "def.power.barbarianOriginSkysostan",
+              "def.power.barbarianOriginIvoryKingdoms"
+            ]
+          },
+          "starting": true,
+          "note": "The origin bounds which combat proficiencies are traditional; the row is the record."
         }
       ]
     }
@@ -3222,6 +3234,17 @@
           "from": {
             "pattern": "Power of Sacrifice \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Dark path",
+            "refs": [
+              "def.power.darkPathDemonology",
+              "def.power.darkPathNecromancy",
+              "def.power.darkPathTransmogrification"
+            ]
+          },
+          "starting": true
         }
       ],
       "casting": [
@@ -3421,6 +3444,17 @@
           "from": {
             "pattern": "Supreme Magical Research \\((\\d+)"
           }
+        },
+        {
+          "choice": {
+            "label": "Tradition",
+            "refs": [
+              "def.power.witchTraditionAntiquarian",
+              "def.power.witchTraditionChthonic",
+              "def.power.witchTraditionSylvan"
+            ]
+          },
+          "starting": true
         }
       ],
       "casting": [
