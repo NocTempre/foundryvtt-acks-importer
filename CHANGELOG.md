@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.3.0
+
+### Added
+- **The dwarven equipment chapter imports.** Thirty-seven By This Axe items —
+  the delver's harness, gnostic implements, the dwarven brewer's lab, helms
+  and workshops, the fuels, the earthshooter, the bears — come in as
+  equipment documents with their page text behind the per-seat reveal, so a
+  dwarven template's gear lands as instances of real base items instead of
+  bare names. Items the Revised Rulebook already defines (prosthesis,
+  earplugs, ear trumpet, mess kit, metamphora) stay the Rulebook's.
+- **A counted container splits into itself and its contents.** "Quiver with
+  20 arrows" imports as a quiver plus twenty arrows — the count lands on the
+  arrows where the sheet can spend it, and the contents record what carried
+  them. A pair splits only when both halves are known equipment: "spear and
+  short sword" becomes two weapons, while "tunic and pants" — one outfit,
+  one printed price — stays whole. Already-imported classes pick this up on
+  the next Update Classes run.
+
 ## 2.2.0
 
 ### Added

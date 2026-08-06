@@ -2850,28 +2850,53 @@ function parseEquipment(cellText, menu, aliases = {}) {
   });
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const aliasFold = new Map(Object.entries(aliases).map(([k, v]) => [fold(k), v]));
+  const resolve = (descriptor) => {
+    const f = fold(descriptor);
+    for (const [ak, av] of aliasFold) {
+      if (f.includes(ak)) return av;
+    }
+    const exact = menu.find((m) => m.fold === f);
+    return (
+      exact?.ref ??
+      menu.find((m) => m.fold.length >= 6 && f.includes(m.fold))?.ref ??
+      menu.find((m) => m.foldStripped.length >= 6 && f.includes(m.foldStripped))?.ref ??
+      ""
+    );
+  };
   const items = [];
+  const push = (descriptor, note = "") => {
+    const qty = parseInt(/^(\d+)\s/.exec(descriptor)?.[1] ?? "1", 10);
+    items.push({
+      ref: resolve(descriptor),
+      name: descriptor,
+      qty: Number.isFinite(qty) && qty > 0 ? qty : 1,
+      skinName: "",
+      note,
+    });
+  };
   for (const raw of text.split(/,(?![^(]*\))/)) {
     const descriptor = raw.replace(/\s+/g, " ").replace(/^and\s+/i, "").trim().replace(/[.]$/, "");
     if (!descriptor) continue;
-    const qty = parseInt(/^(\d+)\s/.exec(descriptor)?.[1] ?? "1", 10);
-    const f = fold(descriptor);
-    let ref = "";
-    for (const [ak, av] of aliasFold) {
-      if (f.includes(ak)) {
-        ref = av;
-        break;
-      }
+    // A counted container splits into itself and its contents — "quiver with
+    // 20 arrows" is a quiver plus twenty arrows, and the count belongs on the
+    // arrows where the sheet can spend it. Only a DIGIT after "with" splits;
+    // "pouch with herbs" stays one item.
+    const container = /^(.+?)\s+with\s+(\d+)\s+(.+)$/i.exec(descriptor);
+    if (container) {
+      push(container[1]);
+      push(`${container[2]} ${container[3]}`, `carried in ${container[1].toLowerCase()}`);
+      continue;
     }
-    if (!ref) {
-      const exact = menu.find((m) => m.fold === f);
-      ref =
-        exact?.ref ??
-        menu.find((m) => m.fold.length >= 6 && f.includes(m.fold))?.ref ??
-        menu.find((m) => m.foldStripped.length >= 6 && f.includes(m.foldStripped))?.ref ??
-        "";
+    // A pair splits only when BOTH halves resolve to known equipment —
+    // "spear and short sword" is two weapons, while "tunic and pants" (one
+    // outfit, one printed price) resolves whole and stays whole.
+    const pair = /^(.+?)\s+and\s+(.+)$/i.exec(descriptor);
+    if (pair && !resolve(descriptor) && resolve(pair[1]) && resolve(pair[2])) {
+      push(pair[1]);
+      push(pair[2]);
+      continue;
     }
-    items.push({ ref, name: descriptor, qty: Number.isFinite(qty) && qty > 0 ? qty : 1, skinName: "", note: "" });
+    push(descriptor);
   }
   return { items, gp, enc };
 }

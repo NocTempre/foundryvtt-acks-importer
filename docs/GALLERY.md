@@ -13,6 +13,7 @@ raw PNG path, so those links survive the next refresh.
 | Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v2.0.0](releases/v2.0.0/getting-started.png) |
 | Import classes | A class's award ladder as imported: fixed grants and the dark-path pick among listed options | [guide](guides/import-from-the-cookbook.md) | [v2.2.0](releases/v2.2.0/classes-award-choice.png) |
 | Browse and audit | The entry picker — the abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v2.0.0](releases/v2.0.0/cookbook-import.png) |
+| Import equipment | A template's gear applied: skins over imported base items, contents split from their container | [guide](guides/import-from-the-cookbook.md) | [v2.3.0](releases/v2.3.0/template-inventory.png) |
 
 Snapshots are captured during the live-verification session of a release
 (`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged afterwards. The

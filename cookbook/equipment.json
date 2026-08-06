@@ -2,6 +2,2597 @@
   "schema": "acks-cookbook/2",
   "content": "equipment",
   "entries": {
+    "def.equip.dwarvenBelts": {
+      "id": "def.equip.dwarvenBelts",
+      "kind": "kind.equipment",
+      "name": "Belts",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 321.9998,
+            "x1": 345.9198000000001,
+            "y0": 475,
+            "y1": 484
+          },
+          "text": "Belts:"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 524,
+                "y0": 477,
+                "y1": 507
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenBoots": {
+      "id": "def.equip.dwarvenBoots",
+      "kind": "kind.equipment",
+      "name": "Boots",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 321.9998,
+            "x1": 348.7998000000001,
+            "y0": 523,
+            "y1": 532
+          },
+          "text": "Boots:"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 524,
+                "y0": 525,
+                "y1": 555
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenCap": {
+      "id": "def.equip.dwarvenCap",
+      "kind": "kind.equipment",
+      "name": "Cap",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 321.9998,
+            "x1": 342.04980000000006,
+            "y0": 571,
+            "y1": 580
+          },
+          "text": "Cap:"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 524,
+                "y0": 573,
+                "y1": 591
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenCloak": {
+      "id": "def.equip.dwarvenCloak",
+      "kind": "kind.equipment",
+      "name": "Cloak",
+      "book": "bta",
+      "cite": "BTA p.94",
+      "pages": [
+        94
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 94,
+          "box": {
+            "x0": 321.9998,
+            "x1": 349.8598000000001,
+            "y0": 607,
+            "y1": 616
+          },
+          "text": "Cloak:"
+        },
+        "description": {
+          "op": "text",
+          "page": 94,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 524,
+                "y0": 609,
+                "y1": 651
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3
+                ],
+                "mergeHyphen": [
+                  1
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 525,
+                "x1": 612,
+                "y0": 177,
+                "y1": 183
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 525,
+                "x1": 612,
+                "y0": 240.49990000000003,
+                "y1": 459.3798
+              },
+              "fixes": {
+                "joinSpace": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenCoat": {
+      "id": "def.equip.dwarvenCoat",
+      "kind": "kind.equipment",
+      "name": "Coat",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 34,
+            "x1": 56.79,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Coat:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 81,
+                "y1": 111
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 129,
+                "y1": 231
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 249,
+                "y1": 267
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 300.4999,
+                "y1": 717.8667
+              },
+              "fixes": {
+                "joinSpace": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.tunicAndPants": {
+      "id": "def.equip.tunicAndPants",
+      "kind": "kind.equipment",
+      "name": "Tunic and Pants",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 34,
+            "x1": 105.06999999999996,
+            "y0": 127,
+            "y1": 136
+          },
+          "text": "Tunic and Pants:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 129,
+                "y1": 231
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 249,
+                "y1": 267
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 300.4999,
+                "y1": 717.8667
+              },
+              "fixes": {
+                "joinSpace": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.turban": {
+      "id": "def.equip.turban",
+      "kind": "kind.equipment",
+      "name": "Turban",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 34,
+            "x1": 68.65,
+            "y0": 247,
+            "y1": 256
+          },
+          "text": "Turban:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 249,
+                "y1": 267
+              }
+            },
+            {
+              "box": {
+                "x0": 235,
+                "x1": 304,
+                "y0": 300.4999,
+                "y1": 717.8667
+              },
+              "fixes": {
+                "joinSpace": [
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29,
+                  30,
+                  31
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.basket": {
+      "id": "def.equip.basket",
+      "kind": "kind.equipment",
+      "name": "Basket",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 334.98000000000013,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Basket:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 81,
+                "y1": 111
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.bucket": {
+      "id": "def.equip.bucket",
+      "kind": "kind.equipment",
+      "name": "Bucket",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 336.5500000000001,
+            "y0": 127,
+            "y1": 136
+          },
+          "text": "Bucket:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 129,
+                "y1": 159
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  8
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.craftsmansWorkshop": {
+      "id": "def.equip.craftsmansWorkshop",
+      "kind": "kind.equipment",
+      "name": "Craftsman's Workshop",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 405.3000000000004,
+            "y0": 247,
+            "y1": 256
+          },
+          "text": "Craftsman’s Workshop:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 249,
+                "y1": 327
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  11,
+                  13
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.delversHarness": {
+      "id": "def.equip.delversHarness",
+      "kind": "kind.equipment",
+      "name": "Delver's Harness",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 376.7900000000003,
+            "y0": 343,
+            "y1": 352
+          },
+          "text": "Delver’s Harness:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 345,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenBrew": {
+      "id": "def.equip.dwarvenBrew",
+      "kind": "kind.equipment",
+      "name": "Dwarven Brew",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 370.13000000000017,
+            "y0": 439,
+            "y1": 448
+          },
+          "text": "Dwarven Brew:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 441,
+                "y1": 483
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  6,
+                  7,
+                  11,
+                  13
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenBrewersLab": {
+      "id": "def.equip.dwarvenBrewersLab",
+      "kind": "kind.equipment",
+      "name": "Dwarven Brewer's Lab",
+      "book": "bta",
+      "cite": "BTA p.95",
+      "pages": [
+        95
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 95,
+          "box": {
+            "x0": 304,
+            "x1": 401.9500000000004,
+            "y0": 499,
+            "y1": 508
+          },
+          "text": "Dwarven Brewer’s Lab:"
+        },
+        "description": {
+          "op": "text",
+          "page": 95,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 501,
+                "y1": 555
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  9
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.gnosticImplements": {
+      "id": "def.equip.gnosticImplements",
+      "kind": "kind.equipment",
+      "name": "Gnostic Implements",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 142.7849999999999,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Gnostic Implements:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 81,
+                "y1": 171
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  10,
+                  12,
+                  14,
+                  16,
+                  18,
+                  20,
+                  22,
+                  24,
+                  26,
+                  30,
+                  32
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.helmetLightDwarven": {
+      "id": "def.equip.helmetLightDwarven",
+      "kind": "kind.equipment",
+      "name": "Helmet, Light Dwarven",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 160.02899999999994,
+            "y0": 187,
+            "y1": 196
+          },
+          "text": "Helmet, Light Dwarven:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 189,
+                "y1": 291
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.helmetHeavyDwarven": {
+      "id": "def.equip.helmetHeavyDwarven",
+      "kind": "kind.equipment",
+      "name": "Helmet, Heavy Dwarven",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 156.77899999999988,
+            "y0": 307,
+            "y1": 316
+          },
+          "text": "Helmet, Heavy Dwarven:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 309,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  9,
+                  11,
+                  12,
+                  14,
+                  16,
+                  17,
+                  18
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.hoist": {
+      "id": "def.equip.hoist",
+      "kind": "kind.equipment",
+      "name": "Hoist",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 77.63999999999999,
+            "y0": 439,
+            "y1": 448
+          },
+          "text": "Hoist:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 441,
+                "y1": 579
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  24,
+                  25,
+                  26,
+                  27,
+                  31,
+                  32,
+                  33
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenJournal": {
+      "id": "def.equip.dwarvenJournal",
+      "kind": "kind.equipment",
+      "name": "Journal",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 86.31999999999998,
+            "y0": 595,
+            "y1": 604
+          },
+          "text": "Journal:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 597,
+                "y1": 639
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "mergeHyphen": [
+                  2
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.laborersTools": {
+      "id": "def.equip.laborersTools",
+      "kind": "kind.equipment",
+      "name": "Laborer's Tools",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 52,
+            "x1": 120.41999999999993,
+            "y0": 655,
+            "y1": 664
+          },
+          "text": "Laborer’s Tools:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 657,
+                "y1": 699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.machinistsSpareParts": {
+      "id": "def.equip.machinistsSpareParts",
+      "kind": "kind.equipment",
+      "name": "Machinist's Spare Parts",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 322,
+            "x1": 424.4600000000005,
+            "y0": 391,
+            "y1": 400
+          },
+          "text": "Machinist’s Spare Parts:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 393,
+                "y1": 435
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenManacles": {
+      "id": "def.equip.dwarvenManacles",
+      "kind": "kind.equipment",
+      "name": "Manacles",
+      "book": "bta",
+      "cite": "BTA p.96",
+      "pages": [
+        96
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 96,
+          "box": {
+            "x0": 322,
+            "x1": 365.09000000000015,
+            "y0": 535,
+            "y1": 544
+          },
+          "text": "Manacles:"
+        },
+        "description": {
+          "op": "text",
+          "page": 96,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 537,
+                "y1": 663
+              },
+              "fixes": {
+                "joinSpace": [
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  15,
+                  16,
+                  17,
+                  19,
+                  23,
+                  24,
+                  25,
+                  26,
+                  28,
+                  29,
+                  30,
+                  32,
+                  33,
+                  34
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.minersHelm": {
+      "id": "def.equip.minersHelm",
+      "kind": "kind.equipment",
+      "name": "Miner's Helm",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 34,
+            "x1": 94.19099999999999,
+            "y0": 187,
+            "y1": 196
+          },
+          "text": "Miner’s Helm:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 189,
+                "y1": 327
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.petard": {
+      "id": "def.equip.petard",
+      "kind": "kind.equipment",
+      "name": "Petard",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 34,
+            "x1": 64.33000000000001,
+            "y0": 343,
+            "y1": 352
+          },
+          "text": "Petard:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 345,
+                "y1": 531
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13,
+                  14,
+                  17,
+                  18,
+                  19,
+                  20,
+                  22,
+                  23,
+                  24,
+                  25,
+                  28,
+                  29,
+                  30,
+                  32,
+                  33,
+                  34,
+                  37,
+                  38,
+                  39,
+                  41,
+                  42,
+                  43,
+                  46,
+                  47,
+                  48,
+                  50,
+                  51,
+                  52,
+                  55,
+                  56,
+                  57,
+                  59,
+                  60,
+                  61,
+                  62
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.portableBatteringRam": {
+      "id": "def.equip.portableBatteringRam",
+      "kind": "kind.equipment",
+      "name": "Portable Battering Ram",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 34,
+            "x1": 140.43999999999994,
+            "y0": 547,
+            "y1": 556
+          },
+          "text": "Portable Battering Ram:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 35,
+                "x1": 304,
+                "y0": 549,
+                "y1": 675
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  6,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  35,
+                  36,
+                  41,
+                  42,
+                  43,
+                  44,
+                  45,
+                  46,
+                  47,
+                  48
+                ],
+                "mergeHyphen": [
+                  8
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.prayerBook": {
+      "id": "def.equip.prayerBook",
+      "kind": "kind.equipment",
+      "name": "Prayer Book",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 304,
+            "x1": 361.09500000000014,
+            "y0": 79,
+            "y1": 88
+          },
+          "text": "Prayer Book:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 81,
+                "y1": 159
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.specialComponents": {
+      "id": "def.equip.specialComponents",
+      "kind": "kind.equipment",
+      "name": "Special Components, Miscellaneous",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 304.0001,
+            "x1": 463.6651000000008,
+            "y0": 391,
+            "y1": 400
+          },
+          "text": "Special Components, Miscellaneous:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 393,
+                "y1": 543
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  11,
+                  12,
+                  13,
+                  14,
+                  16,
+                  17
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.specialMushrooms": {
+      "id": "def.equip.specialMushrooms",
+      "kind": "kind.equipment",
+      "name": "Special Mushrooms",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 304.0001,
+            "x1": 393.83010000000036,
+            "y0": 559,
+            "y1": 568
+          },
+          "text": "Special Mushrooms:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 561,
+                "y1": 615
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.dwarvenWhistle": {
+      "id": "def.equip.dwarvenWhistle",
+      "kind": "kind.equipment",
+      "name": "Whistle",
+      "book": "bta",
+      "cite": "BTA p.97",
+      "pages": [
+        97
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 97,
+          "box": {
+            "x0": 304.0001,
+            "x1": 340.1601000000001,
+            "y0": 631,
+            "y1": 640
+          },
+          "text": "Whistle:"
+        },
+        "description": {
+          "op": "text",
+          "page": 97,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 633,
+                "y1": 663
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 97.99990000000003,
+                "y1": 183.61929999999995
+              },
+              "page": 98,
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  7,
+                  10,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28,
+                  29
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.alchemicalFuel": {
+      "id": "def.equip.alchemicalFuel",
+      "kind": "kind.equipment",
+      "name": "Alchemical Fuel",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 125.24499999999995,
+            "y0": 199,
+            "y1": 208
+          },
+          "text": "Alchemical Fuel:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 201,
+                "y1": 303
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.charcoal": {
+      "id": "def.equip.charcoal",
+      "kind": "kind.equipment",
+      "name": "Charcoal",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 93.00999999999998,
+            "y0": 319,
+            "y1": 328
+          },
+          "text": "Charcoal:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 321,
+                "y1": 363
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.commonOil": {
+      "id": "def.equip.commonOil",
+      "kind": "kind.equipment",
+      "name": "Common Oil",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 110.59999999999995,
+            "y0": 379,
+            "y1": 388
+          },
+          "text": "Common Oil:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 381,
+                "y1": 423
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.compost": {
+      "id": "def.equip.compost",
+      "kind": "kind.equipment",
+      "name": "Compost",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 93.01999999999998,
+            "y0": 439,
+            "y1": 448
+          },
+          "text": "Compost:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 441,
+                "y1": 471
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.firewood": {
+      "id": "def.equip.firewood",
+      "kind": "kind.equipment",
+      "name": "Firewood",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 95.42999999999998,
+            "y0": 487,
+            "y1": 496
+          },
+          "text": "Firewood:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 489,
+                "y1": 519
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 537,
+                "y1": 603
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 97.99990000000003,
+                "y1": 130.53970000000004
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  5,
+                  10,
+                  12,
+                  15,
+                  16,
+                  18
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.refinedOil": {
+      "id": "def.equip.refinedOil",
+      "kind": "kind.equipment",
+      "name": "Refined Oil",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 52,
+            "x1": 103.95699999999995,
+            "y0": 535,
+            "y1": 544
+          },
+          "text": "Refined Oil:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 45,
+                "x1": 314,
+                "y0": 537,
+                "y1": 603
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 97.99990000000003,
+                "y1": 220.03970000000004
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  5,
+                  10,
+                  12,
+                  15,
+                  16,
+                  18,
+                  21,
+                  22,
+                  23,
+                  24,
+                  25,
+                  26,
+                  27,
+                  28
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 264.4999,
+                "y1": 336.8494
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  6,
+                  10,
+                  11,
+                  13,
+                  14,
+                  16,
+                  17,
+                  19,
+                  20
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 357,
+                "y1": 459
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 477,
+                "y1": 567
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  13,
+                  14,
+                  15,
+                  16
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 585,
+                "y1": 699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13,
+                  14,
+                  15,
+                  20,
+                  21,
+                  22
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.earthshooter": {
+      "id": "def.equip.earthshooter",
+      "kind": "kind.equipment",
+      "name": "Earthshooter",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "weapon"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 322,
+            "x1": 380.5500000000003,
+            "y0": 140.03970000000004,
+            "y1": 149.03970000000004
+          },
+          "text": "Earthshooter:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 142.03970000000004,
+                "y1": 220.03970000000004
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 264.4999,
+                "y1": 336.8494
+              },
+              "fixes": {
+                "joinSpace": [
+                  2,
+                  6,
+                  10,
+                  11,
+                  13,
+                  14,
+                  16,
+                  17,
+                  19,
+                  20
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 357,
+                "y1": 459
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.warBear": {
+      "id": "def.equip.warBear",
+      "kind": "kind.equipment",
+      "name": "War Bear",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 322,
+            "x1": 364.45500000000015,
+            "y0": 475,
+            "y1": 484
+          },
+          "text": "War Bear:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 477,
+                "y1": 567
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  7,
+                  8,
+                  13,
+                  14,
+                  15,
+                  16
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.equip.guardBear": {
+      "id": "def.equip.guardBear",
+      "kind": "kind.equipment",
+      "name": "Guard Bear",
+      "book": "bta",
+      "cite": "BTA p.98",
+      "pages": [
+        98
+      ],
+      "meta": {
+        "category": "equipment",
+        "group": "gear"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 98,
+          "box": {
+            "x0": 322,
+            "x1": 372.9800000000002,
+            "y0": 583,
+            "y1": 592
+          },
+          "text": "Guard Bear:"
+        },
+        "description": {
+          "op": "text",
+          "page": 98,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 585,
+                "y1": 699
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13,
+                  14,
+                  15,
+                  20,
+                  21,
+                  22
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.equip.adventurerSHarness": {
       "id": "def.equip.adventurerSHarness",
       "kind": "kind.equipment",
