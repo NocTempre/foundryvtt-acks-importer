@@ -3,7 +3,7 @@
   "_key": "!macros!ackscMacClassAll",
   "name": "Import Character Classes (GM)",
   "type": "script",
-  "img": "icons/svg/pawn.svg",
+  "img": "icons/svg/mystery-man.svg",
   "scope": "global",
   "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importClasses) return ui.notifications.warn(\"acks-importer | class import needs a newer module build.\");\napi.importClasses();",
   "folder": "ackscFldImport00",

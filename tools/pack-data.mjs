@@ -130,7 +130,7 @@ api.cookbookRemoveImports();`,
     macro(
       "ackscMacClassAll",
       "Import Character Classes (GM)",
-      "icons/svg/pawn.svg",
+      "icons/svg/mystery-man.svg",
       GUARD +
         `if (!api.importClasses) return ui.notifications.warn("acks-importer | class import needs a newer module build.");
 api.importClasses();`,
