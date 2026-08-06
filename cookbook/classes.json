@@ -18,7 +18,8 @@
         "chassis": {
           "saves": "",
           "attack": ""
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -225,7 +226,7 @@
               "y1": 730.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -352,7 +353,8 @@
         "chassis": {
           "saves": "fighter",
           "attack": "fighter"
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -578,7 +580,7 @@
               "y1": 726.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -717,7 +719,8 @@
         "chassis": {
           "saves": "thief",
           "attack": "thief"
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -999,7 +1002,7 @@
               "y1": 694.1349
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -1147,7 +1150,8 @@
         "chassis": {
           "saves": "mage",
           "attack": "mage"
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -1339,9 +1343,9 @@
           "page": 37,
           "box": {
             "x0": 62,
-            "x1": 575.0544000000002,
+            "x1": 570.9104999999998,
             "y0": 336.07770000000005,
-            "y1": 699.7321
+            "y1": 637.2321
           },
           "label": {
             "x0": 62,
@@ -1367,7 +1371,7 @@
             {
               "key": "equipment",
               "x0": 304,
-              "x1": 575.0544000000002
+              "x1": 570.9104999999998
             }
           ],
           "rowBands": [
@@ -1401,10 +1405,10 @@
             },
             {
               "y0": 591.4576999999999,
-              "y1": 699.7321
+              "y1": 637.2321
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -1532,7 +1536,8 @@
         "chassis": {
           "saves": "crusader",
           "attack": "crusader"
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -1793,7 +1798,7 @@
               "y1": 418.2699
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -1943,7 +1948,8 @@
         "chassis": {
           "saves": "thief",
           "attack": "thief"
-        }
+        },
+        "core": true
       },
       "awards": [
         {
@@ -2187,7 +2193,7 @@
               "y1": 660.0299
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -2579,7 +2585,7 @@
               "y1": 734.55
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -2930,7 +2936,7 @@
               "y1": 444.9098
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -3356,7 +3362,7 @@
               "y1": 448.8298
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -3779,7 +3785,7 @@
               "y1": 717.05
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -4135,7 +4141,7 @@
               "y1": 728.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -4576,7 +4582,7 @@
               "y1": 391.2698
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -4997,7 +5003,7 @@
               "y1": 720.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -5433,7 +5439,7 @@
               "y1": 455.0298
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -5884,7 +5890,7 @@
               "y1": 721.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -6311,7 +6317,7 @@
               "y1": 693.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -6671,7 +6677,7 @@
               "y1": 732.83
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -7143,7 +7149,7 @@
               "y1": 391.7899
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -7557,7 +7563,7 @@
               "y1": 660.2699
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -8006,7 +8012,7 @@
               "y1": 427.2698
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",
@@ -8456,7 +8462,7 @@
               "y1": 404.1498
             }
           ],
-          "gapMin": 2
+          "gapMin": 1.2
         },
         "hitDie": {
           "op": "value",

@@ -2807,12 +2807,21 @@ function tokenizeProfs(cellText, menu) {
   return out.map(({ tail, ...e }) => e);
 }
 
-/** fold(name) → def id over the equipment cookbook, longest names first. */
+/** Equipment name menu, longest first. Each entry also folds its
+ *  PAREN-STRIPPED name — "Spell Book (Blank)" is the base an "iron-shod
+ *  spellbook" is an instance of, and only the stripped fold can see that. */
 function equipmentMenu() {
+  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const menu = [];
   for (const cb of data.content.values()) {
     for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (e.kind === "kind.equipment") menu.push({ name: e.name, ref: defId });
+      if (e.kind !== "kind.equipment") continue;
+      menu.push({
+        name: e.name,
+        ref: defId,
+        fold: fold(e.name),
+        foldStripped: fold(e.name.replace(/\([^)]*\)/g, " ")),
+      });
     }
   }
   return menu.sort((a, b) => b.name.length - a.name.length);
@@ -2854,8 +2863,12 @@ function parseEquipment(cellText, menu, aliases = {}) {
       }
     }
     if (!ref) {
-      const exact = menu.find((m) => fold(m.name) === f);
-      ref = exact?.ref ?? menu.find((m) => fold(m.name).length >= 6 && f.includes(fold(m.name)))?.ref ?? "";
+      const exact = menu.find((m) => m.fold === f);
+      ref =
+        exact?.ref ??
+        menu.find((m) => m.fold.length >= 6 && f.includes(m.fold))?.ref ??
+        menu.find((m) => m.foldStripped.length >= 6 && f.includes(m.foldStripped))?.ref ??
+        "";
     }
     items.push({ ref, name: descriptor, qty: Number.isFinite(qty) && qty > 0 ? qty : 1, skinName: "", note: "" });
   }
@@ -3106,6 +3119,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       saveChassis: entry.meta?.chassis?.saves ?? "",
       attackChassis: entry.meta?.chassis?.attack ?? "",
       factored: !!entry.meta?.factored,
+      core: !!entry.meta?.core,
       saves,
       attack,
       cleaves,

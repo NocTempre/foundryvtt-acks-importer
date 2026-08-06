@@ -119,7 +119,8 @@
             "pattern": "Castle \\((\\d+)"
           }
         }
-      ]
+      ],
+      "core": true
     }
   },
   {
@@ -825,7 +826,8 @@
             "pattern": "Border Fort \\((\\d+)"
           }
         }
-      ]
+      ],
+      "core": true
     }
   },
   {
@@ -1025,7 +1027,8 @@
         {
           "ref": "def.skill.trapbreaking"
         }
-      ]
+      ],
+      "core": true
     }
   },
   {
@@ -1188,7 +1191,8 @@
             "pattern": "Monopoly Power \\((\\d+)"
           }
         }
-      ]
+      ],
+      "core": true
     }
   },
   {
@@ -2272,7 +2276,8 @@
           "kind": "vancian",
           "repertoire": "arcaneInt"
         }
-      ]
+      ],
+      "core": true
     }
   },
   {
@@ -2446,7 +2451,8 @@
           "kind": "vancian",
           "repertoire": "order"
         }
-      ]
+      ],
+      "core": true
     }
   },
   {

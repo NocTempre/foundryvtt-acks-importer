@@ -2009,8 +2009,12 @@ async function compileClass(doc, entry, kindRow) {
         warn(`${entry.id}: table "${t.title}" found only ${bandLabels.length} 3d6 band row(s)`);
         continue;
       }
-      // The table ends at its Notes line (or a wide gap when a class has none).
-      const notes = flat.find((i) => i.y > bandLabels[bandLabels.length - 1].y && /^Notes/i.test(i.str.trim()));
+      // The table ends at its Notes line — or at a bare footnote asterisk:
+      // the mage's table closes with "* Each template assumes…" and no Notes
+      // prefix at all.
+      const notes = flat.find(
+        (i) => i.y > bandLabels[bandLabels.length - 1].y + 4 && (/^Notes/i.test(i.str.trim()) || /^\*/.test(i.str.trim())),
+      );
       const yEnd = notes ? notes.y - 4 : Math.max(...flat.map((i) => i.y)) + 6;
       // Rows are vertically CENTERED on their band label (a five-line
       // equipment cell starts above it), so bands split at label midpoints.
@@ -2058,7 +2062,10 @@ async function compileClass(doc, entry, kindRow) {
           ...orderedT.map((c, i) => ({ key: c.key, ...spanT(i) })),
         ],
         rowBands,
-        gapMin: 2,
+        // Italic spell names inside equipment cells sit under 2px from their
+        // roman neighbours; 1.2 keeps those word gaps while letter-split
+        // small-caps runs (~0.3px) still join blind.
+        gapMin: 1.2,
       };
       continue;
     }
@@ -2318,7 +2325,7 @@ async function compileClass(doc, entry, kindRow) {
     cite: `${BOOKS[entry.book].short} p.${page}`,
     pages: entry.pages,
     ...(entry.icon ? { icon: entry.icon } : {}),
-    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {}, ...(spec.factored ? { factored: true } : {}) },
+    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {}, ...(spec.factored ? { factored: true } : {}), ...(spec.core ? { core: true } : {}) },
     ...(spec.awards?.length ? { awards: spec.awards } : {}),
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
     ...(spec.casting?.length ? { casting: spec.casting } : {}),

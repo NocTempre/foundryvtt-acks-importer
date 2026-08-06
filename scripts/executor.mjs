@@ -1338,7 +1338,25 @@ async function execInstruction(instr, ctx) {
       // Gap-aware joining (authored gapMin, page geometry like every bound):
       // small-caps runs need blind joins, but a wide gap is a word space the
       // text layer does not carry ("1d4 + CON drain" arrives as 4 runs).
-      const spanText = (items, x0, x1) => clean(joinCellRuns(spanItems(items, x0, x1), instr.gapMin ?? null));
+      // A rowBands cell spans several printed LINES — the wrap point has no
+      // horizontal gap at all, so each line joins alone and the lines join
+      // with a space.
+      const spanText = instr.rowBands
+        ? (items, x0, x1) => {
+            const inSpan = spanItems(items, x0, x1);
+            const lines = new Map();
+            for (const it of inSpan) {
+              const k = Math.round(it.y / 3);
+              (lines.get(k) ?? lines.set(k, []).get(k)).push(it);
+            }
+            return clean(
+              [...lines.entries()]
+                .sort((a, b) => a[0] - b[0])
+                .map(([, l]) => joinCellRuns(l.sort((p, q) => p.x - q.x), instr.gapMin ?? null))
+                .join(" "),
+            );
+          }
+        : (items, x0, x1) => clean(joinCellRuns(spanItems(items, x0, x1), instr.gapMin ?? null));
       const cellValue = (text, col, rawText) => {
         if (col.pattern === "glyphs") {
           // Each PUA glyph char maps through a shipped table (damage-type
