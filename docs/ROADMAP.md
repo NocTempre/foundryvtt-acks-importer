@@ -25,8 +25,21 @@ The pattern is proven — the defence and effect scans already do exactly this, 
 
 ---
 
-## Unstaged books
+## The earthforger's sigils and the sporecaster's mutations as choices
 
-`people.dwarvenCastes` cannot be live-checked because BTA is not among the staged
-reference PDFs on the development machine. The recipe exists; the verification
-does not.
+Both classes offer a pick the way the warlock's Dark Path does: the sigil (and
+the mutation menu at 9th) is a player choice among printed options. Today one
+definition anchors the family and the award notes say the choice is the
+player's; the options themselves are prose. Modeling each option as its own
+selectable entry — and surfacing the pick through the extras chooser — follows
+the same route the warlock and witch tradition paths are waiting on.
+
+---
+
+## Gnostic invocations as documents
+
+The Earthforger and Furnacewife casting entries carry the gnosis kind and the
+Maximum Invocation Level ladder, but their invocation lists (BTA ch.5) are not
+imported as documents — matching the RR classes, whose spell lists are also
+empty on the casting entry. When spell-list references land for the vancian
+classes, the invocation lists should ride the same mechanism.

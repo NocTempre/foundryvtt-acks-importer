@@ -3062,7 +3062,9 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const classProfs = [];
   const unresolvedProfs = [];
-  const listText = String(f.profList ?? "").replace(/^.*?Proficiency List:\s*/i, "");
+  // BTA's capture can fuse the label ("ProficiencyList:"), so the strip
+  // tolerates missing inter-word space.
+  const listText = String(f.profList ?? "").replace(/^.*?Proficiency\s*List:\s*/i, "");
   for (const name of splitList(listText)) {
     const ref = refIndex.get(fold(name.replace(/\([^)]*\)/g, "")));
     if (ref) classProfs.push(ref);

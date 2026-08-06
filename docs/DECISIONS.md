@@ -140,3 +140,30 @@ unlocks.
 DriveThruRPG watermarks each customer's copy, so the bytes differ per person. A
 hash-based fingerprint would identify one buyer's PDF and reject everybody
 else's.
+
+---
+
+### A second class book joins without a second import path (2026-08-06)
+
+**Problem.** By This Axe prints ten dwarven classes plus reprints of the RR
+craftpriest and vaultguard, in a typography measurably different from RR:
+body type at exactly 10pt (RR sets 9), glyph runs joined without inter-word
+spaces, XP figures kissing their Title neighbours at 6-8px, proficiencies as
+run-ins rather than display headings, and the class C/G schedule stated only
+in prose because the RR grid does not know these classes.
+
+**Ruled: RR wins every overlap, and no BTA register entry re-anchors what
+another book already defines.** The two reprinted classes got no bta recipes
+- their rows in the source matrix carry the bta spread page and a note of
+what the diff found (the craftpriest reprint is value-identical; the
+vaultguard differs at two mid-table XP thresholds). Powers the JJ
+consolidated chapter or an RR spread already anchors keep their ids and
+anchors; a world with RR+JJ loses nothing by not owning BTA. Only what no
+book has is authored bta-primary.
+
+**Ruled: typography is a per-book constant, not a global.** Widening the
+definition body ceiling globally to admit BTA leaked RR sidebar quotes into
+neighbouring entries; widening cell glue globally would have re-fused RR
+columns. Both are dispatched per entry book. The prose C/G schedule is a
+binder fallback that fires only when the grid lookup misses, so RR classes
+never touch it.
