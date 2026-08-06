@@ -3178,6 +3178,21 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
     const rawName = capFirst(String(row.cells.template ?? "").replace(/\s+/g, " ").trim());
     const ann = /^(.*?)\s*\(([^)]+)\)$/.exec(rawName);
     const eq = parseEquipment(row.cells.equipment, eqMenu, entry.equipAliases ?? {});
+    // A spellbook prints its contents inline — "musty old spellbook with
+    // beguile humanoid and auditory illusion". The book stays the ITEM (its
+    // embellished name intact); the named spells move to the template's
+    // spell list, where the binder's schema has carried them all along.
+    const spells = [];
+    for (const it of eq.items) {
+      const m = /^(.*?spell\s*book)\s+with\s+(.+)$/i.exec(it.name);
+      if (!m || /\d/.test(m[2].split(/\s+/)[0] ?? "")) continue;
+      it.name = m[1];
+      it.note = it.note ? `${it.note}; holds ${m[2]}` : `holds ${m[2]}`;
+      for (const s of m[2].split(/\s*(?:,|\band\b)\s*/i)) {
+        const name = capFirst(s.trim());
+        if (name) spells.push({ uuid: "", name });
+      }
+    }
     return {
       rollMin: band.min ?? 3,
       rollMax: band.max ?? band.min ?? 3,
@@ -3186,7 +3201,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       caste: String(row.cells.caste ?? "").trim(),
       abilities: tokenizeProfs(row.cells.proficiencies, tplMenu),
       items: eq.items,
-      spells: [],
+      spells,
       gp: eq.gp,
       enc: eq.enc,
       alt: "",
@@ -3554,6 +3569,32 @@ export async function importEquipment(id, folderId) {
     const priced = priceFor(await gearPriceMap(), found.entry.name);
     if (priced?.cost != null) doc.system.cost = priced.cost;
     if (priced?.weight6 != null) doc.system.weight6 = priced.weight6;
+  }
+  // What the grids do not price, the entry's own paragraphs often do — the
+  // "Cost: 25gp" run-in, a stated stone weight, a stated damage die (the BTA
+  // dwarven chapter prints all three in prose). Page values, per seat.
+  if (node?.fields?.description) {
+    const prose = node.fields.description.map((p) => p.text ?? "").join(" ");
+    if (!doc.system.cost) {
+      const m = /Cost:?\s{0,8}([\d,]+(?:\.\d+)?)\s*(gp|sp|cp)/i.exec(prose);
+      if (m) {
+        const n = parseFloat(m[1].replace(/,/g, ""));
+        doc.system.cost = m[2].toLowerCase() === "gp" ? n : m[2].toLowerCase() === "sp" ? n / 10 : n / 100;
+      }
+    }
+    if (!doc.system.weight6) {
+      const m = /weighs?\s+(?:about\s+)?(a half|half a|one|an|a|two|three|four|five|six|\d+(?:\/\d+)?)\s*stones?/i.exec(prose);
+      if (m) {
+        const words = { "a half": 0.5, "half a": 0.5, one: 1, a: 1, an: 1, two: 2, three: 3, four: 4, five: 5, six: 6 };
+        const raw = m[1].toLowerCase();
+        const w = words[raw] ?? (raw.includes("/") ? Number(raw.split("/")[0]) / Number(raw.split("/")[1]) : parseFloat(raw));
+        if (Number.isFinite(w) && w > 0) doc.system.weight6 = w * 6;
+      }
+    }
+    if (doc.type === "weapon" && !doc.system.damage) {
+      const m = /deal(?:s|ing)?\s+(\d+d\d+(?:\s*[+-]\s*\d+)?)/i.exec(prose);
+      if (m) doc.system.damage = m[1].replace(/\s+/g, "");
+    }
   }
   const item = await createDoc(Item, { ...doc, folder });
   // acks-equipment owns the RAW annotation layer (container capacities, the
