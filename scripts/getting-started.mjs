@@ -35,16 +35,32 @@ export function registerGettingStartedSettings() {
 }
 
 /**
- * The GM chain, in dependency order: abilities and equipment before monsters
- * (imported monsters resolve both), location journals and roll tables after,
- * rules tables last (they warn by themselves if acks-location is absent).
- * Each step is already idempotent and already reports through notifications;
- * this only sequences them and narrates which step is running.
+ * The GM chain, in dependency order — every importer the module ships, in the
+ * order that lands prerequisites first:
+ *
+ *  1. abilities   — proficiencies, powers and skills; everything below resolves
+ *                   its ability tokens against these shared items;
+ *  2. equipment   — the shop list, the weapon and armour grids, and the animals;
+ *  3. classes     — a class's proficiency awards and starting kit are refs into
+ *                   the two above, so a class imported first points at nothing;
+ *  4. monsters    — resolve their ability tokens against 1;
+ *  5. companions  — an ability's companion slot points at a creature, and
+ *                   abilities were imported before any creature existed, so the
+ *                   link can only be made once 4 has run;
+ *  6. journals + roll tables — reference the creatures imported in 4;
+ *  7. rules tables — last (they warn by themselves if the provider is absent).
+ *
+ * A step missing from this list is a step a GM can only reach by hunting for
+ * its macro — which is how the class import came to be run by hand, repeatedly.
+ * Each step is idempotent and reports through its own notifications; this only
+ * sequences them and narrates which one is running.
  */
 const GM_STEPS = [
   ["stepAbilities", (api) => api.cookbookImportAbilities()],
   ["stepEquipment", (api) => api.importAllEquipment()],
+  ["stepClasses", (api) => api.importClasses()],
   ["stepMonsters", (api) => api.cookbookImportMonsters()],
+  ["stepCompanions", (api) => api.cookbookFillCompanions()],
   ["stepJournals", (api) => api.cookbookImportJournals()],
   ["stepRollTables", (api) => api.cookbookImportRollTables()],
   ["stepTables", (api) => api.cookbookImportTables()],

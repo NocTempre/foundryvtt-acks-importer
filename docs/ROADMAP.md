@@ -32,3 +32,17 @@ Maximum Invocation Level ladder, but their invocation lists (BTA ch.5) are not
 imported as documents — matching the RR classes, whose spell lists are also
 empty on the casting entry. When spell-list references land for the vancian
 classes, the invocation lists should ride the same mechanism.
+
+---
+
+## Merging duplicate imports already in a world
+
+The importers no longer make twins (DECISIONS, 2026-08-06), but a world that
+ran the earlier ones still holds them. Removing the extra copy is not enough:
+actors that embedded a shared ability point at whichever copy their import
+happened to resolve, so a merge has to re-point those embeds, and a GM who
+edited one of the twins has to be told which one wins. That is a migration with
+a confirmation surface of its own — a minor.
+
+Until then the clean-slate path is the answer and it works: Remove ALL Imports,
+then import again. It is exactly what the test cycle does.

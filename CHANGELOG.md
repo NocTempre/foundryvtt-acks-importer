@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.4.1
+
+### Fixed
+- **An import asks the shelf it writes to.** Equipment, location journals,
+  adventure roll tables and an ability's companion creature all checked the
+  world sidebar for what was already there while writing into a compendium —
+  so a GM who had switched imports to a compendium got the whole shop list,
+  every district journal and every table again on each run, and the counts
+  reported them as new. Each check now reads the same place its import lands.
+  Worlds that leave imports in the sidebar were never affected.
+- **A shared ability is imported once, however many things ask for it at
+  once.** Monsters and NPCs import four at a time and each resolves its own
+  proficiency list, so four creatures reaching for Alertness in the same
+  moment each found nothing and each made one — four copies of one
+  proficiency, and the creatures split between them. The first request now
+  claims the ability and the rest wait for it, which is also what makes the
+  class import and the ability import land on the same item instead of one
+  each.
+- **A macro marked "(GM)" is a GM's to run.** Import Character Classes,
+  Import ALL Equipment and Update Classes were the only bulk imports with no
+  seat check, while their macros are visible and runnable by everyone. In a
+  world that grants players item creation — the usual arrangement where
+  players build their own characters — a player pressing Import Character
+  Classes added a second set of all 31 to the world; Update Classes let them
+  rewrite the set. They now decline for anyone but the GM, as the rest of the
+  import macros already did. Worlds on the default permissions were shielded
+  by Foundry's own check and only ever saw the polite refusal arrive late.
+- **Import everything means everything.** The walkthrough's one-click chain
+  skipped character classes entirely and never linked companion creatures.
+  Classes now import after the proficiencies and equipment their awards point
+  at, and companion slots are filled once the creatures exist — the order
+  prerequisites actually need.
+- **Loading a page twice does not load it twice.** Browse & Load a Page made
+  a fresh document each time it was pointed at a heading it had already
+  loaded. The document now carries the page reference it came from and is
+  reused.
+- **A cached illustration is proved cached once, not once per creature.**
+  Importing a book listed the whole art directory again for every creature —
+  a request that grows with every image imported, taken hundreds of times
+  and queued behind three other importers, so a world whose art was already
+  on disk still spent minutes proving it. The listing is taken once per
+  session and kept true as images are added.
+
 ## 2.4.0
 
 ### Added

@@ -9,6 +9,8 @@
  * Named for the module the reader installed, never for a development phase —
  * a folder in someone's world is a shipped surface.
  */
+import { MODULE_ID } from "./constants.mjs";
+
 const FOLDER_NAME = "ACKS Importer — Browsed";
 const tagFor = (recipe) => `@PdfText[${recipe.id}]{${recipe.cite}}`;
 
@@ -33,14 +35,48 @@ export async function ensureFolder(type) {
   );
 }
 
-/** Create the world document for one recipe (used by dynamic browse-loads). */
+/**
+ * The document already loaded for a browse recipe, or null.
+ *
+ * A browse recipe id is derived from book, page and heading, so loading the
+ * same page a second time asks for the same id — and without this the reader
+ * got a second copy of everything they had already loaded, with nothing on
+ * either document saying which was which.
+ */
+const loadedFor = (recipe) => {
+  const collection = recipe.kind === "monster" ? game.actors : game.items;
+  return collection.find((d) => d.getFlag(MODULE_ID, "browsed")?.id === recipe.id) ?? null;
+};
+
+/**
+ * Create — or REUSE — the world document for one recipe (dynamic browse-loads).
+ * The recipe id rides on the document so a re-load finds it.
+ */
 export async function createDocFor(recipe) {
+  const existing = loadedFor(recipe);
+  if (existing) return existing;
   const html = `<p>${tagFor(recipe)}</p>`;
+  const flags = { [MODULE_ID]: { browsed: { id: recipe.id, cite: recipe.cite } } };
   if (recipe.kind === "monster") {
     const folder = await ensureFolder("Actor");
-    return Actor.create({ name: recipe.name, type: "monster", folder: folder.id, ...monsterDescData(html) });
+    // MERGED, not spread over: monsterDescData carries its own `flags` key, and
+    // spreading it last would drop the recipe id this document is found by.
+    const desc = monsterDescData(html);
+    return Actor.create({
+      name: recipe.name,
+      type: "monster",
+      folder: folder.id,
+      ...desc,
+      flags: { ...flags, ...(desc.flags ?? {}) },
+    });
   }
   const folder = await ensureFolder("Item");
-  return Item.create({ name: recipe.name, type: recipe.kind === "ability" ? "ability" : "item", folder: folder.id, system: { description: html } });
+  return Item.create({
+    name: recipe.name,
+    type: recipe.kind === "ability" ? "ability" : "item",
+    folder: folder.id,
+    flags,
+    system: { description: html },
+  });
 }
 

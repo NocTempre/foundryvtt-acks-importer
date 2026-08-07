@@ -7,6 +7,53 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### One dedup rule for every importer: ask the shelf you write to, and claim before you build (2026-08-06)
+
+**Problem.** Duplicate imports, reported from a live table as "double-importing
+(or worse), especially the classes". Four independent causes, none of which the
+offline suite can see (it has no compendium, no concurrency and one user):
+
+1. *World read, pack write.* `importToCompendium` moved where documents are
+   created. `importedIndex`/`importedIdSet` were taught to follow it; equipment,
+   location journals, adventure roll tables and `resolveCompanion` were not, and
+   kept asking `game.items` / `game.journal` / `game.tables` / `game.actors`.
+   With the setting on, each of those saw an empty shelf on every run.
+2. *Check and create are not atomic.* `importAbility` read the dedup index, then
+   spent a page extraction and a socket round-trip building the item. Imports
+   run four at a time and every creature resolves its own proficiency list, so
+   four creatures reaching for one shared ability in that window each made one.
+   This is the "or worse": the copy count is the concurrency, not two.
+3. *No GM guard.* `importClasses`, `importAllEquipment` and
+   `cookbookUpdateClasses` were the only bulk entry points without one, while
+   their macros are labelled "(GM)" and executable by every seat.
+4. *No dedup at all.* `cookbookImportIds` and the browse-and-load path created
+   unconditionally.
+
+**Taken: the two rules, applied everywhere.** A presence check reads whichever
+target the matching write goes to — `importedIdsOfType(type, worldCollection)`
+is that question asked once, and `importedItem` / `importedActor` are its
+document-returning forms. And a build is *claimed* before it starts:
+`claimImport(id, build)` caches the in-flight promise keyed by cookbook id, so
+the second caller waits for the first one's document. This is the same shape
+`ensureFolderPath` already used for folders, generalized. Because the claim is
+keyed on the cookbook id alone and shared by every item importer, it is also
+what guarantees the class import and the ability import resolve to the same
+item rather than one each — the cross-importer half of the report.
+
+**Rejected: a de-duplicating repair pass.** Worlds that already ran the broken
+importers hold twins. Merging them means choosing which copy the actors that
+embedded it should follow, and that is a migration with a new user-facing
+surface — a minor, not a patch. The clean-slate path already ships and works:
+Remove ALL Imports, then import again. Recorded in ROADMAP.
+
+**Cost.** `importEquipment` splits in two so the item half can be claimed while
+the animal half (an Actor) stays outside the item index. `poc.mjs` gains a
+`browsed` flag so a browse-loaded document can be found again — documents
+created before this release carry no such flag and will still be twinned once,
+after which they are stable.
+
+---
+
 ### The refresh bridge: bytes may cross a reload, and nothing longer (2026-07-29)
 
 **Problem.** The possession model persists a book's *location*, never the book.

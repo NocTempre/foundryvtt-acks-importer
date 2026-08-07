@@ -1354,22 +1354,52 @@ async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
  * extracts cleanly (the AX books' art is JPEG2000). The placement-box
  * page-render crop stays as a fallback for a seat whose decoders fail.
  */
+const ART_DIR = "acks-importer-art";
+
+/**
+ * Filename → full path for everything already in the art directory, listed
+ * ONCE per session.
+ *
+ * The reuse check used to browse the whole directory per actor. That is a
+ * server round trip whose response grows with every import, taken hundreds of
+ * times in a bulk run and serialized behind the other three import workers —
+ * so a world whose art was entirely cached still spent minutes proving it. The
+ * listing changes only when this seat uploads, and every upload updates the
+ * map, so one listing is the whole truth for the run.
+ */
+let artListing = null;
+function artIndex(FP) {
+  // The PROMISE is cached, not the map: four import workers start together and
+  // would otherwise each fire the listing this exists to fire once.
+  artListing ??= (async () => {
+    const map = new Map();
+    try {
+      const listing = await FP.browse("data", ART_DIR);
+      for (const f of listing?.files ?? []) map.set(f.split("/").pop(), f);
+    } catch {
+      /* directory does not exist yet — an empty map, not a failure */
+    }
+    return map;
+  })();
+  return artListing;
+}
+
 async function uploadPageArt(doc, recipe) {
   const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
-  const dir = "acks-importer-art";
+  const dir = ART_DIR;
   const filename = `${recipe.id.replaceAll(".", "-")}.png`;
   // Already imported? Reuse it — decode + upload is the expensive half of a
   // re-import. A tiny file is a corrupt/aborted upload and is redone.
-  try {
-    const listing = await FP.browse("data", dir);
-    const existing = (listing?.files ?? []).find((f) => f.split("/").pop() === filename);
-    if (existing) {
-      const head = await fetch(existing, { method: "HEAD" }).catch(() => null);
-      const size = parseInt(head?.headers?.get("content-length") ?? "0", 10);
-      if (!head || size >= 1024) return { path: existing, width: 0, height: 0, cached: true };
-    }
-  } catch {
-    /* directory may not exist yet — fall through and create it */
+  const index = await artIndex(FP);
+  const existing = index.get(filename);
+  if (existing) {
+    // A tiny file is a corrupt/aborted upload, and an unanswerable one is a
+    // file deleted since the listing was taken — both are re-extracted rather
+    // than handed to an actor as an image path that renders nothing.
+    const head = await fetch(existing, { method: "HEAD" }).catch(() => null);
+    const size = parseInt(head?.headers?.get("content-length") ?? "0", 10);
+    if (head?.ok && size >= 1024) return { path: existing, width: 0, height: 0, cached: true };
+    index.delete(filename);
   }
   const art =
     (await extractPageArt(doc, recipe.page, recipe.name ?? null)) ??
@@ -1378,7 +1408,9 @@ async function uploadPageArt(doc, recipe) {
   await FP.createDirectory("data", dir).catch(() => {});
   const file = new File([art.blob], filename, { type: "image/png" });
   const res = await FP.upload("data", dir, file, {}, { notify: false });
-  return res?.path ? { path: res.path, width: art.width, height: art.height } : null;
+  if (!res?.path) return null;
+  index.set(filename, res.path); // the listing stays true without re-browsing
+  return { path: res.path, width: art.width, height: art.height };
 }
 
 async function importArt(actor, doc, recipe) {
