@@ -74,6 +74,27 @@
   min-width: 0;
 }
 
+/* The scroller's `overflow-wrap: anywhere` is inherited by everything under it,
+   and unlike `break-word` it also lowers MIN-CONTENT width — to a single
+   character. For prose in a column that is the whole point. In a flex row it is
+   the opposite of what is wanted: a flex item's automatic minimum size IS its
+   min-content width, so a label beside a control that will not shrink is ground
+   down to a vertical column of letters rather than wrapping the row or pushing
+   the control. Every flex row this module puts inside a dialog therefore breaks
+   at word boundaries, and inside a word only as a last resort — which leaves
+   min-content at the longest word. There is no selector for "is a flex
+   container": a new row has to join this list. */
+.acks-importer-dialog
+  :is(
+    .acks-importer-reconnect-head,
+    .acks-importer-browse-row,
+    .acks-importer-gs-action,
+    .acks-importer-abil-filters,
+    .acks-importer-abil-actions
+  ) {
+  overflow-wrap: break-word;
+}
+
 /* `.notes` is an AppV1 class: core styles it only under `body.game .app form`,
    and a DialogV2 root is `.application`, never `.app` — so an unstyled hint
    renders as body text at 14px with a paragraph's own margins. Core's v14
@@ -114,6 +135,13 @@
   padding: 0.4em 0.6em;
   border-left: var(--acks-rule-heavy) solid var(--acks-rule-color);
   background: var(--acks-tint);
+  /* The fill brings its own ink. A panel that states an OPAQUE ground and
+     borrows its text colour from whatever it was dropped into is legible only
+     by luck: tint and ink inverting together is what makes the pair readable,
+     and a reveal opens in the chat log, whose card is coloured by core and can
+     be carrying the opposite end of the scale. Never state one without the
+     other. */
+  color: var(--acks-ink);
   font-style: normal;
 }
 
@@ -151,11 +179,13 @@
 /* Book / group headings inside the monster-import list: one list spans every
    connected book, so each block has to say where it came from. Sticky so the
    heading stays visible while scrolling a long book — which is why the ground
-   is the opaque paper token and not a tint: rows pass underneath it. */
+   is the opaque paper token and not a tint: rows pass underneath it — and, by
+   the same rule as the reveal panel, an opaque ground states its own ink. */
 .acks-importer-book-head,
 .acks-importer-group-head {
   position: sticky;
   background: var(--acks-paper);
+  color: var(--acks-ink);
   padding: 3px 0 2px;
 }
 
@@ -237,14 +267,30 @@
   margin: var(--acks-sp-1) 0 0;
 }
 
+/* A book's name and its control share the line while both fit, and the control
+   drops to a line of its own when they do not. A file picker is a fixed slab of
+   browser chrome — its button and "no file chosen" are its own, and no amount
+   of shrinking makes them narrower — so on the widest book names there is not
+   room for both, and wrapping is the only answer that leaves the name whole. */
 .acks-importer-reconnect-head {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5em;
   align-items: center;
 }
 
+/* `auto` basis, not `0`: the name asks for its full width first, which is what
+   decides whether the row wraps. A zero basis would always fit and so never
+   wrap, leaving the name to be squeezed instead. */
 .acks-importer-reconnect-head strong {
-  flex: 1;
+  flex: 1 1 auto;
+}
+
+/* Grows to own the line it wraps onto; shrinks below its chrome only once the
+   reader has dragged the window narrower than one, clipping like the selects. */
+.acks-importer-reconnect-head input[type="file"] {
+  flex: 1 1 15em;
+  min-width: 0;
 }
 
 .acks-importer-reconnect-head button {
