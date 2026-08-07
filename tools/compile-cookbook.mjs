@@ -2400,7 +2400,16 @@ async function compileClass(doc, entry, kindRow) {
     cite: `${BOOKS[entry.book].short} p.${page}`,
     pages: entry.pages,
     ...(entry.icon ? { icon: entry.icon } : {}),
-    meta: { ...(entry.meta ?? {}), key: spec.key, chassis: spec.chassis ?? {}, ...(spec.factored ? { factored: true } : {}), ...(spec.core ? { core: true } : {}) },
+    meta: {
+      ...(entry.meta ?? {}),
+      key: spec.key,
+      chassis: spec.chassis ?? {},
+      ...(spec.factored ? { factored: true } : {}),
+      ...(spec.core ? { core: true } : {}),
+      // How much Intellect bonus this class's printed templates already spend
+      // — a structural fact about the spread, like `factored` above it.
+      ...(spec.templatesAssumeIntBonus ? { templatesAssumeIntBonus: Number(spec.templatesAssumeIntBonus) } : {}),
+    },
     ...(spec.awards?.length ? { awards: spec.awards } : {}),
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
     ...(spec.casting?.length ? { casting: spec.casting } : {}),

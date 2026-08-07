@@ -5774,7 +5774,8 @@
           "saves": "mage",
           "attack": "mage"
         },
-        "core": true
+        "core": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -10433,7 +10434,8 @@
         "chassis": {
           "saves": "crusader",
           "attack": "mage"
-        }
+        },
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -10928,7 +10930,8 @@
           "saves": "",
           "attack": ""
         },
-        "factored": true
+        "factored": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -11727,7 +11730,8 @@
           "saves": "",
           "attack": ""
         },
-        "factored": true
+        "factored": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -12241,7 +12245,8 @@
           "saves": "",
           "attack": ""
         },
-        "factored": true
+        "factored": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -12645,7 +12650,8 @@
           "saves": "",
           "attack": ""
         },
-        "factored": true
+        "factored": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {
@@ -13117,7 +13123,8 @@
           "saves": "",
           "attack": ""
         },
-        "factored": true
+        "factored": true,
+        "templatesAssumeIntBonus": 1
       },
       "awards": [
         {

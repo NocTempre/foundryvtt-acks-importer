@@ -2141,6 +2141,7 @@
     "icon": "icons/svg/daze.svg",
     "class": {
       "key": "mage",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "mage",
         "attack": "mage"
@@ -3277,6 +3278,7 @@
     "icon": "icons/svg/daze.svg",
     "class": {
       "key": "witch",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "crusader",
         "attack": "mage"
@@ -3815,6 +3817,7 @@
     "icon": "icons/svg/anchor.svg",
     "class": {
       "key": "dwarvenCraftpriest",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
         "attack": ""
@@ -4172,6 +4175,7 @@
     "icon": "icons/svg/eye.svg",
     "class": {
       "key": "elvenNightblade",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
         "attack": ""
@@ -4413,6 +4417,7 @@
     "icon": "icons/svg/sword.svg",
     "class": {
       "key": "elvenSpellsword",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
         "attack": ""
@@ -4591,6 +4596,7 @@
     "icon": "icons/svg/angel.svg",
     "class": {
       "key": "nobiranWonderworker",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
         "attack": ""
@@ -4832,6 +4838,7 @@
     "icon": "icons/svg/skull.svg",
     "class": {
       "key": "zaharanRuinguard",
+      "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
         "attack": ""

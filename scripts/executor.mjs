@@ -716,6 +716,34 @@ export function effectScan(paras, registers) {
     for (const [surface, key] of targets) if (p.includes(` ${surface} `)) return key;
     return null;
   };
+
+  /**
+   * WHICH activity a target phrase names, if it names one.
+   *
+   * `classify` answers what KIND of thing is modified ("a proficiency throw")
+   * and deliberately throws away which one, because the vocabulary is shipped
+   * and the name is not. But a bonus with no name on it is not usable: "+2 on
+   * Lockpicking proficiency throws" and "+2 on Hiding and Sneaking proficiency
+   * throws" both stored as an unattributed "+2 to proficiency throws", so a
+   * consumer could only ever apply every bonus to every roll, or none. The
+   * name is read off the seat's own page like every other value here.
+   *
+   * The activity is the run of Capitalised words the phrase opens with, joined
+   * by "and"/"or" — the books name activities in title case and the rest of the
+   * phrase ("proficiency throws") in lower. A phrase that opens lowercase names
+   * no activity and returns "", which is the honest answer for "attack throws".
+   */
+  const namedActivity = (phrase) => {
+    const words = String(phrase ?? "").trim().split(/\s+/);
+    const taken = [];
+    for (const w of words) {
+      if (/^[A-Z][A-Za-z'-]*$/.test(w)) taken.push(w);
+      else if (taken.length && /^(and|or|&)$/i.test(w)) taken.push(w);
+      else break;
+    }
+    while (taken.length && /^(and|or|&)$/i.test(taken.at(-1))) taken.pop();
+    return taken.join(" ");
+  };
   const out = [];
   const seen = new Set();
   const push = (e) => {
@@ -805,12 +833,18 @@ export function effectScan(paras, registers) {
     let n = parseInt(m[1], 10);
     if (Number.isNaN(n)) continue;
     if (/penalty/i.test(m[2])) n = -Math.abs(n);
-    pushModifier({ type: "modifier", target: key, value: flat(n) }, m.index);
+    const forWhat = namedActivity(m[3]);
+    pushModifier({ type: "modifier", target: key, value: flat(n), ...(forWhat ? { forWhat } : {}) }, m.index);
   }
   // "gains a +2 to saving throws" (no bonus/penalty word — require an explicit sign)
   for (const m of text.matchAll(new RegExp(`([+-]\\d+)\\s+(?:to|on)\\s+(${TARGET})`, "gi"))) {
     const key = classify(m[2]);
-    if (key) pushModifier({ type: "modifier", target: key, value: flat(parseInt(m[1], 10)) }, m.index);
+    if (!key) continue;
+    const forWhat = namedActivity(m[2]);
+    pushModifier(
+      { type: "modifier", target: key, value: flat(parseInt(m[1], 10)), ...(forWhat ? { forWhat } : {}) },
+      m.index,
+    );
   }
   // Reversed order: "+1 initiative bonus" / "-2 saving throw penalty".
   for (const m of text.matchAll(/([+-]\d+)\s+([a-z][a-z' -]{2,30}?)\s+(bonus|penalty)\b/gi)) {

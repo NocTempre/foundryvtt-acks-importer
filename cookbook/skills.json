@@ -634,6 +634,7 @@
               "target": "proficiencyThrow",
               "forWhat": "Lockpicking",
               "mode": "add",
+              "appliesToRoll": "methodical",
               "condition": "methodical attempt (one turn); not a hasty attempt",
               "from": {
                 "pattern": "methodically\\s*pick\\s*a\\s*lock[\\s\\S]{0,140}?with\\s*a\\s*\\+(\\d+)\\s*bonus"
@@ -975,6 +976,7 @@
               "target": "proficiencyThrow",
               "mode": "add",
               "forWhat": "Searching",
+              "appliesToRoll": "methodical",
               "condition": "methodical search (one turn), not a hasty one",
               "from": {
                 "pattern": "methodically\\s*search\\s*requires[\\s\\S]{0,110}?with\\s*a\\s*\\+(\\d+)\\s*bonus"
@@ -986,6 +988,31 @@
               "condition": "hasty search (one round)",
               "restriction": "One hasty try per area until the thief gains a level",
               "note": "A methodical search of the same area is still allowed, and may be repeated. A failed throw made while hastily searching on the move spends that area's one hasty attempt."
+            }
+          ]
+        },
+        "rolls": {
+          "op": "rolls",
+          "specs": [
+            {
+              "key": "hasty",
+              "label": {
+                "pattern": "(hastily)"
+              },
+              "target": {
+                "fromProgression": true
+              },
+              "condition": "one round; one try per area until the thief gains a level"
+            },
+            {
+              "key": "methodical",
+              "label": {
+                "pattern": "(methodically)"
+              },
+              "target": {
+                "fromProgression": true
+              },
+              "condition": "one turn; add the methodical bonus; repeatable"
             }
           ]
         }
@@ -1469,6 +1496,7 @@
               "target": "proficiencyThrow",
               "forWhat": "Trapbreaking",
               "mode": "add",
+              "appliesToRoll": "methodical",
               "condition": "methodical attempt (one turn)",
               "from": {
                 "pattern": "methodically\\s*disarm[\\s\\S]{0,120}?with\\s*a\\s*\\+(\\d+)\\s*bonus"

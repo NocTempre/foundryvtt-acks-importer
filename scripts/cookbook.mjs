@@ -3314,6 +3314,12 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       attackChassis: entry.meta?.chassis?.attack ?? "",
       factored: !!entry.meta?.factored,
       core: !!entry.meta?.core,
+      // How much Intellect bonus this class's printed TEMPLATES already spend.
+      // The studious spellcasters' packages are built assuming one, so chargen
+      // must not offer it a second time — and must withhold what the character
+      // cannot hold when their Intellect is lower. A structural fact about how
+      // the spread is arranged, like `factored` beside it.
+      templatesAssumeIntBonus: Number(entry.meta?.templatesAssumeIntBonus) || 0,
       saves,
       attack,
       cleaves,
