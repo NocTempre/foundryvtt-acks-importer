@@ -765,12 +765,14 @@ async function claimImport(id, build) {
   const pending = (async () => rememberImported(id, await build()))();
   inflightImports.set(id, pending);
   try {
-    const doc = await pending;
-    if (!doc) inflightImports.delete(id);
-    return doc;
-  } catch (err) {
+    return await pending;
+  } finally {
+    // The claim covers the in-flight window and NOTHING else. `rememberImported`
+    // has already run inside `pending`, so the verified index holds the result
+    // before this line — while a claim kept past resolution would be a second
+    // cache that nothing invalidates, and a document deleted afterwards would
+    // go on answering "already imported" for the rest of the session.
     inflightImports.delete(id);
-    throw err;
   }
 }
 
@@ -780,8 +782,23 @@ export function forgetImportedIndex() {
   inflightImports.clear();
 }
 
-/** The already-imported item for this cookbook id, or null. */
-const importedItem = async (id) => (await importedIndex()).get(id) ?? null;
+/**
+ * The already-imported item for this cookbook id, or null.
+ *
+ * The index is cached for a whole session, so it can hold a document the GM has
+ * since deleted — and answering "already imported" for a document that is gone
+ * would break the one refresh a GM has: delete the item, import again, get the
+ * new derived values. So the cached hit is confirmed against its collection
+ * before it is trusted, and a stale one is dropped.
+ */
+const importedItem = async (id) => {
+  const cached = (await importedIndex()).get(id) ?? null;
+  if (!cached) return null;
+  const live = cached.collection?.get?.(cached.id) ?? null;
+  if (live) return live;
+  importedCache?.delete(id);
+  return null;
+};
 
 /**
  * The already-imported ACTOR for this cookbook id, or null — the actor-side

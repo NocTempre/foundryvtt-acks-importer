@@ -46,6 +46,19 @@ embedded it should follow, and that is a migration with a new user-facing
 surface — a minor, not a patch. The clean-slate path already ships and works:
 Remove ALL Imports, then import again. Recorded in ROADMAP.
 
+**Amended 2026-08-06 (2.4.2): a claim is a window, not a cache.** The first cut
+of `claimImport` kept the resolved promise in `inflightImports` forever, which
+made it a second cache — one `forgetImportedIndex` reached but nothing else did.
+Deleting an imported document therefore left the claim answering for it, and
+delete-then-re-import (the only way to refresh a value derived at CREATE time)
+silently did nothing until a page reload. The claim is now released in a
+`finally`; `rememberImported` has already run by then, so the verified index
+holds the result and no window is reopened. `importedItem` also confirms a
+cached document against its collection before trusting it, since the index is
+built once and the GM may delete from the sidebar at any time. Caught by live
+testing — the delete path has no offline coverage, and both faults are
+invisible to a single-pass import.
+
 **Cost.** `importEquipment` splits in two so the item half can be claimed while
 the animal half (an Actor) stays outside the item index. `poc.mjs` gains a
 `browsed` flag so a browse-loaded document can be found again — documents

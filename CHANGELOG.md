@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.4.2
+
+### Fixed
+- **A deleted import can be imported again, in the same sitting.** 2.4.1 gave
+  the importers a session-long memory of what they had already made, and that
+  memory outlived the documents: delete an imported item to pick up a changed
+  price or a corrected description, run the import again, and it was told the
+  item was already there — the refresh only worked after a page reload. The
+  memory now confirms a document still exists before it speaks for it, and an
+  import in progress stops being remembered the moment it finishes. Importing
+  the same thing from several places at once still yields one document.
+
 ## 2.4.1
 
 ### Fixed
