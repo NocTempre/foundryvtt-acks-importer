@@ -1,7 +1,7 @@
 {
   "id": "acks-importer",
-  "title": "ACKS II â€” Importer",
-  "description": "Imports ACKS II book content into Foundry from the reader's own PDFs: monsters, proficiencies and class powers, equipment and price tables, adventure locations and roll tables. Ships extraction recipes â€” page geometry and patterns â€” and never the book text itself. Bring your own book.",
+  "title": "ACKS II — Importer",
+  "description": "Imports ACKS II book content into Foundry from the reader's own PDFs: monsters, proficiencies and class powers, equipment and price tables, adventure locations and roll tables. Ships extraction recipes — page geometry and patterns — and never the book text itself. Bring your own book.",
   "version": "2.4.0",
   "authors": [
     {
@@ -65,7 +65,7 @@
   "packs": [
     {
       "name": "macros",
-      "label": "ACKS Importer â€” Macros",
+      "label": "ACKS Importer — Macros",
       "path": "packs/macros",
       "type": "Macro",
       "system": "acks"
