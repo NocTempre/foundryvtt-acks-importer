@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.4.4
+
+### Fixed
+- **A template hands over the coin it prints, in the coin it prints.** Starting
+  money was read as gold and only as gold, so a package paying in silver paid
+  nothing: a proselytizer's twenty silver for alms, a priest's twenty-five, a
+  tribal warrior's sixty-five, and the silver that rounds out a hedge wizard's
+  and a noble magist's purse all vanished — and three of those characters began
+  play with no money whatever. The silver arrives with the gold now, and the
+  words that named it stop turning up in the equipment list as an item called
+  "20sp for alms".
+- **What an item is worth is not what the character is carrying.** A staff
+  tipped with a glass gemstone is priced at forty-five gold in its own
+  description, and that was being counted into the purse — a noble magist began
+  with seventy-nine gold instead of thirty-four — while the bracket it was
+  written in cut the staff's own name in half.
+
 ## 2.4.3
 
 ### Fixed

@@ -2931,9 +2931,20 @@ function parseEquipment(cellText, menu, aliases = {}) {
     enc = encMatch[0].replace(/[().]/g, "").trim();
     text = text.slice(0, encMatch.index).trim().replace(/,\s*$/, "");
   }
+  // Printed starting coin. Most templates pay in gold, but a few pay partly or
+  // wholly in silver — "1gp, 8sp", "20sp for alms", "65sp" — and a template
+  // that prints only silver leaves its character with nothing if only gold is
+  // read. A coin amount taken here is REMOVED from the text, so what is left
+  // for the item splitter is equipment and nothing else.
   let gp = 0;
-  text = text.replace(/(\d[\d,]*)\s*gp[^,]*/gi, (m, n) => {
-    gp += parseInt(n.replace(/,/g, ""), 10) || 0;
+  let sp = 0;
+  // "(45gp value)" prices an ITEM — a gemstone-tipped staff — and is not money
+  // the character carries. Taking it both inflated the purse and cut the item's
+  // name off at the bracket.
+  text = text.replace(/(\d[\d,]*)\s*(gp|sp)\b(?!\s*value)[^,]*/gi, (m, n, unit) => {
+    const amount = parseInt(n.replace(/,/g, ""), 10) || 0;
+    if (unit.toLowerCase() === "sp") sp += amount;
+    else gp += amount;
     return "";
   });
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -2986,7 +2997,7 @@ function parseEquipment(cellText, menu, aliases = {}) {
     }
     push(descriptor);
   }
-  return { items, gp, enc };
+  return { items, gp, sp, enc };
 }
 
 /** The Proficiencies Gained per Level row for one class, from the executed
@@ -3291,6 +3302,7 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       items: eq.items,
       spells,
       gp: eq.gp,
+      sp: eq.sp,
       enc: eq.enc,
       alt: "",
     };
