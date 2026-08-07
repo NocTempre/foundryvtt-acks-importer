@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.4.3
+
+### Fixed
+- **A bonus records what it is a bonus to.** An ability's modifiers were read
+  off the page for their size and their kind and never for their subject, so
+  "a +2 bonus on Lockpicking proficiency throws" and "a +2 bonus on Hiding and
+  Sneaking proficiency throws" both arrived as an unattributed +2 to proficiency
+  throws — indistinguishable from each other and from every other, and useless
+  to anything that wanted to apply one. The activity the sentence names is now
+  kept, so a proficiency that improves another one finally reaches it.
+- **A methodical attempt gets its bonus.** Lockpicking, Searching and
+  Trapbreaking each state a throw worth four more when made slowly, and each
+  stored that bonus beside a throw it never reached — so a thief picking a lock
+  methodically was scored against the hasty number. The bonus now names the
+  throw it belongs to rather than being matched against its own prose, which
+  mentions both attempts in one breath and would land it on the hasty throw too.
+- **Searching offers the two attempts it always had.** The book gives it a hasty
+  throw and a methodical one, as it does for picking a lock and breaking a trap;
+  only Searching arrived as a single unlabelled throw.
+- **A class records whether its templates already spend an Intellect bonus.**
+  The studious spellcasters' starting packages are built assuming one, and
+  nothing said so — so character generation offered it a second time and gave a
+  character below that band more than they may hold.
+
+Values are read when an item is created, so **delete and re-import** the
+abilities and classes you want these to reach. Anything already in your world
+is left exactly as it is until you do.
+
 ## 2.4.2
 
 ### Fixed
