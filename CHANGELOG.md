@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.4.5
+
+### Fixed
+- **A refill takes back what the page no longer yields.** Refreshing an
+  already-imported monster could add and overwrite stats but never retract
+  one: a value an improved recipe no longer produces — a mis-read treasure
+  type, a morale score, appearing dice — survived every refill. Each stat the
+  binder owns is now returned to the state a fresh import would leave whenever
+  the re-extraction does not produce it. A linked treasure table is the
+  Judge's own and is never touched.
+- **Update Abilities retracts what a definition dropped.** An entry that
+  un-deprecates, or loses a prerequisite, alias, granted capability or power
+  value, now clears that field from every already-imported copy on the next
+  Update run; before, the stale value was kept forever, because an update
+  could add and overwrite but never take away.
+
 ## 2.4.4
 
 ### Fixed

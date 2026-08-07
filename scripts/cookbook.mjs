@@ -1930,6 +1930,37 @@ async function importTemplate(bookId, id, folderId) {
 }
 
 /**
+ * Every stat leaf bindMonster writes only when the page yields it. A refill
+ * must RETRACT these: update() merges nested objects, so a key the
+ * re-extraction no longer produces would otherwise keep its stale value
+ * forever. Each path absent from the new payload is written back to its schema
+ * initial — the state a fresh import of the same node would leave. Only
+ * binder-owned leaves are listed; everything else on the actor is left alone
+ * (in particular `details.treasure.table`, which belongs to the GM's linked
+ * treasure table, and `hp.bhr`, which the binder never writes).
+ */
+const REFILL_STAT_PATHS = [
+  "aac.value",
+  "hp.hd",
+  "hp.value",
+  "hp.max",
+  "saves.paralysis.value",
+  "saves.death.value",
+  "saves.blast.value",
+  "saves.implements.value",
+  "saves.spell.value",
+  "details.morale",
+  "details.xp",
+  "details.alignment",
+  "details.treasure.type",
+  "details.appearing.d",
+  "details.appearing.w",
+  "movement.base",
+  "thac0.throw",
+  "attacks",
+];
+
+/**
  * Re-read an already-imported monster's stats from this seat's book.
  *
  * The counterpart to importOne for an actor that already exists: same
@@ -1951,6 +1982,11 @@ export async function refillMonster(actor) {
   const node = await executeEntry(session.doc, found.cb, data.registers, found.id);
   if (!node.ok) return { ok: false, reason: "no-match", book: bookId, name: found.entry.name };
   const { system, prototypeToken } = bindMonster(node);
+  for (const path of REFILL_STAT_PATHS) {
+    if (foundry.utils.getProperty(system, path) !== undefined) continue;
+    const field = actor.system?.schema?.getField?.(path);
+    if (field) foundry.utils.setProperty(system, path, field.getInitialValue());
+  }
   await actor.update({ system, ...(prototypeToken ? { prototypeToken } : {}) });
   cookbookCacheParas(bookId, found.id, node.fields.description ?? []);
   return { ok: true, book: bookId, name: found.entry.name };
@@ -2641,6 +2677,25 @@ export function bindAbility(entry, node, id, opts = {}) {
     },
   };
 }
+
+/**
+ * The extras subkeys bindAbility emits only when the definition carries them —
+ * the conditional spreads above, kept in one list because an UPDATE must
+ * retract them: update() merges nested objects and never deletes an absent
+ * key, so a rebuild that no longer emits one of these (an entry un-deprecated,
+ * a prerequisite dropped) has to say so with an explicit `-=` deletion or the
+ * stale value survives every later run.
+ */
+const ABILITY_EXTRAS_OPTIONAL = [
+  "replacedBy",
+  "powerValue",
+  "requires",
+  "aliasOf",
+  "provides",
+  "conversionStatus",
+  "conversionFrom",
+  "defenses",
+];
 
 /**
  * Items are filed by CONTENT TYPE, not by book: a proficiency spans every book
@@ -4446,13 +4501,22 @@ export async function cookbookUpdateAbilities() {
   // Name-adopted items whose description carries someone else's writing. The
   // write is held back until the GM has answered for them.
   const collisions = [];
-  /** Rewrite the generated surface — the descriptor, the cookbook id, the extras. */
-  const writeGenerated = (doc, built) =>
-    doc.update({
+  /** Rewrite the generated surface — the descriptor, the cookbook id, the
+   * extras. The written extras carry a `-=` deletion sentinel for every
+   * optional subkey the rebuild no longer emits (ABILITY_EXTRAS_OPTIONAL), in
+   * a copy — `built` stays clean for the create path, which must not carry
+   * sentinels into fresh documents. */
+  const writeGenerated = (doc, built) => {
+    const extras = { ...built.flags["acks-extras"].extras };
+    for (const key of ABILITY_EXTRAS_OPTIONAL) {
+      if (!(key in extras)) extras[`-=${key}`] = null;
+    }
+    return doc.update({
       "system.description": built.system.description,
       [`flags.${MODULE_ID}.cookbook`]: built.flags[MODULE_ID].cookbook,
-      "flags.acks-extras.extras": built.flags["acks-extras"].extras,
+      "flags.acks-extras.extras": extras,
     });
+  };
   // Counted first: this walks every ability in the world, actors included, and
   // re-extracts each definition it has not seen — hundreds of items on a world
   // that imported the whole corpus.
