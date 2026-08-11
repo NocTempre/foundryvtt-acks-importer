@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Guides & feature gallery
+    url: https://noctempre.github.io/foundryvtt-acks-extras/
+    about: The family's documentation site — install, getting started, and every feature area.
+  - name: Sheet, table or automation problems
+    url: https://github.com/NocTempre/foundryvtt-acks-extras/issues/new?template=bug_report.yml
+    about: Proficiencies, equipment, formations, henchmen, influence, locations and monster stat blocks belong to ACKS II — Extras.
