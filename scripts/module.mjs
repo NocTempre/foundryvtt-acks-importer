@@ -22,7 +22,7 @@
  *   bookStatus()     which books are open / remembered / absent on this seat
  *   forgetBooks()    drop remembered locations + this session's prose
  */
-import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
+import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE } from "./constants.mjs";
 import { BOOKS, fingerprintWarning, identifyBook } from "./books.mjs";
 import { matchFilesToBooks, pairPicks } from "./book-match.mjs";
 import { RECIPES, recipeById } from "./recipes.mjs";
@@ -272,7 +272,9 @@ function stampClear() {
   }
   // The 0.61.0 stamp lived here and could not survive pagehide. Clear it so an
   // upgrading seat is not carrying a dead record around forever.
-  return idbOp("readwrite", (s) => s.clear(), IDB_META).catch(() => {});
+  return idbOp("readwrite", (s) => s.clear(), IDB_META).catch((err) =>
+    console.debug(`${MODULE_ID} | refresh-bridge stamp store could not be cleared`, err),
+  );
 }
 
 /**
@@ -351,7 +353,9 @@ async function sweepCache() {
       `${MODULE_ID} | refresh bridge expired — page was away ${(away / 1000).toFixed(1)}s, window is ${windowMs / 1000}s${skewed ? " (stamp is in the future — clock changed?)" : ""}. Books come back through the reconnect dialog.`,
     );
   }
-  await bytesClear().catch(() => {});
+  await bytesClear().catch((err) =>
+    console.debug(`${MODULE_ID} | expired refresh-bridge bytes could not be cleared`, err),
+  );
   await stampClear();
   return false;
 }
@@ -1198,14 +1202,30 @@ async function bookStatus() {
 }
 
 async function forgetBooks() {
-  await locationClear().catch(() => {});
+  // The success toast is a claim about the clears, so each clear reports its
+  // outcome instead of being swallowed — a failed IndexedDB clear must not
+  // tell the GM the forget succeeded.
+  let allCleared = true;
+  const attempt = async (label, clear) => {
+    try {
+      await clear();
+    } catch (err) {
+      allCleared = false;
+      console.warn(`${MODULE_ID} | forget books: ${label} could not be cleared`, err);
+    }
+  };
+  await attempt("remembered locations", locationClear);
   // Forget means forget: the refresh bridge goes with the locations, or the
   // next reload would quietly reopen the very books that were just dropped.
-  await bytesClear().catch(() => {});
+  await attempt("bridged book bytes", bytesClear);
   await stampClear();
   proseMem.clear();
   sessionDocs.clear();
-  ui.notifications.info("acks-importer | remembered book locations dropped; in-memory prose cleared. Sheets show stubs until books reconnect.");
+  if (allCleared) {
+    ui.notifications.info("acks-importer | remembered book locations dropped; in-memory prose cleared. Sheets show stubs until books reconnect.");
+  } else {
+    ui.notifications.warn("acks-importer | some remembered book data could not be cleared — see the console. In-memory prose was cleared.");
+  }
 }
 
 /* -------------------------------------------- */
@@ -1400,7 +1420,9 @@ async function uploadPageArt(doc, recipe) {
     (await extractPageArt(doc, recipe.page, recipe.name ?? null)) ??
     (recipe.box ? await extractPageArtRegion(doc, recipe.page, recipe.box) : null);
   if (!art) return null;
-  await FP.createDirectory("data", dir).catch(() => {});
+  await FP.createDirectory("data", dir).catch((err) =>
+    console.debug(`${MODULE_ID} | art directory "${dir}" not created (it usually already exists)`, err),
+  );
   const file = new File([art.blob], filename, { type: "image/png" });
   const res = await FP.upload("data", dir, file, {}, { notify: false });
   if (!res?.path) return null;
@@ -1523,7 +1545,7 @@ function applyStatsTargets() {
   const fromTokens = (canvas.tokens?.controlled ?? []).map((t) => t.actor);
   const open = [...(foundry.applications?.instances?.values?.() ?? []), ...Object.values(ui.windows ?? {})];
   const fromSheets = open.map((app) => app?.document ?? app?.object).filter((d) => d instanceof Actor);
-  return [...new Set([...fromTokens, ...fromSheets].filter((a) => a?.type === "monster"))];
+  return [...new Set([...fromTokens, ...fromSheets].filter((a) => a?.type === ACTOR_TYPE.MONSTER))];
 }
 
 /**
@@ -1682,7 +1704,9 @@ Hooks.once("init", () => {
       // Turning it off must take effect now, not at the next join — a reader
       // who changes their mind about bytes on disk means it.
       if (!Number(value)) {
-        bytesClear().catch(() => {});
+        bytesClear().catch((err) =>
+          console.warn(`${MODULE_ID} | bridged book bytes could not be cleared after disabling the refresh bridge`, err),
+        );
         stampClear();
       }
     },

@@ -12,7 +12,7 @@
  * The cookbook is read-only data; all judgment happened in the offline
  * pipeline. This file only maps executor output onto acks system fields.
  */
-import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
+import { MODULE_ID, LANG_PREFIX, ITEM_TYPE } from "./constants.mjs";
 import { BOOKS } from "./books.mjs";
 import { executeEntry, materializeEffects, attackModel, convertName } from "./executor.mjs";
 import { slugLabel } from "./table-extract.mjs";
@@ -2482,7 +2482,8 @@ export async function cookbookOrganize() {
             !game.folders.some((ch) => ch.folder?.id === f.id),
         );
         if (!empties.length) break;
-        for (const f of empties) await f.delete().catch(() => {});
+        for (const f of empties)
+          await f.delete().catch((err) => console.debug(`${MODULE_ID} | empty folder "${f.name}" not deleted`, err));
       }
     }
     folderCache.clear();
@@ -3820,7 +3821,7 @@ async function importEquipmentItem(found, id, folderId, node) {
         if (Number.isFinite(w) && w > 0) doc.system.weight6 = w * 6;
       }
     }
-    if (doc.type === "weapon" && !doc.system.damage) {
+    if (doc.type === ITEM_TYPE.WEAPON && !doc.system.damage) {
       const m = /deal(?:s|ing)?\s+(\d+d\d+(?:\s*[+-]\s*\d+)?)/i.exec(prose);
       if (m) doc.system.damage = m[1].replace(/\s+/g, "");
     }
@@ -3858,7 +3859,7 @@ export const cookbookEquipmentIds = () =>
 export async function repairEquipmentAbilities() {
   const wrong = game.items.filter(
     (i) =>
-      i.type === "ability" &&
+      i.type === ITEM_TYPE.ABILITY &&
       i.getFlag(MODULE_ID, "generated") &&
       String(i.getFlag(MODULE_ID, "cookbook")?.id ?? "").startsWith("def.equip."),
   );
@@ -4114,11 +4115,11 @@ async function allAbilities() {
   const collection = pack ? game.packs.get(pack) : null;
   const loose = collection ? await collection.getDocuments() : [...game.items];
   for (const item of loose) {
-    if (item.type === "ability") out.push({ doc: item, extras: extrasOf(item), on: null });
+    if (item.type === ITEM_TYPE.ABILITY) out.push({ doc: item, extras: extrasOf(item), on: null });
   }
   for (const actor of game.actors) {
     for (const item of actor.items) {
-      if (item.type === "ability") out.push({ doc: item, extras: extrasOf(item), on: actor });
+      if (item.type === ITEM_TYPE.ABILITY) out.push({ doc: item, extras: extrasOf(item), on: actor });
     }
   }
   return out;
@@ -4678,7 +4679,7 @@ export async function cookbookUpdateAbilities() {
 export function danglingAbilities() {
   const out = [];
   for (const item of game.items) {
-    if (item.type !== "ability") continue;
+    if (item.type !== ITEM_TYPE.ABILITY) continue;
     const flags = item.getFlag(MODULE_ID, "cookbook");
     if (!flags?.id || !item.getFlag(MODULE_ID, "generated")) continue;
     if (!cookbookEntry(flags.id)) out.push(item);
