@@ -134,6 +134,7 @@
   "ACKS-IMPORTER.ui.cookbookDone": "{done}/{picked} imported into the \"{folder}\" folder (details in console).",
   "ACKS-IMPORTER.ui.cookbookSkipped": "{skipped} skipped as already imported.",
   "ACKS-IMPORTER.ui.cookbookStub": "{name} — full text: {cite}. Connect your PDF on this seat to read it here.",
+  "ACKS-IMPORTER.ui.namelessStub": "{name} — full text is in your book. Connect your PDF on this seat to read it here.",
   "ACKS-IMPORTER.ui.debugTitle": "Cookbook debug — raw extraction",
   "ACKS-IMPORTER.ui.debugPick": "Entry",
   "ACKS-IMPORTER.ui.debugGo": "Extract & inspect",

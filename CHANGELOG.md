@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.4.6
+
+### Fixed
+- **An item from a price table describes itself, not the key behind its
+  description.** A weapon or armour imported from one of the book's tables
+  showed a line of code where its description should be —
+  `ACKS-IMPORTER.pdftext.def.weapon.staff` on a staff, and the same for every
+  other row. Those items build their own reference to the page they came from,
+  and nothing knew how to word that reference for a seat with the book closed.
+  Each now reads as every other unopened entry does: its name, the page it is
+  printed on, and how to read the rest. With the book connected nothing changes
+  — the text was always reachable.
+- **Starting equipment separated by semicolons is separated.** A class whose
+  printed equipment list groups with commas and separates with semicolons had
+  everything after each semicolon welded onto the item before it, so a
+  character began play holding one item named for two — a spell and a staff on
+  a single line. A semicolon now ends an item exactly as a comma does, and one
+  inside brackets still does not.
+- **No item is named "and something".** The last entry of a printed list —
+  "a spear, a shield, and a helmet" — arrived carrying the conjunction as part
+  of its name. The step that strips it ran before the spacing was tidied, so it
+  could only ever match the first item of a list, which is the one that never
+  begins with "and".
+
 ## 2.4.5
 
 ### Fixed

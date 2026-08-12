@@ -1589,14 +1589,40 @@ async function applyStats() {
 /*  @PdfText enricher (per-client resolution)   */
 /* -------------------------------------------- */
 
+/**
+ * Last-resort stub for an id nothing can look up.
+ *
+ * The weapon and armour TABLE binders mint their own ids (`def.weapon.staff`,
+ * `def.armor.plate`) from each row's printed name. Those ids are not cookbook
+ * entries and never will be — a table is materialized from the seat's own book
+ * rather than shipped — so both lookups above answer null, and the fall-through
+ * used to localize `ACKS-IMPORTER.pdftext.<id>`: a key that exists only for the
+ * handful of static PoC recipes. Every table-bound item therefore printed its
+ * own i18n key where its description should be.
+ *
+ * Nothing extra has to be stored to say something useful instead. The tag
+ * already carries the citation as its label, and the id carries the printed
+ * name that minted it.
+ */
+function fallbackStub(recipeId, label) {
+  const tail = String(recipeId).split("#")[0].split(".").pop() ?? "";
+  const name = tail
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+  if (!name) return label ?? "";
+  return label
+    ? game.i18n.format(`${LANG_PREFIX}.ui.cookbookStub`, { name, cite: label })
+    : game.i18n.format(`${LANG_PREFIX}.ui.namelessStub`, { name });
+}
+
 function enrichPdfText(recipeId, label) {
   const recipe = resolveRecipe(recipeId);
   const holder = document.createElement("span");
   holder.classList.add("acks-importer-pdftext");
   const stubEl = document.createElement("span");
   stubEl.classList.add("acks-importer-stub");
-  stubEl.textContent =
-    (recipe ? stubFor(recipe) : cookbookStub(recipeId)) ?? game.i18n.localize(`${LANG_PREFIX}.pdftext.${recipeId}`);
+  stubEl.textContent = (recipe ? stubFor(recipe) : cookbookStub(recipeId)) ?? fallbackStub(recipeId, label);
   holder.append(stubEl);
   if (proseFor(recipeId) || cookbookCanReveal(recipeId)) {
     const reveal = document.createElement("a");

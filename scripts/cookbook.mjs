@@ -2977,8 +2977,15 @@ function equipmentMenu() {
  * cookbook — exact name, contained name, or an authored Notes-equivalence
  * alias ("long bearded axe" is a great axe) — and keeps its printed wording
  * as the skin; what resolves to nothing imports as a bare named item.
+ *
+ * A descriptor naming something that is not gear at all — a spell recorded in
+ * the spellbook it came packed with — still imports as an item, because the
+ * cell states it and nothing here can tell a spell from a trinket by reading
+ * it. Splitting the cell correctly is this function's job; deciding what the
+ * pieces ARE is not, and guessing would drop real gear on a bad guess. See
+ * ROADMAP.md § Starting equipment.
  */
-function parseEquipment(cellText, menu, aliases = {}) {
+export function parseEquipment(cellText, menu, aliases = {}) {
   let text = String(cellText ?? "").replace(/\s+/g, " ").trim();
   let enc = "";
   const encMatch = /\(enc\.[^)]*\)\.?\s*$/i.exec(text);
@@ -3028,8 +3035,20 @@ function parseEquipment(cellText, menu, aliases = {}) {
       note,
     });
   };
-  for (const raw of text.split(/,(?![^(]*\))/)) {
-    const descriptor = raw.replace(/\s+/g, " ").replace(/^and\s+/i, "").trim().replace(/[.]$/, "");
+  // SEMICOLONS SEPARATE TOO. A printed equipment cell punctuates the way its
+  // author saw fit: some list with commas throughout, others group with commas
+  // and separate the groups with semicolons ("spellbook with discern magic and
+  // one spell of character's choice; smooth-worn staff, blue robe"). Splitting
+  // on the comma alone fused whatever followed a semicolon onto the item before
+  // it, and the character started play holding a staff welded to a spell.
+  // A semicolon inside brackets is left alone for the same reason a comma is.
+  for (const raw of text.split(/[,;](?![^(]*\))/)) {
+    // TRIM FIRST. Every chunk after the first begins with the space that
+    // followed its separator, so a leading-"and" strip applied before trimming
+    // can only ever match the first chunk — which is the one that never starts
+    // with "and". That put "and one spell of character's choice" on the sheet
+    // as the name of an item.
+    const descriptor = raw.replace(/\s+/g, " ").trim().replace(/^and\s+/i, "").replace(/[.]$/, "").trim();
     if (!descriptor) continue;
     // A counted container splits into itself and its contents — "quiver with
     // 20 arrows" is a quiver plus twenty arrows, and the count belongs on the
