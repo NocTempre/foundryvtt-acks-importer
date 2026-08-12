@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.4.7
+
+### Fixed
+- **Each file goes to the book it belongs to, whatever order you pick them in.**
+  Selecting four books and picking their four PDFs in one trip gave every book
+  somebody else's copy: the Revised Rulebook opened the Judges Journal, the
+  Judges Journal opened the Monstrous Manual, and each one warned that it was a
+  "different edition/printing" of the book it was not. Files were paired to books
+  by position — the first book selected took the first file picked — and neither
+  order is the reader's: the book list reports its selection top to bottom
+  however it was clicked, and the file picker hands its files back in its own
+  order, usually alphabetical. The stock DriveThruRPG filenames sort differently
+  from the way the books are listed, so they rotated straight past their own
+  books. Each file is now matched to its book by the name this seat used for it
+  last time, its size, or the book's title in the filename — the same rules that
+  already placed surplus files, now asked first. Position decides nothing unless
+  no evidence can place a file at all, and one book with one file works exactly
+  as before.
+- **A file that is another book is not read into this one.** The module could
+  tell the file was the wrong book — that is what the "different printing"
+  warning said — and read it anyway. Everything the importer extracts is a page
+  number, so a book filled from the wrong PDF quietly imports the wrong pages
+  under the right names, with nothing afterwards to show for it. A file that
+  identifies as a different ACKS book is now refused, and says which book it
+  actually is: nothing is read, so nothing needs undoing. A printing the module
+  simply does not recognise still opens with the usual warning — an unfamiliar
+  edition is not a wrong book.
+- **A book that opened is never reported as one that didn't.** If the browser
+  refused to store where a book came from, the message said the book "could not
+  be opened" — of a book sitting there open and readable. Remembering the
+  location is now reported as its own outcome: the book is open, and you will be
+  asked for the file again next session.
+
 ## 2.4.6
 
 ### Fixed

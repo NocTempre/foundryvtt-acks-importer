@@ -23,7 +23,8 @@
  *   forgetBooks()    drop remembered locations + this session's prose
  */
 import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
-import { BOOKS, fingerprintWarning } from "./books.mjs";
+import { BOOKS, fingerprintWarning, identifyBook } from "./books.mjs";
+import { matchFilesToBooks, pairPicks } from "./book-match.mjs";
 import { RECIPES, recipeById } from "./recipes.mjs";
 import { openBook, pageItems, extractRecipe, extractDisplay, extractRunin, extractSpoils, extractPageArt, extractPageArtRegion, listHeadings, setWorker, setWasmUrl } from "./extract.mjs";
 import { extractStatPairs } from "./stats.mjs";
@@ -479,6 +480,24 @@ async function ingestBook(bookId, buffer, { silent = false, cache = null } = {})
   try {
     bar.note(game.i18n.localize(`${LANG_PREFIX}.ui.progressOpening`));
     const { doc, numPages, title } = await openBook(buffer);
+    // A file that fingerprints as ANOTHER book in the registry is never read
+    // into this one. Every recipe this build extracts is a page number, so a
+    // book filled from the wrong PDF imports the wrong page's content under the
+    // right name, and nothing downstream can tell. Refusing costs a reader one
+    // message; proceeding costs them an import they have to find and undo.
+    // Edition drift stays a warning — see identifyBook.
+    const actualId = identifyBook(numPages, title);
+    if (actualId && actualId !== bookId) {
+      await doc.destroy?.();
+      const err = new Error(
+        game.i18n.format(`${LANG_PREFIX}.ui.connectWrongBook`, {
+          book: BOOKS[bookId]?.label ?? bookId,
+          actual: BOOKS[actualId].label,
+        }),
+      );
+      err.wrongBook = actualId;
+      throw err;
+    }
     const warning = fingerprintWarning(bookId, numPages, title);
     if (warning && !silent) ui.notifications.warn(`acks-importer | ${warning}`);
     sessionDocs.set(bookId, { doc, title });
@@ -691,52 +710,83 @@ async function connectBookDialog(capture) {
 }
 
 /**
- * Read the picked files into the named books, IN PICK ORDER: the first book the
- * reader selected takes the first file they picked, and so on.
+ * Read each paired file into its book and remember where it came from.
  *
- * Naming is the one pairing signal that cannot be wrong, so it settles every
- * book it covers before the filename matcher is consulted at all. Surplus files
- * — more PDFs than books named — go to `connectSeveral`, which may only compete
- * for the books that were NOT named; a hand-named book is never re-read from a
- * file the matcher preferred.
+ * Each book is remembered in the strongest form this seat supports: the FSA
+ * handle when the pick came through `showOpenFilePicker` (one-click reopen next
+ * session), name-only otherwise — all a browser without the File System Access
+ * API will let us keep, and still worth keeping, since next session says the
+ * name and offers the picker instead of leaving the seat to work it out.
  *
- * Each book is then remembered in the strongest form this seat supports: the
- * FSA handle when the pick came through `showOpenFilePicker` (one-click reopen
- * next session), name-only otherwise. Reads are sequential — several ACKS PDFs
- * parsed at once is hundreds of megabytes in flight. One file that fails to open
- * is reported against its own book and costs the others nothing.
+ * Reads are sequential: several ACKS PDFs parsed at once is hundreds of
+ * megabytes in flight. One file that fails to open is reported against its own
+ * book and costs the others nothing, and a file refused for being another book
+ * says so instead of reading as a failed read.
  *
- * @param {string[]} bookIds  book ids in selection order
- * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  picks in pick order
+ * @param {Map<string, File>} matched  bookId → the file that answers it
+ * @param {Map<File, {file: File, handle?: FileSystemFileHandle}>} byFile  each file's pick, for its handle
+ * @param {object} [options]
+ * @param {boolean} [options.announce]  say where each book was remembered, one message per book
+ * @returns {Promise<string[]>} labels of the books now open
  */
-async function connectPicks(bookIds, picks) {
-  const paired = Math.min(bookIds.length, picks.length);
-  for (let i = 0; i < paired; i++) {
-    const bookId = bookIds[i];
-    const { file, handle } = picks[i];
+async function ingestPairs(matched, byFile, { announce = true } = {}) {
+  const done = [];
+  for (const [bookId, file] of matched) {
+    const handle = byFile.get(file)?.handle ?? null;
     try {
       await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
-      if (handle) {
-        await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size });
-        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.locationSaved`, { book: BOOKS[bookId].label }));
-      } else {
-        // All this browser will let us keep is which file it was. That is still
-        // worth keeping: next session says the name and offers the picker
-        // instead of leaving the seat to work it out.
-        await rememberFile(bookId, file);
-        ui.notifications.info(
-          game.i18n.format(`${LANG_PREFIX}.ui.locationNameOnly`, { book: BOOKS[bookId].label, name: file.name }),
-        );
-      }
     } catch (err) {
       console.error(`${MODULE_ID} | connect ${bookId} from ${file.name}`, err);
-      ui.notifications.error(`${BOOKS[bookId].label}: ${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`)}`);
+      ui.notifications.error(
+        err.wrongBook
+          ? `acks-importer | ${err.message}`
+          : `${BOOKS[bookId].label}: ${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`)}`,
+      );
+      continue;
+    }
+    done.push(BOOKS[bookId].label);
+    // Remembering is a separate outcome from reading, and reported as one: the
+    // book is open either way, and saying "could not be opened" over a storage
+    // failure describes a book the reader can see working.
+    try {
+      if (handle) {
+        await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size });
+        if (announce) ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.locationSaved`, { book: BOOKS[bookId].label }));
+      } else {
+        await rememberFile(bookId, file);
+        if (announce) {
+          ui.notifications.info(
+            game.i18n.format(`${LANG_PREFIX}.ui.locationNameOnly`, { book: BOOKS[bookId].label, name: file.name }),
+          );
+        }
+      }
+    } catch (err) {
+      console.warn(`${MODULE_ID} | ${bookId} opened but its location could not be remembered`, err);
+      ui.notifications.warn(game.i18n.format(`${LANG_PREFIX}.ui.locationNotSaved`, { book: BOOKS[bookId].label }));
     }
   }
+  return done;
+}
+
+/**
+ * Read the picked files into the books the reader named.
+ *
+ * Which books is the reader's to say; WHICH FILE IS WHICH is not something the
+ * dialog can ask them (see `pairPicks`), so it is worked out from the files
+ * themselves. Surplus files — more PDFs than books named — go to
+ * `connectSeveral`, which may only compete for the books that were NOT named;
+ * a hand-named book is never re-read from a file the matcher preferred.
+ *
+ * @param {string[]} bookIds  the book ids the reader selected
+ * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  the files they picked
+ */
+async function connectPicks(bookIds, picks) {
+  const byFile = new Map(picks.map((pick) => [pick.file, pick]));
+  const { matched, unfilled, surplus } = pairPicks(bookIds, [...byFile.keys()], await locations());
+  await ingestPairs(matched, byFile);
   // Fewer files than books named: say which books are still closed, or the
   // reader is left to notice for themselves that two of the three they asked
   // for never opened.
-  const unfilled = bookIds.slice(paired);
   if (unfilled.length) {
     ui.notifications.warn(
       game.i18n.format(`${LANG_PREFIX}.ui.connectUnfilled`, {
@@ -744,10 +794,12 @@ async function connectPicks(bookIds, picks) {
       }),
     );
   }
-  const surplus = picks.slice(paired);
   if (!surplus.length) return;
-  const named = new Set(bookIds.slice(0, paired));
-  return connectSeveral(surplus, Object.keys(BOOKS).filter((id) => !named.has(id)));
+  const named = new Set(bookIds);
+  return connectSeveral(
+    surplus.map((file) => byFile.get(file)),
+    Object.keys(BOOKS).filter((id) => !named.has(id)),
+  );
 }
 
 /**
@@ -836,102 +888,25 @@ async function restoreBooks() {
 }
 
 /**
- * A filename with its separators read as spaces, for testing a book's title
- * against it.
- *
- * The titles in BOOKS are the spaced, printed ones and stay that way — they are
- * the source of truth, and loosening every regex to tolerate every separator
- * would loosen what a match MEANS. A saved download, meanwhile, is as likely to
- * be `ACKS_II_Revised_Rulebook.pdf` or `acks-ii-revised-rulebook.pdf` as the
- * spaced form, so the candidate is normalized instead: underscores, hyphens and
- * dots become spaces and runs collapse.
- */
-const spacedName = (name) => name.replace(/[_.-]+/g, " ").replace(/\s+/g, " ").trim();
-
-/**
- * Work out which picked file answers which waiting book.
- *
- * A seat that must re-pick its books by hand is doing so because the browser
- * cannot reopen them — the insecure-origin and Firefox case, i.e. most remote
- * players. That seat can, however, pick SEVERAL files in one trip through the
- * dialog, and one trip is all a plain `<input multiple>` costs. What it cannot
- * do is tell us which file is which, so we work it out:
- *
- *   1. the exact name this seat used last time — the overwhelmingly common
- *      case, since a book that has been read once is remembered by name;
- *   2. the same byte size under a different name (a renamed or re-downloaded
- *      copy — DTRPG watermarks per customer, but not per download);
- *   3. the book's own title in the filename, which is how the stock DTRPG
- *      filenames read and the only rule that can match a book this seat has
- *      never opened. The candidate is normalized first (see `spacedName`) —
- *      the pattern is the printed title, and a real download rarely is.
- *
- * Passes run in that order over the whole set, so a confident match never
- * loses its file to a speculative one. Anything unmatched is reported rather
- * than guessed at — a book filled from the wrong PDF is far worse than a book
- * left closed.
- */
-function matchFilesToBooks(files, pendingIds, records) {
-  const matched = new Map();
-  const used = new Set();
-  const tests = [
-    (bookId, file) => {
-      const name = records.get(bookId)?.name;
-      return !!name && name.toLowerCase() === file.name.toLowerCase();
-    },
-    (bookId, file) => {
-      const size = records.get(bookId)?.size;
-      return Number.isFinite(size) && size > 0 && size === file.size;
-    },
-    (bookId, file) => BOOKS[bookId]?.titleRe?.test(spacedName(file.name)) ?? false,
-  ];
-  for (const test of tests) {
-    for (const bookId of pendingIds) {
-      if (matched.has(bookId)) continue;
-      const index = files.findIndex((file, i) => !used.has(i) && test(bookId, file));
-      if (index < 0) continue;
-      matched.set(bookId, files[index]);
-      used.add(index);
-    }
-  }
-  return { matched, unmatched: files.filter((_, i) => !used.has(i)) };
-}
-
-/**
  * First-time linking by filename, for the files left over after the books the
  * reader named have been paired off (see `connectPicks`).
  *
  * `candidates` is what those files may still be claimed by — every book this
  * build reads, less anything already spoken for. First-time linking is the
  * whole point, so there may be no remembered record to lean on and the
- * title-in-filename pass does most of the work. Each match is read and then
- * remembered in the strongest form this seat supports: the FSA handle when the
- * pick came through `showOpenFilePicker` (silent-ish reopen next session),
- * name-only otherwise. Reads are sequential for the same reason the reconnect
- * picker's are — several ACKS PDFs parsed at once is hundreds of megabytes in
- * flight. Anything unmatched is named, never guessed: the remedy is the same
- * dialog again, with those books selected in the list so no guessing is needed.
+ * title-in-filename pass does most of the work. Anything unmatched is named,
+ * never guessed: the remedy is the same dialog again, with those books selected
+ * in the list so no guessing is needed.
  *
  * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  files, each with its handle where there is one
  * @param {string[]} [candidates]  book ids these files may fill
  */
 async function connectSeveral(picks, candidates = Object.keys(BOOKS)) {
-  const remembered = await locations();
   const byFile = new Map(picks.map((pick) => [pick.file, pick]));
-  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], candidates, remembered);
-  const done = [];
-  for (const [bookId, file] of matched) {
-    const handle = byFile.get(file)?.handle ?? null;
-    try {
-      await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
-      if (handle) await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size });
-      else await rememberFile(bookId, file);
-      done.push(BOOKS[bookId].label);
-    } catch (err) {
-      console.error(`${MODULE_ID} | connect ${bookId} from ${file.name}`, err);
-      ui.notifications.error(`${BOOKS[bookId].label}: ${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`)}`);
-    }
-  }
+  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], candidates, await locations());
+  // One summary rather than a message per book: this path can be handed the
+  // whole shelf at once, and the summary already names every book it opened.
+  const done = await ingestPairs(matched, byFile, { announce: false });
   if (done.length) {
     ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.connectBulkDone`, { count: done.length, books: done.join(", ") }));
   }

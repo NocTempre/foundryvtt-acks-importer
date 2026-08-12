@@ -62,3 +62,23 @@ export function fingerprintWarning(bookId, numPages, title) {
   if (title && !book.titleRe.test(title)) problems.push(`title "${title}"`);
   return problems.length ? `${book.label}: ${problems.join(", ")} — different edition/printing? Extraction may miss.` : null;
 }
+
+/**
+ * Which book an opened PDF actually is, or null when the fingerprint names no
+ * one book. This is the same evidence `fingerprintWarning` reads, asked the
+ * other way round: not "does this file fit the slot it was put in" but "whose
+ * file is this".
+ *
+ * A book is named only when the whole fingerprint fits it and fits nothing
+ * else. The page counts in the registry are distinct, so an untitled printing
+ * — which is every AX book — is still identified by count alone; a title, where
+ * the printing carries one, must match too. A file that fits no book (a
+ * printing this build has never seen) names nobody, which is what keeps edition
+ * drift a warning rather than a refusal.
+ */
+export function identifyBook(numPages, title) {
+  const hits = Object.entries(BOOKS).filter(
+    ([, book]) => book.pages === numPages && (!title || book.titleRe.test(title)),
+  );
+  return hits.length === 1 ? hits[0][0] : null;
+}

@@ -7,6 +7,48 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Position is not evidence, and a file that is another book is refused (2026-08-11)
+
+**Problem.** A reader selected four books in the connect dialog, picked their
+four PDFs, and every one of them landed in the wrong book — each warning that it
+was a "different edition/printing" of the book it was not. The pairing was
+positional: nth book selected takes nth file picked, which the dialog's own note
+advertised as "paired in the order you chose them".
+
+**Ruling.** That order does not exist. A `<select multiple>` reports
+`selectedOptions` in *document* order however it was clicked, so the reader's
+sequence is gone before the callback runs; the OS file picker returns its files
+in its own order, usually alphabetical. Position therefore carries no information
+about which file is which, and pairing on it is a coin toss that looks
+deliberate. The filename matcher that had always existed — remembered name, then
+byte size, then the book's title in the filename — was consulted only for
+*surplus* files, i.e. never in the case that mattered. It now decides the named
+books first, and position survives only as the last resort for files no evidence
+could place. The matcher moved to its own module so the pairing can be exercised
+offline instead of only against four real PDFs.
+
+**Also ruled: a wrong-book file is refused, not warned about.** The fingerprint
+check already knew the file was wrong and said so — and read it anyway. Every
+recipe this build extracts is a page number, so a book filled from the wrong PDF
+imports the wrong page's content under the right name and nothing downstream can
+tell. `identifyBook` asks the fingerprint the other way round ("whose file is
+this?") and the read is refused when the answer is another book in the registry.
+A printing that fits *no* book still only warns: that is edition drift, which is
+what the warning was for.
+
+**Cost.** One case the guard cannot catch cleanly: a variant printing whose page
+count exactly equals another book's and which carries no metadata title at all
+would be refused as that other book. No shipped printing does this — the
+registry's page counts are distinct, and a test holds them that way — and the
+alternative was reading it into the wrong slot in silence.
+
+**Rejected: asking the reader which file is which.** A row per book with its own
+picker already exists for reconnect, and it costs one trip through the OS dialog
+per book. The whole point of the multi-select is that one trip does the lot; the
+evidence is good enough to earn it, and what it cannot place it names.
+
+---
+
 ### One dedup rule for every importer: ask the shelf you write to, and claim before you build (2026-08-06)
 
 **Problem.** Duplicate imports, reported from a live table as "double-importing
