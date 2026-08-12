@@ -4,6 +4,7 @@
   "ACKS-IMPORTER.tables.noProvider": "No table host is active. Enable ACKS Extras (its rules-table registry stores imported tables) and reload.",
   "ACKS-IMPORTER.tables.imported": "ACKS Importer | imported {tables} rules table(s) from your books into this world ({docs}). Market and hiring automation now uses your book values.",
   "ACKS-IMPORTER.tables.missingBooks": "ACKS Importer | some tables need books not connected on this seat ({books}). Connect them and re-run the import to fill the rest.",
+  "ACKS-IMPORTER.tables.builderApplied": "Class builder applied: {races} race(s) materialized, {builds} Ready-for-Play build(s) stamped onto their classes.",
   "ACKS-IMPORTER.gs.title": "Getting Started — ACKS II Content",
   "ACKS-IMPORTER.gs.intro": "This module streams rules text straight from your own ACKS II PDFs — nothing is copied into the world. Each player (and the GM) connects their own copy of the books on their own computer.",
   "ACKS-IMPORTER.gs.connectHead": "1 · Connect your books",

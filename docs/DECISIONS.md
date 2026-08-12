@@ -7,6 +7,34 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### The class-builder import leaves working examples, not just tables (2026-08-12)
+
+**Problem.** acks-extras grew an advanced mode that derives a class from JJ
+build values, consuming an `acks.classBuilder` ruledata doc, race documents
+and per-class builder state — none of which ships anywhere (every number is
+book content).
+
+**Ruled (user):** the JJ table import produces all three. `table-recipes.mjs`
+extracts the raw builder chapter (category ladders, the per-value spell grids
+including the delayed-acquisition set, trade-offs, smoothing and post-8
+prose, the dwarf/elf sections, the Ready-for-Play build paragraphs);
+`builder-binding.mjs` assembles the engine shape into the same ruledata doc,
+materializes `acks-extras.race` items stamped `def.race.<key>`, and writes
+each Ready-for-Play build onto its class document — scoped, by the same
+ruling, to the RR core classes and the demi-humans; the rest of the JJ
+roster and races is extras-ROADMAP work. Live-verified: derive reproduces
+the printed Fighter and Elven Spellsword spreads exactly.
+
+**Mechanics that earned comments in code, recorded here once:** superscript
+ordinal runs interleave mid-sentence ("capped th at 10 level"), so prose
+anchors stop at the printed number and parses never assume adjacency; verso
+pages sit ~26pt left of recto (the delayed grids), and one verso column
+starts at x≈299, under the default 300 column split.
+
+**Rejected: parsing trade-off elections out of the build paragraphs.** Which
+sentence maps to which trade-off row is a judgment; the paragraph lands in
+`builder.notes` and the Judge elects by hand.
+
 ### Position is not evidence, and a file that is another book is refused (2026-08-11)
 
 **Problem.** A reader selected four books in the connect dialog, picked their

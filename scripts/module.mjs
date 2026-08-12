@@ -31,6 +31,7 @@ import { extractStatPairs } from "./stats.mjs";
 import { mapPairs } from "./stats-map.mjs";
 import { createDocFor } from "./poc.mjs";
 import { importTables, tableRecipeCount } from "./tables-binding.mjs";
+import { applyBuilderImport } from "./builder-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
   initCookbook, loadCookbook, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities,
@@ -563,6 +564,25 @@ async function cookbookImportTables() {
     ui.notifications.warn(
       game.i18n.format(`${LANG_PREFIX}.tables.missingBooks`, { books: report.missingBooks.join(", ") }),
     );
+  }
+  // The class-builder tables carry world writes of their own: the assembled
+  // engine-shaped doc, race Items, and builder state on the imported classes.
+  if (report.imported.some((d) => d.docId === "acks.classBuilder")) {
+    try {
+      const built = await applyBuilderImport();
+      if (built.races.length || built.builds.length) {
+        ui.notifications.info(
+          game.i18n.format(`${LANG_PREFIX}.tables.builderApplied`, {
+            races: built.races.length,
+            builds: built.builds.length,
+          }),
+        );
+      }
+      console.log(`${MODULE_ID} | class-builder binding`, built);
+    } catch (err) {
+      console.error(`${MODULE_ID} | class-builder binding failed`, err);
+      ui.notifications.warn(`acks-importer | class builder: ${err.message}`);
+    }
   }
   console.log(`${MODULE_ID} | table import`, report);
   return report;

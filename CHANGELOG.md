@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.5.0
+
+### Added
+- **The Judges Journal table import now reads the whole class-builder
+  chapter.** New table recipes extract the category value ladders (Hit Dice
+  with mortal-wounds bonuses, the Fighting summary with its 1a/1b split,
+  Thievery, Divine, Arcane), all eleven printed per-value spell grids —
+  Divine 1–4, Arcane 1–4 and the three Delayed Acquisition variants — the
+  trade-off table with its XP penalty, the saving-throw precedence, the
+  post-8th XP increments, the smoothing rule, the racial level-cap table, and
+  the dwarven and elven racial sections. As always, geometry and anchors ship;
+  every number is read from your own copy at import time.
+- **The import leaves working examples, not just tables.** After the raw
+  extraction, the binding assembles the shape the ACKS Extras class builder
+  consumes, materializes Dwarf and Elf race documents from their printed
+  ladders (requirements, per-rung costs, base powers, the elf's arcane
+  stacking and discount, each race's post-8th increases), and stamps the
+  Ready-for-Play builds from the back of the chapter onto the twelve matching
+  core and demi-human class documents — each opens in advanced mode with its
+  printed allocation filled and its build paragraph in the notes. Requires
+  ACKS Extras 3.8.0 to put the builder tables to work.
+
 ## 2.4.7
 
 ### Fixed

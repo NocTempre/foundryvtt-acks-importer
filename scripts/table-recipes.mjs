@@ -218,6 +218,90 @@ const scavengedGrid = ({ locate, column, labelMaxX, cells }) => ({
   rows: SCAVENGED_ROWS,
 });
 
+/* ------------------------------------------------------------------ */
+/*  JJ custom-class builder (acks.classBuilder)                        */
+/* ------------------------------------------------------------------ */
+
+// Category value ladders print 4 → 0 top to bottom; row claims scan downward,
+// so the spec order mirrors the page.
+const VALUE_ROWS_4_TO_0 = ["4", "3", "2", "1", "0"].map((n) => ({ key: n, labelRe: `^${n}$` }));
+
+const HD_VALUE_ROWS = VALUE_ROWS_4_TO_0;
+
+// The Fighting Value summary table: the value alone is the row label; the
+// style name beside it ("(Hero)", "Crusader") reads as the `style` cell.
+const FIGHTING_VALUE_ROWS = [
+  { key: "4", labelRe: "^4$" },
+  { key: "3", labelRe: "^3$" },
+  { key: "2", labelRe: "^2$" },
+  { key: "1b", labelRe: "^1b$" },
+  { key: "1a", labelRe: "^1a$" },
+  { key: "0", labelRe: "^0$" },
+];
+
+// Fighting Value Trade Offs (JJ p293): drop-caps split the label's first
+// letter, and small-caps armour grades join without spaces ("fromvery
+// light tonone"), so the regexes never assume word boundaries.
+const TRADEOFF_ROWS = [
+  { key: "armor.heavyMedium", labelRe: "armor selection from\\s*heavy" },
+  { key: "armor.mediumLight", labelRe: "armor selection from\\s*medium" },
+  { key: "armor.lightVeryLight", labelRe: "armor selection from\\s*light" },
+  { key: "armor.veryLightNone", labelRe: "armor selection from\\s*very" },
+  { key: "weapons.unrestrictedBroad", labelRe: "weapon selection from\\s*u" },
+  { key: "weapons.broadNarrow", labelRe: "weapon selection from\\s*broad" },
+  { key: "weapons.narrowRestricted", labelRe: "weapon selection from\\s*n" },
+  { key: "style.eliminateOne", labelRe: "one fighting style" },
+  { key: "damage.eliminateOne", labelRe: "damage bonus \\(melee" },
+  { key: "damage.eliminateBoth", labelRe: "damage bonus \\(both" },
+];
+
+// One printed per-value spell grid (JJ p295/297/298): class-level rows 1–14,
+// six slot columns, a trailing caster-level column. Two grids share each
+// print column, told apart by their own title rows. A verso page's whole
+// layout sits ~26pt left of a recto's (p298 vs p295/297), hence `verso`.
+const slotGrid = ({ page, startAfter, side, verso = false }) => {
+  const d = verso ? -26 : 0;
+  const xs = side === "L" ? [124, 151, 177, 203, 230, 256, 288] : [381, 408, 434, 460, 486, 512, 545];
+  const keys = ["s1", "s2", "s3", "s4", "s5", "s6", "casterLevel"];
+  return {
+    shape: "gridRows",
+    book: "jj",
+    printedPage: page,
+    locate: startAfter,
+    startAfter,
+    column: side === "L" ? { xMin: 40 + d, xMax: 300 + d } : { xMin: 320 + d, xMax: 590 + d },
+    labelMaxX: (side === "L" ? 105 : 362) + d,
+    rowTol: 4,
+    minCells: 3,
+    cellColumns: keys.map((key, i) => ({ key, x: xs[i] + d, row: true, pattern: "intDash" })),
+    rows: Array.from({ length: 14 }, (_, i) => ({ key: String(i + 1), labelRe: `^${i + 1}$` })),
+  };
+};
+
+// Ready-for-Play Class Builds (JJ p332–333): one prose paragraph per class.
+// The window take hands the whole paragraph to builder-binding, which parses
+// the allocation tokens mechanically; the class roster is the cookbook's own.
+const buildBlock = (id, page, locate) => ({
+  id,
+  printedPage: page,
+  locate,
+  values: [{ key: "build", find: locate.toLowerCase(), take: "window", span: 560 }],
+});
+const BUILD_BLOCKS = [
+  buildBlock("assassin", 332, "Assassin:"),
+  buildBlock("bard", 332, "Bard:"),
+  buildBlock("bladedancer", 332, "Bladedancer:"),
+  buildBlock("crusader", 332, "Crusader:"),
+  buildBlock("dwarvenCraftpriest", 332, "Dwarven Craftpriest:"),
+  buildBlock("dwarvenVaultguard", 332, "Dwarven Vaultguard:"),
+  buildBlock("elvenNightblade", 332, "Elven Nightblade:"),
+  buildBlock("elvenSpellsword", 332, "Elven Spellsword:"),
+  buildBlock("explorer", 332, "Explorer:"),
+  buildBlock("fighter", 332, "Fighter:"),
+  buildBlock("mage", 332, "Mage:"),
+  buildBlock("thief", 333, "Thief:"),
+];
+
 export const TABLE_RECIPES = {
   equipment: {
     source: { book: "ACKS II Revised Rulebook", pages: "160" },
@@ -947,6 +1031,273 @@ export const TABLE_RECIPES = {
         cellPattern: "raw",
         rows: MERC_ROWS,
         emit: { container: "rows", keyField: "type" },
+      },
+    },
+  },
+  // The JJ custom-class builder. Raw per-table extractions — scripts/
+  // builder-binding.mjs assembles them into the shape the acks-extras
+  // builder engine consumes and re-imports the assembled doc, then
+  // materializes race items and stamps the Ready-for-Play builds onto the
+  // matching class documents.
+  "acks.classBuilder": {
+    source: { book: "ACKS II Judges Journal", pages: "291-303, 332-333" },
+    tables: {
+      basePoints: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 291,
+        locate: "build points",
+        values: [{ key: "basePoints", find: "allocating a total of", take: "int" }],
+      },
+      hdRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 292,
+        locate: "Mortal",
+        column: { xMin: 40, xMax: 295 },
+        labelMaxX: 80,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "die", x: 105, w: 45, row: true, pattern: "raw" },
+          { key: "mortalWounds", x: 170, w: 40, row: true, pattern: "intDash" },
+          { key: "cost", x: 230, w: 40, row: true, pattern: "int" },
+        ],
+        rows: HD_VALUE_ROWS,
+      },
+      fightingRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 292,
+        locate: "The table below summarizes",
+        column: { xMin: 40, xMax: 590 },
+        startAfter: "apability",
+        labelMaxX: 80,
+        rowTol: 4,
+        minCells: 4,
+        cellColumns: [
+          { key: "style", x: 82, w: 53, row: true, pattern: "raw" },
+          { key: "attack", x: 137, w: 66, row: true, pattern: "raw" },
+          { key: "weapons", x: 205, w: 70, row: true, pattern: "raw" },
+          { key: "armor", x: 276, w: 66, row: true, pattern: "raw" },
+          { key: "styles", x: 348, row: true, pattern: "int" },
+          { key: "damage", x: 381, w: 64, row: true, pattern: "raw" },
+          { key: "cleaves", x: 445, w: 61, row: true, pattern: "raw" },
+          { key: "cost", x: 508, w: 30, row: true, pattern: "int" },
+        ],
+        rows: FIGHTING_VALUE_ROWS,
+      },
+      thieveryRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 294,
+        locate: "The explorer traded all of its thief skills",
+        column: { xMin: 300, xMax: 590 },
+        labelMaxX: 345,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "skills", x: 388, w: 50, row: true, pattern: "raw" },
+          { key: "cost", x: 468, w: 47, row: true, pattern: "int" },
+        ],
+        rows: VALUE_ROWS_4_TO_0,
+      },
+      divineRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 294,
+        locate: "noting down the appropriate powers",
+        column: { xMin: 300, xMax: 590 },
+        startAfter: "noting down the appropriate powers",
+        labelMaxX: 345,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "power", x: 358, w: 75, row: true, pattern: "raw" },
+          { key: "cost", x: 468, w: 47, row: true, pattern: "int" },
+        ],
+        rows: VALUE_ROWS_4_TO_0,
+      },
+      arcaneRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 296,
+        locate: "Arcane Value determines the extent",
+        column: { xMin: 295, xMax: 590 },
+        labelMaxX: 345,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "power", x: 358, w: 75, row: true, pattern: "raw" },
+          { key: "cost", x: 478, w: 40, row: true, pattern: "int" },
+        ],
+        rows: VALUE_ROWS_4_TO_0,
+      },
+      divineSlots1: slotGrid({ page: 295, startAfter: "Divine 1 Power", side: "L" }),
+      divineSlots2: slotGrid({ page: 295, startAfter: "Divine 2 Power", side: "R" }),
+      divineSlots3: slotGrid({ page: 295, startAfter: "Divine 3 Power", side: "L" }),
+      divineSlots4: slotGrid({ page: 295, startAfter: "Divine 4 Power", side: "R" }),
+      arcaneSlots1: slotGrid({ page: 297, startAfter: "Arcane 1 Power", side: "L" }),
+      arcaneSlots2: slotGrid({ page: 297, startAfter: "Arcane 2 Power", side: "R" }),
+      arcaneSlots3: slotGrid({ page: 297, startAfter: "Arcane 3 Power", side: "L" }),
+      arcaneSlots4: slotGrid({ page: 297, startAfter: "Arcane 4 Power", side: "R" }),
+      arcaneDelayed1: slotGrid({ page: 298, startAfter: "Arcane 1 – Delayed", side: "L", verso: true }),
+      arcaneDelayed2: slotGrid({ page: 298, startAfter: "Arcane 2 – Delayed", side: "R", verso: true }),
+      arcaneDelayed3: slotGrid({ page: 298, startAfter: "Arcane 3 – Delayed", side: "L", verso: true }),
+      savesRule: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 299,
+        locate: "SAVING THROW",
+        values: [
+          { key: "precedence", find: "to appear in order on this list:", take: "phrase", span: 90 },
+          { key: "mapping", find: "the core class which is associated with that category", take: "phrase", span: 130 },
+        ],
+      },
+      xpRules: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 300,
+        locate: "PER LEVEL",
+        values: [
+          { key: "crusaderThief", find: "crusader or thief: additional", take: "int" },
+          { key: "fighter", find: "fighter: an additional", take: "int" },
+          { key: "mage", find: "mage: an additional", take: "int" },
+        ],
+      },
+      smoothing: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 301,
+        locate: "Smoothing",
+        values: [
+          // A superscript "th" run interleaves into "…experience point [th]
+          // requirement for 7 level…", so the anchor is the surviving half.
+          { key: "level", find: "requirement for", take: "int" },
+          { key: "nearest", find: "level to the nearest", take: "int" },
+        ],
+      },
+      racialCaps: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 301,
+        locate: "accompanying table",
+        column: { xMin: 180, xMax: 300 },
+        labelMaxX: 240,
+        rowTol: 4,
+        minCells: 1,
+        cellColumns: [{ key: "maxLevel", x: 273, w: 20, row: true, pattern: "int" }],
+        rows: [
+          { key: "8", labelRe: "^8$" },
+          { key: "7", labelRe: "^7$" },
+          { key: "6", labelRe: "^6$" },
+          { key: "5", labelRe: "^5$" },
+          { key: "4", labelRe: "^4$" },
+        ],
+      },
+      tradeoffPenalty: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 294,
+        locate: "Experience Point Penalty",
+        values: [{ key: "perPower", find: "cost of its fighting value by", take: "int" }],
+      },
+      tradeoffsRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 293,
+        locate: "Fighting Value Trade Offs",
+        column: { xMin: 325, xMax: 600 },
+        startAfter: "Benefit",
+        labelMaxX: 505,
+        rowTol: 4,
+        minCells: 1,
+        cellColumns: [{ key: "benefit", x: 505, w: 92, row: true, pattern: "raw" }],
+        rows: TRADEOFF_ROWS,
+      },
+      dwarfRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 302,
+        locate: "Dwarf Value",
+        column: { xMin: 295, xMax: 600 },
+        labelMaxX: 340,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "label", x: 370, w: 90, row: true, pattern: "raw" },
+          { key: "cost", x: 493, w: 32, row: true, pattern: "int" },
+        ],
+        rows: VALUE_ROWS_4_TO_0,
+      },
+      dwarfRules: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 302,
+        locate: "DWARVEN CUSTOM",
+        // Verso page: the right print column starts at x≈299, so the default
+        // 300 split tears its sentences apart.
+        colSplit: 295,
+        values: [
+          { key: "con", find: "require a minimum constitution", take: "int" },
+          { key: "hpAfter9", find: "receive an extra", take: "int" },
+          // Superscript "th" runs interleave into "…after 8 [th] by 10,000XP",
+          // so the anchor stops at the printed 8; the two sentences (fighter,
+          // then crusader/thief) disambiguate by occurrence.
+          { key: "post8Fighter", find: "each level after 8", take: "int", span: 40 },
+          { key: "post8CrusaderThief", find: "each level after 8", take: "int", span: 40, occurrence: 2 },
+          { key: "sensitivityToRockAndStone", find: "sensitivity to rock and stone:", take: "window", span: 24 },
+          { key: "dwarfTongues", find: "dwarf tongues:", take: "window", span: 24 },
+          { key: "hardy", find: "hardy:", take: "window", span: 24 },
+        ],
+      },
+      elfRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 303,
+        locate: "stack with points",
+        column: { xMin: 320, xMax: 600 },
+        labelMaxX: 365,
+        rowTol: 4,
+        minCells: 2,
+        cellColumns: [
+          { key: "label", x: 403, w: 92, row: true, pattern: "raw" },
+          { key: "cost", x: 513, w: 35, row: true, pattern: "int" },
+        ],
+        rows: VALUE_ROWS_4_TO_0,
+      },
+      elfRules: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 303,
+        locate: "stack with points",
+        values: [
+          { key: "stacksWithArcane", find: "stack with points allocated to the arcane value", take: "window", span: 24 },
+          { key: "arcaneDiscount", find: "the xp cost for the arcane value is reduced by", take: "int" },
+          // The superscript "th" splits "each level [th] after 8"; the first
+          // "after 8" on the page is the section heading, so occurrence 2.
+          { key: "post8", find: "after 8", take: "int", span: 40, occurrence: 2 },
+          { key: "animalFriendship", find: "animal friendship:", take: "window", span: 24 },
+          { key: "attunementToNature", find: "attunement to nature:", take: "window", span: 24 },
+          { key: "connectionToNature", find: "connection to nature:", take: "window", span: 24 },
+          { key: "elfTongues", find: "elf tongues:", take: "window", span: 24 },
+        ],
+      },
+      raceRequirements: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 301,
+        locate: "additional requirements",
+        values: [
+          { key: "dwarfCon", find: "dwarven classes require constitution", take: "int" },
+          { key: "elfInt", find: "elven classes require intellect", take: "int" },
+        ],
+      },
+      builds: {
+        shape: "proseValues",
+        book: "jj",
+        emit: { path: ["classes"] },
+        valueBlocks: BUILD_BLOCKS,
       },
     },
   },

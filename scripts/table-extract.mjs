@@ -748,6 +748,13 @@ function takeProse(window, take) {
       const s = window.split(".")[0].replace(/\s+/g, " ").trim();
       return s || undefined;
     }
+    case "window": {
+      // The raw span, periods and all — for anchors whose values live in
+      // SEVERAL sentences (the JJ Ready-for-Play build paragraphs); the
+      // consumer parses the window mechanically.
+      const s = window.replace(/\s+/g, " ").trim();
+      return s || undefined;
+    }
     case "sexWord": {
       // class-description opening: "…are human women who…" / "…are men…"
       const m = window.match(/\b(women|woman|female|men|man|male)\b/);
