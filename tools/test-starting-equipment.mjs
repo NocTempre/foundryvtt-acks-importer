@@ -60,17 +60,34 @@ check("the count rides the load, not the device", quiver[1].qty === 20 && quiver
 check("and the load records where it is carried", /carried in quiver/.test(quiver[1].note));
 check("an uncounted container stays one item", names("pouch with herbs").length === 1);
 
-// A pair splits only when BOTH halves are known gear AND the whole descriptor
-// resolves to nothing — "tunic and pants" is one printed outfit at one printed
-// price and must stay whole.
+/* --- A pair of known items splits, whatever they are called ---------------- */
+//
+// The whole-descriptor guard exists so "tunic and pants" — one printed outfit
+// at one printed price — is not torn in half. It used to ask `resolve`, whose
+// containment fallback answered yes for the wrong reason: "spear and short
+// sword" CONTAINS "short sword", so the joined string read as an already-known
+// item and the pair never split. The character got one item named for two
+// weapons, and the rule only ever fired when both halves happened to fold
+// shorter than six characters.
 check("a pair of known weapons splits", names("spear and sword", menu("Spear", "Sword")).length === 2);
+check("a long-named half no longer swallows the pair",
+  names("spear and short sword", menu("Spear", "Short Sword")).length === 2);
+check("and both halves come out under their own names",
+  names("spear and short sword", menu("Spear", "Short Sword")).join("|") === "spear|short sword");
+check("name length is irrelevant on either side",
+  names("adventurer's harness and short sword", menu("Adventurer's Harness", "Short Sword")).length === 2);
+
+// What the guard is FOR, and still does.
 check("an outfit the menu knows whole stays whole", names("tunic and pants", menu("Tunic and Pants")).length === 1);
+check("a bracketed qualifier does not stop it being known whole",
+  names("tunic and pants", menu("Tunic and Pants (common)")).length === 1);
+check("an alias naming the whole thing keeps it whole",
+  parseEquipment("long bearded axe and haft", menu("Great Axe"), { "long bearded axe and haft": "def.equip.greataxe" }).items.length === 1);
+
+// Both halves must be known — one alone proves nothing about the other.
 check("a pair the menu knows nothing about stays whole", names("odds and ends").length === 1);
-// KNOWN NARROWING, pinned so it is not mistaken for the rule above working in
-// general: the whole-descriptor test resolves by CONTAINMENT at six characters
-// or more, so a pair whose second half is long enough to be found inside the
-// joined string reads as one already-known item and never reaches the split.
-check("a long-named half swallows the pair", names("spear and short sword", menu("Spear", "Short Sword")).length === 1);
+check("one known half is not enough to split", names("spear and whatnot", menu("Spear")).length === 1);
+check("splitting is not attempted on a phrase with no 'and'", names("short sword", menu("Short Sword")).length === 1);
 
 /* --- Coin and encumbrance still come off cleanly --------------------------- */
 const paid = parseEquipment("a dagger, 12gp, 8sp (Enc. 3 stones).", menu("Dagger"));

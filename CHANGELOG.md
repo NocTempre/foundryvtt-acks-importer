@@ -23,6 +23,16 @@
   of its name. The step that strips it ran before the spacing was tidied, so it
   could only ever match the first item of a list, which is the one that never
   begins with "and".
+- **Two pieces of gear joined by "and" arrive as two.** "Spear and short sword"
+  imported as a single item named for both weapons. Before splitting a pair, the
+  parser checks whether the whole phrase is already a known item — that is what
+  keeps "tunic and pants", one printed outfit at one printed price, in one
+  piece. But the check matched on any catalogue name merely *contained* in the
+  phrase, and "spear and short sword" contains "short sword", so the pair read as
+  something already known and was never split. The longer the second item's name,
+  the more certain it was to happen; the split only ever worked when both names
+  were very short. The whole phrase now has to match a known item outright.
+  Outfits and aliased entries still stay whole.
 
 ## 2.4.5
 

@@ -3011,6 +3011,10 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   });
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const aliasFold = new Map(Object.entries(aliases).map(([k, v]) => [fold(k), v]));
+  // WHICH known item does this descriptor point at? Deliberately generous: the
+  // printed wording is a description ("smooth-worn staff"), not a catalogue
+  // name, so a contained name is the usual way a real cell resolves. Six
+  // characters is the floor at which containment stops being a coincidence.
   const resolve = (descriptor) => {
     const f = fold(descriptor);
     for (const [ak, av] of aliasFold) {
@@ -3023,6 +3027,28 @@ export function parseEquipment(cellText, menu, aliases = {}) {
       menu.find((m) => m.foldStripped.length >= 6 && f.includes(m.foldStripped))?.ref ??
       ""
     );
+  };
+
+  /**
+   * Is this descriptor, WHOLE, one item the menu already knows?
+   *
+   * A different question from `resolve`, and it has to be asked differently.
+   * The pair rule below splits "X and Y" only when the whole thing is not
+   * already a known item — "tunic and pants" is one printed outfit at one
+   * printed price and must stay whole. Asking `resolve` that question let its
+   * containment fallback answer yes for the wrong reason: "spear and short
+   * sword" CONTAINS "short sword", so the joined string read as an
+   * already-known item and the pair never split. The character got one item
+   * named for two weapons, and the longer the second weapon's name the more
+   * certain it was — the rule only ever fired when both halves happened to fold
+   * shorter than six characters.
+   *
+   * So this matches the whole descriptor and nothing less: an exact menu name
+   * (with or without its bracketed qualifier) or an exact alias key.
+   */
+  const resolveWhole = (descriptor) => {
+    const f = fold(descriptor);
+    return aliasFold.get(f) ?? menu.find((m) => m.fold === f || m.foldStripped === f)?.ref ?? "";
   };
   const items = [];
   const push = (descriptor, note = "") => {
@@ -3062,9 +3088,10 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     }
     // A pair splits only when BOTH halves resolve to known equipment —
     // "spear and short sword" is two weapons, while "tunic and pants" (one
-    // outfit, one printed price) resolves whole and stays whole.
+    // outfit, one printed price) is a known item WHOLE and stays whole. The
+    // whole-descriptor test is `resolveWhole`, never `resolve`: see there.
     const pair = /^(.+?)\s+and\s+(.+)$/i.exec(descriptor);
-    if (pair && !resolve(descriptor) && resolve(pair[1]) && resolve(pair[2])) {
+    if (pair && !resolveWhole(descriptor) && resolve(pair[1]) && resolve(pair[2])) {
       push(pair[1]);
       push(pair[2]);
       continue;

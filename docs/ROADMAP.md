@@ -46,3 +46,29 @@ a confirmation surface of its own — a minor.
 
 Until then the clean-slate path is the answer and it works: Remove ALL Imports,
 then import again. It is exactly what the test cycle does.
+
+---
+
+## Starting equipment: telling gear from what it is packed with
+
+`parseEquipment` splits a template's printed Starting Equipment cell into items.
+Splitting it correctly is a solved problem — commas and semicolons separate,
+brackets hold, a counted container yields device plus load, and a pair of known
+items yields two. What the splitter cannot do is decide what the pieces ARE.
+
+A cell that reads "enameled spellbook with discern magic and one spell of
+character's choice" names one piece of gear, one SPELL recorded in it, and a
+choice the player has not made yet. All three arrive as items, because nothing
+in the wording distinguishes them: "discern magic" is shaped exactly like the
+name of a trinket, and a rule that guessed would drop real gear whenever it
+guessed wrong.
+
+Closing it needs a source of truth the splitter does not have — the spell list,
+so a descriptor naming a known spell becomes a spell reference on the book that
+carries it rather than an item; and some way to represent "one spell of the
+character's choice" as a decision the sheet asks for rather than a line of
+inventory. Both are the abilities/magic model's to own, not the splitter's.
+
+Until then the pieces are all items, correctly separated, and a Judge deletes
+the two that are not gear. That is a tidier failure than the alternative and it
+loses nothing.
