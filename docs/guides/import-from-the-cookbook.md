@@ -38,6 +38,32 @@ torch imports as a carried light stack and a flask of holy water as a thrown
 splash weapon rather than both being generic items. Without it, the register's
 own type stands.
 
+## Starting equipment on a class template
+
+A template's printed Starting Equipment line becomes one item per piece the book
+lists. The splitter separates the pieces; it does not judge what they are, so
+anything the line names arrives as an item — including a **spell recorded in the
+spellbook it came packed with** ("discern magic"), and a **choice the player has
+not made yet** ("one spell of character's choice"). Both are the line as printed,
+not a misread of it.
+
+Delete the rows that are not gear after generating a character; the pieces that
+are gear are already separated correctly. Teaching the importer to tell a spell
+from a trinket needs the spell list, which it does not have — see `ROADMAP.md`.
+
+## Where a monster files itself
+
+An imported monster lands in a folder named for the **type its own stat block
+declares**, not for the chapter you found it in. A creature whose block types as
+a beastman files under *Beastmen* beside the others, however unrelated its entry.
+
+A name that looks misspelled is usually the book's own coinage — the Monstrous
+Manual names many creatures unlike their familiar equivalents, and *Hobgholl*
+(MM p.188) is a different creature from *Beastman, Hobgoblin* (MM p.53), not a
+misreading of it. An entry only imports at all when the heading on your page
+matches the one the cookbook expects, so a name that arrived is the name your
+book prints. Compare the stat block before assuming a typo.
+
 ## Cross-book merging
 
 The same conceptual family imported from a second book gains that book's new

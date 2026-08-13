@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.6.1
+
+### Fixed
+- **A power is read from the book its rules text prints in.** Thirty-one class
+  powers that the Judges Journal lists by name — *Ageless*, *Alien Senses*,
+  *Battle Plan*, *Scion of Kings* and the rest — print their actual rules under
+  another name in the Revised Rulebook. Their recipes pointed at the right
+  passage but kept asking the Judges Journal for it, so the page coordinates
+  landed wherever those rectangles happened to fall in the wrong book: *Ageless*
+  described itself with a poison table and the general proficiency-throw rules,
+  broken off mid-word and mangled in its spacing. Each of these powers now opens
+  the book its text is printed in — the book its citation already named — and
+  shows the rules it is actually describing.
+
+  Two consequences worth knowing. These powers now want the **Revised Rulebook**
+  connected rather than the Judges Journal, so a seat holding only the Judges
+  Journal sees no text where it used to see the wrong text. And a world that
+  already imported them holds effects scanned out of that wrong text — **run
+  "Update Abilities in World" to repair them.** That rewrite replaces the
+  description of every ability this module imported, so anything a Judge typed
+  into one of those descriptions is replaced along with it.
+
+### Changed
+- The build refuses a recipe whose page coordinates belong to a book other than
+  the one it reads, and reports how many powers follow their text across a book
+  boundary.
+
 ## 2.6.0
 
 Stabilization release — the importer's share of the 2026-08-07 hygiene

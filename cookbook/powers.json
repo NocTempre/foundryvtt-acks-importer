@@ -3654,10 +3654,10 @@
       "id": "def.power.ageless",
       "kind": "kind.power",
       "name": "Ageless",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        310
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -3671,14 +3671,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 310,
+          "page": 95,
           "box": {
-            "x0": 299.5,
-            "x1": 330.73999999999995,
-            "y0": 441,
-            "y1": 450
+            "x0": 326.5,
+            "x1": 364.0751,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Ageless:"
+          "text": "Longeval"
         },
         "description": {
           "op": "text",
@@ -4027,10 +4027,10 @@
       "id": "def.power.alienSenses",
       "kind": "kind.power",
       "name": "Alien Senses",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        310
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -4044,14 +4044,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 310,
+          "page": 28,
           "box": {
-            "x0": 299.5001,
-            "x1": 349.8290999999999,
-            "y0": 681,
-            "y1": 690
+            "x0": 43,
+            "x1": 81.755,
+            "y0": 521,
+            "y1": 530
           },
-          "text": "Alien Senses:"
+          "text": "Alertness:"
         },
         "description": {
           "op": "text",
@@ -4218,10 +4218,10 @@
       "id": "def.power.animalCompanion",
       "kind": "kind.power",
       "name": "Animal Companion",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.71",
       "pages": [
-        311
+        71
       ],
       "meta": {
         "category": "classPower",
@@ -4235,14 +4235,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 311,
+          "page": 71,
           "box": {
             "x0": 70,
-            "x1": 148.70510000000002,
-            "y0": 341,
-            "y1": 350
+            "x1": 127.43359999999998,
+            "y0": 381,
+            "y1": 390
           },
-          "text": "Animal Companion:"
+          "text": "Totem Animal:"
         },
         "description": {
           "op": "text",
@@ -4542,10 +4542,10 @@
       "id": "def.power.arenaReputation",
       "kind": "kind.power",
       "name": "Arena Reputation",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.26",
       "pages": [
-        311
+        26
       ],
       "meta": {
         "category": "classPower",
@@ -4559,14 +4559,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 311,
+          "page": 26,
           "box": {
-            "x0": 326.5,
-            "x1": 396.9611,
-            "y0": 121,
-            "y1": 130
+            "x0": 43,
+            "x1": 123.51500000000001,
+            "y0": 571,
+            "y1": 580
           },
-          "text": "Arena Reputation:"
+          "text": "Battlefield Prowess ("
         },
         "description": {
           "op": "text",
@@ -4674,10 +4674,10 @@
       "id": "def.power.artificialYouth",
       "kind": "kind.power",
       "name": "Artificial Youth",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        311
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -4691,14 +4691,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 311,
+          "page": 95,
           "box": {
             "x0": 326.5,
-            "x1": 388.45699999999994,
-            "y0": 221,
-            "y1": 230
+            "x1": 364.0751,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Artificial Youth:"
+          "text": "Longeval"
         },
         "description": {
           "op": "text",
@@ -4869,10 +4869,10 @@
       "id": "def.power.avoidGettingLost",
       "kind": "kind.power",
       "name": "Avoid Getting Lost",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.29",
       "pages": [
-        311
+        29
       ],
       "meta": {
         "category": "classPower",
@@ -4886,14 +4886,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 311,
+          "page": 29,
           "box": {
             "x0": 326.5,
-            "x1": 400.9570999999999,
-            "y0": 561,
-            "y1": 570
+            "x1": 374.39000000000004,
+            "y0": 231,
+            "y1": 240
           },
-          "text": "Avoid Getting Lost:"
+          "text": "Pathfinding:"
         },
         "description": {
           "op": "text",
@@ -5328,10 +5328,10 @@
       "id": "def.power.battlePlan",
       "kind": "kind.power",
       "name": "Battle Plan",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.55",
       "pages": [
-        312
+        55
       ],
       "meta": {
         "category": "classPower",
@@ -5345,14 +5345,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 312,
+          "page": 55,
           "box": {
-            "x0": 43,
-            "x1": 87.587,
-            "y0": 401,
-            "y1": 410
+            "x0": 70,
+            "x1": 135.48499999999999,
+            "y0": 231,
+            "y1": 240
           },
-          "text": "Battle Plan:"
+          "text": "Inspire Courage:"
         },
         "description": {
           "op": "text",
@@ -5866,10 +5866,10 @@
       "id": "def.power.blessingOfTheDead",
       "kind": "kind.power",
       "name": "Blessing of the Dead",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        312
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -5883,14 +5883,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 312,
+          "page": 95,
           "box": {
-            "x0": 299.4999,
-            "x1": 379.30299999999994,
-            "y0": 581,
-            "y1": 590
+            "x0": 70,
+            "x1": 126.305,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Blessing of the Dead:"
+          "text": "Divine Health:"
         },
         "description": {
           "op": "text",
@@ -6342,10 +6342,10 @@
       "id": "def.power.broadSpectrumInoculations",
       "kind": "kind.power",
       "name": "Broad Spectrum Inoculations",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        313
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -6359,14 +6359,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 313,
+          "page": 95,
           "box": {
             "x0": 70,
-            "x1": 184.57820000000007,
-            "y0": 631,
-            "y1": 640
+            "x1": 126.305,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Broad Spectrum Inoculations:"
+          "text": "Divine Health:"
         },
         "description": {
           "op": "text",
@@ -6863,10 +6863,10 @@
       "id": "def.power.chthonicHegemon",
       "kind": "kind.power",
       "name": "Chthonic Hegemon",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.100",
       "pages": [
-        313
+        100
       ],
       "meta": {
         "category": "classPower",
@@ -6880,14 +6880,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 313,
+          "page": 100,
           "box": {
-            "x0": 326.5,
-            "x1": 403.5041,
-            "y0": 611,
-            "y1": 620
+            "x0": 299.5,
+            "x1": 355.823,
+            "y0": 621,
+            "y1": 630
           },
-          "text": "Chthonic Hegemon:"
+          "text": "Ancient Pacts"
         },
         "description": {
           "op": "text",
@@ -10545,10 +10545,10 @@
       "id": "def.power.fierySpirit",
       "kind": "kind.power",
       "name": "Fiery Spirit",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.26",
       "pages": [
-        318
+        26
       ],
       "meta": {
         "category": "classPower",
@@ -10562,14 +10562,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 318,
+          "page": 26,
           "box": {
             "x0": 43,
-            "x1": 89.108,
-            "y0": 81,
-            "y1": 90
+            "x1": 123.51500000000001,
+            "y0": 571,
+            "y1": 580
           },
-          "text": "Fiery Spirit:"
+          "text": "Battlefield Prowess ("
         },
         "description": {
           "op": "text",
@@ -10608,10 +10608,10 @@
       "id": "def.power.fieryCauterization",
       "kind": "kind.power",
       "name": "Fiery Cauterization",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.115",
       "pages": [
-        318
+        115
       ],
       "meta": {
         "category": "classPower",
@@ -10625,14 +10625,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 318,
+          "page": 115,
           "box": {
-            "x0": 43,
-            "x1": 119.6891,
-            "y0": 101,
-            "y1": 110
+            "x0": 65,
+            "x1": 218.2966,
+            "y0": 623,
+            "y1": 645
           },
-          "text": "Fiery Cauterization:"
+          "text": "Laying on Hands"
         },
         "description": {
           "op": "text",
@@ -12035,10 +12035,10 @@
       "id": "def.power.greatnessOfSoul",
       "kind": "kind.power",
       "name": "Greatness of Soul",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.26",
       "pages": [
-        319
+        26
       ],
       "meta": {
         "category": "classPower",
@@ -12052,14 +12052,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 319,
+          "page": 26,
           "box": {
-            "x0": 326.5,
-            "x1": 395.2240999999999,
-            "y0": 401,
-            "y1": 410
+            "x0": 43,
+            "x1": 123.51500000000001,
+            "y0": 571,
+            "y1": 580
           },
-          "text": "Greatness of Soul:"
+          "text": "Battlefield Prowess ("
         },
         "description": {
           "op": "text",
@@ -12300,10 +12300,10 @@
       "id": "def.power.hardToKill",
       "kind": "kind.power",
       "name": "Hard to Kill",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.51",
       "pages": [
-        320
+        51
       ],
       "meta": {
         "category": "classPower",
@@ -12317,14 +12317,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 320,
+          "page": 51,
           "box": {
-            "x0": 43,
-            "x1": 91.484,
-            "y0": 141,
-            "y1": 150
+            "x0": 70,
+            "x1": 139.832,
+            "y0": 431,
+            "y1": 440
           },
-          "text": "Hard to Kill:"
+          "text": "Savage Resilience:"
         },
         "description": {
           "op": "text",
@@ -12736,10 +12736,10 @@
       "id": "def.power.horribleTruths",
       "kind": "kind.power",
       "name": "Horrible Truths",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.100",
       "pages": [
-        320
+        100
       ],
       "meta": {
         "category": "classPower",
@@ -12753,14 +12753,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 320,
+          "page": 100,
           "box": {
-            "x0": 43,
-            "x1": 106.09100000000001,
-            "y0": 561,
-            "y1": 570
+            "x0": 299.5,
+            "x1": 355.823,
+            "y0": 621,
+            "y1": 630
           },
-          "text": "Horrible Truths:"
+          "text": "Ancient Pacts"
         },
         "description": {
           "op": "text",
@@ -13793,10 +13793,10 @@
       "id": "def.power.keenInsectSenses",
       "kind": "kind.power",
       "name": "Keen Insect Senses",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        321
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -13810,14 +13810,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 321,
+          "page": 28,
           "box": {
-            "x0": 326.4999,
-            "x1": 400.246,
-            "y0": 611,
-            "y1": 620
+            "x0": 43,
+            "x1": 81.755,
+            "y0": 521,
+            "y1": 530
           },
-          "text": "Keen Insect Senses:"
+          "text": "Alertness:"
         },
         "description": {
           "op": "text",
@@ -15581,10 +15581,10 @@
       "id": "def.power.mindfulness",
       "kind": "kind.power",
       "name": "Mindfulness",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        323
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -15598,14 +15598,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 323,
+          "page": 28,
           "box": {
-            "x0": 326.5,
-            "x1": 376.937,
-            "y0": 381,
-            "y1": 390
+            "x0": 43,
+            "x1": 81.755,
+            "y0": 521,
+            "y1": 530
           },
-          "text": "Mindfulness:"
+          "text": "Alertness:"
         },
         "description": {
           "op": "text",
@@ -15933,10 +15933,10 @@
       "id": "def.power.mysticalBloodline",
       "kind": "kind.power",
       "name": "Mystical Bloodline",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        324
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -15950,14 +15950,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 324,
+          "page": 95,
           "box": {
-            "x0": 299.5,
-            "x1": 373.46209999999985,
-            "y0": 81,
-            "y1": 90
+            "x0": 326.5,
+            "x1": 364.0751,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Mystical Bloodline:"
+          "text": "Longeval"
         },
         "description": {
           "op": "text",
@@ -16180,10 +16180,10 @@
       "id": "def.power.nervousWatchfulness",
       "kind": "kind.power",
       "name": "Nervous Watchfulness",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        324
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -16197,14 +16197,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 324,
+          "page": 28,
           "box": {
-            "x0": 299.5,
-            "x1": 386.45809999999994,
-            "y0": 201,
-            "y1": 210
+            "x0": 43,
+            "x1": 108.07100000000001,
+            "y0": 661,
+            "y1": 670
           },
-          "text": "Nervous Watchfulness:"
+          "text": "Animal Reflexes:"
         },
         "description": {
           "op": "text",
@@ -16493,10 +16493,10 @@
       "id": "def.power.perfectionOfBody",
       "kind": "kind.power",
       "name": "Perfection of Body",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        324
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -16510,14 +16510,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 324,
+          "page": 95,
           "box": {
-            "x0": 299.5,
-            "x1": 373.11109999999985,
-            "y0": 571,
-            "y1": 580
+            "x0": 326.5,
+            "x1": 364.0751,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Perfection of Body:"
+          "text": "Longeval"
         },
         "description": {
           "op": "text",
@@ -17325,10 +17325,10 @@
       "id": "def.power.purityOfBodyAndSoul",
       "kind": "kind.power",
       "name": "Purity of Body and Soul",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        325
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -17342,14 +17342,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 325,
+          "page": 95,
           "box": {
-            "x0": 326.5,
-            "x1": 419.85709999999983,
-            "y0": 441,
-            "y1": 450
+            "x0": 70,
+            "x1": 126.305,
+            "y0": 361,
+            "y1": 370
           },
-          "text": "Purity of Body and Soul:"
+          "text": "Divine Health:"
         },
         "description": {
           "op": "text",
@@ -17442,10 +17442,10 @@
       "id": "def.power.quickening",
       "kind": "kind.power",
       "name": "Quickening",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        325
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -17459,14 +17459,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 325,
+          "page": 28,
           "box": {
-            "x0": 326.5,
-            "x1": 373.859,
-            "y0": 591,
-            "y1": 600
+            "x0": 43,
+            "x1": 108.07100000000001,
+            "y0": 661,
+            "y1": 670
           },
-          "text": "Quickening:"
+          "text": "Animal Reflexes:"
         },
         "description": {
           "op": "text",
@@ -17589,10 +17589,10 @@
       "id": "def.power.rallyTheFaithful",
       "kind": "kind.power",
       "name": "Rally the Faithful",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.56",
       "pages": [
-        325
+        56
       ],
       "meta": {
         "category": "classPower",
@@ -17606,14 +17606,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 325,
+          "page": 56,
           "box": {
-            "x0": 326.5,
-            "x1": 395.3950999999999,
-            "y0": 611,
-            "y1": 620
+            "x0": 43,
+            "x1": 103.373,
+            "y0": 451,
+            "y1": 460
           },
-          "text": "Rally the Faithful:"
+          "text": "Inspire Hope ("
         },
         "description": {
           "op": "text",
@@ -17838,10 +17838,10 @@
       "id": "def.power.relentless",
       "kind": "kind.power",
       "name": "Relentless",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.93",
       "pages": [
-        325
+        93
       ],
       "meta": {
         "category": "classPower",
@@ -17855,14 +17855,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 325,
+          "page": 93,
           "box": {
-            "x0": 326.5,
-            "x1": 367.4599999999999,
-            "y0": 671,
-            "y1": 680
+            "x0": 70,
+            "x1": 158.3261,
+            "y0": 191,
+            "y1": 200
           },
-          "text": "Relentless:"
+          "text": "Connection to Nature"
         },
         "description": {
           "op": "text",
@@ -18301,10 +18301,10 @@
       "id": "def.power.rouseToFury",
       "kind": "kind.power",
       "name": "Rouse to Fury",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.55",
       "pages": [
-        326
+        55
       ],
       "meta": {
         "category": "classPower",
@@ -18318,14 +18318,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 326,
+          "page": 55,
           "box": {
-            "x0": 43,
-            "x1": 99.0431,
-            "y0": 151,
-            "y1": 160
+            "x0": 70,
+            "x1": 135.48499999999999,
+            "y0": 231,
+            "y1": 240
           },
-          "text": "Rouse to Fury:"
+          "text": "Inspire Courage:"
         },
         "description": {
           "op": "text",
@@ -18557,10 +18557,10 @@
       "id": "def.power.scionOfKings",
       "kind": "kind.power",
       "name": "Scion of Kings",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        326
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -18574,14 +18574,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 326,
+          "page": 95,
           "box": {
-            "x0": 43,
-            "x1": 100.547,
-            "y0": 591,
-            "y1": 600
+            "x0": 326.5,
+            "x1": 418.72399999999993,
+            "y0": 251,
+            "y1": 260
           },
-          "text": "Scion of Kings:"
+          "text": "Blood of Ancient Kings"
         },
         "description": {
           "op": "text",
@@ -19127,10 +19127,10 @@
       "id": "def.power.soulOfTheDragon",
       "kind": "kind.power",
       "name": "Soul of the Dragon",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.95",
       "pages": [
-        327
+        95
       ],
       "meta": {
         "category": "classPower",
@@ -19144,14 +19144,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 327,
+          "page": 95,
           "box": {
-            "x0": 70,
-            "x1": 144.49310000000003,
-            "y0": 81,
-            "y1": 90
+            "x0": 326.5,
+            "x1": 418.72399999999993,
+            "y0": 251,
+            "y1": 260
           },
-          "text": "Soul of the Dragon:"
+          "text": "Blood of Ancient Kings"
         },
         "description": {
           "op": "text",
@@ -19289,10 +19289,10 @@
       "id": "def.power.speedOfThought",
       "kind": "kind.power",
       "name": "Speed of Thought",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.28",
       "pages": [
-        327
+        28
       ],
       "meta": {
         "category": "classPower",
@@ -19306,14 +19306,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 327,
+          "page": 28,
           "box": {
-            "x0": 70,
-            "x1": 139.34510000000003,
-            "y0": 171,
-            "y1": 180
+            "x0": 43,
+            "x1": 108.07100000000001,
+            "y0": 661,
+            "y1": 670
           },
-          "text": "Speed of Thought:"
+          "text": "Animal Reflexes:"
         },
         "description": {
           "op": "text",
@@ -20279,10 +20279,10 @@
       "id": "def.power.supernaturalResilience",
       "kind": "kind.power",
       "name": "Supernatural Resilience",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.51",
       "pages": [
-        328
+        51
       ],
       "meta": {
         "category": "classPower",
@@ -20296,14 +20296,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 328,
+          "page": 51,
           "box": {
-            "x0": 43,
-            "x1": 135.61009999999996,
-            "y0": 201,
-            "y1": 210
+            "x0": 70,
+            "x1": 139.832,
+            "y0": 431,
+            "y1": 440
           },
-          "text": "Supernatural Resilience:"
+          "text": "Savage Resilience:"
         },
         "description": {
           "op": "text",
@@ -21153,10 +21153,10 @@
       "id": "def.power.unholyFanaticism",
       "kind": "kind.power",
       "name": "Unholy Fanaticism",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.63",
       "pages": [
-        330
+        63
       ],
       "meta": {
         "category": "classPower",
@@ -21170,14 +21170,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 330,
+          "page": 63,
           "box": {
-            "x0": 43,
-            "x1": 117.34009999999999,
-            "y0": 331,
-            "y1": 340
+            "x0": 326.5,
+            "x1": 383.85800000000006,
+            "y0": 311,
+            "y1": 320
           },
-          "text": "Unholy Fanaticism:"
+          "text": "Holy Fervor ("
         },
         "description": {
           "op": "text",
@@ -21673,10 +21673,10 @@
       "id": "def.power.widespreadRenown",
       "kind": "kind.power",
       "name": "Widespread Renown",
-      "book": "jj",
+      "book": "rr",
       "cite": "RR p.26",
       "pages": [
-        330
+        26
       ],
       "meta": {
         "category": "classPower",
@@ -21690,14 +21690,14 @@
       "fields": {
         "name": {
           "op": "expect",
-          "page": 330,
+          "page": 26,
           "box": {
-            "x0": 299.5,
-            "x1": 380.66209999999995,
-            "y0": 331,
-            "y1": 340
+            "x0": 43,
+            "x1": 123.51500000000001,
+            "y0": 571,
+            "y1": 580
           },
-          "text": "Widespread Renown:"
+          "text": "Battlefield Prowess ("
         },
         "description": {
           "op": "text",

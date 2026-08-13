@@ -7,6 +7,52 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### An alias is read from the book its text prints in (2026-08-12)
+
+**Problem.** A field report showed the class power *Ageless* describing itself
+with a poison table and the general Proficiency Throws rules, in mangled
+spacing, starting mid-word. Not an extraction fault: an alias — a name the books
+list whose rules text prints under another entry — carries a pointer to its
+target's passage, and that pointer is page geometry. The compiler copied the
+geometry, and the citation, onto the alias without moving `book`. Nothing at
+runtime could notice: an entry is read from `entry.book` alone, the instruction
+set has no cross-document read, and the only correctness gate is the `expect`
+probe on the name — which kept passing, because the name was the one field still
+pointing at the right book. So 31 Judges Journal powers executed Revised
+Rulebook rectangles against the JJ and extracted whatever printed there.
+
+**Ruled:** an alias follows its text. Where the target lives in another book the
+alias adopts that book, its pages and its name probe — the probe is what proves
+the page, and the alias's own probe points at the listing it is leaving behind.
+The ability's own name is a different field and does not move. The citation
+already named the target's book, so this makes the entry agree with itself
+rather than changing what it claims.
+
+**Rejected — refuse the cross-book pointer.** The textless-alias path already
+exists and degrades cleanly, so refusing would have been the smaller change. It
+also leaves all 31 permanently unreadable and leaves a reveal button with
+nothing behind it. Wrong text is worse than no text; no text is still not the
+goal.
+
+**Rejected — a per-field book.** Correct in the long run: it would let a JJ
+entry keep its own book and still read a passage from the RR. It needs a second
+document at runtime and a change to a frozen instruction set, which is not a
+hotfix.
+
+**Cost, accepted:** the book that unlocks these 31 moves from the JJ to the RR.
+A seat with only the JJ connected loses their text — it never had their real
+text, but it did have something. Worlds that imported them under the old data
+hold mechanics scanned from the wrong prose; only a GM re-run of Update
+Abilities repairs that, and nothing detects it automatically.
+
+**The gate that was missing.** `expect` proves the name and nothing else, so a
+mis-pointed field is invisible to it. `tools/test-cookbook-coherence.mjs` now
+asserts over shipped data that an alias is read from its target's book, and that
+an entry's citation names the book it is read from — the second is the
+user-visible face of the same defect, and it catches all 31.
+
+---
+
 ### The class-builder import leaves working examples, not just tables (2026-08-12)
 
 **Problem.** acks-extras grew an advanced mode that derives a class from JJ

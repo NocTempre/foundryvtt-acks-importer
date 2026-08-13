@@ -3461,6 +3461,7 @@ async function main() {
   // the alias materializes the same mechanics without restating any of them.
   let linked = 0;
   let dangling = 0;
+  let crossBook = 0;
   for (const data of Object.values(contentOut)) {
     for (const [id, e] of Object.entries(data.entries)) {
       const target = finalTarget(id);
@@ -3472,13 +3473,29 @@ async function main() {
         warn(`${id}: alias target ${target} has no text pointer to follow`);
         continue;
       }
+      // The pointer is page GEOMETRY, and geometry only means anything in the
+      // book it was measured against. An entry is read from `entry.book` alone
+      // — there is no per-field book, and the instruction set has no
+      // cross-document read — so an alias that borrows a passage must also be
+      // read from where that passage prints, or those rectangles land on
+      // whatever the alias's own book happens to print at those coordinates.
+      // The name probe moves with it: it is what proves the page, and the
+      // alias's own probe points at its listing in the book being left behind.
+      // `e.name` — the ability's actual name — is a different field and stays.
+      const t = entryById.get(target);
+      if (t && t.book !== e.book) {
+        crossBook++;
+        e.book = t.book;
+        e.pages = t.pages;
+        if (t.fields?.name) e.fields.name = t.fields.name;
+      }
       e.fields.description = desc;
       // The prose alone only carries what the SCAN can classify. Anything the
       // chef authored on the target — a prerequisite, a companion slot, a
       // progression column — is equally part of the capability, and an alias
       // that shares the capability shares those too. Its own authored specs
       // always win; this only fills what it did not state for itself.
-      const tf = entryById.get(target)?.fields ?? {};
+      const tf = t?.fields ?? {};
       if (tf.effects && !e.fields.effects) e.fields.effects = tf.effects;
       if (tf.progression && !e.fields.progression) e.fields.progression = tf.progression;
       // The citation labels the PROSE, and the prose is the target's — so cite
@@ -3487,7 +3504,6 @@ async function main() {
       // Two names for one capability do not stack. The target's build cost and
       // retirement carry over too (same content), but never overwrite anything
       // the alias's own listing stated.
-      const t = entryById.get(target);
       e.meta = {
         ...(t?.meta?.powerValue != null ? { powerValue: t.meta.powerValue } : {}),
         ...(t?.meta?.deprecated ? { deprecated: true, ...(t.meta.replacedBy ? { replacedBy: t.meta.replacedBy } : {}) } : {}),
@@ -3503,7 +3519,9 @@ async function main() {
     }
   }
   if (linked || unresolved || dangling) {
-    console.error(`aliases: ${linked} linked to their text, ${unresolved} unresolved, ${dangling} dangling`);
+    console.error(
+      `aliases: ${linked} linked to their text, ${unresolved} unresolved, ${dangling} dangling, ${crossBook} following their text into another book`
+    );
   }
 
   // Content-type cookbooks: named by WHAT they extract, spanning every book
