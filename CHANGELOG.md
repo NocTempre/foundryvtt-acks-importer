@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.6.0
+
+Stabilization release — the importer's share of the 2026-08-07 hygiene
+sweep's backlog.
+
+### Fixed
+- **"Forget books" no longer claims success it did not have.** The success
+  toast is gated on both clears actually completing; a partial or failed
+  forget warns instead.
+
+### Changed
+- Document-type checks read frozen `ITEM_TYPE` / `ACTOR_TYPE` constants
+  instead of scattered string literals.
+- Swallowed failures across the import pipeline now log what failed through
+  the module prefix instead of vanishing in bare catches.
+- The validate harness (synced from the module template) now checks path
+  case-sensitivity against CI's case-sensitive filesystem, enforces the
+  `relationships.requires` invariants, and no longer lets a longer sibling
+  key shield a missing exact i18n key.
+
 ## 2.5.0
 
 ### Added
