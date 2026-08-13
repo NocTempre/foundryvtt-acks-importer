@@ -49,27 +49,34 @@ then import again. It is exactly what the test cycle does.
 
 ---
 
-## Where an entry ends when the next heading is body-size bold
+## A prose box that does not contain its own heading
 
-A continuation now stops at a display heading, which ended the entries that ran
-into a price table or the next item along. It does not end the ones whose next
-section is a bold run-in at BODY size — `def.power.longeval`, and the four
-aliases that follow its text, read on into "Code of Behavior" and a template
-table.
+Twenty-three entries are scoped to a region their anchor does not appear in, so
+they extract whatever prints there instead of their own text: `def.equip.coat`,
+`tunicAndPants` and `turban` show columns of price digits. The measure is exact
+and cheap to re-run — an entry's FIRST paragraph, on the anchor's own page,
+must contain the anchor's x.
 
-Height cannot separate those, and neither can a single font rule: pdf.js
-aliases are per-document, so the alias that is a heading font in the Revised
-Rulebook is the body font in By This Axe, where an entry's own `Cost:` arrives
-inside a body run. A rule keyed to the font would cut real entries at their own
-`Cost:` and `Notes:` labels and lose rules text — a worse failure than the
-trailing paragraph it set out to remove.
+The cause is `detectColumns`. It bins body-run x-positions and needs a bin
+holding >8% of them, which a table starves: BTA p95 prints columns at x=36 and
+x=306 and the detector returns 240 and 310. `defColumns` already repairs the
+one-column case from run-in heading positions.
 
-Closing it means calibrating per entry from its own anchor: learn the bold
-alias FROM the heading that was matched, then stop at the next line-initial run
-sharing it, the way `extractRunin` already does for the dynamic path. That is
-sound, and it recomputes every one of the ~4000 paragraph boxes, so it wants a
-release that can carry a full re-verification against all six books rather than
-a read of the largest few. See `DECISIONS.md` (2026-08-13).
+The multi-column case cannot be repaired the same way, and the attempt is
+recorded because it looks obvious. Supplying the missing edge leaves the FALSE
+edge in place: RR p71 returns [140, 330], where 140 is the Totem Animals
+table's left edge and the real prose column starts at 72. Adding 72 closes the
+box at 134, and Totem Animal loses the continuation it flows into — a truncated
+description in place of a wrong one, which is worse. Requiring body lines at
+the edge does not separate the cases either; x=72 has forty of them and is
+genuinely a column.
+
+Closing it needs the detector to say which of ITS columns are prose and which
+are table structure — evidence a histogram of x-positions does not carry.
+Run-in headings are that evidence (a prose column on a definition page has
+them; a table column does not), so the shape is probably to drop detected
+columns with no heading at their edge, verified the same way the boundary work
+was: recompile, diff all 1200 entries, and read what changed.
 
 ---
 

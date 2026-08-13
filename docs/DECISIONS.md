@@ -22,21 +22,71 @@ tells them apart without knowing what the heading says. Measured over the whole
 shipped corpus: 15 of 1204 entries changed, every one of them shorter, none
 longer — and the text each one shed was another entry's.
 
-**Not fixed, and deliberately so — the body-size run-in boundary.** The
-reported case (`def.power.longeval`, and the four aliases that follow it) ends
-at "Code of Behavior", a heading set in bold at BODY size. Height cannot see
-it. Neither can a font rule written once: pdf.js aliases are per-document, and
-the same alias that is a heading font in the Revised Rulebook is the body font
-in By This Axe, where `"stone. Cost:"` arrives as a single body run — so a rule
-that stopped at a non-body font would cut real entries at their own `Cost:` and
-`Notes:` labels, losing rules text. Telling a SECTIONING run-in from a
-LABELLING one needs per-entry calibration from the entry's own anchor, the way
-`extractRunin` does it, and that recomputes all 3993 paragraph boxes. That is
-not a hotfix, and it cannot be validated by reading a sample.
+**Superseded same day for the body-size case — see the entry below.** This
+ruling stands for display headings; the body-size run-in it declined to handle
+was closed in 2.6.3.
 
-**Cost, accepted:** those entries still carry trailing text from the section
-after them. It is the entry's own text plus too much, which is what it already
-was; the 2.6.1 fix moved them from the wrong book's text to their own.
+---
+
+### A block ends at its section heading, calibrated on the body (2026-08-13)
+
+**Problem.** The reported entry survived the rule above. `def.power.longeval`
+(and the four aliases that follow its text, *Ageless* among them) ends at "Code
+of Behavior", which is a heading in neither of the senses the compiler knew: not
+a display heading — it is set at body size — and not the next entry, because the
+stop matched `alias === anchor.alias` and required a colon, and a section
+heading is a THIRD font carrying no colon. The page sets a run-in face, a body
+face and a heading face; the stop could see only its own.
+
+**Ruled:** calibrate on the BODY, not on the anchor. Whatever face most of a
+block is set in is prose, and a line-initial run in any other face that occupies
+its whole line is a heading that ends the block. Testing the RUN's own text
+rather than the line's is what keeps a bullet glyph — its own tiny face, empty
+string, sitting at the column edge of a wrapped sentence — from reading as one.
+
+**The half that mattered more.** Finding the stop is not enough: a block
+continues into the next column and overleaf only because it ran out of column,
+and a block that ended at a heading ran out of nothing. Those two branches were
+gated on the run-in stop alone, so an entry that had already finished still
+collected the next column and the page after it. `longeval` shed its Code of
+Behavior and went on gathering a template table until the continuation was
+gated on the section stop too.
+
+**Rejected — stopping at any non-body face without the bracket test.** The JJ
+closes a power with the classes that may take it, and that list wraps:
+"[Elven Wizard," ends a line and "Nobiran Wizard, Wizard]" begins the next, in
+the list's own face, flush left — a heading by every other test. Cutting there
+leaves the bracket open, which is worse than not cutting: `stripOwnerList` no
+longer recognises the list it exists to remove, so half of it stays on the page.
+`def.power.flawlessPrecision` did exactly this until a heading was forbidden
+from opening inside an unclosed bracket.
+
+**One printed style, several fonts.** The stop that ends a block at the next
+entry matched the anchor's own font, and BTA p98 sets "Firewood:" and "Refined
+Oil:" — adjacent entries in one column, identically styled — in two different
+aliases, so firewood described the oil beneath it. Matching "not the body font"
+instead fixes that and breaks JJ p310, where the see-references ARE set in the
+body font: "Alien Senses: See alertness." swallowed the entry after it, its
+see-reference stopped parsing, and it silently ceased to be an alias at all —
+caught only because the alias count fell by one. A heading is either: the
+anchor's font, or not the body's. Neither test alone covers both pages.
+
+**Measured, whole corpus, against all six books:** 34 of 1206 entries changed,
+every one shorter, none longer, and 30 of the 33 now end on sentence
+punctuation, and every cut lands where the DROPPED text opens a new section
+rather than continuing the entry's own sentence — the weaker "ends on a period"
+test scores a cut at any heading as clean, including a wrong one, so it was
+replaced. Three entries end in table wreckage they ended in before — shorter,
+not worse, and owed to their own boxes rather than to this rule. What the rest
+shed was another section's: three witch traditions dropped from 5012 characters
+to 915 by no longer reciting the whole Additional Class Powers list, and
+`refinedOil` from 2561 to 309 by no longer reciting a weapon table.
+
+**Confirmed against the wiki snapshot**, which preserves the paragraph
+boundaries PDF extraction destroys: Longeval's page there ends exactly where
+this rule now cuts. `flawlessPrecision` is confirmed by the book itself — the
+Judges Journal closes a custom power with its class list, and the kept text
+ends immediately before `[Elven Wizard, Nobiran Wizard, Wizard]`.
 
 ---
 

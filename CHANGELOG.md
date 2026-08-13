@@ -1,5 +1,44 @@
 # Changelog
 
+## 2.6.3
+
+### Added
+- **Two custom powers the importer never knew about.** *Fool's Luck* and
+  *Luck's Boon* — both the Fool's — print their headings in a typeface the
+  harvest was not looking for, so they were absent from the cookbook entirely.
+  Checked the other way round as well: of the 249 custom powers the Judges
+  Journal marks with a class list, these two were the only ones missing.
+
+### Fixed
+- **A class power describes itself and then stops.** *Ageless* ran on through a
+  code of behavior, a list of strictures and a table of templates — a whole
+  class's remaining pages under one power's name — and it was not alone. An
+  entry ended only at the next entry of its own kind, so anything printed
+  between the two came along: a witch tradition recited every additional power
+  the class gets, an earthforger's sigil recited the traits of dwarves, a flask
+  of refined oil recited a weapon table. A section heading now ends an entry,
+  whatever kind of heading it is, and an entry that has already ended no longer
+  goes looking for its continuation in the next column and the page after it.
+  Thirty-four entries stop where their own text stops; *Ageless* went from
+  1946 characters to 285, and three witch traditions from 5012 to 915.
+
+  The last release's known issue is closed by this. Worlds that imported these
+  powers still hold the longer text — **run "Update Abilities in World"** to
+  take the correction, which keeps any description you have written in yourself.
+- **An entry ends at the next entry even when the book changes typeface for
+  it.** One printed style can reach the reader as several different fonts, and
+  a heading was only recognised in the same font as the entry that opened the
+  block. So *Firewood* described itself and then described refined oil, the
+  entry printed beneath it in a font one shade different.
+
+### Known
+- Twenty-three entries have prose boxes that do not contain their own heading,
+  because column detection misreads a page whose layout is dominated by a
+  table — *Coat*, *Tunic and Pants* and *Turban* show price digits instead of
+  their descriptions. Correcting it means overruling detected columns rather
+  than adding to them, and the obvious repair truncated other entries in
+  testing. See `ROADMAP.md`.
+
 ## 2.6.2
 
 ### Fixed
@@ -27,10 +66,7 @@
 ### Known
 - Entries whose next section begins with a **bold heading at body size** still
   read on past their end — *Longeval*, and the four powers that share its text,
-  continue into a code of behaviour and a template table. Separating those from
-  an entry's own **Cost:** and **Notes:** labels needs per-entry work that
-  reaches every recipe in the cookbook; it is not in this patch. See
-  `ROADMAP.md`.
+  continue into a code of behaviour and a template table. *(Closed in 2.6.3.)*
 
 ## 2.6.1
 

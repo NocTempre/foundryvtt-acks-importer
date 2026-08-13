@@ -1851,6 +1851,21 @@
     }
   },
   {
+    "id": "def.power.foolsLuck",
+    "kind": "kind.power",
+    "book": "jj",
+    "name": "Fool’s Luck",
+    "anchor": {
+      "runin": "Fool’s Luck:"
+    },
+    "pages": [
+      318
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
     "id": "def.power.fourArms",
     "kind": "kind.power",
     "book": "jj",
@@ -2746,6 +2761,21 @@
     "name": "Low-Light Vision",
     "anchor": {
       "runin": "Low-Light Vision:"
+    },
+    "pages": [
+      322
+    ],
+    "meta": {
+      "category": "classPower"
+    }
+  },
+  {
+    "id": "def.power.lucksBoon",
+    "kind": "kind.power",
+    "book": "jj",
+    "name": "Luck’s Boon",
+    "anchor": {
+      "runin": "Luck’s Boon:"
     },
     "pages": [
       322

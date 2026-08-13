@@ -2522,20 +2522,31 @@ const slugOf = (s) =>
  */
 function defColumns(pd) {
   const cols = detectColumns(pd.items);
+  // Run-in HEADINGS always sit at a column's left edge, so their x-positions
+  // recover columns the histogram misses when a dominant table starves a bin.
+  const heads = pd.items.filter((it) => it.h < DEF_BODY_MAX_H && /^[A-Z][^:]{1,44}:$/.test(it.str.trim()));
+  const xs = heads.map((h) => h.x).sort((a, b) => a - b);
+  const starts = [];
+  for (const x of xs) {
+    if (!starts.length || x - starts[starts.length - 1] > 60) starts.push(x);
+  }
   // Trust the proven detector whenever it found a multi-column layout. Lowering
   // its threshold globally invents columns out of table cells, indents and the
   // page-edge chapter tabs (RR p33 reported EIGHT), which is far worse than the
   // miss being fixed.
+  //
+  // It also cannot be repaired by ADDING the edges run-in headings imply. The
+  // detector's misses are not only missing edges: on RR p71 it returns [140,
+  // 330], where 140 is the Totem Animals TABLE's left edge and the prose column
+  // it missed begins at 72. Supplying 72 leaves the false 140 in place, the box
+  // closes at 134, and the entry loses the continuation it flows into — trading
+  // a wrong description for a truncated one, which is the worse of the two.
+  // Overruling a detected column needs evidence this function does not have.
+  // The 23 entries whose prose box does not contain their own anchor are the
+  // measure of what is still wrong here; see ROADMAP.md.
   if (cols.length > 1) return cols;
-  // It reported one. Run-in HEADINGS always sit at a column's left edge, so
-  // their x-positions recover the true columns when a dominant table starves
-  // the histogram's second bin (RR p33 prints two columns, reports one — which
-  // made an entry swallow its neighbour's prose).
-  const heads = pd.items.filter((it) => it.h < DEF_BODY_MAX_H && /^[A-Z][^:]{1,44}:$/.test(it.str.trim()));
-  const starts = [];
-  for (const x of heads.map((h) => h.x).sort((a, b) => a - b)) {
-    if (!starts.length || x - starts[starts.length - 1] > 60) starts.push(x);
-  }
+  // It reported one column where the page prints two (RR p33), which made an
+  // entry swallow its neighbour's prose.
   return starts.length > 1 ? starts : cols;
 }
 
@@ -2798,22 +2809,79 @@ async function compileDefinition(doc, entry, kindRow) {
         .join("")
         .replace(/\s+/g, " ")
         .trim();
+    // Which face is PROSE in this column, by weight of characters below the
+    // anchor. Everything that ends a block is identified against this rather
+    // than against the anchor's own face, because one printed style can arrive
+    // as several aliases: BTA p98 sets "Firewood:" in one and "Refined Oil:"
+    // — the very next entry, same style, same column — in another, so an
+    // anchor-matched stop walked straight past it and firewood described the
+    // oil beside it. pdf.js aliases are per-document and per-subset; the body
+    // is the only face a page is guaranteed to agree with itself about.
+    const bodyAlias = (() => {
+      const tally = new Map();
+      for (const it of pd.items) {
+        if (colOf(it.x, cols) !== col || it.y <= anchor.y + 2) continue;
+        if (!it.str.trim()) continue;
+        tally.set(it.alias, (tally.get(it.alias) ?? 0) + it.str.trim().length);
+      }
+      return [...tally.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+    })();
     const stop = pd.items
       .filter(
         (it) =>
           it !== anchor &&
-          it.alias === anchor.alias &&
+          // EITHER test alone misses a page. The anchor's face misses a sibling
+          // set in another alias (BTA p98: "Firewood:" and "Refined Oil:"), and
+          // "not the body face" misses a page whose run-ins ARE set in the body
+          // face (JJ p310, where every see-reference shares it) — which let
+          // "Alien Senses: See alertness." swallow the entry after it and
+          // quietly stop being an alias at all. A heading is either.
+          (it.alias === anchor.alias || (bodyAlias && it.alias !== bodyAlias)) &&
           colOf(it.x, cols) === col &&
           it.y > anchor.y + 2 &&
           Math.abs(it.x - colX) < 15 &&
           /^[A-Z][^:]{0,44}:/.test(lineFrom(it)),
       )
       .sort((a, b) => a.y - b.y)[0];
+    // A block also ends at a SECTION heading, which is a different thing from
+    // the next entry: "Code of Behavior" closes Longeval and belongs to the
+    // class, not to any power. It carries no colon, so the stop above cannot
+    // see it. Same calibration, different shape: a line-initial run in a
+    // non-body face that occupies its WHOLE line is a heading. Testing the
+    // RUN's own text rather than the line's is what keeps a bullet glyph — its
+    // own tiny face, empty string, sitting at the column edge of a wrapped
+    // sentence — from reading as one.
+    const section = !bodyAlias
+      ? null
+      : pd.items
+          .filter((it) => {
+            if (it === anchor) return false;
+            if (colOf(it.x, cols) !== col || it.alias === bodyAlias) return false;
+            if (it.y <= anchor.y + 2 || it.y >= (stop ? stop.y : pd.height)) return false;
+            if (Math.abs(it.x - colX) >= 15 || it.h >= DEF_BODY_MAX_H) return false;
+            const own = it.str.trim();
+            if (!(own.length >= 2 && own.length <= 44 && /^[A-Z]/.test(own) && own === lineFrom(it))) return false;
+            // The JJ closes a power with the classes that may take it, and that
+            // list wraps: "[Elven Wizard," ends one line and "Nobiran Wizard,
+            // Wizard]" begins the next, set in the list's own face and flush
+            // left — a section heading by every test above. Cutting there
+            // leaves the bracket open, which is worse than not cutting at all:
+            // `stripOwnerList` can no longer recognise the list it was written
+            // to remove, so half of it stays on the page. A heading never opens
+            // inside a bracket that has not closed.
+            let depth = 0;
+            for (const o of pd.items) {
+              if (colOf(o.x, cols) !== col || o.y <= anchor.y || o.y >= it.y) continue;
+              for (const ch of o.str) depth += ch === "[" ? 1 : ch === "]" ? -1 : 0;
+            }
+            return depth <= 0;
+          })
+          .sort((a, b) => a.y - b.y)[0];
     // Where the NEXT heading carries a superscript ordinal ("Hideout (9th
     // level)"), that ordinal sits above its heading's baseline — so a block
     // that stops just above the heading still catches it, and the paragraph box
     // built around it swallows the heading line too. End above the superscript.
-    let yStop = stop ? stop.y : pd.height;
+    let yStop = section && (!stop || section.y < stop.y) ? section.y : stop ? stop.y : pd.height;
     if (stop) {
       for (const it of pd.items) {
         if (it.h >= (stop.h ?? 9) * 0.8 || colOf(it.x, cols) !== col) continue;
@@ -2898,13 +2966,19 @@ async function compileDefinition(doc, entry, kindRow) {
     // at the top of the next column, which is where ~1 in 5 entries lost their
     // second half.
     const isRunin = (it) => it.alias === anchor.alias && Math.abs(it.x - cols[colOf(it.x, cols)]) < 15;
-    const cont = columnFlow(pd, cols, col, !!stop || assists.descStopY != null, isRunin);
+    // A block only continues because it ran out of column, and a block that
+    // ended at a heading did not run out of anything. `section` answers that
+    // question exactly as `stop` does — leaving it out was what sent an entry
+    // that had already finished on to collect the next column and the page
+    // after it.
+    const ended = !!stop || !!section || assists.descStopY != null;
+    const cont = columnFlow(pd, cols, col, ended, isRunin);
     if (cont.length) {
       const cx0 = cols[col + 1] - 5;
       const cx1 = cols[col + 2] ? cols[col + 2] - 6 : pd.width;
       paras.push(...paragraphBoxes(toLines(cont), cx0, cx1).map((p) => withFixes(p, pd, tabs)));
       bodyText = `${bodyText} ${joinBody(cont)}`.trim();
-    } else if (!stop && assists.descStopY == null && col + 1 >= cols.length) {
+    } else if (!ended && col + 1 >= cols.length) {
       // Bottom of the LAST column: the block continues overleaf.
       //
       // `descStopY` gates this exactly as it gates the column-flow above. Two
