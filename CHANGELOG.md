@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.6.2
+
+### Fixed
+- **The description you wrote on an imported ability is yours to keep.**
+  "Update Abilities in World" rebuilds every ability this module imported. It
+  already asked before touching an item it had merely adopted by name, but an
+  item it created itself was rewritten whole — so a Judge who imported an
+  ability and then typed a ruling, a house note or a page reference into its
+  description lost those words on the next update, silently. The update now
+  holds back the description alone on any ability whose text has been added to,
+  writes everything else, and says how many it kept. The mechanics are still
+  repaired; only your prose is left standing.
+- **An entry ends where its section ends.** A definition that runs past the
+  bottom of its column continues in the next one, and that continuation stopped
+  only at the next entry of the same kind — so it read straight through
+  anything else in its way. Refined oil described itself and then recited a
+  weapon table and the entry for an earthshooter; a dwarven whistle recited the
+  price of firewood and alchemical fuel; an earthforger's sigil went on into the
+  traits of dwarves in general. Fifteen entries stop at their own section now.
+- **What is left after a price is lifted out is not a piece of gear.** A
+  template paying "a further 20gp of equipment of the character's choosing" put
+  an item named *a further* in the character's inventory, because the coin was
+  taken out of the sentence and the words in front of it stayed behind.
+
+### Known
+- Entries whose next section begins with a **bold heading at body size** still
+  read on past their end — *Longeval*, and the four powers that share its text,
+  continue into a code of behaviour and a template table. Separating those from
+  an entry's own **Cost:** and **Notes:** labels needs per-entry work that
+  reaches every recipe in the cookbook; it is not in this patch. See
+  `ROADMAP.md`.
+
 ## 2.6.1
 
 ### Fixed

@@ -7,6 +7,39 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Prose continues across a column and a page; never across a heading (2026-08-13)
+
+**Problem.** A definition block that reaches the bottom of its column resumes
+in the next one, and `columnFlow` / `pageFlow` ended that continuation at the
+next anchor of the SAME kind. Nothing else stopped it, so a block ran through
+whatever lay between: an equipment entry swallowed a weapon table and the next
+item's entry, a dwarven whistle swallowed a fuels price list, a class power
+swallowed a race's traits.
+
+**Ruled:** a continuation also ends at a display heading, whatever kind it
+belongs to. Body runs sit below the display-heading size, so the size alone
+tells them apart without knowing what the heading says. Measured over the whole
+shipped corpus: 15 of 1204 entries changed, every one of them shorter, none
+longer — and the text each one shed was another entry's.
+
+**Not fixed, and deliberately so — the body-size run-in boundary.** The
+reported case (`def.power.longeval`, and the four aliases that follow it) ends
+at "Code of Behavior", a heading set in bold at BODY size. Height cannot see
+it. Neither can a font rule written once: pdf.js aliases are per-document, and
+the same alias that is a heading font in the Revised Rulebook is the body font
+in By This Axe, where `"stone. Cost:"` arrives as a single body run — so a rule
+that stopped at a non-body font would cut real entries at their own `Cost:` and
+`Notes:` labels, losing rules text. Telling a SECTIONING run-in from a
+LABELLING one needs per-entry calibration from the entry's own anchor, the way
+`extractRunin` does it, and that recomputes all 3993 paragraph boxes. That is
+not a hotfix, and it cannot be validated by reading a sample.
+
+**Cost, accepted:** those entries still carry trailing text from the section
+after them. It is the entry's own text plus too much, which is what it already
+was; the 2.6.1 fix moved them from the wrong book's text to their own.
+
+---
+
 ### An alias is read from the book its text prints in (2026-08-12)
 
 **Problem.** A field report showed the class power *Ageless* describing itself

@@ -49,6 +49,30 @@ then import again. It is exactly what the test cycle does.
 
 ---
 
+## Where an entry ends when the next heading is body-size bold
+
+A continuation now stops at a display heading, which ended the entries that ran
+into a price table or the next item along. It does not end the ones whose next
+section is a bold run-in at BODY size — `def.power.longeval`, and the four
+aliases that follow its text, read on into "Code of Behavior" and a template
+table.
+
+Height cannot separate those, and neither can a single font rule: pdf.js
+aliases are per-document, so the alias that is a heading font in the Revised
+Rulebook is the body font in By This Axe, where an entry's own `Cost:` arrives
+inside a body run. A rule keyed to the font would cut real entries at their own
+`Cost:` and `Notes:` labels and lose rules text — a worse failure than the
+trailing paragraph it set out to remove.
+
+Closing it means calibrating per entry from its own anchor: learn the bold
+alias FROM the heading that was matched, then stop at the next line-initial run
+sharing it, the way `extractRunin` already does for the dynamic path. That is
+sound, and it recomputes every one of the ~4000 paragraph boxes, so it wants a
+release that can carry a full re-verification against all six books rather than
+a read of the largest few. See `DECISIONS.md` (2026-08-13).
+
+---
+
 ## Starting equipment: telling gear from what it is packed with
 
 `parseEquipment` splits a template's printed Starting Equipment cell into items.

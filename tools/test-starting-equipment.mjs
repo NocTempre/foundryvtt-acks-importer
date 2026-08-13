@@ -99,4 +99,16 @@ const valued = parseEquipment("gemstone-tipped staff (45gp value)", menu());
 check("a priced item adds no coin to the purse", valued.gp === 0);
 check("and keeps its whole printed name", valued.items[0].name === "gemstone-tipped staff (45gp value)");
 
+/* --- What the coin lift leaves behind is not an item ----------------------- */
+// Taking "20gp of equipment of the character's choosing" out of its clause used
+// to strand the words in front of it, and "a further" went on the sheet as gear.
+const further = parseEquipment("a dagger, and a further 20gp of equipment of the character's choosing", menu("Dagger"));
+check("a stranded connective is not an item", !further.items.some((i) => /^(a further|and|a|of)$/i.test(i.name.trim())));
+check("and the gear beside it survives", further.items.length === 1 && /dagger/i.test(further.items[0].name));
+check("while the coin is still read", further.gp === 20);
+// The guard names function words, not one reported phrase, so it must never
+// reach a descriptor that carries a noun — however short or common the noun.
+check("a real item made of short words is kept", names("a war dog").length === 1);
+check("an item whose name is mostly function words is kept", names("suit of plate").length === 1);
+
 console.log(`test-starting-equipment: all ${pass} checks passed`);

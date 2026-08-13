@@ -2973,6 +2973,16 @@ function equipmentMenu() {
 }
 
 /**
+ * Words that cannot, alone, name a piece of gear. A descriptor made only of
+ * these is what is left over when something was lifted out of a clause —
+ * never an item in its own right.
+ */
+const FUNCTION_WORD = new Set([
+  "a", "an", "and", "the", "of", "or", "plus", "with", "for",
+  "further", "total", "another", "more", "additional", "worth", "each", "any", "",
+]);
+
+/**
  * Parse a template's Starting Equipment cell into item descriptors, coin and
  * the encumbrance note. Every descriptor resolves against the equipment
  * cookbook — exact name, contained name, or an authored Notes-equivalence
@@ -3053,6 +3063,14 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   };
   const items = [];
   const push = (descriptor, note = "") => {
+    // Nothing but connective tissue is not a thing. Taking the coin out of a
+    // clause removes the amount and what it was for — "and a further 20gp of
+    // equipment of the character's choosing" leaves "a further" — and the
+    // remainder went on the sheet as an item by that name. Naming the closed
+    // set of function words, rather than the one phrase that was reported,
+    // catches the same wreckage whatever wording strands it; a real piece of
+    // gear always carries a word that is not on this list.
+    if (!descriptor || descriptor.split(/\s+/).every((w) => FUNCTION_WORD.has(w.toLowerCase().replace(/[^a-z]/g, "")))) return;
     const qty = parseInt(/^(\d+)\s/.exec(descriptor)?.[1] ?? "1", 10);
     items.push({
       ref: resolve(descriptor),
@@ -4545,6 +4563,7 @@ export async function cookbookUpdateAbilities() {
   let created = 0;
   let overwritten = 0;
   let kept = 0;
+  let preserved = 0;
   // Name-adopted items whose description carries someone else's writing. The
   // write is held back until the GM has answered for them.
   const collisions = [];
@@ -4552,14 +4571,20 @@ export async function cookbookUpdateAbilities() {
    * extras. The written extras carry a `-=` deletion sentinel for every
    * optional subkey the rebuild no longer emits (ABILITY_EXTRAS_OPTIONAL), in
    * a copy — `built` stays clean for the create path, which must not carry
-   * sentinels into fresh documents. */
-  const writeGenerated = (doc, built) => {
+   * sentinels into fresh documents.
+   *
+   * `keepProse` holds back the description and nothing else. The flag proves
+   * this module created the item; it does not prove nobody has written in it
+   * since, and the mechanics are what an update exists to repair. Never widen
+   * this to skip the whole write — an item left unrepaired because someone
+   * annotated it is the failure this option exists to avoid. */
+  const writeGenerated = (doc, built, { keepProse = false } = {}) => {
     const extras = { ...built.flags["acks-extras"].extras };
     for (const key of ABILITY_EXTRAS_OPTIONAL) {
       if (!(key in extras)) extras[`-=${key}`] = null;
     }
     return doc.update({
-      "system.description": built.system.description,
+      ...(keepProse ? {} : { "system.description": built.system.description }),
       [`flags.${MODULE_ID}.cookbook`]: built.flags[MODULE_ID].cookbook,
       "flags.acks-extras.extras": extras,
     });
@@ -4601,10 +4626,23 @@ export async function cookbookUpdateAbilities() {
         ...(extras.conversionFrom ? { conversionFrom: extras.conversionFrom } : {}),
       });
       built.flags["acks-extras"].extras.effects = await resolveCompanions(built.flags["acks-extras"].extras.effects);
-      // Never overwrite writing this module did not put there. A flagged item is
-      // ours by proof; an item matched by name only is asked about.
+      // Never overwrite writing this module did not put there. Authorship of
+      // the ITEM and authorship of its DESCRIPTION are different questions: the
+      // flag answers the first, and a Judge who annotated a description this
+      // module created still wrote those words. So an item matched by name only
+      // is asked about, while a flagged one keeps its prose and takes the rest
+      // of the update — which is the half that repairs the mechanics, and the
+      // reason to run this at all.
       const prose = doc.system?.description;
-      if (!flagged && handWrittenProse(prose)) {
+      const annotated = handWrittenProse(prose);
+      if (flagged && annotated) {
+        await writeGenerated(doc, built, { keepProse: true });
+        updated++;
+        preserved++;
+        if (on) onActors++;
+        continue;
+      }
+      if (!flagged && annotated) {
         collisions.push({
           doc,
           on,
@@ -4661,10 +4699,11 @@ export async function cookbookUpdateAbilities() {
       `${guessed ? `, ${guessed} of them ambiguous — see console` : ""}), ${skipped} not in the cookbook` +
       `${renamed ? `; ${renamed} of your own renamed aside, ${created} reference(s) created beside them` : ""}` +
       `${overwritten ? `; ${overwritten} replaced on request` : ""}` +
+      `${preserved ? `; ${preserved} kept the description you wrote` : ""}` +
       `${kept ? `; ${kept} left untouched` : ""}` +
       `${stale ? `; ${stale} left over from a withdrawn definition — run Prune` : ""}.`,
   );
-  return { updated, adopted, onActors, guessed, skipped, renamed, created, overwritten, kept, stale };
+  return { updated, adopted, onActors, guessed, skipped, renamed, created, overwritten, kept, preserved, stale };
 }
 
 /**

@@ -69,6 +69,18 @@ let DEF_BODY_MAX_H = 10;
 const DEF_TOP_BAND = 60;
 
 /**
+ * What stops a continuation. `isAnchor` knows only the heading style that ends
+ * a block of THIS kind, which is not the only thing that can end one: a class
+ * power flowing overleaf runs into "Code of Behavior" and the template table,
+ * headings of a different kind entirely, and the flow read straight through
+ * them to the next power — carrying a whole class's remaining text under one
+ * ability's name. Prose continues across a column and across a page; it never
+ * continues across a heading. Body runs stay below the display-heading size,
+ * so anything at or above it ends the flow whatever kind it belongs to.
+ */
+const endsFlow = (it, isAnchor) => isAnchor(it) || it.h >= HEADING_MIN_H;
+
+/**
  * The continuation of a column-flowed definition block: everything in the NEXT
  * column above the first anchor there. Returns [] when the block ended normally
  * (a stop anchor was found in its own column) or there is no next column.
@@ -78,7 +90,7 @@ function columnFlow(pd, cols, col, stopFound, isAnchor) {
   if (stopFound || col + 1 >= cols.length) return [];
   const next = col + 1;
   const firstAnchor = pd.items
-    .filter((it) => colOf(it.x, cols) === next && it.y > DEF_TOP_BAND && isAnchor(it))
+    .filter((it) => colOf(it.x, cols) === next && it.y > DEF_TOP_BAND && endsFlow(it, isAnchor))
     .sort((a, b) => a.y - b.y)[0];
   const yMax = firstAnchor ? firstAnchor.y - 4 : pd.height;
   return pd.items.filter(
@@ -96,7 +108,7 @@ async function pageFlow(doc, page, isAnchor) {
   const pd2 = await pageItems(doc, page + 1);
   const cols2 = detectColumns(pd2.items);
   const first = pd2.items
-    .filter((it) => colOf(it.x, cols2) === 0 && it.y > DEF_TOP_BAND && isAnchor(it))
+    .filter((it) => colOf(it.x, cols2) === 0 && it.y > DEF_TOP_BAND && endsFlow(it, isAnchor))
     .sort((a, b) => a.y - b.y)[0];
   const yMax = first ? first.y - 4 : pd2.height;
   const items = pd2.items.filter(
