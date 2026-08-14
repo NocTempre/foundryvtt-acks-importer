@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.7.0
+
+The item-market tables: five new ruledata recipes read the market grids from
+the GM's own books for the acks-extras markets feature.
+
+### Added
+- **Five market table recipes** — Equipment Availability by Market Class
+  (RR), the 29-type Common and Precious Merchandise grid (RR), Market
+  Characteristics (RR: tolls, baselines, consignments, passengers), the
+  Magic Item Transaction grid (JJ), and Wage and Construction Rates (RR).
+  All import through the existing table pipeline and land in the world
+  registry the markets feature reads.
+- The gridRows extractor learned cost-band labels parsed from the page,
+  leading columns ahead of a market grid, and a small-gap merge for the
+  face that splits a cell’s first glyph into its own run.
+
+
 ## 2.6.3
 
 ### Added
