@@ -1095,6 +1095,25 @@ export const TABLE_RECIPES = {
       },
     },
   },
+  // Magic-item market (JJ ch. 4): monthly buyers/sellers by item price and
+  // market class — the same six cost bands as the RR equipment grid, so the
+  // row list is shared. acks-extras markets prices magic trades on it.
+  magicItems: {
+    source: { book: "ACKS II Judges Journal", pages: "131" },
+    tables: {
+      transactionsByMarketClass: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 131,
+        locate: "Magic Item Price",
+        labelMaxX: 200,
+        marketCells: 6,
+        cellPattern: "raw",
+        rows: EQUIP_AVAIL_ROWS,
+        emit: { container: "rows", keyField: "band" },
+      },
+    },
+  },
   // Mercantile-venture merchandise (RR ch. 8): the 29-type Common and
   // Precious Merchandise grid. acks-extras markets reads pricePerStone /
   // priceStep for demand-step pricing; the daily-stones grid rides along for
