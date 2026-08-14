@@ -2717,6 +2717,7 @@ const ITEM_SHELF = {
   // give them their own shelf beside Class Powers.
   "def.drawback": "Drawbacks",
   "def.skill": "Skills",
+  "def.language": "Languages",
   "def.class": "Classes",
   "def.equip": "Equipment",
   "def.weapon": "Weapons",
