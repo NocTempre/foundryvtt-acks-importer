@@ -1153,8 +1153,35 @@ export const TABLE_RECIPES = {
   // priceStep for demand-step pricing; the daily-stones grid rides along for
   // the future arbitrage loop.
   mercantile: {
-    source: { book: "ACKS II Revised Rulebook", pages: "374-375" },
+    source: { book: "ACKS II Revised Rulebook", pages: "370, 374-375" },
     tables: {
+      // Market Characteristics (RR ch. 8): per-class baselines — cargo,
+      // toll, tariff, consignments, passengers. Money/dice cells stay raw
+      // ("0.2cp/st", "2d6+1 × 10", "none"); the consumer parses.
+      marketCharacteristics: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 370,
+        locate: "Baseline Passengers",
+        startAfter: "Baseline Passengers",
+        labelMaxX: 110,
+        cellColumns: [
+          { key: "baselineCargo", x: 131, w: 42, row: true, pattern: "raw" },
+          { key: "toll", x: 200, w: 42, row: true, pattern: "raw" },
+          { key: "tariff", x: 272, w: 50, row: true, pattern: "raw" },
+          { key: "consignments", x: 378, w: 32, row: true, pattern: "raw" },
+          { key: "passengers", x: 470, w: 48, row: true, pattern: "raw" },
+        ],
+        rows: [
+          { key: 1, labelRe: "^i$" },
+          { key: 2, labelRe: "^ii$" },
+          { key: 3, labelRe: "^iii$" },
+          { key: 4, labelRe: "^iv$" },
+          { key: 5, labelRe: "^v$" },
+          { key: 6, labelRe: "^vi$" },
+        ],
+        emit: { container: "rows", keyField: "marketClass" },
+      },
       merchandiseTypes: {
         shape: "gridRows",
         book: "rr",
