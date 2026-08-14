@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.7.1
+
+### Fixed
+- A name expectation that throws during import now fails that entry instead
+  of counting as a pass.
+- A failed compendium index read during bulk import warns with its
+  consequence named (re-created imports) instead of silently reading as
+  "nothing imported yet".
+
 ## 2.7.0
 
 The item-market tables: five new ruledata recipes read the market grids from
