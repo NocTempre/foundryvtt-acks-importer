@@ -160,6 +160,17 @@ export function applyCellPattern(text, pattern = "raw") {
       const ROMAN = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6 };
       return ROMAN[m[1].toUpperCase()] ?? null;
     }
+    case "costBand": {
+      // "1gp or less" -> {minCost:0,maxCost:1}; "2 – 10gp" -> {minCost:2,maxCost:10};
+      // "10,001gp or more" -> {minCost:10001,maxCost:null} (open top)
+      const n = (s) => Number(s.replace(/,/g, ""));
+      const less = t.match(/(\d[\d,]*)\s*gp\s*or\s*less/i);
+      if (less) return { minCost: 0, maxCost: n(less[1]) };
+      const more = t.match(/(\d[\d,]*)\s*gp\s*(?:\+|or\s*more)/i);
+      if (more) return { minCost: n(more[1]), maxCost: null };
+      const range = t.match(/(\d[\d,]*)\s*[–-]\s*(\d[\d,]*)\s*gp/i);
+      return range ? { minCost: n(range[1]), maxCost: n(range[2]) } : null;
+    }
     case "familiesBand": {
       // "Large city (5,000 – 9,999)" -> {min,max}; "(40,000+)" -> open top
       const range = t.match(/\((\d[\d,]*)\s*[–-]\s*(\d[\d,]*)\)/);
@@ -195,8 +206,9 @@ export async function findPage(recipe, numPages, readPage) {
 }
 
 /**
- * `gridRows`: a label column followed by N market-class cells and optional
- * trailing columns (wage etc.). Runs left of `labelMaxX` form the row label
+ * `gridRows`: a label column followed by N market-class cells, with optional
+ * `leading` columns (container, price…) before the grid and `trailing`
+ * columns (wage etc.) after it. Runs left of `labelMaxX` form the row label
  * (drop-caps split a label across runs — they all sit in the label band);
  * the remaining runs, in x order, are the cells.
  *
@@ -222,6 +234,7 @@ export function extractGridRows(items, recipe) {
   for (const spec of recipe.rows) {
     const re = new RegExp(spec.labelRe, "i");
     let matched = null;
+    let matchedLabel = "";
     for (let i = cursor; i < rows.length; i++) {
       const label = joinRuns(rows[i].items.filter((it) => it.x < recipe.labelMaxX));
       if (label && re.test(label)) {
@@ -232,6 +245,7 @@ export function extractGridRows(items, recipe) {
           if (n < recipe.minCells) continue;
         }
         matched = rows[i];
+        matchedLabel = label;
         cursor = i + 1;
         break;
       }
@@ -242,7 +256,21 @@ export function extractGridRows(items, recipe) {
     }
     // Footnote markers (*, †, ‡) sit between rows and can y-merge into one;
     // they are never a cell value, so drop lone-marker runs from the band.
-    const cellRuns = matched.items.filter((it) => it.x >= recipe.labelMaxX && !/^[*†‡]+$/.test(it.str.trim()));
+    let cellRuns = matched.items.filter((it) => it.x >= recipe.labelMaxX && !/^[*†‡]+$/.test(it.str.trim()));
+    // joinCellGap: the book's small-caps face splits a cell's initial glyph
+    // into its own run ("c"+"rates"). A gap smaller than joinCellGap is a
+    // glyph boundary, not a column gutter — merge those runs into one cell.
+    if (recipe.joinCellGap != null) {
+      const sorted = [...cellRuns].sort((a, b) => a.x - b.x);
+      cellRuns = [];
+      for (const r of sorted) {
+        const prev = cellRuns[cellRuns.length - 1];
+        if (prev && r.x - (prev.x + (prev.w ?? 0)) < recipe.joinCellGap) {
+          prev.str += r.str;
+          prev.w = r.x + (r.w ?? 0) - prev.x;
+        } else cellRuns.push({ ...r });
+      }
+    }
     const cells = cellRuns.map((r) => r.str.trim());
     let row;
     if (recipe.cellColumns) {
@@ -306,17 +334,26 @@ export function extractGridRows(items, recipe) {
         row[tspec.key] = raw == null ? null : applyCellPattern(raw, tspec.pattern ?? "raw");
       });
     } else {
-      // Positional cells → an array (market-class grids), plus trailing cols.
-      const marketN = recipe.marketCells ?? cells.length - (recipe.trailing?.length ?? 0);
-      const market = cells.slice(0, marketN).map((c) => applyCellPattern(c, recipe.cellPattern ?? "dashNull"));
+      // Positional cells → an array (market-class grids), with optional
+      // leading columns (container, price…) before it and trailing after.
+      const lead = recipe.leading ?? [];
+      const marketN = recipe.marketCells ?? cells.length - lead.length - (recipe.trailing?.length ?? 0);
+      const market = cells.slice(lead.length, lead.length + marketN).map((c) => applyCellPattern(c, recipe.cellPattern ?? "dashNull"));
       row = { [recipe.cellsKey ?? "byMarketClass"]: market };
+      lead.forEach((lspec, i) => {
+        const raw = cells[i];
+        row[lspec.key] = raw == null ? null : applyCellPattern(raw, lspec.pattern ?? "raw");
+      });
       (recipe.trailing ?? []).forEach((tspec, i) => {
-        const raw = cells[marketN + i];
+        const raw = cells[lead.length + marketN + i];
         const v = raw == null ? null : applyCellPattern(raw, tspec.pattern ?? "raw");
         if (tspec.expand && v && typeof v === "object") Object.assign(row, v);
         else row[tspec.key] = v;
       });
     }
+    // labelPattern: the label itself carries data (a cost band) — parsed
+    // fields merge onto the row beside the cells.
+    if (spec.labelPattern) Object.assign(row, applyCellPattern(matchedLabel, spec.labelPattern) ?? {});
     if (spec.set) Object.assign(row, spec.set);
     out[spec.key] = row;
   }

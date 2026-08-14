@@ -36,6 +36,56 @@ const MERC_ROWS = [
   { key: "beastRider", labelRe: "beast\\s*rider" },
 ];
 
+// Equipment Availability by Market Class (RR): six price-band rows, each a
+// cost band label (parsed to {minCost,maxCost} by the costBand labelPattern)
+// and six market-class cells kept raw ("2,750" | "25%" | "-").
+const EQUIP_AVAIL_ROWS = [
+  { key: "le1", labelRe: "gp or less", labelPattern: "costBand" },
+  { key: "2to10", labelRe: "^2\\s*[–-]\\s*10gp", labelPattern: "costBand" },
+  { key: "11to100", labelRe: "^11\\s*[–-]\\s*100gp", labelPattern: "costBand" },
+  { key: "101to1000", labelRe: "^101\\s*[–-]", labelPattern: "costBand" },
+  { key: "1001to10000", labelRe: "^1,?001\\s*[–-]", labelPattern: "costBand" },
+  { key: "ge10001", labelRe: "gp or more", labelPattern: "costBand" },
+];
+
+// Common and Precious Merchandise (RR): 19 common + 10 precious rows sharing
+// one page — label, container, price/st, price step, then the market-class
+// grid. The Precious header sits mid-table; row order below skips past it
+// because no spec matches a bare "Precious"/"Merchandise" label row.
+const MERCH_ROWS = [
+  { key: "grainVegetables", labelRe: "^grain", set: { tier: "common" } },
+  { key: "salt", labelRe: "^salt", set: { tier: "common" } },
+  { key: "beerAle", labelRe: "^beer", set: { tier: "common" } },
+  { key: "pottery", labelRe: "^pottery", set: { tier: "common" } },
+  { key: "commonWood", labelRe: "^common wood", set: { tier: "common" } },
+  { key: "wineSpirits", labelRe: "^wine", set: { tier: "common" } },
+  { key: "oilsSauces", labelRe: "^oils", set: { tier: "common" } },
+  { key: "preservedFish", labelRe: "^preserved fish", set: { tier: "common" } },
+  { key: "preservedMeat", labelRe: "^preserved meat", set: { tier: "common" } },
+  { key: "glassware", labelRe: "^glassware", set: { tier: "common" } },
+  { key: "rareWood", labelRe: "^rare wood", set: { tier: "common" } },
+  { key: "commonMetal", labelRe: "^common metal", set: { tier: "common" } },
+  { key: "commonFurs", labelRe: "^common furs", set: { tier: "common" } },
+  { key: "textiles", labelRe: "^textiles", set: { tier: "common" } },
+  { key: "dyesPigments", labelRe: "^dyes?\\s*&", set: { tier: "common" } },
+  { key: "botanicals", labelRe: "^botanicals", set: { tier: "common" } },
+  { key: "clothing", labelRe: "^clothing", set: { tier: "common" } },
+  { key: "tools", labelRe: "^tools", set: { tier: "common" } },
+  { key: "armorWeapons", labelRe: "^armor", set: { tier: "common" } },
+  { key: "monsterParts", labelRe: "^monster parts", set: { tier: "precious" } },
+  { key: "ivory", labelRe: "^ivory", set: { tier: "precious" } },
+  { key: "rareFurs", labelRe: "^rare furs", set: { tier: "precious" } },
+  { key: "spices", labelRe: "^spices", set: { tier: "precious" } },
+  { key: "finePorcelain", labelRe: "^fine porcelain", set: { tier: "precious" } },
+  { key: "preciousMetals", labelRe: "^precious metals", set: { tier: "precious" } },
+  { key: "silk", labelRe: "^silk", set: { tier: "precious" } },
+  { key: "rareBooksArt", labelRe: "^rare books", set: { tier: "precious" } },
+  { key: "semipreciousStones", labelRe: "^semiprecious", set: { tier: "precious" } },
+  // The page's rotated chapter tab y-merges into this last row and pollutes
+  // the label's start — match anywhere in the label, never anchored.
+  { key: "gems", labelRe: "gems", set: { tier: "precious" } },
+];
+
 // Class-trajectory percentages (JJ "Leveled NPCs by Percentage"): a level
 // column and six class-weight columns. The reference collapses runs of equal
 // levels into ranges; emitting one row per level (minLevel==maxLevel) resolves
@@ -977,8 +1027,19 @@ export const TABLE_RECIPES = {
     },
   },
   availability: {
-    source: { book: "ACKS II Revised Rulebook", pages: "162-165, 172" },
+    source: { book: "ACKS II Revised Rulebook", pages: "124, 162-165, 172" },
     tables: {
+      equipmentAvailability: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 124,
+        locate: "1gp or less",
+        labelMaxX: 140,
+        marketCells: 6,
+        cellPattern: "raw",
+        rows: EQUIP_AVAIL_ROWS,
+        emit: { container: "rows", keyField: "band" },
+      },
       searchFees: {
         shape: "pairs",
         book: "rr",
@@ -1030,6 +1091,34 @@ export const TABLE_RECIPES = {
         marketCells: 6,
         cellPattern: "raw",
         rows: MERC_ROWS,
+        emit: { container: "rows", keyField: "type" },
+      },
+    },
+  },
+  // Mercantile-venture merchandise (RR ch. 8): the 29-type Common and
+  // Precious Merchandise grid. acks-extras markets reads pricePerStone /
+  // priceStep for demand-step pricing; the daily-stones grid rides along for
+  // the future arbitrage loop.
+  mercantile: {
+    source: { book: "ACKS II Revised Rulebook", pages: "374-375" },
+    tables: {
+      merchandiseTypes: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 374,
+        // "Common and Precious Merchandise" appears in the preceding prose;
+        // the monster-parts container run only exists on the table's page.
+        locate: "Metamphorae",
+        labelMaxX: 138,
+        joinCellGap: 12,
+        marketCells: 6,
+        cellPattern: "raw",
+        leading: [
+          { key: "container", pattern: "raw" },
+          { key: "pricePerStone", pattern: "num" },
+          { key: "priceStep", pattern: "num" },
+        ],
+        rows: MERCH_ROWS,
         emit: { container: "rows", keyField: "type" },
       },
     },
