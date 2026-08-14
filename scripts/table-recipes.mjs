@@ -1095,6 +1095,40 @@ export const TABLE_RECIPES = {
       },
     },
   },
+  // Construction projects (RR §IV.11): worker construction and wage rates —
+  // what an item commission costs and how fast it builds. Money cells stay
+  // raw ("10gp / 15gp†"); the consumer parses the primary variant. The
+  // small-caps face fuses label words ("Mastercraftsman"), so labels match
+  // with optional whitespace.
+  construction: {
+    source: { book: "ACKS II Revised Rulebook", pages: "174" },
+    tables: {
+      wageAndConstructionRates: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 174,
+        locate: "Wage and Construction Rates",
+        startAfter: "Worker",
+        labelMaxX: 240,
+        cellColumns: [
+          { key: "ratePerMonth", x: 249, w: 55, row: true, pattern: "raw" },
+          { key: "ratePerDay", x: 348, w: 60, row: true, pattern: "raw" },
+          { key: "wagePerMonth", x: 445, w: 40, row: true, pattern: "raw" },
+        ],
+        rows: [
+          { key: "unskilledLaborer", labelRe: "^unskilled\\s*laborer" },
+          { key: "skilledLaborer", labelRe: "^skilled\\s*laborer" },
+          { key: "apprenticeCraftsman", labelRe: "^apprentice\\s*c?raftsman|^apprenticec" },
+          { key: "journeymanCraftsman", labelRe: "^journeyman\\s*c?raftsman|^journeymanc" },
+          { key: "masterCraftsman", labelRe: "^master\\s*c?raftsman|^masterc" },
+          { key: "masterCrew", labelRe: "^master,\\s*2" },
+          { key: "siegeEngineer", labelRe: "^siege\\s*engineer" },
+          { key: "engineer", labelRe: "^engineer" },
+        ],
+        emit: { container: "rows", keyField: "worker" },
+      },
+    },
+  },
   // Magic-item market (JJ ch. 4): monthly buyers/sellers by item price and
   // market class — the same six cost bands as the RR equipment grid, so the
   // row list is shared. acks-extras markets prices magic trades on it.
