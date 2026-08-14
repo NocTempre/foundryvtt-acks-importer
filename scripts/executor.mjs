@@ -1502,7 +1502,9 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
       result = null;
     }
     if (field === "name") {
-      if (result && result.ok === false) ok = false;
+      // A name check that THREW is a failed check, not a passed one — null
+      // (the exception path above) must fail exactly like `ok: false`.
+      if (!result || result.ok === false) ok = false;
       fields.name = result;
       continue;
     }

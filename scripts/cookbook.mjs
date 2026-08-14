@@ -866,7 +866,12 @@ async function importedIdsOfType(type, worldCollection) {
   const pack = await packFor(type);
   const collection = pack ? game.packs.get(pack) : null;
   if (collection) {
-    const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch(() => null);
+    // A failed index read must be LOUD: returning an empty set here reads as
+    // "nothing imported yet" and a bulk run re-creates everything as twins.
+    const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch((err) => {
+      console.warn(`${MODULE_ID} | importedIdsOfType: index of ${pack} unreadable — imported ${type}s may be recreated`, err);
+      return null;
+    });
     for (const row of index ?? []) {
       const id = row.flags?.[MODULE_ID]?.cookbook?.id;
       if (id) ids.add(id);
