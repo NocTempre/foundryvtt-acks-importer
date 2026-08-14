@@ -103,3 +103,31 @@ inventory. Both are the abilities/magic model's to own, not the splitter's.
 Until then the pieces are all items, correctly separated, and a Judge deletes
 the two that are not gear. That is a tidier failure than the alternative and it
 loses nothing.
+
+## The system compendiums this importer does NOT yet replace
+
+acks-extras 4.1 folds a system compendium out of the sidebar once the world
+holds imported documents covering it (`hideSupersededPacks`). The map behind
+that setting is a coverage audit, and every pack ABSENT from it is a gap here
+— content a GM can only get from the system's own pack, which is exactly the
+dependency materializing from their books is meant to end.
+
+Covered today: weapons and armour (the book's own tables, via
+`importWeapons`/`importArmor`), adventuring gear and clothing (178 register
+entries), proficiencies (121 + 14 skills + 4 combat proficiencies), powers
+(421), monsters (287 + 25 legacy + 4 templates), roll tables (23).
+
+**Not covered — the gaps:**
+
+- **Languages** (system pack: 58). No `kind.language` exists. The owner's
+  direction (2026-08-14) is that languages become a CATEGORY of the abilities
+  model rather than a type of their own, so this gap closes on both sides at
+  once: a category in extras, a kind here.
+- **Spell lists** (system packs: 56 arcane, 19 divine). Deliberately parked —
+  spell references land with the magic major (see the classes and repo
+  roadmaps); the register carries the casting ladders but no spell documents.
+- **JJ shield variants and masterwork gear.** Zero `buckler`/`kite shield`
+  entries and one `masterwork` mention across the register, so extras'
+  `equipment-samples` pack stays the only source of these and could not be
+  retired with the other example packs. Closing this means reading the JJ
+  shield table and the masterwork rules into equipment entries.
