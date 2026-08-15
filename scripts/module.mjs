@@ -32,6 +32,7 @@ import { mapPairs } from "./stats-map.mjs";
 import { createDocFor } from "./poc.mjs";
 import { importTables, tableRecipeCount } from "./tables-binding.mjs";
 import { applyBuilderImport } from "./builder-binding.mjs";
+import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
   initCookbook, loadCookbook, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities,
@@ -586,6 +587,22 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | class-builder binding failed`, err);
       ui.notifications.warn(`acks-importer | class builder: ${err.message}`);
+    }
+  }
+  // The taxonomy is read, not shipped, so the items exist only once a seat has
+  // imported it from their own book.
+  if (report.imported.some((d) => d.docId === LANGUAGES_DOC_ID)) {
+    try {
+      const lib = globalThis.acksExtras?.lib;
+      const table = lib?.tables?.getDoc?.(LANGUAGES_DOC_ID)?.tables?.tree;
+      const made = table ? await applyLanguageImport(table) : { created: 0, present: 0 };
+      if (made.created) {
+        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.tables.languagesApplied`, { created: made.created }));
+      }
+      console.log(`${MODULE_ID} | language binding`, made);
+    } catch (err) {
+      console.error(`${MODULE_ID} | language binding failed`, err);
+      ui.notifications.warn(`acks-importer | languages: ${err.message}`);
     }
   }
   console.log(`${MODULE_ID} | table import`, report);

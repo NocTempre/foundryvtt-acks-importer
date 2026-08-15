@@ -353,6 +353,39 @@ const BUILD_BLOCKS = [
 ];
 
 export const TABLE_RECIPES = {
+  // The Auran Empire language taxonomy prints as one indented two-column table:
+  // the Cybelean name on the left, its real-world counterpart on the right, and
+  // descent carried entirely by how far each cell is indented.
+  //
+  // It is read rather than transcribed, and the difference matters. Every other
+  // definition kind anchors on a printed name because it has a MECHANIC to bind
+  // to; a language has none — its entry would be a name and nothing else, so
+  // one entry per language is not a way of finding the list, it is the list.
+  // This recipe carries the section heading, two x-bands and an indent step.
+  // What the rows say comes from the reader's own book.
+  languages: {
+    source: { book: "ACKS II Revised Rulebook", pages: "507" },
+    tables: {
+      tree: {
+        shape: "indentTree",
+        docId: "acks.languages",
+        page: 507,
+        locate: "LANGUAGES",
+        // Below the two column headers; the section title and the vertical
+        // page furniture are excluded by height, not by position.
+        yMin: 130,
+        bodyMaxH: 10,
+        // The left column's outermost cells sit at x=72 and each level of
+        // descent steps in by 36.
+        baseX: 72,
+        step: 36,
+        columns: [
+          { key: "name", xMin: 60, xMax: 320 },
+          { key: "counterpart", xMin: 320, xMax: 590 },
+        ],
+      },
+    },
+  },
   equipment: {
     source: { book: "ACKS II Revised Rulebook", pages: "160" },
     tables: {

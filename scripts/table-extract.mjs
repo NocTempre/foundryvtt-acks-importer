@@ -840,7 +840,57 @@ export function extractProseValues(items, recipe) {
   return out;
 }
 
-const SHAPES = { gridRows: extractGridRows, pairs: extractPairs, nameList: extractNameList, bandGrid: extractBandGrid, harvestPairs: extractHarvestPairs, bandList: extractBandList, proseValues: extractProseValues };
+
+/**
+ * `indentTree`: every row of a printed taxonomy, with its depth taken from
+ * how far the cell is indented.
+ *
+ * THE POINT OF THIS SHAPE is that it names nothing. The other shapes select
+ * their rows by label — a list of the strings to look for — which for a
+ * taxonomy would mean shipping the taxonomy. Here the recipe carries only
+ * geometry: where the region starts, which x-bands hold which column, and the
+ * indent step that turns a cell's x into its place in the tree. What the rows
+ * SAY is read from the reader's own book and never enters this repo.
+ *
+ * Depth is `round((x - baseX) / step)`, so a cell one step in is a child of
+ * the last cell one step out. Rows whose first run sits left of `baseX` — a
+ * heading, a drop-cap, a footnote marker — are dropped, as are runs taller
+ * than `bodyMaxH`, which is what keeps the section title and the page
+ * furniture out of the tree.
+ *
+ * @returns {{rows: {depth: number, parent: number|null, …columns}[]}}
+ */
+export function extractIndentTree(items, recipe) {
+  const { baseX = 0, step = 36, bodyMaxH = 10, yMin = 0, yMax = Infinity } = recipe;
+  const body = items.filter((it) => it.h < bodyMaxH && it.y >= yMin && it.y <= yMax);
+  const rows = rowsByY(body, recipe.rowTol ?? 3);
+  const out = [];
+  // One open ancestor per depth, so a row's parent is whatever last stood one
+  // step to its left — which is what an indent MEANS on a printed tree.
+  const openAt = [];
+  for (const r of rows) {
+    const cells = {};
+    for (const col of recipe.columns ?? []) {
+      const text = r.items
+        .filter((it) => it.x >= col.xMin && it.x <= col.xMax)
+        .map((it) => it.str)
+        .join("")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (text) cells[col.key] = text;
+    }
+    const first = r.items.find((it) => it.x >= baseX - 1);
+    if (!first || !Object.keys(cells).length) continue;
+    const depth = Math.max(0, Math.round((first.x - baseX) / step));
+    openAt.length = depth;
+    const parent = depth > 0 ? (openAt[depth - 1] ?? null) : null;
+    openAt[depth] = out.length;
+    out.push({ depth, parent, ...cells });
+  }
+  return { rows: out };
+}
+
+const SHAPES = { indentTree: extractIndentTree, gridRows: extractGridRows, pairs: extractPairs, nameList: extractNameList, bandGrid: extractBandGrid, harvestPairs: extractHarvestPairs, bandList: extractBandList, proseValues: extractProseValues };
 
 /**
  * Shape the raw keyed extraction into the ruledata table's JSON, per

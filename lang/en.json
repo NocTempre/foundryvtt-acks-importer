@@ -155,5 +155,6 @@
   "ACKS-IMPORTER.ui.pruneNone": "No stale abilities — every imported ability still has a definition.",
   "ACKS-IMPORTER.ui.pruneAbilities": "Prune",
   "ACKS-IMPORTER.ui.pruneAbilitiesTip": "Remove imported abilities whose definition this module no longer ships. Lists them for confirmation first.",
-  "ACKS-HENCHMEN.rarityTable.default": "Default (average human settlement)"
+  "ACKS-HENCHMEN.rarityTable.default": "Default (average human settlement)",
+  "ACKS-IMPORTER.tables.languagesApplied": "Imported {created} language(s) from your own book."
 }
