@@ -23,8 +23,12 @@ import { ensureItemFolder } from "./cookbook.mjs";
 const MODULE_ID = "acks-importer";
 const ABILITY_TYPE = "ability";
 
-/** The ruledata doc the languages recipe imports into. */
-export const LANGUAGES_DOC_ID = "acks.languages";
+/**
+ * The ruledata doc the languages recipe imports into — the recipe's own key in
+ * `TABLE_RECIPES`, because `importTables` reports and registers each doc under
+ * that key and the binding gate matches against what it reports.
+ */
+export const LANGUAGES_DOC_ID = "languages";
 
 /**
  * A stable id for one extracted row: `def.language.` plus the name camelCased

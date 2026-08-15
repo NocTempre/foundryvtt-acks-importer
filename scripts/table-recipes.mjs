@@ -368,8 +368,8 @@ export const TABLE_RECIPES = {
     tables: {
       tree: {
         shape: "indentTree",
-        docId: "acks.languages",
-        page: 507,
+        book: "rr",
+        printedPage: 507,
         locate: "LANGUAGES",
         // Below the two column headers; the section title and the vertical
         // page furniture are excluded by height, not by position.
