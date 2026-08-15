@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.9.0
+
+The language taxonomy is read from your own book instead of shipped in this
+module.
+
+### Added
+- **Languages import from the Revised Rulebook you own.** A recipe carries a
+  page, the section heading, two column bands and an indent step — the depth of
+  a printed cell is its place in the family tree — and the languages themselves
+  are extracted from your copy at import time and made into ability items. What
+  the tree contains, and which tongue descends from which, stays in the book.
+
+### Fixed
+- **A list of names was shipping in the register.** Fifty-eight entries carried
+  a language name in the id, again in the name field, and a third time as the
+  anchor, because a language has no mechanic for an anchor to find — the entry
+  was the name and nothing else. That is not a way of locating content, it is
+  the content, and no value read off a page ships in this family. Removed, and
+  replaced by the recipe above.
+- **Neither IP gate could see it.** `ip-scan` caps how long a shipped string may
+  be and hunts for prose; the register lint caps a label at sixty characters.
+  Neither counts how many short proper nouns a kind ships, so a taxonomy
+  authored one cell per entry passed both. `audit-transcription` now fails a
+  kind that ships a catalogue of name-only entries — but only where the kind's
+  own fields extract nothing else, which is what separates a language from a
+  power, whose entries carry a bare anchor apiece and keep their instructions
+  in the kind.
+
 ## 2.8.0
 
 A race's powers reach the rungs that grant them. The books name a power one way
