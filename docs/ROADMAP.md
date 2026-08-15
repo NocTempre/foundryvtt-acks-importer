@@ -119,7 +119,49 @@ entries), proficiencies (121 + 14 skills + 4 combat proficiencies), powers
 (the whole Appendix A taxonomy, read from the seat's own book at import time —
 no language entry ships in this module; see DECISIONS 2026-08-15).
 
+**Measured 2026-08-15.** Everything the cookbook can materialize was imported
+into a world holding the seat's six books (1,307 documents), and each system
+and module pack was compared against it document by document. Counts below are
+that comparison. Two cautions on reading them: a miss can be a NAMING or
+MODELLING difference rather than absent content (the system pack enumerates
+"Craft: Smithing" and "Combat Trickery: Disarm" where the register carries one
+`Craft` / `Combat Trickery` entry with picks), and the monster leg did not
+finish inside its budget, so the monster numbers are unverified rather than
+low.
+
+| Pack | Docs | Not produced by the import | Verdict |
+|---|---|---|---|
+| `acks-languages` | 58 | **0** | **superseded in full** — now hidden by `hideSupersededPacks` |
+| `acks-adventuring-equipment` | 103 | 11 | partial |
+| `acks-all-equipment` | 55 | 15 | partial |
+| `acks-clothing` | 38 | 17 | partial |
+| `acks-proficiencies` | 119 | 35 (many pick-modelled) | partial |
+| `acks-class-abilities` | 20 | 12 | partial |
+| `acks-monsters` | 44 | 27 | UNVERIFIED (import timed out) |
+| `acks-monster-abilities` | 52 | 48 | UNVERIFIED (rides the monster import) |
+
+No system pack carries an Active Effect, so for these the question is only
+whether the document exists; the module packs are the reverse (41/42, 32/34,
+19/20 carry effects) and are covered above.
+
 **Not covered — the gaps:**
+
+- **Named equipment the import does not produce.** Coins and trade bars
+  (Copper/Silver/Gold/Platinum, Furs), the helmet line (Light, Heavy Dwarven,
+  Heavy Elven), the three Saddle and Tack rows, candles by material, bundled
+  rows the price list sells as one purchase (Torches (6), 30 Sling Stones,
+  1 Silver Arrow), Craftsman's Tools, and the ironbound chest. Roughly 43
+  entries across the three equipment packs.
+- **Thief-skill powers as documents.** `acks-class-abilities` prints Backstab,
+  Climb Walls, Hide in Shadows, Hear Noise, Move Silently, Find Traps and the
+  rest as items; the register models the skills as class ladders instead, so a
+  world that imports has the NUMBERS but not the twelve documents. Decide
+  whether that is a gap to close or a modelling difference to state — it is
+  currently neither.
+- **The monster legs were never measured.** Importing 287 monsters exceeded the
+  audit's budget. Until it completes, `acks-monsters` and
+  `acks-monster-abilities` are hidden by `hideSupersededPacks` on a floor of
+  ten imported monsters while nobody has checked what the other 34 contain.
 
 - **Spell lists** (system packs: 56 arcane, 19 divine). Deliberately parked —
   spell references land with the magic major (see the classes and repo
@@ -129,3 +171,27 @@ no language entry ships in this module; see DECISIONS 2026-08-15).
   `equipment-samples` pack stays the only source of these and could not be
   retired with the other example packs. Closing this means reading the JJ
   shield table and the masterwork rules into equipment entries.
+- **Class training grants — what a class may WIELD and WEAR.** The whole of
+  extras' `equipment-training` pack (34 items: 5 fighting styles, 5 armour
+  rungs, 18 weapon selections) has no counterpart here. The register's four
+  `kind.combatProficiency` entries (`def.prof.weaponProficiency`,
+  `armorProficiency`, `fightingStyles`, `nonProficientUse`) are the RULES TEXT
+  and carry no effects; `kind.class` entries carry `profList`, `awards`,
+  tables and `equipAliases` but no weapon-selection or armour-rung data. So an
+  imported class says which proficiencies it awards and never which weapons it
+  may carry. Until this is read off the JJ pp. 290–291 class-construction
+  chunks, that pack is the only source of those grants, and a world without it
+  falls open: extras' `weaponProficiency()` answers "all" and `armorMax()`
+  answers "heavy" rather than refusing. Closing it needs the grant vocabulary
+  (`flags.acks-extras.weaponProf` / `.armourProficiency` / `.styleProficient`,
+  documented in extras' `scripts/equipment/proficiency.mjs`) emitted per class.
+- **Three henchmen mechanics the abilities model cannot yet say.** Extras'
+  `proficiencies-powers` is otherwise redundant — its bonuses are recovered
+  either by the henchmen collector's name fallbacks or by the typed
+  `modifier target=reaction` specs this module already ships — but three have
+  neither route: **Inspire Courage's morale-roll bonus**, **Utter Domination's
+  morale BASE of 4** (a floor, not a bonus), and **Beast Friendship's hiring
+  magnitude** (the name fallback grants a bonus but not the +2). Additionally
+  `def.prof.command` and `def.prof.leadership` are `audited: false` with no
+  effects, so the two proficiencies most central to henchman morale are
+  carried by the name fallback alone.

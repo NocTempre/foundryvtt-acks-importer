@@ -70,5 +70,13 @@
       "type": "Macro",
       "system": "acks"
     }
+  ],
+  "packFolders": [
+    {
+      "name": "ACKS II",
+      "sorting": "m",
+      "color": "#822638",
+      "packs": ["macros"]
+    }
   ]
 }
