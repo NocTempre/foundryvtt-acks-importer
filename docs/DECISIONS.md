@@ -426,3 +426,41 @@ neighbouring entries; widening cell glue globally would have re-fused RR
 columns. Both are dispatched per entry book. The prose C/G schedule is a
 binder fallback that fires only when the grid lookup misses, so RR classes
 never touch it.
+
+### The printed name and the defined name are two different names (2026-08-14)
+
+**Problem.** A class or race spread names a power in the short form its own
+paragraph uses; the definition it points at carries the full one. A dwarf's
+value-0 rung prints "Hardy" for `def.power.hardyPeople`, and prints "Dwarf
+Tongues" and "Elf Tongues" for `def.power.giftOfTongues` — a name no
+definition carries at all. Race materialization resolved rung powers by exact
+item name, so the misses landed in the rung's note and the rung granted
+nothing. In a world that has not yet imported its powers, *every* name misses
+and every rung comes up empty.
+
+**Ruled: the source matrix is the alias index.** `register/_refs/powerSource`
+already records, per class, the name a spread prints beside the ref it means —
+it was built as a provenance matrix, but that pairing is exactly the alias
+mapping, and authoring a second list of aliases beside it would give one fact
+two owners. Resolution now falls through to it: world item by exact name
+first, register second.
+
+**Ruled: a register hit binds even when the world does not hold the power.**
+A `def.*` id is a ref in its own right, so the rung points at the definition
+and resolves the moment those powers are imported — better than a note naming
+a power nothing links to. Only a name the register cannot place stays in the
+note.
+
+**Ruled: an ambiguous printed name resolves to nothing.** Nine classes print
+a "Renown" of their own, and four print a "Lay on Hands"; binding a rung to
+whichever came first would attach another class's power. Five names are
+ambiguous today and every one of them is dropped from the index rather than
+guessed at.
+
+**Cost, and what it exposed.** `powerSource` was the one reference register
+that never declared `registry`, and the compiler keys tables by that field
+(`refs[r.registry] = r`) — so it had always compiled into the cookbook as the
+literal key `undefined`. Nothing could name it, and a second omission would
+have silently overwritten the first. The lint now requires the field and
+requires it to equal the file's basename, which is why the file is
+`powerSource.json` rather than `power-sources.json`.

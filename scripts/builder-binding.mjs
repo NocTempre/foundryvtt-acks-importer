@@ -11,6 +11,7 @@
  * ALREADY world data — extracted from the seat's own book by the table
  * import — so reshaping it is mechanical, never a promotion.
  */
+import { refForPrintedName } from "./cookbook.mjs";
 
 const MODULE_ID = "acks-importer";
 const BUILDER_DOC_ID = "acks.classBuilder";
@@ -320,12 +321,25 @@ export function parseBuild(window) {
 /*  Foundry appliers                                                   */
 /* ------------------------------------------------------------------ */
 
-/** Resolve an ability by printed name to its cookbook-or-uuid ref. */
+/**
+ * Resolve an ability by printed name to its cookbook-or-uuid ref.
+ *
+ * A world item answering to that exact name wins: it is what this seat holds
+ * and what its GM meant, homebrew included. Failing that the name goes through
+ * the `powerSource` register, because a rung prints the SHORT name while the
+ * definition carries the full one — "Hardy" is `def.power.hardyPeople`, and
+ * neither "Dwarf Tongues" nor "Elf Tongues" is any item's name at all.
+ *
+ * A register hit is returned even when nothing in the world carries it yet: a
+ * `def.*` id is a ref in its own right, so the rung points at the definition
+ * and lights up the moment those powers are imported. Only a name the register
+ * cannot place stays unresolved, which is what the rung's note is for.
+ */
 function abilityRefByName(name) {
   const lower = String(name).toLowerCase();
   const item = game.items.find((i) => i.type === "ability" && i.name.toLowerCase() === lower);
-  if (!item) return null;
-  return item.flags?.[MODULE_ID]?.cookbook?.id ?? `uuid:${item.uuid}`;
+  if (item) return item.flags?.[MODULE_ID]?.cookbook?.id ?? `uuid:${item.uuid}`;
+  return refForPrintedName(name);
 }
 
 /**

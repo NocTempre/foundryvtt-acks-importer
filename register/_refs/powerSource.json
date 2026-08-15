@@ -1,6 +1,7 @@
 {
+ "registry": "powerSource",
  "shape": "table",
- "note": "Per-power source matrix (RR-primary): dispositions rrPrimary, rrPrimaryJjAppend, jjPrimary (JJ anchors the def; BTA also prints it), btaPrimary (BTA anchors the def), jjOnly, profEquivalent, skillRef. Pages are full-PDF indices; a class row page is its spread. Grown class-by-class.",
+ "note": "Per-power source matrix (RR-primary): dispositions rrPrimary, rrPrimaryJjAppend, jjPrimary (JJ anchors the def; BTA also prints it), btaPrimary (BTA anchors the def), jjOnly, profEquivalent, skillRef. Pages are full-PDF indices; a class row page is its spread. Grown class-by-class. Doubles as the printed-name alias index: a row's name is what a spread PRINTS, its ref what that name means.",
  "table": {
   "fighter": [
    {

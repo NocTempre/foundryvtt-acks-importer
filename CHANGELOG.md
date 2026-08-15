@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.8.0
+
+A race's powers reach the rungs that grant them. The books name a power one way
+in a class or race spread and another way where it is defined, and the import
+had only exact names to work with — so a dwarf arrived with "Hardy" written in
+a note and no power attached.
+
+### Fixed
+- **Racial powers resolve by the name their spread prints.** A power the world
+  does not already hold now goes through the source register, which records
+  the printed name beside the definition it means: "Hardy" reaches Hardy
+  People, and a dwarf's and an elf's Tongues both reach Gift of Tongues —
+  a name no definition carries, so nothing could ever have matched it. A rung
+  keeps pointing at the definition even when that power has not been imported
+  yet, and lights up when it is. A name several definitions answer to (nine
+  classes print a "Renown" of their own) still resolves to nothing rather than
+  to a guess, and stays in the rung's note where a Judge can see it.
+- **The power-source register was compiled under no name at all.** It was the
+  one reference register that never declared its `registry`, so it landed in
+  the compiled cookbook keyed as "undefined" — unreadable by anything, and
+  liable to be overwritten by the next register that made the same omission.
+  The lint now requires every register to name itself, and to match its own
+  filename, so a second one cannot go missing the same way.
+
 ## 2.7.1
 
 ### Fixed

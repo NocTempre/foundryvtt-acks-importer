@@ -162,6 +162,14 @@ if (fs.existsSync(refsDir)) {
     const label = `_refs/${f}`;
     const r = readJson(path.join(refsDir, f), label);
     if (!r) continue;
+    // The compiler keys every table by `registry` (`refs[r.registry] = r`), so a
+    // file that omits it lands under the literal key "undefined" — reachable by
+    // nothing, and clobbered by the next file that omits it too. Requiring the
+    // key to MATCH THE BASENAME keeps one obvious name per table and makes a
+    // collision impossible, since two files cannot share a filename.
+    if (r.registry !== f.replace(/\.json$/, "")) {
+      err(`${label}: registry "${r.registry}" must equal the file's basename`);
+    }
     if (!SHAPES.has(r.shape)) err(`${label}: bad shape "${r.shape}"`);
     if (r.shape === "table") {
       if (!r.table || typeof r.table !== "object") err(`${label}: table shape requires "table"`);
@@ -236,10 +244,10 @@ if (fs.existsSync(COOKBOOK)) {
       }
     }
   }
-  const matrix = readJson(path.join(REGISTER, "_refs", "power-sources.json"), "_refs/power-sources.json");
+  const matrix = readJson(path.join(REGISTER, "_refs", "powerSource.json"), "_refs/powerSource.json");
   for (const [cls, rows] of Object.entries(matrix?.table ?? {})) {
     for (const r of rows ?? []) {
-      if (r.ref && r.ref.startsWith("def.") && !defIds.has(r.ref)) err(`power-sources.${cls}: ref "${r.ref}" resolves to no cookbook entry`);
+      if (r.ref && r.ref.startsWith("def.") && !defIds.has(r.ref)) err(`powerSource.${cls}: ref "${r.ref}" resolves to no cookbook entry`);
     }
   }
 }

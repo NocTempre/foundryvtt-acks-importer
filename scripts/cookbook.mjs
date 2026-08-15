@@ -4153,6 +4153,49 @@ async function allAbilities() {
 const nameKey = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
 /**
+ * Folded printed name -> the definition it means, from the `powerSource`
+ * register.
+ *
+ * A class or race spread names a power in the SHORT form its own paragraph
+ * uses, while the definition carries the full one: a dwarf's rung prints
+ * "Hardy" for `def.power.hardyPeople`, and both "Dwarf Tongues" and "Elf
+ * Tongues" mean `def.power.giftOfTongues` — which no name match can find,
+ * because the printed name is not the definition's name.
+ *
+ * A name several definitions answer to resolves to NOTHING rather than to a
+ * guess: nine classes print their own "Renown", and picking one would bind a
+ * rung to another class's power. Built once and memoised on the register.
+ */
+function printedNameIndex() {
+  if (data.registers?.__printedNames) return data.registers.__printedNames;
+  const index = new Map();
+  const ambiguous = new Set();
+  for (const rows of Object.values(data.registers?.tables?.powerSource ?? {})) {
+    for (const row of rows ?? []) {
+      const key = nameKey(row?.name);
+      if (!key || !row.ref) continue;
+      const seen = index.get(key);
+      if (seen && seen !== row.ref) ambiguous.add(key);
+      else index.set(key, row.ref);
+    }
+  }
+  for (const key of ambiguous) index.delete(key);
+  if (data.registers) {
+    Object.defineProperty(data.registers, "__printedNames", { value: index, enumerable: false });
+  }
+  return index;
+}
+
+/**
+ * The definition id a printed power name means, or null when the register
+ * does not name it (or names it ambiguously).
+ *
+ * @param {string} name the name as a class or race spread prints it
+ * @returns {string|null} a `def.*` cookbook id
+ */
+export const refForPrintedName = (name) => printedNameIndex().get(nameKey(name)) ?? null;
+
+/**
  * Resolve an item name to a definition id. Tries the name as printed, then
  * again with a trailing throw value stripped: a stat block writes its
  * proficiencies as "climbing 6+", which is the same proficiency as "Climbing"

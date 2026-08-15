@@ -59,4 +59,44 @@ for (const e of entries.values()) {
   check(`${e.id}: cite "${e.cite}" names the book it is read from (${e.book})`, m[1].toLowerCase() === e.book.toLowerCase());
 }
 
+/* The compiler keys each reference register by its `registry` field
+ * (`refs[r.registry] = r`), so a source file that omits the field compiles to
+ * the literal key "undefined" — a table nothing can name and the next
+ * registry-less file would overwrite. The power-source matrix shipped that way
+ * and was unreachable for it. */
+const registers = JSON.parse(fs.readFileSync(path.join(COOKBOOK, "registers.json"), "utf8"));
+for (const name of Object.keys(registers.tables ?? {})) {
+  check(`register table "${name}" compiled under a real registry name`, name !== "undefined" && /^[a-z][A-Za-z]*$/.test(name));
+}
+
+/* The power-source matrix is also the printed-name alias index: a class or race
+ * spread names a power in its own short form ("Hardy") while the definition
+ * carries the full one (`def.power.hardyPeople`), so a rung that resolves by
+ * name alone can never find it. Every ref it points at must be a real entry,
+ * or the alias resolves to a definition the cookbook cannot open. */
+const sourceRows = Object.values(registers.tables?.powerSource ?? {}).flat();
+check("the power-source matrix ships rows", sourceRows.length > 0);
+for (const row of sourceRows) {
+  if (!row?.ref?.startsWith("def.")) continue;
+  check(`powerSource "${row.name}": ref ${row.ref} is a shipped entry`, entries.has(row.ref));
+}
+
+/* The racial rungs the class builder writes name their powers this way, and
+ * two of them ("Dwarf Tongues", "Elf Tongues") are the name of no definition
+ * at all. Losing these is silent: the rung keeps its note and simply grants
+ * nothing. */
+const printedNames = new Map();
+const ambiguousNames = new Set();
+for (const row of sourceRows) {
+  const key = String(row?.name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (!key || !row.ref) continue;
+  if (printedNames.has(key) && printedNames.get(key) !== row.ref) ambiguousNames.add(key);
+  else printedNames.set(key, row.ref);
+}
+for (const key of ambiguousNames) printedNames.delete(key);
+for (const printed of ["Hardy", "Dwarf Tongues", "Elf Tongues", "Sensitivity to Rock and Stone", "Animal Friendship", "Attunement to Nature", "Connection to Nature"]) {
+  const key = printed.toLowerCase().replace(/[^a-z0-9]/g, "");
+  check(`racial power "${printed}" resolves through the power-source register`, printedNames.has(key));
+}
+
 console.log(`\ntest-cookbook-coherence: all ${pass} checks passed`);
