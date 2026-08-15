@@ -147,7 +147,13 @@ export function cookbookStub(fullId) {
 /** Whether this seat could reveal prose for the id right now. */
 export function cookbookCanReveal(fullId) {
   const found = cookbookEntry(fullId);
-  return !!found && ctx.sessionDocs.has(bookOf(found));
+  if (!found) return false;
+  // A recipe with no `description` instruction has no prose to reveal: a
+  // language is one cell of a printed taxonomy, a name and a page and nothing
+  // else, so the reveal link would open on an empty string. A synthesized
+  // family entry carries no `fields` at all and keeps its own path.
+  if (found.entry.fields && !found.entry.fields.description) return false;
+  return ctx.sessionDocs.has(bookOf(found));
 }
 
 /** Cache an entry's description paragraphs (session memory only). */
@@ -2879,13 +2885,25 @@ const splitList = (s) =>
     .map((x) => x.replace(/\s+/g, " ").trim())
     .filter(Boolean);
 
+/**
+ * Can a printed name-list on a class spread award this entry?
+ *
+ * A class's Proficiency List and a template's Proficiencies cell name
+ * proficiencies, skills and powers. They never name a LANGUAGE — the taxonomy
+ * is its own tree — so languages stay out of both tokenizers. Being in them
+ * only gives short common words ("Orc", "Ithean", "Draconic") a chance to claim
+ * the head of a cell that belongs to something else, which the greedy
+ * longest-first match cannot undo.
+ */
+const isAwardableByName = (entry) => !NON_ABILITY_KINDS.has(entry?.kind) && entry?.kind !== "kind.language";
+
 /** fold(name) → def id across every content cookbook (profs, powers, skills). */
 function abilityRefIndex() {
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const index = new Map();
   for (const cb of data.content.values()) {
     for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (NON_ABILITY_KINDS.has(e.kind)) continue;
+      if (!isAwardableByName(e)) continue;
       index.set(fold(e.name), defId);
     }
   }
@@ -2897,7 +2915,7 @@ function abilityNameMenu() {
   const menu = [];
   for (const cb of data.content.values()) {
     for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (NON_ABILITY_KINDS.has(e.kind)) continue;
+      if (!isAwardableByName(e)) continue;
       menu.push({ name: e.name, ref: defId });
     }
   }

@@ -115,14 +115,11 @@ dependency materializing from their books is meant to end.
 Covered today: weapons and armour (the book's own tables, via
 `importWeapons`/`importArmor`), adventuring gear and clothing (178 register
 entries), proficiencies (121 + 14 skills + 4 combat proficiencies), powers
-(421), monsters (287 + 25 legacy + 4 templates), roll tables (23).
+(421), monsters (287 + 25 legacy + 4 templates), roll tables (23), languages
+(58 — the whole Appendix A taxonomy).
 
 **Not covered — the gaps:**
 
-- **Languages** (system pack: 58). No `kind.language` exists. The owner's
-  direction (2026-08-14) is that languages become a CATEGORY of the abilities
-  model rather than a type of their own, so this gap closes on both sides at
-  once: a category in extras, a kind here.
 - **Spell lists** (system packs: 56 arcane, 19 divine). Deliberately parked —
   spell references land with the magic major (see the classes and repo
   roadmaps); the register carries the casting ladders but no spell documents.

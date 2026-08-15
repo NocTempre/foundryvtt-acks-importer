@@ -464,3 +464,46 @@ literal key `undefined`. Nothing could name it, and a second omission would
 have silently overwritten the first. The lint now requires the field and
 requires it to equal the file's basename, which is why the file is
 `powerSource.json` rather than `power-sources.json`.
+
+### A language is a name and a page, not a description (2026-08-15)
+
+**Problem.** `kind.language` had a folder and a category but no entries. The
+obvious authoring — model it on `kind.proficiency` — does not fit what the book
+prints. The Auran Empire languages are not descriptor blocks: RR Appendix A
+sets all 58 as one indented family tree, each a single cell naming the language
+beside its real-world counterpart, and no page anywhere describes an individual
+language. There is no run-in heading, no display heading and no prose.
+
+**Ruled: languages compile to their name check alone.** `compileLanguage`
+anchors the printed cell (`anchor.label`, matched folded so Argollëan survives
+extraction differences) and emits one `expect`. Every other definition kind's
+`description` instruction would have nothing to point at. Aiming it at the rows
+below the cell — the only text there is — would hand each language its
+children's names as its own prose, which is how `def.equip.coat` already fails
+(ROADMAP).
+
+**Ruled: the tree stays on the page.** Names ship, as every entry's name does.
+Descent, and which real-world tongue each language stands in for, is the page's
+own arrangement — the table IS the content — so the entry ships neither. A
+reader follows the citation. This also keeps the register honest about what it
+knows: nothing in the module can be wrong about a relationship it never claims.
+
+**Cost.** A language item's description is a citation stub with no reveal. The
+`@PdfText` reveal link is now gated on the recipe HAVING a description
+instruction rather than on the seat having the book, because otherwise every
+language showed a reveal that opened on an empty string.
+
+**Ruled: `def.language.*`, never `def.lang.*`.** `itemShelfFor` keys on an id's
+first two segments, and the shelf commit bab3055 added is `def.language` — so
+`def.lang.*` ids lint clean, compile clean, and file all 58 languages in the
+unsorted root folder. Nothing else in the register or the compiled cookbook
+collides: no existing definition's id tail matches a language's, and no
+cross-reference in any book resolves to one. The single name collision is
+`mm.lizardman`, a monster in a book cookbook, which shares no lookup with a
+content-type definition.
+
+**Ruled: languages stay out of the printed-name tokenizers.** A class's
+Proficiency List and a template's Proficiencies cell name proficiencies, skills
+and powers, never a language. Feeding 58 short common words ("Orc", "Ithean",
+"Draconic") to a greedy longest-first matcher only gives them a chance to claim
+the head of a cell that belongs to something else.
