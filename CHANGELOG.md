@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.9.1
+
+The 2.9.0 language import works now.
+
+### Fixed
+- **The languages recipe never ran.** The import resolves a recipe's book from
+  the table entry, and the languages table carried its book only in the
+  doc-level source line — so the whole recipe was silently filed under a
+  missing book. Its binding also matched a doc id the import never reports,
+  and its page hint spelled a field the page-finder does not read. All three
+  found on the first live import; fixed and live-verified end to end (58
+  languages, twice, the second run creating nothing).
+- **Languages filed in the world root.** The binding minted `def.lang.*` ids,
+  which the shelf lookup cannot key — the exact failure the id ruling had
+  already named — and created the items with no folder. Ids are
+  `def.language.*` now and creation goes through the same shelf machinery as
+  every other imported ability, so languages land under **Languages**.
+- The 2.9.0 gallery gains the languages-import shot, taken in the live session
+  that verified the fix.
+
 ## 2.9.0
 
 The language taxonomy is read from your own book instead of shipped in this
