@@ -16,9 +16,13 @@ raw PNG path, so those links survive the next refresh.
 | Import the class builder | A race document materialized from the Judges Journal — the ladder, costs, and every power resolved to the definition its rung names | [guide](guides/import-from-the-cookbook.md) | [v2.8.0](releases/v2.8.0/classes-builder-import.png) |
 | Browse and audit | The entry picker — the abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v2.0.0](releases/v2.0.0/cookbook-import.png) |
 | Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v2.4.0](releases/v2.4.0/equipment-prose-price.png) |
+| Import languages | The Appendix A taxonomy read from the connected book: 58 languages filed on their shelf, none shipped | [guide](guides/import-from-the-cookbook.md) | [v2.9.0](releases/v2.9.0/languages-import.png) |
 
-Snapshots are captured during the live-verification session of a release
-(`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged afterwards. The
+Snapshots are captured during a live-verification session against the release
+(`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged from data that was
+not really imported. The 2.9.0 languages shot is from the post-release session
+that live-verified (and fixed) the language import the release gate had not
+reached. The
 books connected for these shots were disconnected again afterwards.
 
 Names and page citations appear in frame because they are what the picker is
