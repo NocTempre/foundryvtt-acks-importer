@@ -2790,7 +2790,13 @@ function itemShelfPath(id) {
   return [FOLDER_NAME, shelf, GROUP_SHELF[entry?.meta?.group] ?? null];
 }
 
-async function ensureItemFolder(id = null) {
+/**
+ * The folder a definition id's item files under, created on demand. The shelf
+ * comes from the id's first two segments alone, so callers whose ids have no
+ * register entry (languages, read from the seat's own book) still land on
+ * their shelf rather than in the root.
+ */
+export async function ensureItemFolder(id = null) {
   return ensureFolderPath("Item", itemShelfPath(id));
 }
 

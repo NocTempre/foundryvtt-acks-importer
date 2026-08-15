@@ -116,7 +116,8 @@ Covered today: weapons and armour (the book's own tables, via
 `importWeapons`/`importArmor`), adventuring gear and clothing (178 register
 entries), proficiencies (121 + 14 skills + 4 combat proficiencies), powers
 (421), monsters (287 + 25 legacy + 4 templates), roll tables (23), languages
-(58 — the whole Appendix A taxonomy).
+(the whole Appendix A taxonomy, read from the seat's own book at import time —
+no language entry ships in this module; see DECISIONS 2026-08-15).
 
 **Not covered — the gaps:**
 

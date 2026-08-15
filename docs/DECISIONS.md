@@ -474,7 +474,9 @@ sets all 58 as one indented family tree, each a single cell naming the language
 beside its real-world counterpart, and no page anywhere describes an individual
 language. There is no run-in heading, no display heading and no prose.
 
-**Ruled: languages compile to their name check alone.** `compileLanguage`
+**Ruled: languages compile to their name check alone.** *Superseded same day —
+see the entry below: 58 name-only entries turned out to BE the list, and none
+ship.* `compileLanguage`
 anchors the printed cell (`anchor.label`, matched folded so Argollëan survives
 extraction differences) and emits one `expect`. Every other definition kind's
 `description` instruction would have nothing to point at. Aiming it at the rows
@@ -482,7 +484,9 @@ below the cell — the only text there is — would hand each language its
 children's names as its own prose, which is how `def.equip.coat` already fails
 (ROADMAP).
 
-**Ruled: the tree stays on the page.** Names ship, as every entry's name does.
+**Ruled: the tree stays on the page.** *Superseded same day — see the entry
+below: the names do NOT ship, and the tree is read into the world from the
+seat's own book.* Names ship, as every entry's name does.
 Descent, and which real-world tongue each language stands in for, is the page's
 own arrangement — the table IS the content — so the entry ships neither. A
 reader follows the citation. This also keeps the register honest about what it
@@ -507,3 +511,43 @@ Proficiency List and a template's Proficiencies cell name proficiencies, skills
 and powers, never a language. Feeding 58 short common words ("Orc", "Ithean",
 "Draconic") to a greedy longest-first matcher only gives them a chance to claim
 the head of a cell that belongs to something else.
+
+### The taxonomy is read from the seat's own book, and a list cannot ship (2026-08-15)
+
+Supersedes the first two rulings of the entry above, hours after they shipped.
+
+**Problem.** Fifty-eight register entries whose every field was the same name
+— camelCased in the id, plain in `name`, folded in `anchor.label` — passed
+both IP gates. `ip-scan` caps string LENGTH and hunts for prose; the register
+lint caps a label at sixty characters. Neither counts how MANY name-only
+entries a kind ships, and a taxonomy transcribed one cell per entry is not a
+way of finding the list, it IS the list. The family's rule is that no value
+read off a page ships in any repo, history included; the entries were removed
+and the commits that carried them were squashed out of history before the
+branch and tags moved.
+
+**Ruled: the recipe carries geometry, never names.** The `languages` table
+recipe (`table-recipes.mjs`) holds a section heading, two x-bands and an
+indent step. `extractIndentTree` (`table-extract.mjs`) turns cell indentation
+into depth and parentage at import time, in the world doing the importing,
+against the seat's own Revised Rulebook. What the rows SAY never enters this
+repo; a derived id is not shipped content.
+
+**Ruled: extracted languages become shelved ability items.**
+`language-binding.mjs` derives `def.language.*` ids — honoring this entry's
+own earlier `def.language.*`-never-`def.lang.*` ruling, which the first cut
+of the binding violated (it minted `def.lang.*`, which `itemShelfFor` cannot
+key, so all 58 items landed loose in the world root). Creation goes through
+`ensureItemFolder`, the same shelf machinery every other imported ability
+uses. The items do not set the `generated` flag: Prune removes generated items
+whose definition no longer resolves, and a language never had a definition to
+resolve — flagging them would offer all 58 for deletion on the next prune.
+
+**Ruled: the gate that was missing now exists.** `audit-transcription.mjs`
+fails validate when any kind ships more than a dozen name-only entries. It
+caught nothing the day it landed only because the list was already gone; it is
+the check that would have refused the list on the day it was authored.
+
+**Cost.** A world whose seat never imports the Revised Rulebook has no
+language items at all. That is the right failure: the alternative was the
+module knowing the answer.

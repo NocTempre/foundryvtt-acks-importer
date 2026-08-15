@@ -18,6 +18,8 @@
  * the importing. A derived id is not shipped content.
  */
 
+import { ensureItemFolder } from "./cookbook.mjs";
+
 const MODULE_ID = "acks-importer";
 const ABILITY_TYPE = "ability";
 
@@ -25,7 +27,10 @@ const ABILITY_TYPE = "ability";
 export const LANGUAGES_DOC_ID = "acks.languages";
 
 /**
- * A stable id for one extracted row: `def.lang.` plus the name camelCased.
+ * A stable id for one extracted row: `def.language.` plus the name camelCased
+ * — the segment `itemShelfFor` keys on, so the items file under the Languages
+ * shelf like every other imported ability (`def.lang.*` would lint clean and
+ * land all of them in the unsorted root).
  *
  * Derived in the seat's own world from the seat's own book, so re-importing
  * lands on the same item rather than minting a twin, and two worlds owning the
@@ -40,7 +45,7 @@ export function languageId(name) {
     .split(/\s+/)
     .map((w, i) => (i ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase()))
     .join("");
-  return slug ? `def.lang.${slug}` : null;
+  return slug ? `def.language.${slug}` : null;
 }
 
 /**
@@ -99,6 +104,9 @@ export async function applyLanguageImport(table) {
       .filter(Boolean),
   );
   const todo = wanted.filter((d) => !have.has(d.flags[MODULE_ID].cookbook.id));
-  if (todo.length) await Item.createDocuments(todo);
+  if (todo.length) {
+    const folder = (await ensureItemFolder(todo[0].flags[MODULE_ID].cookbook.id))?.id ?? null;
+    await Item.createDocuments(todo.map((d) => ({ ...d, folder })));
+  }
   return { created: todo.length, present: wanted.length - todo.length };
 }
