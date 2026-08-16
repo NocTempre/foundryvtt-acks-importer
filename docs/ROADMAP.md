@@ -14,14 +14,54 @@ question is whether that belongs in the register or in the binding.
 
 ---
 
-## Locators for gear values
+## Gear values the tables do not reach
 
-Cost, weight, weapon damage and armour AC currently fall back to the system's
-defaults, with the printed table governing and the entry marked unaudited. No
-chef-authored locators ship for them yet.
+Weapon damage, armour AC, and the cost and weight of anything the price grid
+sells are read from the reader's own tables — this was once described as
+needing per-entry locators, which measuring it showed to be the wrong shape:
+the values are in grids, and grids are read whole.
 
-The pattern is proven — the defence and effect scans already do exactly this, and
-`powerValue` was moved onto it — so this is authoring work, not design work.
+What is still unpriced, and why:
+
+- **Structures** (43 entries), **lodging** and **provisions** are not in the
+  adventuring-gear or clothing grids. They are priced in their own tables,
+  which have no reader yet.
+- **Barding** prints a dash for cost and encumbrance in the armour table; the
+  figures live elsewhere.
+- **Traps** carry a price in the equipment list and mechanics in the Judge's
+  chapter; the trap documents come from the latter, and the price row is not
+  joined to them.
+- A handful of grid rows read a cost of zero where the page shows a dash or a
+  qualifier, rather than declining to answer.
+
+## Money, trade goods, and rows sold as a bundle
+
+Coins and trade bars (copper, silver, gold, platinum) and furs are not in the
+equipment grids at all — they are money and freight, priced in their own
+sections. Two rows the price list sells as one purchase (a bundle of torches,
+a count of sling stones) import as the single article instead, and the elven
+helmet has no row in the books read so far.
+
+## A class whose paragraph is interleaved with its own table
+
+The zaharan ruinguard states its combat training in a paragraph the level
+table sits inside, so extraction folds the table's cells through the sentence
+mid-word. The parse refuses the whole paragraph rather than grant the clauses
+that survived. Reading it needs the paragraph located by its COLUMN — the
+machinery the prose boxes already use — rather than by the page's reading
+order.
+
+The barbarian is a different absence: its training is a table of peoples, one
+row per region, and which row applies is the reader's choice. That is a
+variant to be registered, not a value to be read.
+
+## Two books that name their gear identically
+
+The dwarven equipment entries display the same names as their rulebook
+counterparts — two items called "Boots", two called "Journal" — because each
+book describes its own. They are distinct entries with distinct ids, so
+nothing is lost, but a world that imports both shelves them side by side with
+no way to tell which book each came from.
 
 ---
 

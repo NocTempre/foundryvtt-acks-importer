@@ -4960,8 +4960,16 @@ export async function importWeapons(folderId) {
 /** camelCase cookbook id for a table-materialized armour item. */
 const armorId = (name) => `def.armor.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
 
-/** camelCase cookbook id for an item materialized from a printed price row. */
-const pricedId = (name) => `def.priced.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
+/**
+ * Cookbook id for an item materialized from a printed price row.
+ *
+ * Folds the WHOLE printed name, parenthetical included — `slugLabel` drops it,
+ * and it is exactly what tells two rows of one thing apart ("Candle (tallow,
+ * 1 lb)" and "Candle (wax, 1 lb)"). The same distinction `rowClaimKey` keeps
+ * for a vehicle whose team is its only difference.
+ */
+const pricedId = (name) =>
+  `def.priced.${String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "row"}`;
 
 /**
  * Materialize the printed price rows that no cookbook entry of its own claims.
@@ -5012,9 +5020,13 @@ export async function importPricedGear(folderId) {
   const seen = new Set();
   for (const row of rows) {
     const key = priceKey(row.name);
-    if (!key || claimed.has(key) || seen.has(key)) continue;
-    seen.add(key);
     const id = pricedId(row.name);
+    // Claiming asks the lookup key, which drops the parenthetical because a
+    // reader looking a thing up does not type it. Deduping asks the id, which
+    // keeps it — otherwise the second of two rows that differ ONLY by their
+    // parenthetical is dropped as a repeat of the first.
+    if (!key || claimed.has(key) || seen.has(id)) continue;
+    seen.add(id);
     if (await importedItem(id)) continue;
     // The equipment root owns the rule mapping a NAME to the item type it
     // should be, exactly as bindEquipment defers to it; absent the module a

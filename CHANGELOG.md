@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.9.12
+
+Every price the book prints is a price you can pay.
+
+### Fixed
+- **A price of a thousand or more is no longer read as its last three digits.**
+  A treatise ladder imported at 400, 800, 200 and 600 gold; it is 400, 800,
+  1200 and 1600. Superior thieves' tools cost 1600 and imported at 600, a war
+  elephant cost 2000 and imported free. Anything under a thousand was always
+  right, which is what made this hard to notice: the wrong prices looked like
+  ordinary ones.
+- **Gear names have their spaces.** The price list imported "Saddle andtack,
+  draft" and "craftsman'stools", because the gap between two printed words is
+  a position on the page rather than a character in the text. Names now read as
+  the page sets them, opening capital included.
+
+### Added
+- **Everything the price list sells now imports as something you can buy.**
+  113 rows the shop list prices had no item: a candle is sold by what it is
+  made of and a saddle by what it is for, and each was imported once, as the
+  category, with no price at all — because pricing it would have meant picking
+  one of its variants. Every row the book prices is now its own item, costed
+  and weighed from your own page. The category keeps its description.
+
+### Known gaps
+- Structures, lodging, provisions and barding are priced in tables this release
+  does not read, and import without a cost. Coins, trade bars and furs are not
+  in the equipment lists at all.
+
 ## 2.9.11
 
 A class arrives knowing what it is trained to fight with.
