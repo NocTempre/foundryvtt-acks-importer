@@ -2729,6 +2729,7 @@ const ITEM_SHELF = {
   "def.weapon": "Weapons",
   "def.armor": "Armor",
   "def.trap": "Traps",
+  "def.variation": "Variations",
 };
 const itemShelfFor = (id) => {
   const key = String(id ?? "").split(".").slice(0, 2).join(".");
@@ -2859,7 +2860,7 @@ export async function importAbility(id, folderId) {
  * v0.26.0 and produced `category: equipment is not a valid choice` when the
  * ability sheet tried to validate items that should never have been abilities.
  */
-const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend", "kind.trap"]);
+const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend", "kind.trap", "kind.variation"]);
 
 /** Does this entry bind to an `ability` item? */
 export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
@@ -3807,6 +3808,121 @@ export async function importClasses() {
 /* -------------------------------------------- */
 /*  Traps (kind.trap → acks-extras.trap)        */
 /* -------------------------------------------- */
+
+/* -------------------------------------------- */
+/*  Variations (kind.variation → acks-extras.*) */
+/* -------------------------------------------- */
+
+/** The variation Item sub-type acks-extras registers. */
+const VARIATION_ITEM_TYPE = "acks-extras.variation";
+
+/** Sixths of a stone, the unit the family weighs everything in. */
+const SIXTHS_PER_STONE = 6;
+
+/**
+ * Build one `acks-extras.variation` from an entry and its materialized numbers.
+ *
+ * The register says what KIND of difference this is, what it may go on, and
+ * what it supersedes — all structure, none of it read off a page. Every number
+ * comes from `node.fields.variation`, which the executor located in the seat's
+ * own prose; a locator that did not match drops its whole spec, so a field is
+ * either the book's number or absent, never a default wearing the book's
+ * authority.
+ *
+ * `deltas.stoneLighter` is the one translation: the page says an item "weighs
+ * one less stone" and the schema counts sixths, so the located stone count is
+ * negated and scaled. That is a change of unit, not of value.
+ */
+export function bindVariation(entry, node, id) {
+  const meta = entry.meta ?? {};
+  const cite = entry.cite ?? "";
+  const deltas = {};
+  const cost = {};
+  for (const found of node?.fields?.variation ?? []) {
+    const amount = Number(found?.amount);
+    if (!Number.isFinite(amount)) continue;
+    switch (found.field) {
+      case "deltas.bonus":
+      case "deltas.damage":
+      case "deltas.ac":
+        deltas[found.field.split(".")[1]] = amount;
+        break;
+      case "deltas.stoneLighter":
+        deltas.weight6 = -amount * SIXTHS_PER_STONE;
+        break;
+      case "cost.add":
+      case "cost.mul":
+      case "cost.baseMul":
+        cost[found.field.split(".")[1]] = amount;
+        break;
+      default:
+        break; // a field this version does not know is left for a later one
+    }
+  }
+  return {
+    name: entry.name,
+    type: VARIATION_ITEM_TYPE,
+    ...(entry.icon ? { img: entry.icon } : {}),
+    system: {
+      key: meta.key ?? "",
+      kind: meta.variationKind ?? "",
+      appliesTo: meta.appliesTo ?? [],
+      supersedes: meta.supersedes ?? [],
+      ...(Object.keys(deltas).length ? { deltas } : {}),
+      ...(Object.keys(cost).length ? { cost } : {}),
+      source: { book: entry.book ?? "rr", cite, ref: id },
+      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+    },
+  };
+}
+
+/** Every kind.variation [id, entry] across the content cookbooks. */
+export function* variationEntries() {
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (e.kind === "kind.variation") yield [defId, e];
+    }
+  }
+}
+
+/**
+ * Import the published variations, one document per purchasable difference.
+ *
+ * Guarded twice for the same two reasons the traps are: a player pressing a GM
+ * macro would mint a second set, and a world without acks-extras has no
+ * variation data model to put them in.
+ */
+export async function importVariations() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates items).");
+  if (!CONFIG.Item.dataModels?.[VARIATION_ITEM_TYPE]) {
+    ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — the variation item type is unavailable.`);
+    return [];
+  }
+  const made = [];
+  let skipped = 0;
+  for (const [id, entry] of variationEntries()) {
+    if (await importedItem(id)) {
+      skipped++;
+      continue;
+    }
+    const doc = await claimImport(id, async () => {
+      const found = cookbookEntry(id);
+      const bookId = found ? bookOf(found) : null;
+      const session = bookId ? ctx.sessionDocs.get(bookId) : null;
+      let node = null;
+      if (session) {
+        node = await executeEntry(session.doc, found.cb, data.registers, id);
+        if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+        else node = null;
+      }
+      const folder = (await ensureItemFolder(id))?.id ?? null;
+      return createDoc(Item, { ...bindVariation(entry, node, id), folder });
+    });
+    if (doc) made.push(doc);
+  }
+  ui.notifications?.info(`${MODULE_ID} | variations: ${made.length} imported, ${skipped} already present.`);
+  return made;
+}
 
 /** The trap Item sub-type acks-extras registers; guarded like the class one. */
 const TRAP_ITEM_TYPE = "acks-extras.trap";

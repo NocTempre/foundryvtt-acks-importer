@@ -1492,7 +1492,8 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
 
   for (const [field, instr] of Object.entries(entry.fields ?? {})) {
     if (opts.skipOps?.includes(instr.op)) continue; // caller choice (e.g. verify without art)
-    if (field === "effects" || field === "rolls") continue; // assist specs applied below, once description exists
+    // assist specs applied below, once the description they read exists
+    if (field === "effects" || field === "rolls" || field === "variation") continue;
     const ctx = { doc, registers, getPage, claims, misses, field };
     let result = null;
     try {
@@ -1541,6 +1542,18 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
       ? materializeEffects(authoredEffects, fields.description)
       : effectScan(fields.description, registers);
     if (effects.length) fields.effects = effects;
+    // A VARIATION's numbers: the same materializer, deliberately its own field.
+    // Not folded into `effects` because these are not an ability's mechanics —
+    // they are what a difference costs and what it moves — and because that
+    // path falls through to `effectScan` when nothing is authored, which would
+    // put a scan's guesses on a document whose whole point is that its numbers
+    // came off the page. No scan fallback here: a variation with no authored
+    // locator locates nothing, and says so by being empty.
+    const variationSpecs = entry.fields?.variation?.specs;
+    if (variationSpecs?.length) {
+      const located = materializeEffects(variationSpecs, fields.description);
+      if (located.length) fields.variation = located;
+    }
     // Every roll the ability offers, each with its own target and progression.
     // A chef-authored recipe REPLACES the scan outright for this entry rather
     // than merging with it: the recipe states how many rolls the entry has, so

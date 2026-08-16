@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.9.7
+
+Masterwork comes across from your own page.
+
+### Added
+- **The masterwork variations import.** Six differences an item can carry —
+  a weapon's attack throw, its damage, both at once, armour lightened, armour
+  protecting, and an ornamented finish — arrive as documents you drag onto a
+  sword the way you drop a rope into a backpack. The armour two apply to
+  shields as well. Every surcharge and every bonus is read from your own book;
+  nothing is shipped, and a number that could not be read is left blank rather
+  than guessed at. Needs ACKS Extras for the variation item type.
+- **The Treasure Tome is a book the importer knows.** Connecting it does not
+  unlock anything yet; it is registered so the magic items can follow.
+
 ## 2.9.6
 
 The printed traps come across from your own book.

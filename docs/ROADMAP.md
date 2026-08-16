@@ -141,10 +141,66 @@ values: masterwork's surcharge, silver's multiplier, a buckler's rating and a
 gem's cut are page values, and a world imports them or has none. A Judge can
 type one in by hand, exactly as they can a trap.
 
-So this importer owes two things, and neither exists yet.
+**The mechanism is built and the masterwork family is across (2026-08-16).**
+`kind.variation` mints documents through `importVariations()`, and the five
+masterwork differences the schema can express exactly — a weapon's attack throw,
+its damage, both together, armour lightened, armour protecting — arrive with
+their surcharges and deltas read from the seat's own page. Verified end to end
+against the reference library: all five locate every number they claim.
 
-**One document per published variation**, materialized into a compendium the
-same way abilities and traps are. The `system` shape it must fill:
+How the numbers come across, because it settles the pattern for the families
+below. Each entry carries `variation` locator specs — a regex over the seat's
+prose and the field it fills — compiled through the FROZEN `effects` op rather
+than a new one, and materialized by `materializeEffects`, which is all-or-nothing:
+a locator that does not match drops its spec, so a field is either the book's
+number or absent, never a default wearing the book's authority. The register
+holds the structure (key, kind, appliesTo, supersedes) and no values. One
+translation happens in the binding: the page says an item "weighs one less
+stone" and the schema counts sixths, so the located stone count is negated and
+scaled — a change of unit, not of value.
+
+Two corrections to what this section used to assume. The masterwork rules are in
+the **Revised Rulebook at p.161**, not the Judge's Journal, and they are set as
+**run-in prose** (`Masterwork Weapon:`, `Masterwork Armor:`, …) — there is a
+summary table on the page as well, but it extracts as one run-on string, so the
+prose is what the locators read. Several variations legitimately share one
+passage, which is why they share an anchor.
+
+**Still owed, now scoped:**
+
+- **The masterwork families the schema cannot yet hold.** Instrument, structure
+  and ship are printed in the same passage, but their benefits are Performance
+  throws, structural hit points and speed — none of which is a `deltas` field.
+  They want either new delta fields in extras or `conditional` entries (the
+  schema's own "value claims reported to the Judge, never applied").
+- **The JJ shield FORMS** — Auxiliary, Buckler, Crescent, Heater, Kite and
+  Phalanx, set as display headings in the Judge's Journal custom-rules chapter,
+  so they anchor by `display` rather than `runin`. Note before starting that
+  `deltas` cannot express them: every form is +1 AC equipped, and what actually
+  separates them is the Shield Usage table's per-CARRY-STATE effects (mounted,
+  strapped front, strapped rear, and whether Defend is allowed), plus differing
+  encumbrance. They need the carry-state model, not another delta. The
+  masterwork variations already cover shields for lightening and protection.
+- **Silver, and the other material qualities.** No printed heading was found for
+  a silver multiplier; the masterwork passage only mentions silver in passing as
+  a material that lets a weapon hit magical monsters. Locate the rule before
+  authoring an entry for it.
+- **Gems are DEFERRED, and were never a Treasure Tome problem.** The Gem Value
+  table is printed in the Judge's Journal treasure chapter, and it is a ROLL
+  TABLE (roll / value / type), not a quality variation — so it wants
+  `kind.rolltable`, not this section. The Treasure Tome is now registered
+  (`tt`, 346pp) against its future consumers, the magic items; nothing reads it
+  yet, which is the one standing exception to this file's rule that a book id
+  must unlock something.
+- **Cosmetics landed** as `appearance.ornamented`: the masterwork passage's own
+  rule that ornaments and engraving add to an item's value without changing its
+  characteristics. It carries no deltas and no cost on purpose — what the
+  ornament is worth is the Judge's, and the variation exists so there is
+  somewhere to record it.
+- **The `baseTypeFields` table**, below, which is a different artifact from the
+  documents and still unbuilt.
+
+The `system` shape a variation document fills:
 
 | Field | What it holds |
 |---|---|

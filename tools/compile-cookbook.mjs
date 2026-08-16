@@ -2574,7 +2574,7 @@ async function compileClassMeta(doc, entry) {
  * extracts, not the source book — a content type spans every book). */
 // kind.class routes through compileClass before the definition branch reads
 // this map — its row here feeds only the index's content list.
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps" };
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps", "kind.variation": "variations" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -3224,6 +3224,15 @@ async function compileDefinition(doc, entry, kindRow) {
   // carry is a `from.pattern` locator resolved against the seat's own prose, so
   // the recipe can be as convoluted as it likes without holding a value.
   if (entry.effects?.length) fields.effects = { op: "effects", specs: entry.effects };
+
+  // A VARIATION's numbers, by the same route and the same frozen op: what a
+  // masterwork blade costs and what it moves are page values, so the recipe
+  // ships the locator and the field it fills and never the number. Reusing
+  // `effects` rather than minting an op is deliberate — the instruction set is
+  // frozen per schema version, and the materializer already does exactly this
+  // (regex over the seat's prose, all-or-nothing so a half-read variation is
+  // dropped rather than shipped looking complete).
+  if (entry.variation?.length) fields.variation = { op: "effects", specs: entry.variation };
 
   // Chef-authored ROLL recipes. The recipe ships how MANY rolls the entry has
   // and where each one's parts live; the label, the target and every ladder

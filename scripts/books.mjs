@@ -32,6 +32,12 @@ export const BOOKS = {
     pages: 441,
     titleRe: /Monstrous Manual/i,
   },
+  tt: {
+    label: "ACKS II Treasure Tome",
+    short: "TT",
+    pages: 346,
+    titleRe: /Treasure Tome/i,
+  },
   // ACKS I adventures (AX line). Metadata titles are EMPTY in these printings,
   // so the fingerprint gates on page count alone; titleRe stays for printings
   // that do carry one. printedOffset: printed folio = PDF page - offset, used
