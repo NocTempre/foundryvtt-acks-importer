@@ -577,6 +577,99 @@
         }
       }
     },
+    "def.variation.materialSilver": {
+      "id": "def.variation.materialSilver",
+      "kind": "kind.variation",
+      "name": "Silver",
+      "book": "rr",
+      "cite": "RR p.129",
+      "pages": [
+        129
+      ],
+      "meta": {
+        "category": "variation",
+        "key": "material.silver",
+        "variationKind": "material",
+        "appliesTo": [
+          "weapon"
+        ],
+        "supersedes": []
+      },
+      "icon": "icons/svg/upgrade.svg",
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 129,
+          "box": {
+            "x0": 88,
+            "x1": 110.77999999999999,
+            "y0": 631,
+            "y1": 640
+          },
+          "text": "Silver:"
+        },
+        "description": {
+          "op": "text",
+          "page": 129,
+          "paras": [
+            {
+              "box": {
+                "x0": 65,
+                "x1": 612,
+                "y0": 633,
+                "y1": 709
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  20,
+                  21,
+                  22,
+                  23,
+                  32,
+                  33,
+                  34
+                ],
+                "drop": [
+                  1
+                ]
+              }
+            }
+          ]
+        },
+        "variation": {
+          "op": "effects",
+          "specs": [
+            {
+              "field": "cost.baseMul",
+              "from": {
+                "into": "amount",
+                "pattern": "commissioned\\s*for\\s*(\\d+)\\s*[x\\u00d7]\\s*the\\s*listed\\s*price"
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.variation.masterworkWeaponToHit": {
       "id": "def.variation.masterworkWeaponToHit",
       "kind": "kind.variation",

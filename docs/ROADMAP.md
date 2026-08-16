@@ -196,10 +196,15 @@ passage, which is why they share an anchor.
 
   **Owed on the extras side:** a carry-state model to read these, after which
   the frozen `SHIELD_VARIANTS` table in `scripts/equipment/config.mjs` retires.
-- **Silver, and the other material qualities.** No printed heading was found for
-  a silver multiplier; the masterwork passage only mentions silver in passing as
-  a material that lets a weapon hit magical monsters. Locate the rule before
-  authoring an entry for it.
+- ~~**Silver, and the other material qualities.**~~ DONE 2026-08-16, and there
+  are no others. Silver is printed at RR p.129 as a run-in in the weapon-quality
+  list — which is why a heading search missed it — and imports as
+  `material.silver` with the multiplier read off the page. It scales the listed
+  price (`cost.baseMul`), deliberately not `mul`: silver must not multiply a
+  masterwork surcharge added on top of it. **Nothing else on that list is a
+  variation**: Handy, Impact, Incapacitating, Long, Mounted, Slow and Thrown are
+  intrinsic traits of a weapon TYPE, not differences applied to one, and silver
+  is the only material ACKS II has.
 - **Gems are DEFERRED, and were never a Treasure Tome problem.** The Gem Value
   table is printed in the Judge's Journal treasure chapter, and it is a ROLL
   TABLE (roll / value / type), not a quality variation — so it wants
@@ -396,3 +401,10 @@ a table, so that one slot is filled by hand from whatever the world holds.
 
 The Nobiran spread prints no Tongues runin at all, so a Nobiran class carries
 the human default and its race declaration waits for a page that names them.
+
+**Searched 2026-08-16, and no such page exists.** The Nobiran racial spread
+(JJ custom-classes chapter) carries no tongues line, and the only Nobiran
+language reference in either book is the *Bonus Languages* POWER — which several
+races may take and which grants a count rather than naming a list. So this is
+not a page we have failed to read: the human default is the correct answer until
+Autarch prints one, and nobody should re-open it looking for the page.
