@@ -5014,7 +5014,15 @@ export async function importPricedGear(folderId) {
     }
   }
 
-  const folder = folderId ?? (await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.equip"] ?? "Equipment"]))?.id ?? null;
+  // Their own shelf under Equipment, beside the group shelves the described
+  // entries file into. Dropped on the Equipment folder itself they sit loose
+  // among those folders — a hundred-odd items with nothing holding them — and
+  // they cannot join the group shelves either: a row's group is a fact the
+  // register records about a described entry, and these rows have no entry.
+  // Sorting them by the page they were printed on does not help, because the
+  // clothing page carries the provisions and livestock too.
+  const folder =
+    folderId ?? (await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.equip"] ?? "Equipment", "Price List"]))?.id ?? null;
   const cite = `${BOOKS[WEAPON_TABLE.book]?.short ?? "RR"} p. ${PRICE_TABLES.gear.page}`;
   let created = 0;
   const seen = new Set();

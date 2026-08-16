@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.9.13
+
+The price list gets a shelf of its own.
+
+### Fixed
+- **The items imported from the price list are filed.** All 113 of them landed
+  on the Equipment folder itself, loose among the folders that sort the rest of
+  the gear — a shelf of subfolders with a hundred-odd items spilled beside it.
+  They now sit together under Equipment, on a shelf of their own. Re-run the
+  equipment import to file the ones you already have, then delete the strays.
+
 ## 2.9.12
 
 Every price the book prints is a price you can pay.
