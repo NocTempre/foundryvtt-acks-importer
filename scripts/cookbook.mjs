@@ -2728,6 +2728,7 @@ const ITEM_SHELF = {
   "def.equip": "Equipment",
   "def.weapon": "Weapons",
   "def.armor": "Armor",
+  "def.trap": "Traps",
 };
 const itemShelfFor = (id) => {
   const key = String(id ?? "").split(".").slice(0, 2).join(".");
@@ -2858,7 +2859,7 @@ export async function importAbility(id, folderId) {
  * v0.26.0 and produced `category: equipment is not a valid choice` when the
  * ability sheet tried to validate items that should never have been abilities.
  */
-const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend"]);
+const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend", "kind.trap"]);
 
 /** Does this entry bind to an `ability` item? */
 export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
@@ -3800,6 +3801,142 @@ export async function importClasses() {
   await inheritRaceTongues(made);
   await syncRaceTongues(made);
   ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
+  return made;
+}
+
+/* -------------------------------------------- */
+/*  Traps (kind.trap → acks-extras.trap)        */
+/* -------------------------------------------- */
+
+/** The trap Item sub-type acks-extras registers; guarded like the class one. */
+const TRAP_ITEM_TYPE = "acks-extras.trap";
+
+/** 1st through 6th: the levels the Judge's book prints every trap at. */
+const TRAP_LEVELS = 6;
+
+/**
+ * Where one printed level begins.
+ *
+ * The book sets each tier as "1st level:" inside one flowed paragraph, so the
+ * split is the book's OWN numbering rather than a reading of what the sentence
+ * means — the same kind of structural split `parseEquipment` makes on a
+ * starting-equipment cell. The ordinal is a superscript run in the PDF and
+ * survives extraction, so it anchors the split; the digit is what is captured,
+ * because that is the level being stated.
+ */
+const TIER_RE = /(\d)\s*(?:st|nd|rd|th)\s*level\s*:\s*/gi;
+
+/** First dice expression in a tier's sentence, or "" — the frozen `dice` shape. */
+const TIER_DICE = /\b\d+d\d+(?:\s*[+-]\s*\d+)?\b/;
+
+/**
+ * Split a trap's materialized description into the part that describes the trap
+ * and the six that describe its levels.
+ *
+ * Everything before the first tier marker is the trap; each marker opens a
+ * level and runs to the next. A trap whose text carries no marker at all yields
+ * six empty rows and keeps the whole passage as the description, which is the
+ * right answer for a book that phrased one differently — nothing is dropped and
+ * nothing is invented.
+ *
+ * @param {string[]} blocks the `text` op's paragraphs, in reading order
+ * @returns {{description: string, levels: object[]}}
+ */
+export function splitTrapTiers(blocks = []) {
+  const whole = blocks.map((b) => String(b ?? "").trim()).filter(Boolean).join(" ").replace(/\s+/g, " ");
+  const marks = [...whole.matchAll(TIER_RE)];
+  const levels = Array.from({ length: TRAP_LEVELS }, () => ({ text: "", damageFormula: "" }));
+  if (!marks.length) return { description: whole, levels };
+
+  const description = whole.slice(0, marks[0].index).trim();
+  for (let i = 0; i < marks.length; i++) {
+    const level = Number(marks[i][1]);
+    if (!Number.isFinite(level) || level < 1 || level > TRAP_LEVELS) continue;
+    const from = marks[i].index + marks[i][0].length;
+    const text = whole.slice(from, marks[i + 1]?.index ?? whole.length).trim();
+    // A book that states a level twice gets the LAST word, not a concatenation:
+    // rewriting is what a reprint does, and two half-sentences would be neither.
+    levels[level - 1] = { text, damageFormula: TIER_DICE.exec(text)?.[0]?.replace(/\s+/g, "") ?? "" };
+  }
+  return { description, levels };
+}
+
+/**
+ * Build one `acks-extras.trap` from a trap entry and its materialized text.
+ *
+ * Only two things are read out of the seat's prose: the tier SPLIT, which is
+ * the book's own numbering, and the damage dice, which is the frozen `dice`
+ * locate. Everything a Judge would have to JUDGE — whether the throw is a save
+ * or an attack, which save, what beating it is worth, how far the effect
+ * reaches — is left at its default with the printed sentence sitting beside it
+ * on the sheet. Guessing those is exactly the interpretation the pipeline keeps
+ * offline, and a wrong-but-plausible save key is worse than a blank one.
+ */
+export function bindTrap(entry, node, id) {
+  const cite = entry.cite ?? "";
+  const blocks = (node?.fields?.description ?? []).map((p) => (typeof p === "string" ? p : (p?.text ?? "")));
+  const { description, levels } = splitTrapTiers(blocks);
+  return {
+    name: entry.name,
+    type: TRAP_ITEM_TYPE,
+    ...(entry.icon ? { img: entry.icon } : {}),
+    system: {
+      source: { book: entry.book ?? "jj", cite, ref: id },
+      // The passage renders from the seat's own book through the same lazy tag
+      // every other imported description uses; the plain split above is what
+      // fills the rows.
+      description: description ? `<p>@PdfText[${id}]{${cite}}</p>` : "",
+      level: 1,
+      levels: levels.map((row) => ({ text: row.text, damageFormula: row.damageFormula })),
+    },
+  };
+}
+
+/** Every kind.trap [id, entry] across the content cookbooks. */
+export function* trapEntries() {
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (e.kind === "kind.trap") yield [defId, e];
+    }
+  }
+}
+
+/**
+ * Import the printed traps, one document per trap, all six levels on it.
+ *
+ * Guarded twice, for the two ways this fails without one: a player pressing a
+ * GM macro would mint a second set of thirteen, and a world without acks-extras
+ * has no trap data model to put them in.
+ */
+export async function importTraps() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates items).");
+  if (!CONFIG.Item.dataModels?.[TRAP_ITEM_TYPE]) {
+    ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — the trap item type is unavailable.`);
+    return [];
+  }
+  const made = [];
+  let skipped = 0;
+  for (const [id, entry] of trapEntries()) {
+    if (await importedItem(id)) {
+      skipped++;
+      continue;
+    }
+    const doc = await claimImport(id, async () => {
+      const found = cookbookEntry(id);
+      const bookId = found ? bookOf(found) : null;
+      const session = bookId ? ctx.sessionDocs.get(bookId) : null;
+      let node = null;
+      if (session) {
+        node = await executeEntry(session.doc, found.cb, data.registers, id);
+        if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+        else node = null;
+      }
+      const folder = (await ensureItemFolder(id))?.id ?? null;
+      return createDoc(Item, { ...bindTrap(entry, node, id), folder });
+    });
+    if (doc) made.push(doc);
+  }
+  ui.notifications?.info(`${MODULE_ID} | traps: ${made.length} imported, ${skipped} already present.`);
   return made;
 }
 

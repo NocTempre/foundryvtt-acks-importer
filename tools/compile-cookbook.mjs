@@ -80,6 +80,43 @@ const DEF_TOP_BAND = 60;
  */
 const endsFlow = (it, isAnchor) => isAnchor(it) || it.h >= HEADING_MIN_H;
 
+/** The font a page sets its body in: the alias most of its body-size runs use. */
+function dominantAlias(pd) {
+  const counts = new Map();
+  for (const it of pd.items.filter((i) => i.h < DEF_BODY_MAX_H)) {
+    counts.set(it.alias, (counts.get(it.alias) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}
+
+/** The first display heading in a page's first column — a hard stop for a
+ *  block continuing onto it, whatever the sub-headings say. */
+function headingTop(pd, cols) {
+  const head = pd.items
+    .filter((it) => it.h >= HEADING_MIN_H && colOf(it.x, cols) === 0 && it.y > DEF_TOP_BAND)
+    .sort((a, b) => a.y - b.y)[0];
+  return head ? head.y - 4 : null;
+}
+
+/**
+ * Every run that sits ALONE on its line at body size — the shape a `subheading`
+ * entry is anchored on, and the shape that ends one.
+ *
+ * Shared with the page-turn continuation because a font alias cannot answer the
+ * question across a page boundary: pdf.js names fonts per PAGE, so the face
+ * that is `g_d0_f4` on one page is a different alias on the next, and a stop
+ * test built on the alias silently runs the block to the foot of the page.
+ */
+function soloLines(pd, cols) {
+  const lines = new Map();
+  for (const it of pd.items.filter((i) => i.h < DEF_BODY_MAX_H)) {
+    const k = `${colOf(it.x, cols)}:${Math.round(it.y / 3)}`;
+    if (!lines.has(k)) lines.set(k, []);
+    lines.get(k).push(it);
+  }
+  return [...lines.values()].filter((a) => a.length === 1).map((a) => a[0]);
+}
+
 /**
  * The continuation of a column-flowed definition block: everything in the NEXT
  * column above the first anchor there. Returns [] when the block ended normally
@@ -2537,7 +2574,7 @@ async function compileClassMeta(doc, entry) {
  * extracts, not the source book — a content type spans every book). */
 // kind.class routes through compileClass before the definition branch reads
 // this map — its row here feeds only the index's content list.
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes" };
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -2603,11 +2640,25 @@ function marginTabs(pd) {
     if (!byX.has(k)) byX.set(k, []);
     byX.get(k).push(it);
   }
+  // Where body type actually reaches. A tab is set in the trimmed margin,
+  // OUTSIDE the text block; a superscript ordinal sits on a line of body type,
+  // inside it. Position is the direct test and vertical span is not: the JJ's
+  // "Dungeons" tab is four glyphs over sixteen points, SHORTER than a column of
+  // six tier ordinals sharing an indent, so a rule measuring the stack's height
+  // read each as the other — dropping the ordinal off every "1st level" while
+  // keeping the tab as a word of gibberish at the end of the entry.
+  //
+  // Measured from body runs rather than from the detected columns: a tab stack
+  // can drag a column left onto itself, and a left edge derived from that would
+  // place the tab inside the very block it is supposed to be outside of.
+  const body = pd.items.filter((it) => (it.h ?? 0) >= 7);
+  const textRight = body.length ? Math.max(...body.map((it) => it.x + (it.w ?? 0))) : pd.width;
+  const textLeft = (body.length ? Math.min(...body.map((it) => it.x)) : 0) - 10;
   const out = new Set();
   for (const arr of byX.values()) {
     if (arr.length < 3) continue; // two stray ordinals can share an x; three do not
-    const ys = arr.map((i) => i.y);
-    if (Math.max(...ys) - Math.min(...ys) < 20) continue; // a real stack runs down the page
+    const x = arr[0].x;
+    if (x >= textLeft && x <= textRight) continue; // inside the text block: not a tab
     for (const it of arr) out.add(it);
   }
   return out;
@@ -2761,13 +2812,7 @@ async function compileDefinition(doc, entry, kindRow) {
     // that holds exactly that one run; its alias then identifies its siblings,
     // which is where the block ends.
     const want = assists.anchor ?? entry.anchor?.subheading ?? entry.name;
-    const lines = new Map();
-    for (const it of pd.items.filter((i) => i.h < DEF_BODY_MAX_H)) {
-      const k = `${colOf(it.x, cols)}:${Math.round(it.y / 3)}`;
-      if (!lines.has(k)) lines.set(k, []);
-      lines.get(k).push(it);
-    }
-    const solo = [...lines.values()].filter((a) => a.length === 1).map((a) => a[0]);
+    const solo = soloLines(pd, cols);
     const anchor = solo.find((it) => it.str.trim() === want) ?? solo.find((it) => it.str.trim().startsWith(want));
     if (!anchor) throw new Error(`subheading anchor "${want}" not found on p.${page}`);
     const col = colOf(anchor.x, cols);
@@ -2795,6 +2840,57 @@ async function compileDefinition(doc, entry, kindRow) {
       const cx1 = cols[col + 2] ? cols[col + 2] - 6 : pd.width;
       paras.push(...paragraphBoxes(toLines(cont), cx0, cx1).map((p) => withFixes(p, pd, tabs)));
       bodyText = `${bodyText} ${joinBody(cont)}`.trim();
+    } else if (!stop && col + 1 >= cols.length && page + 1 <= doc.numPages) {
+      // Nothing stopped this block and it held the LAST column, so it runs on
+      // at the top of the next page — the same turn the display branch already
+      // follows. Two things differ there and both are why `pageFlow` is not
+      // reused: the continuation page needs its OWN columns (it re-detects
+      // them, and a page that defeated detection for the entry defeats it for
+      // the turn as well, so `assists.flowColumns` states them per page as it
+      // does on the AX path), and what ends the block is the next entry's
+      // sub-heading, tested by SHAPE rather than by font alias — pdf.js names
+      // fonts per page, so the alias that identified this anchor's siblings
+      // means nothing on the page after it.
+      const pd2 = await pageItems(doc, page + 1);
+      const cols2 = assists.flowColumns?.[String(page + 1)] ?? defColumns(pd2);
+      const inFirst = (it) => colOf(it.x, cols2) === 0 && it.y > DEF_TOP_BAND;
+      // Alone on its line is NOT enough here. On the anchor page the wanted
+      // NAME settles which solo line is the heading; on this one nothing is
+      // being matched by name, and a wrapped sentence at the top of a page is
+      // frequently a single run — which would stop the flow before it carried
+      // anything. A sub-heading is also set in a face the body is not, so the
+      // page's own body face is measured and the stop is the first solo line
+      // that departs from it.
+      // ...and it must be BODY-SIZED. A superscript ordinal is alone on its
+      // line and in a face of its own, so height is the third thing that has
+      // to hold: without it the "th" of the very tier being carried over reads
+      // as the next entry's heading and stops the flow at the page's first
+      // line, which is indistinguishable from the turn not happening at all.
+      const bodyFace = dominantAlias(pd2);
+      const stopAt = soloLines(pd2, cols2)
+        .filter((it) => inFirst(it) && it.alias !== bodyFace && (it.h ?? 0) >= 7)
+        .sort((a, b) => a.y - b.y)[0];
+      const yStop = Math.min(stopAt?.y ? stopAt.y - 2 : pd2.height, headingTop(pd2, cols2) ?? pd2.height);
+      // The turn must not carry the page's FURNITURE. Where detection puts a
+      // column left on the margin tab itself, "column zero" is the tab strip,
+      // and the continuation would be three paragraphs of glyphs that drop to
+      // nothing — empty blocks appended to an entry that had already said all
+      // it was going to. Excluded here rather than left to the drop fixes, so
+      // an entry with no real continuation gets no paragraph at all.
+      const tabs2 = marginTabs(pd2);
+      const carried = pd2.items.filter(
+        (it) => it.h < DEF_BODY_MAX_H && !tabs2.has(it) && inFirst(it) && it.y < yStop,
+      );
+      if (carried.length) {
+        const px0 = cols2[0] - 5;
+        const px1 = cols2[1] ? cols2[1] - 6 : pd2.width;
+        paras.push(
+          ...paragraphBoxes(toLines(carried), px0, px1).map((p) =>
+            withFixes({ ...p, page: page + 1 }, pd2, marginTabs(pd2)),
+          ),
+        );
+        bodyText = `${bodyText} ${joinBody(carried)}`.trim();
+      }
     }
     fields.description = { op: "text", page, paras };
   } else {

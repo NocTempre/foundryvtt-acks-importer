@@ -63,6 +63,75 @@ alias.
 
 ---
 
+## The printed traps, as mechanics rather than a price
+
+`acks-extras` 4.9.0 built the whole of the delve chapter's trap procedure and an
+`acks-extras.trap` Item to hold one, deliberately so this importer would have
+something to materialize into. Nothing here fills it.
+
+What already imports is the CONSTRUCTION side and only that: thirteen trap rows
+come across as `kind.equipment` / `meta.group: "structure"` from the RR price
+list at p.152 — `def.equip.arrowFiringTrap`, `deadfallTrap`, `portcullisTrap`,
+`scythingBladeTrap` and the rest — each carrying a name, a citation and its
+description. A Judge who imports gets what a trap COSTS to build and no way to
+spring one.
+
+The mechanics print in the Judge's Journal, pp. 241–243, under STEP 7: PLACE
+TRAPS. Each trap is a named entry giving six tiers, one per trap level, and the
+tier states the attack throw or the save, the damage, and whatever rider it
+carries. Page 240 holds the two things every trap reads from: the trigger
+mechanisms and the trap-level rule.
+
+**DONE 2026-08-16 — the kind and the entries.** `kind.trap` is minted
+(`register/_kinds/trap.json`) and all thirteen printed traps are authored in
+`register/jj/p241-p243-traps.json`, compiling to `cookbook/traps.json`. Thirteen,
+not the eleven this family used to say: the wiki snapshot's chapter-8 outline
+lists Ceiling Collapse, Deadfall, Excavated Earth Pit, Fire, Missile, Needle,
+Portcullis, Rock-Cut Pit, Rolling Rock, Scything Blade, Spring Snare, Swinging
+Log and Whipping Branch, and the pages agree.
+
+They anchor through the existing `subheading` locate mode — the trap names are
+solo runs of a distinct font at body size, which is exactly what that mode was
+built for, so no new locate strategy was needed. Each carries an
+`assists.columns` pair because the indented tier lines defeat column detection
+(the 2026-08-15 ruling: author the assist, leave the detector alone), and the
+spread is mirrored, so odd pages state `[72, 329]` and even pages `[45, 302]`.
+Verified against the wiki: every entry materializes exactly two blocks — the
+description and the run of six level tiers — except Portcullis, whose three are
+one block broken by a column turn.
+
+**DONE — the binding, and the decision it was waiting on.** Extras 4.12 rebuilt
+`TrapData` so ONE document holds all six levels (`levels`, with `level`
+selecting the row in force), which settles the question this section used to
+pose: thirteen documents, not seventy-eight. A scything blade is one trap; what
+changes with its level is what it does, not what it is.
+
+`importTraps()` builds them. Two things are read out of the seat's prose and no
+more: the tier SPLIT, which is the book's own numbering and the same kind of
+structural cut `parseEquipment` makes on a starting-equipment cell, and the
+damage dice, which is the frozen `dice` locate. Each level's printed sentence is
+kept WHOLE on the row beside them.
+
+Everything that would take a judgment — save or attack throw, which save, what
+beating it is worth, how far the effect reaches — is deliberately left at its
+default with the sentence sitting next to it on the sheet. A wrong-but-plausible
+save key is worse than a blank one, and reading those out of prose is the
+interpretation this pipeline keeps offline (RECIPES §1).
+
+Measured against the reference library: **all thirteen traps yield all six
+levels**, and eleven yield damage dice on five or six of them. The two that
+yield none are the pits, correctly — a pit's damage is printed as a DEPTH, and
+extras derives it from that. Where a tier states several dice the first is
+taken, which is not always the headline number (a needle's poison die can beat
+the needle's own), so the printed sentence is the authority and the field is the
+convenience.
+
+`kind.trap` is in `NON_ABILITY_KINDS` — without that a new definition kind
+silently joins the ability import and mints items that fail validation, which is
+what shipped in v0.26.0 — and `def.trap` files onto a "Traps" shelf.
+
+---
+
 ## Variations: the documents an item's differences are made of
 
 `acks-extras` 4.11 models a difference between one item and its plain self as
@@ -151,6 +220,16 @@ MODELLING difference rather than absent content (the system pack enumerates
 finish inside its budget, so the monster numbers are unverified rather than
 low.
 
+**The first caution turned out to govern most of the counts.** The separate
+register-vs-pack audit (`npm run verify:compendium`) was itself miscounting: it
+read neither `kind.skill` nor `register/_refs/`, and its alias file had never
+been authored, so a name the edition replaced and content filed under another
+kind both read as absent. Corrected 2026-08-16, its proficiency gap fell from 16
+to 1 and its power gap from 45 to 26 ([DECISIONS.md](DECISIONS.md)). The table
+below is the LIVE IMPORT audit, a different measurement, and it has **not** been
+re-run — so read these numbers as an upper bound on what is missing, and
+re-measure before authoring against them.
+
 | Pack | Docs | Not produced by the import | Verdict |
 |---|---|---|---|
 | `acks-languages` | 58 | **0** | **superseded in full** — now hidden by `hideSupersededPacks` |
@@ -174,12 +253,28 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
   rows the price list sells as one purchase (Torches (6), 30 Sling Stones,
   1 Silver Arrow), Craftsman's Tools, and the ironbound chest. Roughly 43
   entries across the three equipment packs.
-- **Thief-skill powers as documents.** `acks-class-abilities` prints Backstab,
-  Climb Walls, Hide in Shadows, Hear Noise, Move Silently, Find Traps and the
-  rest as items; the register models the skills as class ladders instead, so a
-  world that imports has the NUMBERS but not the twelve documents. Decide
-  whether that is a gap to close or a modelling difference to state — it is
-  currently neither.
+- ~~**Thief-skill powers as documents.**~~ SETTLED 2026-08-16 as a modelling
+  difference, and nothing is owed. The Revised Rulebook's own table names eight
+  thief skills — Climbing, Hiding, Listening, Lockpicking, Pickpocketing,
+  Searching, Sneaking, Trapbreaking — and the register carries every one as
+  `kind.skill`. They are class powers whose target improves with level, so they
+  are ladders a class entry references rather than twelve standalone documents.
+  `acks-class-abilities` prints Backstab / Climb Walls / Hide in Shadows / Hear
+  Noise / Move Silently / Find Traps because it was built against ACKS I; those
+  are now aliased onto the ACKS II names. See [DECISIONS.md](DECISIONS.md).
+- **Monster resistances and immunities are not documents, by design.** Cold /
+  Fire / Gas / Lightning / Piercing / Crushing / Slashing Resistance, Immunity
+  to Fire, Regeneration and Superior Regeneration print as items in
+  `acks-monster-abilities`. This module materializes them into `fields.defenses`
+  by scanning the seat's own description prose against a shipped vocabulary
+  ([COOKBOOK.md](COOKBOOK.md), "Defenses are materialized, never baked"), so
+  they arrive as a field on the monster and never as their own item. The
+  compendium audit still lists them, deliberately — a standing decision should
+  be met while reading the report, not silenced inside the tool.
+- **`Apostasy` is the one proficiency genuinely absent.** It appears in neither
+  the Revised Rulebook nor the Judge's Journal, so it is ACKS I content or
+  prints in a book this register has not read. Locate it before deciding
+  whether it is a gap at all.
 - **The monster legs were never measured.** Importing 287 monsters exceeded the
   audit's budget. Until it completes, `acks-monsters` and
   `acks-monster-abilities` are hidden by `hideSupersededPacks` on a floor of

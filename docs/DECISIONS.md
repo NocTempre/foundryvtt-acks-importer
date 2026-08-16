@@ -7,6 +7,121 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A block that reaches the foot of the last column turns the page (2026-08-16)
+
+**Problem.** `subheading` entries followed a column turn but not a page turn,
+which the `display` branch has always done. Scything Blade is the last trap on
+its spread: its fifth level was cut mid-sentence at the foot of the page and its
+sixth was lost entirely. Twelve traps of thirteen were whole, so the defect was
+invisible in aggregate and only showed against the wiki's own outline.
+
+**Ruled:** the branch follows the turn, and what stops it there is tested by
+SHAPE, in three parts — because each of the first two, alone, is wrong:
+
+- **Not by font alias.** pdf.js names fonts per PAGE, so the alias that
+  identifies an anchor's siblings means nothing on the page after it.
+- **Not by "alone on its line" either.** A wrapped sentence at the top of a page
+  is frequently a single run, and it stopped the flow before it carried
+  anything — indistinguishable from the turn never happening.
+- **So: alone on its line, in a face the page's body is not, AND body-sized.**
+  The third clause is owed to the ordinals: the `th` of the very tier being
+  carried over is alone, in its own face, and stopped the flow at the page's
+  first line.
+
+`assists.flowColumns` states the continuation page's columns, reusing the AX
+path's own vocabulary — a page that defeated column detection for the entry
+defeats it for the turn as well, and Scything Blade's continuation page is one.
+
+**Cost, and the second thing this taught.** The first version carried the
+next page's "column zero" wholesale, and on RR p18 that is the MARGIN TAB: the
+`nonProficientUse` entry gained three paragraphs that dropped to empty strings.
+Furniture is now excluded before paragraphs are built rather than left to the
+drop fixes, so an entry with no real continuation gains no paragraph at all.
+With that, the whole-corpus diff is `powers.json` only — `proficiencies.json` is
+byte-identical, which is the check that the turn fires where it should and
+nowhere else.
+
+### A margin tab is known by where it sits, not by how tall it stands (2026-08-16)
+
+**Problem.** Authoring the trap entries surfaced `marginTabs` failing in both
+directions on one page. The rule separated a vertical chapter tab from a
+superscript ordinal by the height of the stack: three or more small runs sharing
+an x, spanning at least twenty points, is a tab. Neither half holds. The Judge's
+Journal sets its "Dungeons" tab as four glyphs over sixteen points — under the
+threshold, so it was kept, and materialized as a word of gibberish at the end of
+every entry that reached the foot of the last column. Meanwhile a trap's six
+tier ordinals share one indent and span two hundred points — over the threshold,
+so the `st` was dropped off every `1st level`.
+
+**Ruled:** position, which is the direct test. A tab is set in the trimmed
+margin, OUTSIDE the block of body type; an ordinal sits on a line of it. The
+extent is measured from the runs of body height on the page, deliberately not
+from the detected columns — a tab stack can drag a column left onto itself, and
+an edge derived from that places the tab inside the very block it is meant to be
+outside of. That was tried first and it un-dropped the Revised Rulebook's own
+`ProFIcIEncIES` tab, which is how the reasoning got checked.
+
+**Measured, whole corpus:** twelve entries changed, all of them in `powers.json`,
+all shedding drops rather than gaining them — ordinal superscripts on the class
+tables and a row of footnote asterisks that had been silently deleted from the
+text for as long as the rule has existed. `proficiencies.json` is byte-identical,
+which is the check that the margin tabs are all still caught.
+
+**Cost:** the rule now trusts that body type reaches further than furniture
+does. A page whose only body runs are themselves in the margin would defeat it,
+and none exists in six books.
+
+### The coverage audit counted a naming difference as absent content (2026-08-16)
+
+**Problem.** `verify-against-compendium` reported 98 differences against the
+system's packs — 16 proficiencies and 45 powers the register supposedly lacked.
+That report is not idle: it is where this roadmap's authoring priorities come
+from, and extras' `hideSupersededPacks` map is built on the same question. Read
+one by one, most of the 61 were content the register already holds.
+
+Three separate blindnesses, each mechanical:
+
+- **A kind the pairing does not read.** The proficiency pairing read
+  `kind.proficiency` and `kind.combatProficiency` only. The Revised Rulebook's
+  own table names eight thief skills — Climbing, Hiding, Listening, Lockpicking,
+  Pickpocketing, Searching, Sneaking, Trapbreaking — and the register carries all
+  of them as `kind.skill`, which neither pairing looked at.
+- **A directory the reader cannot reach.** `registerEntries` walks the book
+  directories and skips everything beginning with `_`, so `register/_refs/` was
+  invisible. Animal, Beastman, Construct, Demon, Humanoid, Ooze, Undead and
+  Vermin are creature-type tokens there; the pack ships each as an item.
+- **A name the edition replaced.** The pack predates ACKS II and carries ACKS I
+  spellings. Each was settled by searching the RR for both: *Righteous Turning*,
+  *Master of Charms & Illusions*, *Dungeon Bashing* and *Apostasy* do not appear
+  in it; *Righteous Rebuke*, *Mastery of Enchantments & Illusions* and
+  *Dungeonbashing Expertise* do.
+
+**Ruled:** an answer is reported at the tier that is true of it, rather than as
+coverage or as a gap. Content under a kind the pairing does not read, and content
+carried as a descriptor token, each get their own bucket and their own sentence —
+counting them as covered would hide a real modelling difference, and counting
+them as missing sends a chef to author an entry that already exists. Settled
+renames go in `compendium-aliases.json`, which had never been authored: it held
+its own example and nothing else. Proficiencies fell from 16 to 1, powers from
+45 to 26 with 8 descriptor and 4 cross-kind.
+
+**Ruled — the thief-skill question, which the roadmap left as neither.** It is a
+modelling difference, and the register's model is the ACKS II one: these are
+class powers whose target improves with level, so they are ladders the class
+entries reference, not twelve standalone documents. The pack ships *Backstab*,
+*Climb Walls*, *Hear Noise*, *Hide in Shadows*, *Move Silently* and *Find Traps*
+because it was built against ACKS I. Nothing is owed here.
+
+**Cost:** the ten monster resistances and immunities are still reported. They are
+materialized into `fields.defenses` from the seat's own prose and will never be
+documents, which is a standing decision rather than a lookup — so it is written
+in the roadmap where the audit lives, and a chef meets it while reading the
+report rather than finding it silenced inside the tool.
+
+**One genuine gap survived the pass:** *Apostasy*, which appears in neither the
+Revised Rulebook nor the Judge's Journal. It is named in the roadmap as content
+to locate rather than aliased away.
+
 ### A page the histogram cannot read is authored, not out-detected (2026-08-15)
 
 **Problem.** Sixteen definitions extracted whatever printed beside them instead
