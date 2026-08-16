@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.9.11
+
+A class arrives knowing what it is trained to fight with.
+
+### Added
+- **An imported class carries its own weapon, armour and fighting-style
+  training.** Every class spread states all three in one paragraph, and that
+  paragraph now comes across as an effect on the class document, so a character
+  holding the class is read against what the class is actually trained in.
+  Until now nothing stated it, and every character answered "proficient with
+  everything" and "may wear the heaviest armour there is" — a mage in plate
+  drew no comment. Nineteen of the twenty-one classes carry it.
+- **The two mandatory styles are not imported, because they are not optional.**
+  Every class has them already; the import states only what its own paragraph
+  chooses on top.
+
+### Fixed
+- **A class whose paragraph cannot be read honestly grants nothing.** Two
+  spreads state their training in a form the parse cannot take: one gives it as
+  a table of peoples rather than a sentence, and one has its level table sitting
+  inside the text, which arrives folded through the sentence a word at a time.
+  Both import with no training rather than a half-read one — a character in
+  either class reads exactly as it did before this release.
+
 ## 2.9.10
 
 What the newest importers create can be removed again.
