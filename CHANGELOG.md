@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.9.4
+
+An entry's description is its own.
+
+### Fixed
+- **A description is read from the column its own heading starts.** Sixteen
+  entries were scoped to a region their heading does not appear in and
+  extracted whatever printed there instead — *Coat*, *Tunic and Pants* and
+  *Turban* showed a column of price digits, *Master Gnosis* described dwarven
+  tongues, *Evasion* recited a proficiency table. Column detection reads a page
+  by where its text runs begin, and a price list beside a definition out-votes
+  the definition; each of these pages now states its own columns. The last
+  release's known issue is closed by this.
+- **A description no longer opens with the tail of its own heading.** An
+  ability printed as "Renown (9th level):" is located by the part of its name
+  that does not vary, so the level began the description instead — sixty-two
+  entries started "9th): ". They now start at their first word.
+- **An entry does not end at its own last sentence.** A short closing line
+  alone at the foot of a column reads exactly like a section heading, and
+  *Turban* lost half its description to one. A heading is not a sentence, so a
+  line ending in a full stop no longer ends a block.
+
+Worlds imported before this release still hold the old text — **re-run the
+import** to take the correction.
+
+### Changed
+- `npm run validate` now fails when a definition's description comes from
+  outside its own heading's column, and names the entries. All three defects
+  above shipped green; this is the check that would have caught the first.
+
 ## 2.9.3
 
 An imported class knows what it speaks.

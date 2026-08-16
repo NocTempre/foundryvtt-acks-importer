@@ -74,6 +74,9 @@
   "pages": [
    95
   ],
+  "assists": {
+   "columns": [36, 306]
+  },
   "meta": {
    "category": "equipment",
    "group": "gear"
@@ -90,6 +93,9 @@
   "pages": [
    95
   ],
+  "assists": {
+   "columns": [36, 306]
+  },
   "meta": {
    "category": "equipment",
    "group": "gear"
@@ -106,6 +112,10 @@
   "pages": [
    95
   ],
+  "assists": {
+   "descStopY": 290,
+   "columns": [36, 306]
+  },
   "meta": {
    "category": "equipment",
    "group": "gear"

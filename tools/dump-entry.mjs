@@ -17,15 +17,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openBook } from "../scripts/extract.mjs";
 import { executeEntry } from "../scripts/executor.mjs";
+import { FILES } from "./reference-lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const COOKBOOK = path.join(HERE, "..", "cookbook");
-const LIB = "C:\\Proj\\acks-reference\\ACKSII";
-const FILES = {
-  rr: `${LIB}\\ACKSII_Revised_Rulebook_DIGITAL_FINAL_r10_2nd_Printing.pdf`,
-  jj: `${LIB}\\ACKSII_Judges_Journal_DIGITAL_FINAL_r9_2nd_Printing.pdf`,
-  mm: `${LIB}\\ACKSII_Monstrous_Manual_DIGITAL_FINAL_r7_2nd_Printing.pdf`,
-};
 
 const args = process.argv.slice(2).filter((a) => a !== "--no-art");
 const skipOps = process.argv.includes("--no-art") ? ["art"] : undefined;

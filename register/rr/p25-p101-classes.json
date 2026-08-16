@@ -517,6 +517,9 @@
     "pages": [
       29
     ],
+    "assists": {
+     "columns": [72, 329]
+    },
     "meta": {
       "category": "classPower"
     }
@@ -1842,6 +1845,9 @@
     "pages": [
       71
     ],
+    "assists": {
+     "columns": [72, 329]
+    },
     "meta": {
       "category": "classPower"
     },
@@ -1939,6 +1945,9 @@
     "pages": [
       37
     ],
+    "assists": {
+     "columns": [72, 329]
+    },
     "meta": {
       "category": "classPower"
     }
@@ -2059,6 +2068,9 @@
     "pages": [
       71
     ],
+    "assists": {
+     "columns": [72, 329]
+    },
     "meta": {
       "category": "classPower"
     }
@@ -3598,6 +3610,9 @@
     "pages": [
       93
     ],
+    "assists": {
+     "columns": [72, 329]
+    },
     "meta": {
       "category": "classPower"
     }

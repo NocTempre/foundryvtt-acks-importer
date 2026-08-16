@@ -63,17 +63,6 @@ alias.
 
 ---
 
-## A heading's superscript ordinal leaks into its description
-
-An entry named "Rite of Discovery (7th level):" is anchored on the prefix
-"Rite of Discovery (" because the ordinal varies, so `headRuns` stops there and
-"7th):" opens the extracted description. Eleven entries read this way. The
-`assists.expectTop` band already exists for the mirror problem — an ordinal
-landing inside the NAME probe — and the fix is the same evidence applied to the
-other end, not a new mechanism.
-
----
-
 ## Starting equipment: telling gear from what it is packed with
 
 `parseEquipment` splits a template's printed Starting Equipment cell into items.
