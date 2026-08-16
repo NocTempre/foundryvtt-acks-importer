@@ -15,6 +15,19 @@ check("parseCost 2cp → 0.02", Math.abs(parseCost("2cp") - 0.02) < 1e-9);
 check("parseCost '5gp/60gp value' → 5", parseCost("5gp/60gp value") === 5);
 check("parseCost Varies → null", parseCost("Varies") === null);
 
+// A price at or above a thousand carries a separator, and the unit follows its
+// digits with no boundary between them. Read without allowing for that, every
+// such price came back as its last three digits — 1,500gp priced at 500gp,
+// wrong by an order of magnitude and entirely ordinary-looking.
+check("parseCost 1,500gp → 1500", parseCost("1,500gp") === 1500);
+check("parseCost 2,000gp → 2000", parseCost("2,000gp") === 2000);
+check("parseCost 1,200gp → 1200", parseCost("1,200gp") === 1200);
+// The run gap that separates words also lands after the thousands comma.
+check("parseCost '1, 500gp' → 1500", parseCost("1, 500gp") === 1500);
+check("parseCost 1000gp → 1000", parseCost("1000gp") === 1000);
+// A three-digit price must be untouched by the separator handling.
+check("parseCost 500gp → 500", parseCost("500gp") === 500);
+
 if (!referenceComplete()) {
   console.log(`test-gear-prices: ${pass} unit checks passed; reference PDFs absent — extraction skipped.`);
   process.exit(0);

@@ -24,6 +24,16 @@ function dropMarks(items) {
 /** Column layout for one side of a two-column grid. */
 const SIDE = (nameX0, nameX1, costX, encX) => ({ nameX0, nameX1, costX, encX });
 
+/**
+ * Run gap (in page units) above which two runs of a name are separate words.
+ * A name arrives as several runs and the space between words is geometry, not
+ * a character: joined with no threshold the rows read "Saddle andtack,draft",
+ * and at too fine a threshold the kerning inside a word splits it ("d raft").
+ * Measured against the grid: anything from ~0.3 to ~1.5 reproduces the printed
+ * spacing exactly, so this sits in the middle of that band.
+ */
+const NAME_GAP = 1;
+
 export const PRICE_TABLES = Object.freeze({
   gear: {
     page: 131,
@@ -38,6 +48,20 @@ export const PRICE_TABLES = Object.freeze({
     sides: [SIDE(45, 242, 247, null), SIDE(296, 488, 493, null)],
   },
 });
+
+/**
+ * The printed name as a name: the grid small-caps the opening letter of each
+ * comma-separated part, which extracts lowercase ("cloak, Linen or Wool" →
+ * "Cloak, Linen or Wool"). Only that letter is restored — title-casing the
+ * rest would be inventing capitals the page does not print.
+ */
+export function tidyRowName(name) {
+  return String(name ?? "")
+    .split(",")
+    .map((part) => part.trim().replace(/^([a-z])/, (c) => c.toUpperCase()))
+    .filter(Boolean)
+    .join(", ");
+}
 
 /** Normalise a name to a lookup key (matches the gear entries). */
 export function priceKey(name) {
@@ -65,7 +89,12 @@ export function priceFor(map, name) {
 
 /** "10gp"→10, "3sp"→0.3, "2cp"→0.02, "5gp/60gp value"→5; "Varies"/blank→null. */
 export function parseCost(text) {
-  const s = String(text ?? "").trim();
+  // Thousands separators go first: matched as part of the number they would
+  // end it early, and "1,200gp" would price at 200.
+  // No \b after the group: the unit follows the digits with no boundary
+  // between them ("1,500gp"), so anchoring on one leaves the separator in and
+  // the number reads from after it.
+  const s = String(text ?? "").replace(/(\d)[,\s]+(?=\d{3}(?!\d))/g, "$1").trim();
   if (!s || /var/i.test(s)) return null;
   const m = s.match(/(\d+(?:\.\d+)?)\s*(gp|sp|cp)/i);
   if (!m) {
@@ -87,14 +116,21 @@ function encToWeight6(enc) {
   return Number.isFinite(n) ? Math.round(n * 6) : null;
 }
 
-/** Nearest run to an x-anchor within tol. */
-function nearest(runs, x, tol = 16) {
-  let best = null;
-  for (const r of runs) {
-    const d = Math.abs(r.x - x);
-    if (d <= tol && (!best || d < best.d)) best = { d, r };
-  }
-  return best?.r.str.trim() ?? "";
+/**
+ * The whole cell at an x-anchor: every run within tol, in x order, joined.
+ *
+ * Taking only the NEAREST run silently truncates a price split across runs —
+ * "1,200gp" arrives as "1" and ",200gp", and the nearest of the two is the
+ * one without the thousands digit. That reads as 200gp: an order of magnitude
+ * off, in the direction that looks like a plausible price.
+ */
+function cellAt(runs, x, tol = 16) {
+  return runs
+    .filter((r) => Math.abs(r.x - x) <= tol)
+    .sort((a, b) => a.x - b.x)
+    .map((r) => r.str.trim())
+    .join("")
+    .trim();
 }
 
 /**
@@ -107,10 +143,26 @@ export function extractPrices(items, recipe) {
   for (const r of rows) {
     for (const side of recipe.sides) {
       const nameRuns = r.items.filter((it) => it.x >= side.nameX0 && it.x < side.nameX1);
-      const name = joinRuns(nameRuns).replace(/\s+/g, " ").trim();
+      const raw = joinRuns(nameRuns, recipe.nameGap ?? NAME_GAP).replace(/\s+/g, " ").trim();
+      if (!raw || raw.length < 2) continue;
+      // A long name reaches into the price column, so its own price can be
+      // read as part of the name ("Gown, Duchess 1,000gp"). It is the row's
+      // price wherever it landed: taken off the name, and used as the cost
+      // when the cost column itself came back empty. This happens BEFORE the
+      // name is tidied, because the tidier treats a comma as separating parts
+      // of a name and a thousands separator is not that.
+      // Spaces are allowed inside the figure: the same run gap that separates
+      // words also lands between a thousands comma and the digits after it,
+      // so the price prints here as "1, 500gp".
+      const bled = /(\d[\d\s,]*(?:\.\d+)?\s*(?:gp|sp|cp))\s*$/i.exec(raw);
+      const name = tidyRowName(bled ? raw.slice(0, bled.index).replace(/[\s,]+$/, "") : raw);
       if (!name || name.length < 2) continue;
-      const cost = parseCost(nearest(r.items, side.costX));
-      const weight6 = side.encX != null ? encToWeight6(nearest(r.items, side.encX)) : null;
+      // The bled reading wins when there is one. It begins at the price's
+      // first digit, whereas the cost column starts wherever its own tolerance
+      // does — which for these rows is past the leading digit, so the column
+      // reads "1,500gp" as 500 while the name holds the whole figure.
+      const cost = (bled ? parseCost(bled[1]) : null) ?? parseCost(cellAt(r.items, side.costX));
+      const weight6 = side.encX != null ? encToWeight6(cellAt(r.items, side.encX)) : null;
       // A real row must carry a price; header/section rows do not.
       if (cost == null && weight6 == null) continue;
       out.push({ name, cost, weight6 });
@@ -132,7 +184,22 @@ export function isPricePage(items, recipe) {
  */
 export async function extractPriceMapFromDoc(doc, readPage) {
   const map = new Map();
-  for (const recipe of Object.values(PRICE_TABLES)) {
+  for (const row of await extractPriceRowsFromDoc(doc, readPage)) {
+    const key = priceKey(row.name);
+    if (key && !map.has(key)) map.set(key, { name: row.name, cost: row.cost, weight6: row.weight6 });
+  }
+  return map;
+}
+
+/**
+ * Every printed price row, in page order, keeping the name each was printed
+ * under. The map above folds these to one entry per key; the row list is what
+ * a caller needs to make an ITEM out of a row, which requires its name.
+ * @returns {Promise<{name:string, cost:number|null, weight6:number|null, table:string}[]>}
+ */
+export async function extractPriceRowsFromDoc(doc, readPage) {
+  const out = [];
+  for (const [table, recipe] of Object.entries(PRICE_TABLES)) {
     const guess = recipe.page ?? 1;
     const order = [];
     for (let d = 0; d <= 14; d++) {
@@ -144,12 +211,9 @@ export async function extractPriceMapFromDoc(doc, readPage) {
     for (const p of order) {
       const { items } = await readPage(doc, p);
       if (!isPricePage(items, recipe)) continue;
-      for (const row of extractPrices(items, recipe)) {
-        const key = priceKey(row.name);
-        if (key && !map.has(key)) map.set(key, { cost: row.cost, weight6: row.weight6 });
-      }
+      for (const row of extractPrices(items, recipe)) out.push({ ...row, table });
       break; // found this recipe's page
     }
   }
-  return map;
+  return out;
 }

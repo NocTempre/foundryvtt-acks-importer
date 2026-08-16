@@ -19,7 +19,7 @@ import { slugLabel } from "./table-extract.mjs";
 import { pageItems } from "./extract.mjs";
 import { WEAPON_TABLE, extractWeaponsFromDoc, bindWeaponRow } from "./weapon-tables.mjs";
 import { ARMOR_TABLE, extractArmorFromDoc, bindArmorRow } from "./armor-tables.mjs";
-import { extractPriceMapFromDoc, priceFor } from "./gear-prices.mjs";
+import { extractPriceMapFromDoc, extractPriceRowsFromDoc, priceFor, priceKey, PRICE_TABLES } from "./gear-prices.mjs";
 import { savesForLevel } from "./stats.mjs";
 import { progressBar } from "./progress.mjs";
 
@@ -4912,7 +4912,10 @@ export async function importAllEquipment() {
   }
   const weapons = await importWeapons();
   const armor = await importArmor();
-  return { total: ids.length, created, animals, repaired, repairedAnimals, weapons, armor };
+  // Last: it asks which price rows the entries above already claim, so it has
+  // to run after they have had their chance at them.
+  const priced = await importPricedGear();
+  return { total: ids.length, created, animals, repaired, repairedAnimals, weapons, armor, priced };
 }
 
 /* -------------------------------------------- */
@@ -4956,6 +4959,84 @@ export async function importWeapons(folderId) {
 
 /** camelCase cookbook id for a table-materialized armour item. */
 const armorId = (name) => `def.armor.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
+
+/** camelCase cookbook id for an item materialized from a printed price row. */
+const pricedId = (name) => `def.priced.${slugLabel(name).replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())}`;
+
+/**
+ * Materialize the printed price rows that no cookbook entry of its own claims.
+ *
+ * The gear cookbook is a list of things the book DESCRIBES; the price grid is
+ * a list of things it SELLS, and the two are not the same list. The grid
+ * itemizes what a description treats as one subject — a candle is sold by the
+ * material it is made of, a saddle by what it is for — and it also prices
+ * things no paragraph describes at all. Either way the reader can buy the row
+ * and could not, before this, own it: the category imported once, with no
+ * price, because pricing it would have meant choosing one of its variants.
+ *
+ * A row an entry already resolves is left alone — that item exists and carries
+ * the book's own description, which a grid row does not have. Everything else
+ * becomes an item priced from the reader's own page.
+ */
+export async function importPricedGear(folderId) {
+  const session = ctx.sessionDocs.get(WEAPON_TABLE.book);
+  if (!session?.doc) return { rows: 0, created: 0, reason: "book not connected" };
+  let rows;
+  try {
+    rows = await extractPriceRowsFromDoc(session.doc, pageItems);
+  } catch (err) {
+    console.error(`${MODULE_ID} | price-row extraction failed`, err);
+    return { rows: 0, created: 0, reason: "extraction error" };
+  }
+  if (!rows.length) return { rows: 0, created: 0, reason: "grid not found in book" };
+
+  // Exactly what priceFor resolves, asked once for the whole grid: a row is
+  // claimed by an entry with its key, or by an entry whose key it alone
+  // extends. A key several rows extend claims none of them — which is the
+  // category whose variants this function is here to produce.
+  const rowKeys = rows.map((r) => priceKey(r.name));
+  const claimed = new Set();
+  for (const id of cookbookEquipmentIds()) {
+    const key = priceKey(cookbookEntry(id)?.entry?.name);
+    if (!key) continue;
+    if (rowKeys.includes(key)) claimed.add(key);
+    else {
+      const ext = rowKeys.filter((rk) => rk.startsWith(key) && rk.length > key.length);
+      if (ext.length === 1) claimed.add(ext[0]);
+    }
+  }
+
+  const folder = folderId ?? (await ensureFolderPath("Item", [FOLDER_NAME, ITEM_SHELF["def.equip"] ?? "Equipment"]))?.id ?? null;
+  const cite = `${BOOKS[WEAPON_TABLE.book]?.short ?? "RR"} p. ${PRICE_TABLES.gear.page}`;
+  let created = 0;
+  const seen = new Set();
+  for (const row of rows) {
+    const key = priceKey(row.name);
+    if (!key || claimed.has(key) || seen.has(key)) continue;
+    seen.add(key);
+    const id = pricedId(row.name);
+    if (await importedItem(id)) continue;
+    // The equipment root owns the rule mapping a NAME to the item type it
+    // should be, exactly as bindEquipment defers to it; absent the module a
+    // priced row is plain inventory.
+    const klass = globalThis.acksExtras?.equipment?.equipmentClass?.(row.name) ?? null;
+    const type = klass?.type ?? "item";
+    const doc = {
+      name: row.name,
+      type,
+      img: "icons/containers/bags/pouch-simple-brown.webp",
+      system: {
+        ...(type === "item" ? { subtype: "item", quantity: { value: 1, max: 0 } } : {}),
+        ...(row.cost != null ? { cost: row.cost } : {}),
+        ...(row.weight6 != null ? { weight6: row.weight6 } : {}),
+      },
+      flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true } },
+    };
+    rememberImported(id, await createDoc(Item, { ...doc, folder }));
+    created++;
+  }
+  return { rows: rows.length, created };
+}
 
 /** The RR gear/clothing price map, built once per session from the reader's book. */
 let _priceMap = null;
