@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.9.3
+
+An imported class knows what it speaks.
+
+### Added
+- **A class's languages import with it.** A demi-human spread's Tongues trait
+  becomes the class's granted list, read whole off your own page — the racial
+  tongue, the common one, and the rest. A class without the trait is human:
+  it grants the common tongue (its name read from your chargen chapter) and
+  leaves one open pick for the homeland language. Works for every book with
+  class spreads — the By This Axe classes carry the same trait and import the
+  same way.
+- **The builder's race documents inherit their classes' tongues**, keyed by
+  the trait's own subject, and never overwrite a list you edited yourself.
+- One known fallback: the Elven Spellsword's page interleaves its proficiency
+  list into the middle of the Tongues sentence, so that one class takes the
+  human default (the common tongue plus an open pick) rather than risk
+  granting a proficiency as a language. The elf race document still carries
+  the full list, read from the Nightblade's page.
+
+
 ## 2.9.2
 
 The imported languages are languages.

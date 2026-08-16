@@ -2436,8 +2436,40 @@ async function compileClass(doc, entry, kindRow) {
  * class-name rows × level columns 1..N, cells "C" / "G" / "C + G" (blank past
  * a class's maximum level). Rows are keyed by class name, so the walk accepts
  * word-starting rows; level columns come from the numbered header cells.
+ *
+ * A `window` entry has no table at all: its pages are emitted as raw body
+ * columns — the same per-column emission the class body uses, for the same
+ * interleaving reason — and the binder patterns against the reader's own
+ * words (`def.classmeta.startingTongues` reads the common tongue's name out
+ * of the chargen chapter this way).
  */
 async function compileClassMeta(doc, entry) {
+  if (entry.window) {
+    const fields = {};
+    for (const p of entry.pages) {
+      const bpd = await pageItems(doc, p);
+      const bcols = defColumns(bpd).filter((x, i, a) => i === 0 || x - a[i - 1] >= 150);
+      const edges = [...bcols.slice(1).map((x) => x - 6), bpd.width - 30];
+      let bx0 = 30;
+      edges.forEach((bx1, ci) => {
+        fields[`body${p}c${ci}`] = {
+          op: "value", page: p,
+          box: { x0: bx0, x1: bx1, y0: 50, y1: bpd.height },
+          pattern: "raw",
+        };
+        bx0 = bx1;
+      });
+    }
+    return {
+      kind: entry.kind,
+      name: entry.name,
+      book: entry.book,
+      cite: `${BOOKS[entry.book].short} p.${entry.pages[0]}`,
+      pages: entry.pages,
+      meta: { ...(entry.meta ?? {}) },
+      fields,
+    };
+  }
   const g = entry.grid ?? {};
   const page = g.page ?? entry.pages[0];
   const pd = await pageItems(doc, page);
@@ -2861,6 +2893,14 @@ async function compileDefinition(doc, entry, kindRow) {
             if (Math.abs(it.x - colX) >= 15 || it.h >= DEF_BODY_MAX_H) return false;
             const own = it.str.trim();
             if (!(own.length >= 2 && own.length <= 44 && /^[A-Z]/.test(own) && own === lineFrom(it))) return false;
+            // A heading is not a sentence, and a sentence ends in a full stop.
+            // Everything above is a test of SHAPE, and a short closing line
+            // that happens to be the last of its column has the same shape as
+            // a heading: BTA p95 ends Turban with "Meniri dwarves south of
+            // Opelenea and Kemesh." — forty-four characters, capitalised,
+            // alone on its line, and set in a face that is not the column's
+            // commonest only because a price table below it holds the vote.
+            if (/[.!?]$/.test(own)) return false;
             // The JJ closes a power with the classes that may take it, and that
             // list wraps: "[Elven Wizard," ends one line and "Nobiran Wizard,
             // Wizard]" begins the next, set in the list's own face and flush
@@ -2907,14 +2947,30 @@ async function compileDefinition(doc, entry, kindRow) {
     const stripMap = new Map();
     let headEnd = anchor.x + (anchor.w ?? 60) - 1;
     const fold = (s) => s.replace(/\s+/g, " ").trim();
+    // An anchor that stops at an open parenthesis ("Master Gnosis (") is a
+    // PREFIX, written that way because the level ordinal inside varies from
+    // class to class. The printed heading does not stop there, so neither does
+    // the drop: "(9th):" is heading too, and leaving it behind opened sixty-two
+    // descriptions with "9th): ". Absorb to the parenthesis's close and the
+    // colon after it — and only when the line actually holds that shape, so a
+    // line of some other form still ends at the prefix rather than being eaten
+    // whole.
+    const HEAD_TAIL = /^[^()]{0,20}\)\s*:/;
+    const prefixOpen = /\($/.test(want);
+    const covered = (s) => {
+      const t = fold(s);
+      if (t.length < want.length) return false;
+      return !prefixOpen || HEAD_TAIL.test(t.slice(want.length));
+    };
+    const covers = covered(sameLine.map((it) => it.str).join("")) ? covered : (s) => fold(s).length >= want.length;
     let acc = "";
     for (const it of sameLine) {
-      if (fold(acc).length >= want.length) break;
+      if (covers(acc)) break;
       // Does this run overshoot the heading? Find the fewest of its characters
       // that finish covering `want`; anything past that is prose.
       let need = it.str.length;
       for (let k = 1; k <= it.str.length; k++) {
-        if (fold(acc + it.str.slice(0, k)).length >= want.length) {
+        if (covers(acc + it.str.slice(0, k))) {
           need = k;
           break;
         }

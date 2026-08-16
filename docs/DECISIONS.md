@@ -7,6 +7,51 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A page the histogram cannot read is authored, not out-detected (2026-08-15)
+
+**Problem.** Sixteen definitions extracted whatever printed beside them instead
+of their own text — Coat, Tunic and Pants and Turban shipped a column of price
+digits. `detectColumns` bins body-run x-origins and needs a bin holding >8% of
+them, which a table starves: BTA p95 prints columns at 36 and 306 and the
+detector returns 240 and 310, both edges of the price list below.
+
+**Rejected: a better detector.** Two were built and measured against the whole
+corpus. Reading the gutters as whitespace over the page fails where a wide table
+crosses them (RR p71 sets seventeen stat lines across the gutter). Reading them
+from the anchor's own lines works on BTA but breaks pages where the block is
+short and a table follows it: recompiled, that version fixed sixteen entries and
+broke four that had been correct, `def.power.jargon` among them. Every variant
+traded one set of pages for another, because the pages that defeat the detector
+are irregular in different ways.
+
+**Ruled:** `assists.columns` — the per-entry override the repo already had, and
+already used on six register files — is the answer for these, and the detector
+is left alone. An authored pair of numbers is exact, verifiable by reading the
+entry's own text, and risks nothing on the eleven hundred entries that were
+never in doubt. Sixteen entries authored across eleven pages.
+
+**Cost:** a page that defeats detection now needs a human to notice. So the
+measure became a gate rather than a note: `tools/check-prose-boxes.mjs` fails
+when a definition's first paragraph does not contain its own anchor's x, and
+names the entries needing the assist. It reads only the compiled cookbook, so
+CI carries it.
+
+**Two compiler rules were sharpened in the same pass**, both of them cases where
+a test of SHAPE matched something that was not that shape:
+
+- A section heading may not end in a full stop. Turban's closing line — "Meniri
+  dwarves south of Opelenea and Kemesh." — is forty-four characters,
+  capitalised, alone on its line, and set in a face that is not its column's
+  commonest only because a price table below it holds the vote. It read as a
+  heading and cut the entry in half.
+- A run-in anchored on a PREFIX ending in "(" does not end at the prefix. The
+  anchor is written that way because the level ordinal varies, but "(9th):" is
+  still heading: 62 of 69 prefix-anchored definitions opened their description
+  with their own heading's tail. Absorption now runs to the closing parenthesis
+  and the colon after it, and only where the line actually holds that shape.
+
+---
+
 ### Prose continues across a column and a page; never across a heading (2026-08-13)
 
 **Problem.** A definition block that reaches the bottom of its column resumes
@@ -587,3 +632,50 @@ next run adopts — never a world that has lost a language.
 holding the old abilities is recognised as already having the tongue. Without
 that, the release that fixes the type is also the release that doubles
 everyone's language list.
+
+### 2026-08-16 — who speaks which: read off the spread, defaulted off the chapter
+
+The roadmap entry of a day earlier said the language lists were "not a
+pattern away" — measured against `cookbookProse`, which returns only the
+register's description window. Wrong measurement: the spreads DO print the
+lists, as a `Tongues:` runin in Racial Traits, and the class binder's `body`
+(the full spread, the same read the cleave phrase uses) reaches it.
+
+**Ruled: the runin is the granted list, whole.** It names the racial tongue,
+the common one, and the rest, so a demi-human class imports with `granted` =
+the parse and `count` = 0; Intellect's slots are the extras module's business
+at grant time. The parse keeps only proper-name-shaped items, so a
+speak-with-beasts power can never be granted as a language.
+
+**Ruled: a human class is the chargen chapter's rule.** No runin means human:
+one open homeland pick beside the common tongue, whose NAME is extracted once
+per run from the chapter's own "often called" sentence
+(`def.classmeta.startingTongues`, the compiler's new prose-window classMeta
+shape). Bookless imports grant nothing rather than a guess.
+
+**Ruled: race documents inherit through the runin's own subject.** "Dwarf
+Tongues" names its race; the label, folded, keys the builder's race item, and
+only an EMPTY race list is written — a Judge's edit is never replaced.
+
+**Found while shipping, not fixed here: repeated compiles disagree.** Six
+from-scratch compiles produced four distinct powers.json hashes, differing in
+paragraph box coordinates — so the drift gate flagged different entries on
+different runs. UNRESOLVED whether the compiler itself is nondeterministic or
+the measurement was contaminated: a concurrent session was hand-editing the
+compiler and the bta registers during the same window, and this session's own
+compiler edit was overwritten mid-run by that session, so the hashes may have
+been comparing different programs. Re-measure on a quiet tree before treating
+the compiler as guilty. The committed cookbook is the modal output of six runs, which also
+repaired 22 BTA entries whose committed boxes pointed at the WRONG page
+column — stale survivors of the margin fix that the in-place compile's
+folding behaviour never replaced. The determinism bug is toolchain work and
+is recorded in the intake ledger, not patched in a hotfix.
+
+**Ruled: a clause the page interleaves is dropped whole.** The Spellsword's
+spread lands its proficiency list mid-sentence in the raw column text,
+capitalised exactly like tongues, so no shape test can separate them. The
+speak-clause capture is capped at 80 characters — every real list fits in 48
+with all its spaces glued out — and a clause that cannot reach its terminator
+under the cap is interleaved and dies; the class falls back to the human
+default. One class granting fewer languages beats one class granting
+Fighting Style Specialization as a tongue.

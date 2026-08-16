@@ -49,34 +49,28 @@ then import again. It is exactly what the test cycle does.
 
 ---
 
-## A prose box that does not contain its own heading
+## A definition heading that opens mid-line
 
-Twenty-three entries are scoped to a region their anchor does not appear in, so
-they extract whatever prints there instead of their own text: `def.equip.coat`,
-`tunicAndPants` and `turban` show columns of price digits. The measure is exact
-and cheap to re-run — an entry's FIRST paragraph, on the anchor's own page,
-must contain the anchor's x.
+`def.power.masteryofdominationanddeception` is a run-in whose heading does not
+start its line: JJ p323 closes the previous entry with "Elven Courtier]" and
+opens this one immediately after, at x=129 in a column starting at 72. Every
+rule that locates a run-in assumes it is flush left — the stop that ends the
+previous block, the section test, the column-edge check `assists.columns`
+states. Nothing is currently wrong with what it extracts (it is an alias and
+reads its target's passage), so this is a latent assumption rather than a
+defect, and it is written down because the next such heading may not be an
+alias.
 
-The cause is `detectColumns`. It bins body-run x-positions and needs a bin
-holding >8% of them, which a table starves: BTA p95 prints columns at x=36 and
-x=306 and the detector returns 240 and 310. `defColumns` already repairs the
-one-column case from run-in heading positions.
+---
 
-The multi-column case cannot be repaired the same way, and the attempt is
-recorded because it looks obvious. Supplying the missing edge leaves the FALSE
-edge in place: RR p71 returns [140, 330], where 140 is the Totem Animals
-table's left edge and the real prose column starts at 72. Adding 72 closes the
-box at 134, and Totem Animal loses the continuation it flows into — a truncated
-description in place of a wrong one, which is worse. Requiring body lines at
-the edge does not separate the cases either; x=72 has forty of them and is
-genuinely a column.
+## A heading's superscript ordinal leaks into its description
 
-Closing it needs the detector to say which of ITS columns are prose and which
-are table structure — evidence a histogram of x-positions does not carry.
-Run-in headings are that evidence (a prose column on a definition page has
-them; a table column does not), so the shape is probably to drop detected
-columns with no heading at their edge, verified the same way the boundary work
-was: recompile, diff all 1200 entries, and read what changed.
+An entry named "Rite of Discovery (7th level):" is anchored on the prefix
+"Rite of Discovery (" because the ordinal varies, so `headRuns` stops there and
+"7th):" opens the extracted description. Eleven entries read this way. The
+`assists.expectTop` band already exists for the mirror problem — an ordinal
+landing inside the NAME probe — and the fix is the same evidence applied to the
+other end, not a new mechanism.
 
 ---
 
@@ -196,36 +190,12 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
   effects, so the two proficiencies most central to henchman morale are
   carried by the name fallback alone.
 
-## Which languages a class or a race speaks
+## Which languages a class or a race speaks — the human homeland pick
 
-An imported class and an imported race both carry an EMPTY `system.languages`,
-so `grantLanguages` in acks-extras has only the Intellect bonus to work with:
-a character bound to an imported Dwarven Vaultguard gets open slots and not one
-named tongue. The taxonomy import (2.9.2) fixed what a language IS; it does not
-say who speaks which.
-
-**Measured 2026-08-15, and the data is not currently reachable:**
-
-- **A class's registered prose does not contain it.** `cookbookProse` on the
-  four spreads checked — Dwarven Vaultguard, Elven Spellsword, Zaharan
-  Ruinguard, Fighter — returns 345–1,913 characters with no sentence matching
-  speak / language / tongue / literate. The register captures a class's
-  *description*, and the languages are not in it.
-- **A race has no register entry at all.** Nothing in `register/**` carries
-  `kind.race` or a `def.race.*` id: `builder-binding.mjs` synthesizes the two
-  races entirely from the custom-class-builder tables (`raw.dwarfRules`,
-  `raw.elfRules`), which carry values and power presence checks and no prose.
-  There is nothing to hang a pattern on.
-
-So this is not a pattern away. It needs new register coverage for the race
-descriptions and a new anchor into the part of a class spread that prints its
-tongues — page analysis against a real book, of the same kind the taxonomy
-recipe took, not a regex bolted onto what is already extracted.
-
-Until then a Judge types the languages into the class or race sheet by hand,
-where the field is free text and `resolveLanguage` will find the world's
-document for whatever name they write.
-
-**A speculative pattern is the wrong answer here.** Guessing the sentence
-would silently write WRONG languages onto every imported class, which for a
-content-generating path is worse than writing none.
+The class half is built (2.9.3): a spread's `Tongues:` runin becomes the
+class's `system.languages.granted`, a spread without one takes the human
+default (the common tongue extracted from the chargen chapter, plus one open
+homeland pick), and the race documents inherit their classes' lists. What
+remains unbuilt is the homeland pick itself: the regional languages a human
+character chooses from print as prose examples, not as a table, so the open
+slot is filled by hand from whatever languages the world holds.

@@ -4548,6 +4548,42 @@
         }
       }
     },
+    "def.classmeta.startingTongues": {
+      "kind": "kind.classMeta",
+      "name": "Starting languages",
+      "book": "rr",
+      "cite": "RR p.20",
+      "pages": [
+        20
+      ],
+      "meta": {
+        "category": "classMeta"
+      },
+      "fields": {
+        "body20c0": {
+          "op": "value",
+          "page": 20,
+          "box": {
+            "x0": 30,
+            "x1": 294,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        },
+        "body20c1": {
+          "op": "value",
+          "page": 20,
+          "box": {
+            "x0": 294,
+            "x1": 582,
+            "y0": 50,
+            "y1": 792
+          },
+          "pattern": "raw"
+        }
+      }
+    },
     "def.class.fighter": {
       "kind": "kind.class",
       "name": "Fighter",

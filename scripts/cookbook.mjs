@@ -3196,7 +3196,7 @@ export function proseGainSchedule(body) {
  * `opts.gains` is this class's Proficiencies-Gained-per-Level row — each C
  * becomes a class-proficiency ChoiceSpec award, each G a general one.
  */
-export function bindClass(entry, node, id, { gains = null } = {}) {
+export function bindClass(entry, node, id, { gains = null, commonName = null } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
   // Body fields arrive one per page (`body61`) or one per page-column
@@ -3409,6 +3409,19 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
     awards.sort((a, b) => a.atLevel - b.atLevel);
   }
 
+  /* --- languages (RR §I.10, read off the spread) ---
+     A demi-human spread prints its whole list in a Tongues runin — racial
+     tongue, the common one, and the rest — with no pick left open beyond what
+     Intellect buys, so the parse IS the granted list and count stays 0. A
+     spread without the runin is a human class: it knows the common tongue and
+     its homeland's, and the homeland is setting-dependent, so it rides as ONE
+     open pick beside the extracted common name. Bookless (no body), both stay
+     empty — a class with no page to read grants nothing rather than a guess. */
+  const tongues = body ? parseTongues(body) : null;
+  const languages = tongues
+    ? { granted: tongues.granted, count: 0 }
+    : { granted: body && commonName ? [commonName] : [], count: body ? 1 : 0 };
+
   let cleaves = {};
   if (entry.cleaves?.pattern && body) {
     const m = new RegExp(entry.cleaves.pattern, "i").exec(body);
@@ -3493,9 +3506,18 @@ export function bindClass(entry, node, id, { gains = null } = {}) {
       },
       unresolvedProfs,
       awards,
+      languages,
       templates,
     },
-    flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true } },
+    flags: {
+      [MODULE_ID]: {
+        cookbook: { id, cite },
+        // The runin's own subject ("Dwarf", "Elf") — the race these tongues
+        // belong to, kept so the race document can be brought in step.
+        ...(tongues ? { tongues: { race: tongues.race } } : {}),
+        generated: true,
+      },
+    },
   };
 }
 
@@ -3520,6 +3542,125 @@ async function executeProfGains() {
 }
 
 /**
+ * What the common tongue is called in this setting, read once per run from
+ * the chargen chapter's LANGUAGES section (`def.classmeta.startingTongues`).
+ *
+ * The section introduces the vulgarized Classical tongue by the name it is
+ * "often called", and that quoted name is the one a human class's granted
+ * list carries. The PATTERN is structure — the book explaining a nickname —
+ * and the NAME comes off the reader's own page, so nothing is transcribed.
+ * Null without the book, or if the sentence is not where the anchor says: a
+ * human class then imports with no granted tongue rather than a guessed one.
+ */
+async function executeCommonTongue() {
+  const id = "def.classmeta.startingTongues";
+  const found = cookbookEntry(id);
+  if (!found) return null;
+  const session = ctx.sessionDocs.get(bookOf(found));
+  if (!session) return null;
+  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  if (!node?.ok) return null;
+  const body = Object.entries(node.fields ?? {})
+    .filter(([k, v]) => /^body\d+(?:c\d+)?$/.test(k) && typeof v === "string")
+    .map(([, v]) => v)
+    .join(" ");
+  const m = /often\s+called\s+[“"']?\s*([A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*)?)/.exec(body);
+  return m ? m[1].trim() : null;
+}
+
+/**
+ * The tongues a class's spread prints, parsed from its Racial Traits runin.
+ *
+ * The runin is labelled `<Race> Tongues:` and its sentence lists what the
+ * race can speak, sometimes in two clauses ("can speak … and can also speak
+ * …"). Both are read; list items keep the book's own capitalization, drop the
+ * article and the trailing "tongues"/"languages", and anything not shaped
+ * like a proper name (a spell reference, a subordinate clause) is discarded
+ * rather than granted.
+ *
+ * The grammar here is structure — how the book phrases the trait — and every
+ * name in the result came off the reader's own page. A spread with no Tongues
+ * runin (every human class) returns null, which is an answer, not a failure:
+ * it routes the class to the human default.
+ *
+ * @param {string} body the spread's raw body text, in reading order
+ * @returns {{race: string, granted: string[]}|null}
+ */
+export function parseTongues(body) {
+  const text = String(body ?? "");
+  // Every \s is \s* here, not \s+: raw body extraction drops inter-run spaces
+  // (the cleave pattern folds them for the same reason), so the runin arrives
+  // as "ElfTongues:" as often as "Elf Tongues:" and a required space misses
+  // the trait entirely.
+  // One word: the label's subject is the race ("Dwarf", "Elf", "Zaharan"),
+  // and reaching further back swallows the section heading when the space
+  // between them is one of the dropped ones.
+  const runin = /([A-Z][a-z]+)\s*Tongues\s*:/.exec(text);
+  if (!runin) return null;
+  // The runin's own span: up to the next runin label or a bounded window —
+  // the speak-clause scan below only reads inside it.
+  const rest = text.slice(runin.index + runin[0].length);
+  const next = /\s[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*:/.exec(rest);
+  const window = rest.slice(0, Math.min(next?.index ?? 600, 600));
+
+  const granted = [];
+  // The capture is CAPPED at 80 characters — the printed lists all fit in 48
+  // even with every space glued out. A clause that cannot reach its terminator inside the cap is one the
+  // page has interleaved with a neighbouring column's text (measured live: a
+  // spread's proficiency list arrived mid-sentence, capitalised exactly like
+  // tongues), and it is dropped whole: the class falls back to the human
+  // default rather than granting a proficiency as a language.
+  for (const clause of window.matchAll(/can\s*(?:also\s*)?speak\s*([^.]{0,80}?)(?=\s*(?:tongues|languages)\b|\.|$)/g)) {
+    for (const piece of clause[1].replace(/^the\s*/i, "").split(/,|\band\b/)) {
+      // Strip the glued terminator, then re-open a space the extraction
+      // dropped inside a name ("AncientZaharan") — book names carry no
+      // internal capitals, so a case boundary is a lost space.
+      const name = piece
+        .trim()
+        .replace(/(tongues|languages)$/i, "")
+        .trim()
+        .replace(/([a-z])([A-Z])/g, "$1 $2");
+      // A tongue is a proper name; "with beasts (as the spell)" is not.
+      if (/^[A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*)*$/.test(name) && !granted.includes(name)) granted.push(name);
+    }
+  }
+  return granted.length ? { race: runin[1].trim(), granted } : null;
+}
+
+/**
+ * Bring the race documents' tongues in step with what the class spreads read.
+ *
+ * A Tongues runin names its RACE ("Dwarf Tongues: Dwarves can speak…"), and
+ * the custom-class-builder's race items — whose own chapter prints no such
+ * runin — are the other place that list belongs: a custom dwarven class built
+ * on the race document owes its character the same tongues a vaultguard gets.
+ * The label off the page keys the match, folded against the race item's key
+ * and name, and only a race whose list is still EMPTY is written — a Judge's
+ * own edit is never replaced.
+ *
+ * Races import from the builder tables and classes from their spreads, in
+ * either order: run after a class import here, and worked into the race on
+ * the next class import if the race arrived later.
+ */
+async function syncRaceTongues(classDocs) {
+  const foldKey = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const raceOf = (label) => {
+    const key = foldKey(label);
+    return (game.items ?? []).find(
+      (i) => i.type === "acks-extras.race" && (foldKey(i.system?.key) === key || foldKey(i.name) === key),
+    );
+  };
+  for (const doc of classDocs ?? []) {
+    const label = doc?.flags?.[MODULE_ID]?.tongues?.race;
+    const granted = doc?.system?.languages?.granted ?? [];
+    if (!label || !granted.length) continue;
+    const race = raceOf(label);
+    if (!race || (race.system?.languages?.granted ?? []).length) continue;
+    await race.update({ "system.languages": { granted, count: 0 } });
+  }
+}
+
+/**
  * Import every class document (skip ones already in the world). Values come
  * from the connected book; a bookless import creates constructor stubs.
  */
@@ -3536,6 +3677,7 @@ export async function importClasses() {
   const made = [];
   let skipped = 0;
   const gainsNode = await executeProfGains();
+  const commonName = await executeCommonTongue();
   for (const [id, entry] of classEntries()) {
     if (await importedItem(id)) {
       skipped++;
@@ -3552,11 +3694,12 @@ export async function importClasses() {
         else node = null;
       }
       const folder = (await ensureItemFolder(id))?.id ?? null;
-      const built = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
+      const built = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName });
       return createDoc(Item, { ...built, folder });
     });
     if (doc) made.push(doc);
   }
+  await syncRaceTongues(made);
   ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
   return made;
 }
@@ -3586,6 +3729,7 @@ export async function cookbookUpdateClasses() {
   if (!ok) return 0;
   let updated = 0;
   const gainsNode = await executeProfGains();
+  const commonName = await executeCommonTongue();
   for (const item of targets) {
     const id = item.flags[MODULE_ID].cookbook.id;
     const entry = byId.get(id);
@@ -3598,10 +3742,17 @@ export async function cookbookUpdateClasses() {
       if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
       else node = null;
     }
-    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name) });
-    await item.update({ name: doc.name, ...(doc.img ? { img: doc.img } : {}), system: doc.system });
+    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName });
+    const tongues = doc.flags?.[MODULE_ID]?.tongues;
+    await item.update({
+      name: doc.name,
+      ...(doc.img ? { img: doc.img } : {}),
+      system: doc.system,
+      ...(tongues ? { [`flags.${MODULE_ID}.tongues`]: tongues } : {}),
+    });
     updated++;
   }
+  await syncRaceTongues(targets);
   ui.notifications?.info(`${MODULE_ID} | classes updated: ${updated}.`);
   return updated;
 }
