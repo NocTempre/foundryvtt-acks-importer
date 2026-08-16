@@ -11,7 +11,7 @@
     "build:packs": "node tools/build-packs.mjs",
     "validate": "node tools/validate.mjs",
     "prepare": "git config core.hooksPath .githooks",
-    "test": "node tools/test-book-match.mjs && node tools/test-executor.mjs && node tools/test-equipment-binding.mjs && node tools/test-weapon-tables.mjs && node tools/test-armor-tables.mjs && node tools/test-gear-prices.mjs && node tools/test-starting-equipment.mjs && node tools/test-class-builder-tables.mjs && node tools/test-class-tongues.mjs && node tools/test-trap-tiers.mjs && node tools/test-variations.mjs && node tools/test-vehicles.mjs && node tools/test-cookbook-coherence.mjs",
+    "test": "node tools/test-book-match.mjs && node tools/test-executor.mjs && node tools/test-equipment-binding.mjs && node tools/test-weapon-tables.mjs && node tools/test-armor-tables.mjs && node tools/test-gear-prices.mjs && node tools/test-starting-equipment.mjs && node tools/test-class-builder-tables.mjs && node tools/test-class-tongues.mjs && node tools/test-class-training.mjs && node tools/test-trap-tiers.mjs && node tools/test-variations.mjs && node tools/test-vehicles.mjs && node tools/test-cookbook-coherence.mjs",
     "lint:register": "node tools/lint-register.mjs",
     "check:drift": "node tools/check-cookbook-drift.mjs",
     "harvest": "node tools/harvest-page.mjs",

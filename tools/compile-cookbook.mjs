@@ -2531,6 +2531,9 @@ async function compileClass(doc, entry, kindRow) {
     },
     ...(spec.awards?.length ? { awards: spec.awards } : {}),
     ...(spec.cleaves ? { cleaves: spec.cleaves } : {}),
+    // The run-in the spread states its combat training under — declared per
+    // class because the label is not the same on every spread.
+    ...(spec.training ? { training: spec.training } : {}),
     ...(spec.casting?.length ? { casting: spec.casting } : {}),
     ...(spec.skills?.length ? { skills: spec.skills } : {}),
     ...(spec.equipAliases ? { equipAliases: spec.equipAliases } : {}),

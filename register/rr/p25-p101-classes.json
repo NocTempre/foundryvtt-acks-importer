@@ -120,7 +120,10 @@
           }
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -518,7 +521,10 @@
       29
     ],
     "assists": {
-     "columns": [72, 329]
+      "columns": [
+        72,
+        329
+      ]
     },
     "meta": {
       "category": "classPower"
@@ -830,7 +836,10 @@
           }
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1031,7 +1040,10 @@
           "ref": "def.skill.trapbreaking"
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1195,7 +1207,10 @@
           }
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1352,7 +1367,10 @@
         {
           "ref": "def.skill.streetwise"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1494,7 +1512,10 @@
           "starting": true,
           "note": "The origin bounds which combat proficiencies are traditional; the row is the record."
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1696,7 +1717,10 @@
           },
           "note": "V"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1831,7 +1855,10 @@
             "pattern": "Fortress \\((\\d+)"
           }
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -1846,7 +1873,10 @@
       71
     ],
     "assists": {
-     "columns": [72, 329]
+      "columns": [
+        72,
+        329
+      ]
     },
     "meta": {
       "category": "classPower"
@@ -1946,7 +1976,10 @@
       37
     ],
     "assists": {
-     "columns": [72, 329]
+      "columns": [
+        72,
+        329
+      ]
     },
     "meta": {
       "category": "classPower"
@@ -2069,7 +2102,10 @@
       71
     ],
     "assists": {
-     "columns": [72, 329]
+      "columns": [
+        72,
+        329
+      ]
     },
     "meta": {
       "category": "classPower"
@@ -2302,7 +2338,10 @@
           "repertoire": "arcaneInt"
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -2477,7 +2516,10 @@
           "repertoire": "order"
         }
       ],
-      "core": true
+      "core": true,
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -2662,7 +2704,10 @@
           "kind": "vancian",
           "repertoire": "order"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Armor and Weapons:"
+      }
     }
   },
   {
@@ -2862,7 +2907,10 @@
           "kind": "vancian",
           "repertoire": "order"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -3057,7 +3105,10 @@
           "kind": "vancian",
           "repertoire": "order"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -3267,7 +3318,10 @@
           "kind": "vancian",
           "repertoire": "arcaneInt"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -3478,7 +3532,10 @@
           "kind": "vancian",
           "repertoire": "studious"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -3611,7 +3668,10 @@
       93
     ],
     "assists": {
-     "columns": [72, 329]
+      "columns": [
+        72,
+        329
+      ]
     },
     "meta": {
       "category": "classPower"
@@ -4016,7 +4076,10 @@
           "kind": "vancian",
           "repertoire": "studious"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -4169,7 +4232,10 @@
             "pattern": "Vault \\((\\d+)"
           }
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -4414,7 +4480,10 @@
         {
           "ref": "def.skill.sneaking"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -4593,7 +4662,10 @@
           "kind": "vancian",
           "repertoire": "arcaneInt"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -4835,7 +4907,10 @@
           "kind": "vancian",
           "repertoire": "order"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {
@@ -5061,7 +5136,10 @@
           "repertoire": "arcaneInt",
           "casterLevel": "casterLevel"
         }
-      ]
+      ],
+      "training": {
+        "runin": "Combat Proficiencies:"
+      }
     }
   },
   {

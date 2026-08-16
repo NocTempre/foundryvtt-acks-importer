@@ -4625,6 +4625,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "equipAliases": {
         "scimitar": "name:Short Sword",
         "francisca": "name:Hand Axe",
@@ -5005,6 +5008,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "fields": {
         "name": {
@@ -5414,6 +5420,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "skills": [
         {
@@ -5851,6 +5860,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "casting": [
         {
           "key": "arcane",
@@ -6251,6 +6263,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -6713,6 +6728,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "fields": {
         "name": {
           "op": "expect",
@@ -7100,6 +7118,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "skills": [
         {
@@ -7506,6 +7527,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "fields": {
         "name": {
@@ -7940,6 +7964,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "fields": {
         "name": {
           "op": "expect",
@@ -8356,6 +8383,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapons:"
+      },
       "casting": [
         {
           "key": "divine",
@@ -8756,6 +8786,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "fields": {
         "name": {
           "op": "expect",
@@ -9145,6 +9178,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -9600,6 +9636,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -10069,6 +10108,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -10542,6 +10584,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -11029,6 +11074,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "casting": [
         {
           "key": "divine",
@@ -11445,6 +11493,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "fields": {
         "name": {
           "op": "expect",
@@ -11844,6 +11895,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -12335,6 +12389,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Combat Proficiencies:"
+      },
       "casting": [
         {
           "key": "arcane",
@@ -12753,6 +12810,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {
@@ -13258,6 +13318,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Combat Proficiencies:"
       },
       "casting": [
         {

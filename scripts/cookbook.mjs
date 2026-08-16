@@ -3451,6 +3451,11 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
     else if (phrase.includes("twoclasslevels")) cleaves = { kind: "perLevel", base: 0.5, per: 0.5, round: "down" };
   }
 
+  // What the class is trained to fight with, carried as an effect the actor
+  // reads through the class item it holds. The run-in label is declared per
+  // class because the spreads do not all print it under the same one.
+  const training = body && entry.training?.runin ? parseCombatTraining(body, entry.training.runin) : null;
+
   // The eight printed starting templates: proficiency cells tokenized against
   // every known ability name, equipment cells split into skinned descriptors.
   const tplMenu = abilityNameMenu();
@@ -3529,6 +3534,7 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
       languages,
       templates,
     },
+    ...(training ? { effects: [trainingEffect(entry, training)] } : {}),
     flags: {
       [MODULE_ID]: {
         cookbook: { id, cite },
@@ -3539,6 +3545,38 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
         generated: true,
       },
     },
+  };
+}
+
+/**
+ * The class's training as one embedded Active Effect.
+ *
+ * The consumer reads the CHANGE LIST, not an applied value, so the effect only
+ * has to be present and enabled on an actor holding the class — which a
+ * transferring item effect is. It carries all three domains together because
+ * they are one paragraph in the book and one answer about the character.
+ *
+ * `type` is written rather than the older numeric `mode`: on v14 the numeric
+ * field survives only as a shim whose setter coerces, so a string there
+ * silently lands as NaN and the change never gets a type at all.
+ */
+function trainingEffect(entry, training) {
+  const changes = [];
+  const add = (domain, value) => {
+    if (value) changes.push({ key: `flags.acks-extras.${domain}`, type: "add", value: String(value), priority: 20 });
+  };
+  add("weaponProf", training.weapons.join(","));
+  add("armourProficiency", training.armour);
+  add("styleProficient", training.styles.join(","));
+  return {
+    name: game.i18n?.format
+      ? game.i18n.format(`${LANG_PREFIX}.ui.classTraining`, { class: entry.name })
+      : `${entry.name} Training`,
+    img: "icons/svg/sword.svg",
+    changes,
+    transfer: true,
+    disabled: false,
+    flags: { [MODULE_ID]: { generated: true } },
   };
 }
 
@@ -3587,6 +3625,171 @@ async function executeCommonTongue() {
     .join(" ");
   const m = /often\s*called\s*[“”"']?\s*([A-Z][A-Za-z]*(?:\s*[A-Z][A-Za-z]*)?)/.exec(body);
   return m ? m[1].trim() : null;
+}
+
+/**
+ * What a class is TRAINED to fight with, read off its own spread.
+ *
+ * Every class spread carries one paragraph stating all three trainings in a
+ * fixed order — weapons, then armour, then fighting styles — as a run-in
+ * whose label the register declares per class, because it is not the same
+ * label on every spread.
+ *
+ * The three grammars, each a shape the book writes rather than a value it
+ * prints:
+ *
+ *  - WEAPONS. "all weapons" is unrestricted; a size clause ("any tiny, small,
+ *    or medium melee weapons") is a set of size grants; "all missile weapons"
+ *    is the missile grant; anything else is a list of named weapons, and where
+ *    the sentence names a group and then enumerates it in a parenthesis, the
+ *    ENUMERATION is what is read — the book's own answer to what the group
+ *    contains, in the book's own words, so nothing is inferred about the group.
+ *  - ARMOUR. The heaviest rung the sentence names, since each rung includes
+ *    everything under it. A sentence that denies armour outright is the
+ *    bottom rung, not an absent answer.
+ *  - STYLES. Only the POSITIVE clause. Every spread that names styles goes on
+ *    to name the ones it excludes, in the same sentence and the same words, so
+ *    a parse that reads the whole sentence grants precisely what the class is
+ *    forbidden. The exclusion clause is cut before anything is read.
+ *
+ * The two mandatory styles are not emitted: they are RAW for every class, and
+ * the consumer already holds them, so repeating them here would be this repo
+ * stating a rule that lives in the other one.
+ *
+ * A sentence stating an EXCEPTION ("all weapons except …") returns no weapon
+ * grant at all. The grant vocabulary cannot express a subtraction, and reading
+ * such a sentence as its unrestricted half would grant exactly the weapons the
+ * class is denied — so the class stays unstated, and a reader who narrows it
+ * by hand is not fighting an assertion this importer invented.
+ *
+ * @param {string} body the spread's raw body text, in reading order
+ * @param {string} runin the run-in label this class prints the paragraph under
+ * @returns {{weapons: string[], armour: string, styles: string[]}|null}
+ */
+export function parseCombatTraining(body, runin) {
+  const text = String(body ?? "").replace(/\s+/g, " ");
+  const label = String(runin ?? "").trim();
+  if (!text || !label) return null;
+  const at = text.toLowerCase().indexOf(label.toLowerCase());
+  if (at < 0) return null;
+  // To the next run-in label (a short capitalised phrase closing on a colon)
+  // or, failing one, a span comfortably longer than the longest printed
+  // paragraph — the trainings are always stated before the next label.
+  const rest = text.slice(at + label.length);
+  const para = rest.slice(0, /\s[A-Z][A-Za-z]*(?:\s[A-Za-z]+){0,3}:/.exec(rest)?.index ?? 900);
+
+  // Segment by the three phrases themselves: the shortest spreads state all
+  // three in ONE sentence, so sentence boundaries do not divide them.
+  const marks = [
+    ["weapons", /weapon\s+proficiency/i],
+    ["armour", /(?:armor|armour)\s+proficiency|proficiency\s+with\s+(?:armor|armour)/i],
+    ["styles", /fighting\s+style\s+proficiency/i],
+  ]
+    .map(([key, re]) => ({ key, at: re.exec(para)?.index ?? -1 }))
+    .filter((m) => m.at >= 0)
+    .sort((a, b) => a.at - b.at);
+  if (!marks.length) return null;
+  const seg = {};
+  marks.forEach((m, i) => {
+    // A segment ends at its own sentence, not at the next phrase: the shortest
+    // spreads run all three through one sentence (so the next phrase arrives
+    // first), and the longest give each its own (so the sentence does). Taking
+    // whichever comes first is what stops "…and staffs." from reading on into
+    // "They have no armour…" and turning the next clause into a weapon name.
+    const upto = i + 1 < marks.length ? marks[i + 1].at : para.length;
+    const slice = para.slice(m.at, upto);
+    // A sentence ends at a full stop that STARTS another one. The styles are
+    // spelled out in an "(i.e. …)" aside on the shortest spreads, and treating
+    // its stop as the end of the sentence cuts the list off before it begins.
+    seg[m.key] = slice.slice(0, /\.\s+[A-Z]|\.$/.exec(slice)?.index ?? slice.length);
+  });
+
+  /* --- weapons ---------------------------------------------------------- */
+  const weapons = [];
+  const wSeg = seg.weapons ?? "";
+  if (/\bexcept\b/i.test(wSeg)) {
+    // Stated as a subtraction — see the header. Nothing is granted.
+  } else if (/\ball\s+weapons\b/i.test(wSeg)) {
+    weapons.push("all");
+  } else {
+    // The group phrasings are consumed as they are recognised, so whatever
+    // remains is a plain list of names. Leaving them in would read the sizes
+    // a second time, as weapons called "tiny" and "small".
+    let rest = wSeg;
+    const eat = (re, take) => {
+      const m = re.exec(rest);
+      if (!m) return;
+      take(m);
+      rest = rest.slice(0, m.index) + " " + rest.slice(m.index + m[0].length);
+    };
+    eat(/all\s+missile\s+weapons/i, () => weapons.push("missile:all"));
+    eat(/((?:tiny|small|medium|large)(?:\s*,?\s*(?:and|or)?\s*(?:tiny|small|medium|large))*)\s*melee\s*weapons/i, (m) => {
+      for (const s of m[1].match(/tiny|small|medium|large/gi) ?? []) weapons.push(`melee:${s.toLowerCase()}`);
+    });
+    // A named group is trusted only through its own parenthesis; where there
+    // is no parenthesis the sentence is already a plain list of weapons.
+    const parens = [...rest.matchAll(/\(\s*including([^)]*)\)/gi)].map((m) => m[1]);
+    const lists = parens.length ? parens : [rest.replace(/^[^]*?proficiency\s+with\s+/i, "")];
+    for (const list of lists) {
+      for (const raw of list.split(/,| and | or /i)) {
+        const name = singularWeapon(raw);
+        if (name) weapons.push(name);
+      }
+    }
+  }
+
+  /* --- armour ----------------------------------------------------------- */
+  let armour = "";
+  const aSeg = seg.armour ?? "";
+  // The sentence names every rung it includes, so the answer is the HEAVIEST
+  // named — "light and very light" is a light class, not a very light one.
+  // "very light" is removed before looking for "light" so the qualifier cannot
+  // be read as the bare rung it contains.
+  const aBare = aSeg.replace(/very\s*light/gi, " ");
+  const RUNGS = [
+    [/heavy/i, aBare, "heavy"],
+    [/medium/i, aBare, "medium"],
+    [/light/i, aBare, "light"],
+    [/very\s*light/i, aSeg, "veryLight"],
+  ];
+  if (/\bno\s+(?:armor|armour)\s+proficiency|\bno\s+proficiency\s+with\s+(?:armor|armour)/i.test(para)) armour = "unarmored";
+  else if (/all\s+(?:armor|armour)/i.test(aSeg)) armour = "heavy";
+  else armour = RUNGS.find(([re, src]) => re.test(src))?.[2] ?? "";
+
+  /* --- styles ----------------------------------------------------------- */
+  const sSeg = (seg.styles ?? "").split(/\bbut\s+not\b/i)[0];
+  const styles = [];
+  if (/all\s+fighting\s+styles/i.test(sSeg)) styles.push("dual", "twohanded", "weaponshield");
+  else {
+    if (/dual\s*weapon/i.test(sSeg)) styles.push("dual");
+    if (/two\s*-?\s*handed\s*weapon/i.test(sSeg)) styles.push("twohanded");
+    if (/weapon\s*and\s*shield/i.test(sSeg)) styles.push("weaponshield");
+  }
+
+  if (!weapons.length && !armour && !styles.length) return null;
+  return { weapons: [...new Set(weapons)], armour, styles: [...new Set(styles)] };
+}
+
+/**
+ * One weapon name from a list item: the article and any aside dropped, the
+ * plural the sentence writes folded back to the singular the grant vocabulary
+ * matches on. Returns "" for a fragment that is not a name.
+ */
+function singularWeapon(raw) {
+  let s = String(raw ?? "")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\b(?:any|all|the|a|with|and|or|of|their|its)\b/gi, " ")
+    .replace(/[^A-Za-z\s-]/g, " ")
+    .replace(/\s*-\s*/g, "-")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+  if (!s || s.length < 3 || /\b(?:weapon|weapons|armor|armour|style|styles|proficiency|melee|missile)\b/.test(s)) return "";
+  // "knives" is the one plural in the printed lists that does not simply
+  // shed an s; "cestus" is the one SINGULAR that looks like it should.
+  if (/ves$/.test(s)) s = s.replace(/ves$/, "fe");
+  else if (/s$/.test(s) && !/(?:ss|us)$/.test(s)) s = s.replace(/s$/, "");
+  return s;
 }
 
 /**

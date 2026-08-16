@@ -136,6 +136,7 @@
   "ACKS-IMPORTER.ui.cookbookWorking": "Importing monsters from your book…",
   "ACKS-IMPORTER.ui.cookbookAllConfirm": "Import {n} monsters from {book} into the \"{folder}\" folder? Each one reads your connected PDF, so this takes a few minutes.",
   "ACKS-IMPORTER.ui.cookbookAllConfirmSkip": "{skipped} already in this world will be skipped.",
+  "ACKS-IMPORTER.ui.classTraining": "{class} Combat Training",
   "ACKS-IMPORTER.ui.cookbookAllPresent": "All {n} monsters from this book are already imported — nothing to do.",
   "ACKS-IMPORTER.ui.cookbookDone": "{done}/{picked} imported into the \"{folder}\" folder (details in console).",
   "ACKS-IMPORTER.ui.cookbookSkipped": "{skipped} skipped as already imported.",
