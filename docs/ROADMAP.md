@@ -34,6 +34,50 @@ What is still unpriced, and why:
 - A handful of grid rows read a cost of zero where the page shows a dash or a
   qualifier, rather than declining to answer.
 
+## What the ACKS Extras sample packs still answer that this importer does not
+
+Four packs in acks-extras were candidates for removal once the importer could
+produce their content from the reader's own book. Measured against the
+register, none of them can go yet. The gaps, per pack:
+
+- **Class Training (34 documents, 32 carrying mechanics).** Nothing here is
+  produced at all. The class import states the same training as effects on a
+  class document, which serves a character who HAS one of the printed classes
+  — and two of those do not import their training at all. A custom class, a
+  homebrew build, or a character configured without a class item has no other
+  source for a fighting style, an armour rung or a weapon selection. These
+  would have to become importable documents in their own right, from the
+  class-construction chapter rather than from any one class's spread.
+
+- **Equipment & Combat Proficiencies (42 documents, 41 carrying mechanics).**
+  Four are fully answered. Twenty-five have no importer document at all,
+  because the register holds ONE entry where the pack ships a configured
+  variant per category: Combat Trickery in seven, Fighting Style
+  Specialization in five, Martial Training in seven, Weapon Focus in six. The
+  pack's variants are the register's single entry with a choice already made.
+  Thirteen more import by name and description with no mechanics — Combat
+  Reflexes, Swashbuckling, Precise Shooting, Mounted Combat and the rest carry
+  no effect locators, so what imports cannot do anything.
+
+- **Equipment Samples (9 documents).** Six are shields — and the names match,
+  which is misleading: the pack ships them as ARMOUR, playable gear with an
+  AC and a price, while the importer produces documents of the same names as
+  VARIATIONS, the differences a reader drags onto a shield. Neither replaces
+  the other. The armour table import produces the generic shield, not the
+  variant forms. The remaining three are demonstrations rather than content: a
+  masterwork weapon and armour with the bonus already applied, and an invented
+  named weapon.
+
+- **Henchmen Proficiencies & Powers (20 documents, 19 carrying mechanics).**
+  Six are fully answered; fourteen import by name and description only —
+  Leadership, Command, Mercantile Network, Military Genius and the rest — so
+  the hiring, loyalty and morale modifiers the pack items carry are absent
+  from the imported versions.
+
+The common shape: a NAME imports, and the MECHANIC does not. Effect locators
+are the work that closes most of this, and the per-category variants need a
+way to express "this entry, with one of its choices already made".
+
 ## Money, trade goods, and rows sold as a bundle
 
 Coins and trade bars (copper, silver, gold, platinum) and furs are not in the
