@@ -679,3 +679,40 @@ with all its spaces glued out — and a clause that cannot reach its terminator
 under the cap is interleaved and dies; the class falls back to the human
 default. One class granting fewer languages beats one class granting
 Fighting Style Specialization as a tongue.
+
+### 2026-08-16 — a class is its race's whether or not its page reads
+
+The Spellsword fallback shipped in 2.9.3 was the right refusal and the wrong
+resting place: the class got the human default, which is not merely less
+information but WRONG information — an elf handed a homeland pick it does not
+get.
+
+**Ruled: the register declares the race; the book still supplies the list.**
+`class.race` on the six demi-human RR entries is a classification, the same
+kind of statement as `chassis` or `factored`, and the class's name already
+says it. The tongues are then borrowed from a sibling of the same race whose
+page parsed, so every name still came off the reader's own book — only the
+page it was read from changes.
+
+**Ruled: only a class that read its OWN runin may lend, and only a class that
+did not may borrow.** Without that pair of tests a human-default list
+propagates itself around a race and the fallback silently becomes the answer.
+The borrower also hands back the homeland slot the default had spent, keeping
+whatever its own spread granted on top.
+
+**Ruled: Nobirans are their own race and stay on the default.** Their spread
+prints no Tongues runin, so there is no sibling to borrow from and nothing is
+invented; the declaration is there for the day a page provides one.
+
+**Ruled: bonus languages are picks, never names.** Multilingual and Linguistics
+grant languages of the reader's own choosing — the book says so and leaves them
+to the campaign's regions — so they land in `count`, not `granted`. The largest
+grant found wins rather than the sum, because a spread states its allowance once
+and then talks about it.
+
+**Cost, and the shape of the whole feature:** every pattern here is `\s*`
+between tokens and explicit in its alternations, because raw body extraction
+glues inter-run spaces out. That is not defensive style, it is the measured
+behaviour of the source — `ElfTongues:`, `theCommon`, `AncientZaharan`,
+`called“Common”`. The last of those cost a release: 2.9.3 shipped with the
+common tongue silently unfound, so every human class imported speaking nothing.

@@ -3832,6 +3832,7 @@
     "icon": "icons/svg/anchor.svg",
     "class": {
       "key": "dwarvenCraftpriest",
+      "race": "dwarf",
       "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
@@ -4036,6 +4037,7 @@
     "icon": "icons/svg/shield.svg",
     "class": {
       "key": "dwarvenVaultguard",
+      "race": "dwarf",
       "chassis": {
         "saves": "",
         "attack": ""
@@ -4190,6 +4192,7 @@
     "icon": "icons/svg/eye.svg",
     "class": {
       "key": "elvenNightblade",
+      "race": "elf",
       "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
@@ -4432,6 +4435,7 @@
     "icon": "icons/svg/sword.svg",
     "class": {
       "key": "elvenSpellsword",
+      "race": "elf",
       "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
@@ -4611,6 +4615,7 @@
     "icon": "icons/svg/angel.svg",
     "class": {
       "key": "nobiranWonderworker",
+      "race": "nobiran",
       "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",
@@ -4853,6 +4858,7 @@
     "icon": "icons/svg/skull.svg",
     "class": {
       "key": "zaharanRuinguard",
+      "race": "zaharan",
       "templatesAssumeIntBonus": 1,
       "chassis": {
         "saves": "",

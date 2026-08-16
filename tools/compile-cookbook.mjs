@@ -2415,6 +2415,10 @@ async function compileClass(doc, entry, kindRow) {
     meta: {
       ...(entry.meta ?? {}),
       key: spec.key,
+      // Which race this class is an expression of, where the register says.
+      // A classification, like `chassis` beside it — the tongues themselves
+      // are still read from the reader's own page.
+      ...(spec.race ? { race: spec.race } : {}),
       chassis: spec.chassis ?? {},
       ...(spec.factored ? { factored: true } : {}),
       ...(spec.core ? { core: true } : {}),

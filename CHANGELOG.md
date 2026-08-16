@@ -2,6 +2,26 @@
 
 ## 2.9.4
 
+### Added
+- **A class whose page will not parse takes its race's list.** The register
+  declares which race a class is an expression of — an elf class is an elf
+  class whether or not its spread reads cleanly — and the tongues are
+  borrowed from a sibling of the same race whose page did parse. Every name
+  still comes off your own book, just from the page that printed it legibly.
+  The Elven Spellsword, whose page interleaves its proficiency list through
+  the Tongues sentence, now gets the full elven list instead of the human
+  default.
+- **Bonus languages a class grants are imported as picks.** A Multilingual or
+  Linguistics power grants languages of your own choosing rather than named
+  ones, so they arrive as open slots: the Venturer and Bard carry three each,
+  the By This Axe Rhetor four.
+
+### Fixed
+- **The common tongue's name is found again.** Its sentence glues shut in the
+  extracted text (`called“Common”`), so the pattern missed it and every human
+  class imported with no tongue at all rather than the one it starts with.
+## 2.9.4
+
 An entry's description is its own.
 
 ### Fixed

@@ -10962,6 +10962,7 @@
       "meta": {
         "category": "class",
         "key": "dwarvenCraftpriest",
+        "race": "dwarf",
         "chassis": {
           "saves": "",
           "attack": ""
@@ -11400,6 +11401,7 @@
       "meta": {
         "category": "class",
         "key": "dwarvenVaultguard",
+        "race": "dwarf",
         "chassis": {
           "saves": "",
           "attack": ""
@@ -11762,6 +11764,7 @@
       "meta": {
         "category": "class",
         "key": "elvenNightblade",
+        "race": "elf",
         "chassis": {
           "saves": "",
           "attack": ""
@@ -12277,6 +12280,7 @@
       "meta": {
         "category": "class",
         "key": "elvenSpellsword",
+        "race": "elf",
         "chassis": {
           "saves": "",
           "attack": ""
@@ -12682,6 +12686,7 @@
       "meta": {
         "category": "class",
         "key": "nobiranWonderworker",
+        "race": "nobiran",
         "chassis": {
           "saves": "",
           "attack": ""
@@ -13155,6 +13160,7 @@
       "meta": {
         "category": "class",
         "key": "zaharanRuinguard",
+        "race": "zaharan",
         "chassis": {
           "saves": "",
           "attack": ""

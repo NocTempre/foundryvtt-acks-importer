@@ -3418,9 +3418,19 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
      open pick beside the extracted common name. Bookless (no body), both stay
      empty — a class with no page to read grants nothing rather than a guess. */
   const tongues = body ? parseTongues(body) : null;
+  // Multilingual / Linguistics: picks the reader fills from their own campaign,
+  // which ride on top of whichever list the class starts from.
+  const bonus = body ? parseBonusLanguages(body) : 0;
   const languages = tongues
-    ? { granted: tongues.granted, count: 0 }
-    : { granted: body && commonName ? [commonName] : [], count: body ? 1 : 0 };
+    ? { granted: tongues.granted, count: bonus }
+    : { granted: body && commonName ? [commonName] : [], count: (body ? 1 : 0) + bonus };
+  // The race this class is an expression of. DECLARED in the register where
+  // the spread's own runin cannot be trusted to say it — the Spellsword's page
+  // interleaves its proficiency list through the sentence — and the class is
+  // an elf class whether or not its page parses. The declaration classifies;
+  // the LIST still comes from the reader's book, inherited from a sibling of
+  // the same race whose page reads cleanly (see `inheritRaceTongues`).
+  const raceKey = entry.meta?.race ?? (tongues ? tongues.race.toLowerCase() : null);
 
   let cleaves = {};
   if (entry.cleaves?.pattern && body) {
@@ -3512,9 +3522,10 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
     flags: {
       [MODULE_ID]: {
         cookbook: { id, cite },
-        // The runin's own subject ("Dwarf", "Elf") — the race these tongues
-        // belong to, kept so the race document can be brought in step.
-        ...(tongues ? { tongues: { race: tongues.race } } : {}),
+        // Which race these tongues belong to — declared, or the runin's own
+        // subject. Kept so a sibling can lend its list to a class whose page
+        // does not parse, and so the race document is brought in step.
+        ...(raceKey ? { tongues: { race: raceKey, parsed: !!tongues } } : {}),
         generated: true,
       },
     },
@@ -3564,7 +3575,7 @@ async function executeCommonTongue() {
     .filter(([k, v]) => /^body\d+(?:c\d+)?$/.test(k) && typeof v === "string")
     .map(([, v]) => v)
     .join(" ");
-  const m = /often\s+called\s+[“"']?\s*([A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*)?)/.exec(body);
+  const m = /often\s*called\s*[“”"']?\s*([A-Z][A-Za-z]*(?:\s*[A-Z][A-Za-z]*)?)/.exec(body);
   return m ? m[1].trim() : null;
 }
 
@@ -3627,6 +3638,47 @@ export function parseTongues(body) {
   return granted.length ? { race: runin[1].trim(), granted } : null;
 }
 
+/** Number words a printed grant uses, so a count reads as either. */
+const NUMBER_WORD = Object.freeze({
+  one: 1, two: 2, three: 3, four: 4, five: 5,
+  six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+});
+
+/**
+ * How many EXTRA languages of the reader's own choosing a spread grants,
+ * beyond any it names — a Multilingual or Linguistics class power ("gain
+ * three bonus languages", "can speak, read, and write an additional 4
+ * languages of his choice"). These are open picks, never names: the book
+ * leaves them to the campaign's own regions, so they become slots and nothing
+ * else, which is exactly what `languages.count` is.
+ *
+ * Every separator is `\s*` for the reason `parseTongues` needs it — raw body
+ * extraction glues inter-run spaces out — and the number-word alternation is
+ * explicit rather than `[a-z]+` so a fully-glued "threebonuslanguages" still
+ * resolves where a greedy class would swallow the whole token.
+ *
+ * Takes the LARGEST grant found rather than the sum: a spread states its
+ * allowance once and then talks about it ("some or all of these languages"),
+ * and summing would count the restatement.
+ *
+ * @param {string} body the spread's raw body text
+ * @returns {number} extra picks, 0 where the spread grants none
+ */
+export function parseBonusLanguages(body) {
+  const text = String(body ?? "");
+  const words = Object.keys(NUMBER_WORD).join("|");
+  const value = (tok) => NUMBER_WORD[String(tok).toLowerCase()] ?? (Number(tok) || 0);
+  let most = 0;
+  for (const re of [
+    new RegExp(`(${words}|\\d+)\\s*bonus\\s*languages`, "gi"),
+    new RegExp(`additional\\s*(${words}|\\d+)\\s*languages`, "gi"),
+  ]) {
+    for (const m of text.matchAll(re)) most = Math.max(most, value(m[1]));
+  }
+  // A spread claiming dozens is a parse that has wandered, not a class power.
+  return most <= 10 ? most : 0;
+}
+
 /**
  * Bring the race documents' tongues in step with what the class spreads read.
  *
@@ -3642,6 +3694,52 @@ export function parseTongues(body) {
  * either order: run after a class import here, and worked into the race on
  * the next class import if the race arrived later.
  */
+/**
+ * Lend a race's tongues to a class of that race whose own page did not parse.
+ *
+ * A class is an elf class whether or not its spread reads cleanly, and the
+ * Spellsword's does not: its page interleaves the proficiency list through the
+ * Tongues sentence, so the clause is dropped rather than risk granting a
+ * proficiency as a language. The register declares the race, and the list is
+ * taken from a sibling of the same race whose page DID parse — so every name
+ * still comes off the reader's own book, just from the page that printed it
+ * legibly.
+ *
+ * Only a class that ended with no named tongues is filled, and only from a
+ * sibling that has some; a class the parse already answered is left alone.
+ */
+async function inheritRaceTongues(classDocs) {
+  const docs = (classDocs ?? []).filter(Boolean);
+  const byRace = new Map();
+  for (const d of docs) {
+    const t = d.flags?.[MODULE_ID]?.tongues;
+    const granted = d.system?.languages?.granted ?? [];
+    // Only a class that read its OWN runin may lend; a human-default list
+    // would otherwise propagate itself around the race.
+    if (t?.race && t.parsed && granted.length && !byRace.has(t.race)) byRace.set(t.race, granted);
+  }
+  let lent = 0;
+  for (const d of docs) {
+    const t = d.flags?.[MODULE_ID]?.tongues;
+    // Its OWN page answered, so nothing is borrowed. A class that fell to
+    // the human default has a declared race and no parse of its own — that
+    // is the one this exists for, and its default list is not evidence.
+    if (!t?.race || t.parsed) continue;
+    const race = t.race;
+    const granted = byRace.get(race);
+    if (!granted) continue;
+    // It reached here on the HUMAN default, which spends one slot on a
+    // homeland tongue a demi-human does not get — this is a class whose own
+    // page would not parse, not a human. Give that slot back, keeping only
+    // what its spread granted on top (a Multilingual power, say).
+    const bonus = Math.max(0, (Number(d.system?.languages?.count) || 0) - 1);
+    await d.update({ "system.languages": { granted, count: bonus } });
+    lent++;
+  }
+  if (lent) console.log(`${MODULE_ID} | ${lent} class(es) took their tongues from a sibling of the same race`);
+  return lent;
+}
+
 async function syncRaceTongues(classDocs) {
   const foldKey = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
   const raceOf = (label) => {
@@ -3699,6 +3797,7 @@ export async function importClasses() {
     });
     if (doc) made.push(doc);
   }
+  await inheritRaceTongues(made);
   await syncRaceTongues(made);
   ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
   return made;
@@ -3752,6 +3851,7 @@ export async function cookbookUpdateClasses() {
     });
     updated++;
   }
+  await inheritRaceTongues(targets);
   await syncRaceTongues(targets);
   ui.notifications?.info(`${MODULE_ID} | classes updated: ${updated}.`);
   return updated;

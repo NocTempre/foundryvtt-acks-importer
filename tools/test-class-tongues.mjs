@@ -7,7 +7,7 @@
  * a repo file and ships no book values.
  */
 import assert from "node:assert/strict";
-import { parseTongues } from "../scripts/cookbook.mjs";
+import { parseTongues, parseBonusLanguages } from "../scripts/cookbook.mjs";
 
 /* --- the two-clause shape: a list, an aside, and a second list ----------- */
 let t = parseTongues(
@@ -74,4 +74,33 @@ t = parseTongues("Grib Tongues: Gribs can speak the Fooish and Fooish tongues.")
 assert.deepEqual(t.granted, ["Fooish"], "the same tongue is not granted twice");
 assert.equal(parseTongues("Grib Tongues: Gribs are talkative."), null, "a runin with no speak clause is null");
 
-console.log("test-class-tongues: OK (two-clause, one-clause, multi-word, refusals, dedupe)");
+/* --- extra picks a class or race grants on top of any named list ---------
+ * Multilingual / Linguistics grant SLOTS, not names: the book leaves them to
+ * the campaign's own regions.                                              */
+assert.equal(
+  parseBonusLanguages("Multilingual: As travellers, gribs become conversant in many tongues, thereby gaining three bonus languages."),
+  3,
+  "a word-numbered bonus grant",
+);
+assert.equal(
+  parseBonusLanguages("Linguistics: He can speak, read, and write an additional 4 languages of his choice."),
+  4,
+  "a digit-numbered additional grant",
+);
+assert.equal(parseBonusLanguages("Sylph Tongues: Sylphs speak four bonus languages."), 4);
+// Glued the way the raw body arrives.
+assert.equal(parseBonusLanguages("theygainthreebonuslanguages."), 3, "a fully glued grant still resolves");
+// Restating the allowance must not double it.
+assert.equal(
+  parseBonusLanguages("They gain three bonus languages. The grib can select some or all of these languages later."),
+  3,
+  "a restatement is not a second grant",
+);
+// No grant, and a number that is not a language allowance.
+assert.equal(parseBonusLanguages("Gribs are tough and speak plainly."), 0);
+assert.equal(parseBonusLanguages("He gains three bonus proficiencies."), 0, "bonus proficiencies are not languages");
+assert.equal(parseBonusLanguages("gaining 99 bonus languages"), 0, "an implausible count is a wandered parse");
+assert.equal(parseBonusLanguages(""), 0);
+assert.equal(parseBonusLanguages(null), 0);
+
+console.log("test-class-tongues: OK (two-clause, one-clause, multi-word, refusals, dedupe, bonus picks)");

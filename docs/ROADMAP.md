@@ -181,10 +181,12 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
 
 ## Which languages a class or a race speaks — the human homeland pick
 
-The class half is built (2.9.3): a spread's `Tongues:` runin becomes the
-class's `system.languages.granted`, a spread without one takes the human
-default (the common tongue extracted from the chargen chapter, plus one open
-homeland pick), and the race documents inherit their classes' lists. What
-remains unbuilt is the homeland pick itself: the regional languages a human
-character chooses from print as prose examples, not as a table, so the open
-slot is filled by hand from whatever languages the world holds.
+Built for classes and races (2.9.4): a spread's `Tongues:` runin becomes the
+class's granted list, a class whose page will not parse borrows from a
+sibling of its declared race, bonus grants land as picks, and the race
+documents inherit. What remains is the homeland pick itself — the regional
+languages a human character chooses from print as prose examples rather than
+a table, so that one slot is filled by hand from whatever the world holds.
+
+The Nobiran spread prints no Tongues runin at all, so a Nobiran class carries
+the human default and its race declaration waits for a page that names them.
