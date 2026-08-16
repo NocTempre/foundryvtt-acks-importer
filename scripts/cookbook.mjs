@@ -3888,6 +3888,9 @@ export function bindVehicleRow(row, entry, id) {
     name: label,
     type: VEHICLE_ACTOR_TYPE,
     ...(entry.icon ? { img: entry.icon } : {}),
+    // The stamp Remove ALL Imports finds documents by. A row claims its own id
+    // so removal is per vehicle, matching how they were created.
+    flags: { [MODULE_ID]: { cookbook: { id: `${id}.${rowClaimKey(row)}`, cite: entry.cite ?? "" } } },
     system: {
       kind: "land",
       source: { book: entry.book ?? "rr", cite: entry.cite ?? "", ref: id },
@@ -4032,6 +4035,9 @@ export function bindVariation(entry, node, id) {
     name: entry.name,
     type: VARIATION_ITEM_TYPE,
     ...(entry.icon ? { img: entry.icon } : {}),
+    // The stamp Remove ALL Imports finds documents by; without it a world could
+    // import these and never get them back out.
+    flags: { [MODULE_ID]: { cookbook: { id, cite } } },
     system: {
       key: meta.key ?? "",
       kind: meta.variationKind ?? "",
@@ -4172,6 +4178,9 @@ export function bindTrap(entry, node, id) {
     name: entry.name,
     type: TRAP_ITEM_TYPE,
     ...(entry.icon ? { img: entry.icon } : {}),
+    // The stamp Remove ALL Imports finds documents by; without it a world could
+    // import these and never get them back out.
+    flags: { [MODULE_ID]: { cookbook: { id, cite } } },
     system: {
       source: { book: entry.book ?? "jj", cite, ref: id },
       // The passage renders from the seat's own book through the same lazy tag

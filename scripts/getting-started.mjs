@@ -58,6 +58,12 @@ export function registerGettingStartedSettings() {
 const GM_STEPS = [
   ["stepAbilities", (api) => api.cookbookImportAbilities()],
   ["stepEquipment", (api) => api.importAllEquipment()],
+  // Variations go ON the gear imported above, so they follow it. Traps and
+  // vehicles depend on nothing; each needs ACKS Extras for its document type
+  // and says so itself when it is absent.
+  ["stepVariations", (api) => api.importVariations()],
+  ["stepTraps", (api) => api.importTraps()],
+  ["stepVehicles", (api) => api.importVehicles()],
   ["stepClasses", (api) => api.importClasses()],
   ["stepMonsters", (api) => api.cookbookImportMonsters()],
   ["stepCompanions", (api) => api.cookbookFillCompanions()],
