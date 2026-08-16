@@ -63,6 +63,45 @@ alias.
 
 ---
 
+## Variations: the documents an item's differences are made of
+
+`acks-extras` 4.11 models a difference between one item and its plain self as
+an `acks-extras.variation` Item, applied to a base item by the `containedIn`
+relation gear uses to sit in a backpack. The module ships the mechanism and no
+values: masterwork's surcharge, silver's multiplier, a buckler's rating and a
+gem's cut are page values, and a world imports them or has none. A Judge can
+type one in by hand, exactly as they can a trap.
+
+So this importer owes two things, and neither exists yet.
+
+**One document per published variation**, materialized into a compendium the
+same way abilities and traps are. The `system` shape it must fill:
+
+| Field | What it holds |
+|---|---|
+| `key` | namespaced, `masterwork.weaponToHit` — the PREFIX is the exclusivity group, so two variations of one family can never sit on one item. Choosing the prefix IS the modelling decision |
+| `appliesTo` | base types (`weapon`, `shield`, `gem`, …). Empty means any, which is right for most |
+| `supersedes` | printed cross-family rules ONLY, `magical.*` patterns allowed. Empty unless a page states one; magic superseding masterwork is the single known filler |
+| `deltas` | `bonus`, `damage`, `ac`, `weight6` |
+| `cost` | `baseMul` scales the item's listed price, `add` is a flat surcharge, `mul` scales the whole — the rules' own order, and silver must not multiply a masterwork surcharge |
+| `dataFields` | field specs for anything this variation records per instance (a gem's carat, a named blade's ladder) |
+| `conditional` | value claims reported to the Judge, never applied |
+
+The pages to read: the masterwork tiers and their surcharges, the silver
+quality's multiplier, the JJ shield table's forms and carry states, and gem
+quality wherever the Judge's Journal and Treasure Tome print it.
+
+**The `baseTypeFields` table**, in the ruledata document `variations`, keyed by
+base type — the field specs a CATEGORY records, which belong to no one document
+because they describe every gem rather than one.
+
+Two consumers follow once those land: loot tables and class templates granting
+variations by default, and extras retiring its three legacy flags (masterwork,
+silver, shield variant) onto documents. Until then a flag owns its family and
+extras refuses a variation that would double-count with it.
+
+---
+
 ## Starting equipment: telling gear from what it is packed with
 
 `parseEquipment` splits a template's printed Starting Equipment cell into items.
@@ -153,7 +192,8 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
   entries and one `masterwork` mention across the register, so extras'
   `equipment-samples` pack stays the only source of these and could not be
   retired with the other example packs. Closing this means reading the JJ
-  shield table and the masterwork rules into equipment entries.
+  shield table and the masterwork rules into entries — as VARIATIONS now, which
+  the next section specifies.
 - **Class training grants — what a class may WIELD and WEAR.** The whole of
   extras' `equipment-training` pack (34 items: 5 fighting styles, 5 armour
   rungs, 18 weapon selections) has no counterpart here. The register's four
