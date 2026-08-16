@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.9.4
+## 2.9.5
 
 ### Added
 - **A class whose page will not parse takes its race's list.** The register
