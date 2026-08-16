@@ -595,9 +595,14 @@ async function cookbookImportTables() {
     try {
       const lib = globalThis.acksExtras?.lib;
       const table = lib?.tables?.getDoc?.(LANGUAGES_DOC_ID)?.tables?.tree;
-      const made = table ? await applyLanguageImport(table) : { created: 0, present: 0 };
-      if (made.created) {
-        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.tables.languagesApplied`, { created: made.created }));
+      const made = table ? await applyLanguageImport(table) : { created: 0, present: 0, adopted: 0, retyped: 0 };
+      // Adoptions and retypes are work the seat should hear about too: a run
+      // that creates nothing — because every tongue was already there under a
+      // Judge's own name, or was minted as an ability by an older version —
+      // has still changed the world.
+      const landed = made.created + made.adopted + made.retyped;
+      if (landed) {
+        ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.tables.languagesApplied`, { created: landed }));
       }
       console.log(`${MODULE_ID} | language binding`, made);
     } catch (err) {

@@ -551,3 +551,39 @@ the check that would have refused the list on the day it was authored.
 **Cost.** A world whose seat never imports the Revised Rulebook has no
 language items at all. That is the right failure: the alternative was the
 module knowing the answer.
+
+### 2026-08-15 — an imported language is a `language`
+
+The taxonomy imported as `ability` items carrying `system.category:
+"language"`. The system has owned a first-class `language` item type all along:
+it declares the type, gives it an icon and a details template, files it in its
+own section of the character sheet, and reads it in the Polyglot provider it
+registers at startup. Minting abilities put all 58 tongues outside every one of
+those at once — imported languages showed up in the proficiency list, and no
+character speaking one was visible to Polyglot.
+
+**Ruled: the type is the system's.** `LANGUAGE_TYPE` replaces the ability
+constant, and the descent record moves from `system` to flags, because the
+system's language type carries a description and nothing else and a field it
+does not declare is dropped on the way in. Nothing about the IP posture
+changes: the names still come from the reader's own book and the ids are still
+derived at runtime.
+
+**Ruled: find before minting, in three places.** A tongue is looked for by its
+derived id, then by name among the world's languages, then in the system's own
+compendium. The first is the old idempotence guard; the second stops the import
+laying a twin beside a language a Judge typed themselves; the third means a
+world gets the system's furnished document — description and art — rather than
+a bare name. An adopted document is stamped with the derived id so the next run
+finds it by the fast path.
+
+**Ruled: the retype creates before it deletes.** A document's type cannot be
+updated, so an ability minted by an earlier version is replaced rather than
+changed. The replacement is committed first and the ability removed only once
+its successor exists, so a run that dies halfway leaves a duplicate — which the
+next run adopts — never a world that has lost a language.
+
+**Cost.** The name index spans every type, not just `language`, so a world
+holding the old abilities is recognised as already having the tongue. Without
+that, the release that fixes the type is also the release that doubles
+everyone's language list.

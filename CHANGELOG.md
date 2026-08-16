@@ -1,5 +1,44 @@
 # Changelog
 
+## 2.9.2
+
+The imported languages are languages.
+
+### Fixed
+- **The taxonomy imports as the system's own `language` type**, not as
+  abilities. The system declares that type, files it in its own section of the
+  character sheet, and reads it in the Polyglot support it ships — minting
+  abilities put all 58 of them outside every bit of that at once. A world that
+  already imported them is converted on the next import, and ACKS Extras
+  converts one that never imports again.
+- **The import finds a language before it builds one.** A tongue the world
+  already holds — under its derived id, under a name you typed, or as the
+  system compendium's own document — is adopted and stamped rather than laid
+  down a second time beside itself. Adopting the system's copy keeps whatever
+  description and art it came with.
+- The toast counts what was adopted and retyped as well as what was created,
+  so a run that changed your world no longer reports doing nothing.
+- **The macros pack joins the family folder.** Its folder is declared under the
+  same name ACKS Extras uses, so both modules' compendiums land in one
+  "ACKS II" folder instead of one folder each.
+
+### Changed
+- **The coverage section is a measurement, not a claim.** Everything the
+  cookbook can materialize was imported against six books — 1,307 documents —
+  and every system and module pack compared document by document. Languages is
+  the only pack that came back complete, which is why ACKS Extras now hides
+  it. The rest are recorded with their real shortfalls: 43 named equipment
+  entries, the twelve thief-skill powers the register models as class ladders,
+  the class training grants with no counterpart here, and three henchmen
+  mechanics the abilities model cannot yet state. The monster legs are marked
+  unverified rather than counted.
+- **The IP scanner tells a locator from a quotation.** A `cite` value that is
+  nothing but a citation says where to look in your own copy and reproduces
+  nothing; a citation with prose attached is a pointer to the sentence it came
+  from. Keying on that shape took a first report of 1,262 leaks down to the
+  nine that were real — all `note` fields, all now carrying their mechanical
+  fact without the page reference beside it.
+
 ## 2.9.1
 
 The 2.9.0 language import works now.
