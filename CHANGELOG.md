@@ -2,6 +2,8 @@
 
 ## 2.9.5
 
+A class knows what it speaks even when its own page will not say.
+
 ### Added
 - **A class whose page will not parse takes its race's list.** The register
   declares which race a class is an expression of — an elf class is an elf
