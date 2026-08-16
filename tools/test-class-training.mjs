@@ -120,6 +120,54 @@ t = parseCombatTraining(
 );
 check("stops at the next run-in", t.weapons, ["club"]);
 
+/* --- what extraction actually hands the parser ---------------------------
+   Joining lines by concatenation drops the space the page shows, anywhere:
+   after the run-in, inside a phrase, before the conjunction, after the full
+   stop, and in front of the next run-in. A whole run can arrive with no
+   spaces at all. Every fixture below is the shape above with its spaces
+   removed at those seams — the parse must be unchanged by that. */
+t = parseCombatTraining(
+  "Combat Proficiencies:Snerks have weapon proficiency withall missile weapons and with all tiny, " +
+    "small, and medium meleeweapons.Theyhavearmorproficiencywithlightandverylight armor. They have " +
+    "fighting styleproficiency with the dualweapon and two-handed weapon styles, but notwith the " +
+    "weaponand shield style.Combat Progression:Snerks advance with plate and all weapons.",
+  "Combat Proficiencies:",
+);
+check("joined: weapons", t.weapons, ["missile:all", "melee:tiny", "melee:small", "melee:medium"]);
+// The whole armour clause arrives as one word; "verylight" must not be read
+// as the rung it contains.
+check("joined: armour", t.armour, "light");
+// "but notwith" still closes the positive clause; the next run-in still stops
+// the paragraph, so the trailing "all weapons" is not read as a grant.
+check("joined: styles", t.styles, ["dual", "twohanded"]);
+
+// A table footnote can land welded into the middle of the sentence.
+t = parseCombatTraining(
+  "Combat Proficiencies:Grubbles have weapon proficiency with*no adjustment fromall weapons, armor " +
+    "proficiency with all armor, and fighting styleproficiency with all three optional styles " +
+    "(i.e. the dual weapon, two-handed weapon, andweapon and shield styles).Combat Progression:x",
+  "Combat Proficiencies:",
+);
+check("spliced footnote: weapons", t.weapons, ["all"]);
+check("spliced footnote: styles", t.styles, ["dual", "twohanded", "weaponshield"]);
+
+// The conjunction welded to the name it precedes, inside an enumeration.
+t = parseCombatTraining(
+  "Combat Proficiencies:Florns have weapon proficiency with all axes (including battle axes, great " +
+    "axes, andhand axes). They have armor proficiency with all armor. They have fighting style " +
+    "proficiency with the dual weapon style.",
+  "Combat Proficiencies:",
+);
+check("welded conjunction", t.weapons, ["battle axe", "great axe", "hand axe"]);
+
+// The run-in label itself can arrive with its own space missing.
+t = parseCombatTraining(
+  "CombatProficiencies:Nubs have weapon proficiency with clubs. They have armor proficiency with " +
+    "all armor. They have fighting style proficiency with the dual weapon style.",
+  "Combat Proficiencies:",
+);
+check("joined run-in label", t.weapons, ["club"]);
+
 /* --- refusals ------------------------------------------------------------ */
 assert.equal(parseCombatTraining("No such paragraph here.", RUNIN), null);
 n++;
@@ -131,6 +179,19 @@ n++;
 // paragraph to read, and says so rather than guessing from the lead-in.
 assert.equal(
   parseCombatTraining("Combat Proficiencies: Yaks are limited to a range traditional to their people, as shown below.", RUNIN),
+  null,
+);
+n++;
+// A spread whose level table sits inside the text block extracts with the
+// table folded through the sentence. The style clause here survives intact
+// and would be granted alone; the whole paragraph is refused instead.
+assert.equal(
+  parseCombatTraining(
+    "Combat Proficiencies:Yaks Experience title Level Hit dice have weapon proficiency with battle" +
+      "level axes, great axes, and two-0 Insignificant 1 1d6 ------handed swords. They have " +
+      "armorproficiencywithallarmor. They have fighting style proficiency with the weapon and shield style.",
+    RUNIN,
+  ),
   null,
 );
 n++;

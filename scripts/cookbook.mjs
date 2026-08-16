@@ -3670,20 +3670,36 @@ export function parseCombatTraining(body, runin) {
   const text = String(body ?? "").replace(/\s+/g, " ");
   const label = String(runin ?? "").trim();
   if (!text || !label) return null;
-  const at = text.toLowerCase().indexOf(label.toLowerCase());
+  // Extraction joins lines by concatenation, so a space the page shows is
+  // routinely absent from the text — "fighting styleproficiency",
+  // "armorproficiencywithlightandverylight". EVERY seam below is therefore
+  // optional rather than required; a parser written against the spacing the
+  // page displays reads almost nothing off the file it is actually given.
+  const loose = (s) => s.replace(/ /g, "\\s*");
+  const at = text.search(new RegExp(loose(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), "i"));
   if (at < 0) return null;
-  // To the next run-in label (a short capitalised phrase closing on a colon)
-  // or, failing one, a span comfortably longer than the longest printed
-  // paragraph — the trainings are always stated before the next label.
-  const rest = text.slice(at + label.length);
-  const para = rest.slice(0, /\s[A-Z][A-Za-z]*(?:\s[A-Za-z]+){0,3}:/.exec(rest)?.index ?? 900);
+  const after = text.slice(at).replace(new RegExp(`^${loose(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))}`, "i"), "");
+  // To the next run-in label — a capitalised phrase closing on a colon, which
+  // the same joins can leave welded to the previous sentence ("…styles).Combat
+  // Progression:"), so no separating space is required of it either.
+  const para = after.slice(0, /(?:^|[.)\s])[A-Z][a-z]+(?:\s*[A-Za-z]+){0,3}:/.exec(after)?.index ?? 900);
+
+  // A spread whose level table sits inside the text block extracts with the
+  // table's cells folded through the sentence, mid-word: a weapon list comes
+  // back holding "battlelevelaxes" and a row of hit dice. None of these
+  // paragraphs prints a number, so a digit means the prose is interleaved and
+  // no part of it can be trusted — including the clauses that happen to look
+  // intact, which is how such a class ends up granted the one fighting style
+  // the table did not interrupt. Reading it needs the paragraph located by
+  // its column, not the page's reading order.
+  if (/\d/.test(para)) return null;
 
   // Segment by the three phrases themselves: the shortest spreads state all
   // three in ONE sentence, so sentence boundaries do not divide them.
   const marks = [
-    ["weapons", /weapon\s+proficiency/i],
-    ["armour", /(?:armor|armour)\s+proficiency|proficiency\s+with\s+(?:armor|armour)/i],
-    ["styles", /fighting\s+style\s+proficiency/i],
+    ["weapons", /weapon\s*proficiency/i],
+    ["armour", /(?:armor|armour)\s*proficiency|proficiency\s*with\s*(?:armor|armour)/i],
+    ["styles", /fighting\s*style\s*proficiency/i],
   ]
     .map(([key, re]) => ({ key, at: re.exec(para)?.index ?? -1 }))
     .filter((m) => m.at >= 0)
@@ -3701,7 +3717,8 @@ export function parseCombatTraining(body, runin) {
     // A sentence ends at a full stop that STARTS another one. The styles are
     // spelled out in an "(i.e. …)" aside on the shortest spreads, and treating
     // its stop as the end of the sentence cuts the list off before it begins.
-    seg[m.key] = slice.slice(0, /\.\s+[A-Z]|\.$/.exec(slice)?.index ?? slice.length);
+    // The space after the stop is optional for the same reason as every other.
+    seg[m.key] = slice.slice(0, /\.\s*[A-Z]|\.$/.exec(slice)?.index ?? slice.length);
   });
 
   /* --- weapons ---------------------------------------------------------- */
@@ -3709,7 +3726,10 @@ export function parseCombatTraining(body, runin) {
   const wSeg = seg.weapons ?? "";
   if (/\bexcept\b/i.test(wSeg)) {
     // Stated as a subtraction — see the header. Nothing is granted.
-  } else if (/\ball\s+weapons\b/i.test(wSeg)) {
+  } else if (/all\s*weapons/i.test(wSeg)) {
+    // No word boundary in front: a table footnote can land welded to the
+    // phrase ("proficiency with*no adjustment fromall weapons") and the
+    // sentence still says what it says.
     weapons.push("all");
   } else {
     // The group phrasings are consumed as they are recognised, so whatever
@@ -3722,14 +3742,14 @@ export function parseCombatTraining(body, runin) {
       take(m);
       rest = rest.slice(0, m.index) + " " + rest.slice(m.index + m[0].length);
     };
-    eat(/all\s+missile\s+weapons/i, () => weapons.push("missile:all"));
+    eat(/all\s*missile\s*weapons/i, () => weapons.push("missile:all"));
     eat(/((?:tiny|small|medium|large)(?:\s*,?\s*(?:and|or)?\s*(?:tiny|small|medium|large))*)\s*melee\s*weapons/i, (m) => {
       for (const s of m[1].match(/tiny|small|medium|large/gi) ?? []) weapons.push(`melee:${s.toLowerCase()}`);
     });
     // A named group is trusted only through its own parenthesis; where there
     // is no parenthesis the sentence is already a plain list of weapons.
     const parens = [...rest.matchAll(/\(\s*including([^)]*)\)/gi)].map((m) => m[1]);
-    const lists = parens.length ? parens : [rest.replace(/^[^]*?proficiency\s+with\s+/i, "")];
+    const lists = parens.length ? parens : [rest.replace(/^[^]*?proficiency\s*with\s*/i, "")];
     for (const list of lists) {
       for (const raw of list.split(/,| and | or /i)) {
         const name = singularWeapon(raw);
@@ -3752,14 +3772,14 @@ export function parseCombatTraining(body, runin) {
     [/light/i, aBare, "light"],
     [/very\s*light/i, aSeg, "veryLight"],
   ];
-  if (/\bno\s+(?:armor|armour)\s+proficiency|\bno\s+proficiency\s+with\s+(?:armor|armour)/i.test(para)) armour = "unarmored";
-  else if (/all\s+(?:armor|armour)/i.test(aSeg)) armour = "heavy";
+  if (/\bno\s*(?:armor|armour)\s*proficiency|\bno\s*proficiency\s*with\s*(?:armor|armour)/i.test(para)) armour = "unarmored";
+  else if (/all\s*(?:armor|armour)/i.test(aSeg)) armour = "heavy";
   else armour = RUNGS.find(([re, src]) => re.test(src))?.[2] ?? "";
 
   /* --- styles ----------------------------------------------------------- */
-  const sSeg = (seg.styles ?? "").split(/\bbut\s+not\b/i)[0];
+  const sSeg = (seg.styles ?? "").split(/\bbut\s*not/i)[0];
   const styles = [];
-  if (/all\s+fighting\s+styles/i.test(sSeg)) styles.push("dual", "twohanded", "weaponshield");
+  if (/all\s*fighting\s*styles/i.test(sSeg)) styles.push("dual", "twohanded", "weaponshield");
   else {
     if (/dual\s*weapon/i.test(sSeg)) styles.push("dual");
     if (/two\s*-?\s*handed\s*weapon/i.test(sSeg)) styles.push("twohanded");
@@ -3784,6 +3804,9 @@ function singularWeapon(raw) {
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
+  // The conjunction can arrive welded to the name it precedes ("andspears"),
+  // in which case the word-boundary strip above cannot see it.
+  s = s.replace(/^(?:and|or)(?=[a-z]{3})/, "").trim();
   if (!s || s.length < 3 || /\b(?:weapon|weapons|armor|armour|style|styles|proficiency|melee|missile)\b/.test(s)) return "";
   // "knives" is the one plural in the printed lists that does not simply
   // shed an s; "cestus" is the one SINGULAR that looks like it should.
