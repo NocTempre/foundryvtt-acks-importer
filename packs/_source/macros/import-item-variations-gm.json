@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacVariat00",
+  "_key": "!macros!ackscMacVariat00",
+  "name": "Import Item Variations (GM)",
+  "type": "script",
+  "img": "icons/svg/upgrade.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importVariations) return ui.notifications.warn(\"acks-importer | variation import needs a newer module build.\");\napi.importVariations();",
+  "folder": "ackscFldImport00",
+  "sort": 225,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}

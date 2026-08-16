@@ -3998,6 +3998,7 @@ export function bindVariation(entry, node, id) {
   const cite = entry.cite ?? "";
   const deltas = {};
   const cost = {};
+  const data = {};
   for (const found of node?.fields?.variation ?? []) {
     const amount = Number(found?.amount);
     if (!Number.isFinite(amount)) continue;
@@ -4016,6 +4017,14 @@ export function bindVariation(entry, node, id) {
         cost[found.field.split(".")[1]] = amount;
         break;
       default:
+        // `data.<key>` is the open half of the schema: what a variation records
+        // about ITSELF, against the specs in `dataFields`. A shield's armour
+        // class and encumbrance land here rather than in `deltas` because they
+        // are not one number added to the item — they differ by how the shield
+        // is being carried, and the consumer that will read them keys on the
+        // enum rather than summing. Keyed so it can be read later; prose could
+        // not be.
+        if (found.field?.startsWith("data.")) data[found.field.slice(5)] = amount;
         break; // a field this version does not know is left for a later one
     }
   }
@@ -4030,6 +4039,13 @@ export function bindVariation(entry, node, id) {
       supersedes: meta.supersedes ?? [],
       ...(Object.keys(deltas).length ? { deltas } : {}),
       ...(Object.keys(cost).length ? { cost } : {}),
+      // What this variation records about itself, and the specs to read it by.
+      // `dataFields` is the SHAPE and ships from the register; `data` is the
+      // page's numbers and does not.
+      ...(Object.keys(data).length ? { data } : {}),
+      ...(meta.dataFields?.length ? { dataFields: meta.dataFields } : {}),
+      ...(Object.keys(data).length ? { data } : {}),
+      ...(meta.dataFields ? { dataFields: meta.dataFields } : {}),
       source: { book: entry.book ?? "rr", cite, ref: id },
       description: `<p>@PdfText[${id}]{${cite}}</p>`,
     },

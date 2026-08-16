@@ -1,0 +1,243 @@
+[
+  {
+    "id": "def.variation.shieldAuxiliary",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Auxiliary Shield",
+    "anchor": {
+      "display": "Auxiliary Shield"
+    },
+    "pages": [
+      409
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.auxiliary",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [
+        {
+          "key": "encStone",
+          "type": "number",
+          "label": "Encumbrance (stone)"
+        }
+      ],
+      "grantsAC": [
+        "hand",
+        "backVsRear"
+      ],
+      "mounted": "riderOrMount",
+      "deniedWhen": [
+        "surprised",
+        "retreating",
+        "attackedFromBehind"
+      ],
+      "mountedDeniedWhen": [
+        "vulnerable"
+      ]
+    },
+    "icon": "icons/svg/shield.svg",
+    "variation": [
+      {
+        "field": "data.encStone",
+        "from": {
+          "into": "amount",
+          "pattern": "However\\s*it\\s*is\\s*carried[\\s\\S]{0,60}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
+        }
+      }
+    ],
+    "note": "Every shield AC bonus here is CONDITIONAL - on carry state (hand / front / back), on being mounted, and on circumstance (vulnerable, surprised, attacked from behind). The buckler depends on a proficiency instead. So none records a bare equippedAC: one number cannot say what these rules say. Only encumbrance is captured, where stated without condition."
+  },
+  {
+    "id": "def.variation.shieldBuckler",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Buckler",
+    "anchor": {
+      "display": "Buckler"
+    },
+    "pages": [
+      409
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.buckler",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [
+        {
+          "key": "encItems",
+          "type": "number",
+          "label": "Encumbrance (items)"
+        }
+      ],
+      "grantsAC": [
+        "hand"
+      ],
+      "requiresStyleSpecialization": true,
+      "deniedWhen": [
+        "vulnerable"
+      ]
+    },
+    "icon": "icons/svg/shield.svg",
+    "variation": [
+      {
+        "field": "data.encItems",
+        "from": {
+          "into": "amount",
+          "pattern": "It\\s*has\\s*an\\s*encumbrance\\s*of\\s*(\\d+)\\s*item"
+        }
+      }
+    ]
+  },
+  {
+    "id": "def.variation.shieldCrescent",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Crescent Shield",
+    "anchor": {
+      "display": "Crescent Shield"
+    },
+    "pages": [
+      409
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.crescent",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [],
+      "grantsAC": [
+        "hand",
+        "front",
+        "backVsRear"
+      ],
+      "deniedWhen": [
+        "vulnerable"
+      ]
+    },
+    "icon": "icons/svg/shield.svg",
+    "note": "Encumbrance is 1 stone, or 2 strapped on the front - conditional, so not captured as a bare number."
+  },
+  {
+    "id": "def.variation.shieldHeater",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Heater Shield",
+    "anchor": {
+      "display": "Heater Shield"
+    },
+    "pages": [
+      409
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.heater",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [
+        {
+          "key": "encStone",
+          "type": "number",
+          "label": "Encumbrance (stone)"
+        }
+      ],
+      "grantsAC": [
+        "hand",
+        "backVsRear"
+      ],
+      "mounted": "riderOrMount",
+      "deniedWhen": [
+        "vulnerable"
+      ],
+      "mountedDeniedWhen": [
+        "surprised",
+        "retreating",
+        "attackedFromBehind"
+      ]
+    },
+    "icon": "icons/svg/shield.svg",
+    "variation": [
+      {
+        "field": "data.encStone",
+        "from": {
+          "into": "amount",
+          "pattern": "However\\s*it\\s*is\\s*carried[\\s\\S]{0,60}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
+        }
+      }
+    ]
+  },
+  {
+    "id": "def.variation.shieldKite",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Kite Shield",
+    "anchor": {
+      "display": "Kite Shield"
+    },
+    "pages": [
+      410
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.kite",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [],
+      "grantsAC": [
+        "hand"
+      ],
+      "mounted": "riderAndMount",
+      "noBack": true,
+      "deniedWhen": [
+        "vulnerable"
+      ]
+    },
+    "icon": "icons/svg/shield.svg",
+    "note": "Dismounted it encumbers 2 stone; mounted, rider and mount take 1 each. Conditional, so not captured."
+  },
+  {
+    "id": "def.variation.shieldPhalanx",
+    "kind": "kind.variation",
+    "book": "jj",
+    "name": "Phalanx Shield",
+    "anchor": {
+      "display": "Phalanx Shield"
+    },
+    "pages": [
+      410
+    ],
+    "meta": {
+      "category": "variation",
+      "key": "shield.phalanx",
+      "variationKind": "form",
+      "appliesTo": [
+        "shield"
+      ],
+      "supersedes": [],
+      "dataFields": [],
+      "grantsAC": [
+        "hand"
+      ],
+      "noBack": true,
+      "noMount": true
+    },
+    "icon": "icons/svg/shield.svg",
+    "note": "Its one encumbrance clause sits inside the dismounted sentence and it cannot be used mounted at all, so the figure is not unconditional the way the auxiliary shield stated one is."
+  }
+]

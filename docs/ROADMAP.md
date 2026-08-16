@@ -173,14 +173,29 @@ passage, which is why they share an anchor.
   throws, structural hit points and speed — none of which is a `deltas` field.
   They want either new delta fields in extras or `conditional` entries (the
   schema's own "value claims reported to the Judge, never applied").
-- **The JJ shield FORMS** — Auxiliary, Buckler, Crescent, Heater, Kite and
-  Phalanx, set as display headings in the Judge's Journal custom-rules chapter,
-  so they anchor by `display` rather than `runin`. Note before starting that
-  `deltas` cannot express them: every form is +1 AC equipped, and what actually
-  separates them is the Shield Usage table's per-CARRY-STATE effects (mounted,
-  strapped front, strapped rear, and whether Defend is allowed), plus differing
-  encumbrance. They need the carry-state model, not another delta. The
-  masterwork variations already cover shields for lightening and protection.
+- **The JJ shield FORMS are IMPORTED (2026-08-16), ahead of their consumer.**
+  All six — Auxiliary, Buckler, Crescent, Heater, Kite, Phalanx — arrive as
+  `form` variations from JJ pp.409–410.
+
+  What they carry is the point, and it is not a bonus. A shield form does not
+  state a MAGNITUDE: the book repeats "+1" because a standard shield is +1, and
+  a magic shield of the same form would carry the same conditions on its own
+  value. What the form states is WHERE the shield's AC applies and WHEN it does
+  not, so each entry records that as enum keys — `grantsAC` (`hand`, `front`,
+  `backVsRear`), `mounted` (`riderOrMount` / `riderAndMount`), `deniedWhen`
+  (`vulnerable`, `surprised`, `retreating`, `attackedFromBehind`), plus
+  `noBack`, `noMount` and the buckler's `requiresStyleSpecialization`. Read per
+  entry off the page, never patterned across them: an early pass applied one AC
+  regex to all six and produced a bare `equippedAC: 1` on every form, which is
+  the distinction these rules exist to make, deleted.
+
+  Encumbrance is located only where the book states it without a condition —
+  the auxiliary and heater ("however it is carried") and the buckler's item.
+  The crescent's 1-or-2 and the kite's dismounted-2/mounted-1-each are
+  conditional and are left for the consumer.
+
+  **Owed on the extras side:** a carry-state model to read these, after which
+  the frozen `SHIELD_VARIANTS` table in `scripts/equipment/config.mjs` retires.
 - **Silver, and the other material qualities.** No printed heading was found for
   a silver multiplier; the masterwork passage only mentions silver in passing as
   a material that lets a weapon hit magical monsters. Locate the rule before

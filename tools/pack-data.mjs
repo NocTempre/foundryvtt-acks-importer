@@ -137,6 +137,39 @@ api.importClasses();`,
       215,
       FOLDERS.import,
     ),
+    // The three imports added in 2.9.6-2.9.8. Each needs ACKS Extras for the
+    // document type it materializes into, so each says which one is missing
+    // rather than failing at Item.create with a validation error.
+    macro(
+      "ackscMacTraps000",
+      "Import Traps (GM)",
+      "icons/svg/trap.svg",
+      GUARD +
+        `if (!api.importTraps) return ui.notifications.warn("acks-importer | trap import needs a newer module build.");
+api.importTraps();`,
+      220,
+      FOLDERS.import,
+    ),
+    macro(
+      "ackscMacVariat00",
+      "Import Item Variations (GM)",
+      "icons/svg/upgrade.svg",
+      GUARD +
+        `if (!api.importVariations) return ui.notifications.warn("acks-importer | variation import needs a newer module build.");
+api.importVariations();`,
+      225,
+      FOLDERS.import,
+    ),
+    macro(
+      "ackscMacVehicl00",
+      "Import Vehicles (GM)",
+      "icons/svg/stone-path.svg",
+      GUARD +
+        `if (!api.importVehicles) return ui.notifications.warn("acks-importer | vehicle import needs a newer module build.");
+api.importVehicles();`,
+      230,
+      FOLDERS.import,
+    ),
     macro(
       "ackscMacAdvJourn",
       "Import Location Journals (GM)",

@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacTraps000",
+  "_key": "!macros!ackscMacTraps000",
+  "name": "Import Traps (GM)",
+  "type": "script",
+  "img": "icons/svg/trap.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importTraps) return ui.notifications.warn(\"acks-importer | trap import needs a newer module build.\");\napi.importTraps();",
+  "folder": "ackscFldImport00",
+  "sort": 220,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}
