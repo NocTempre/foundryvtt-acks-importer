@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.9.10
+
+What the newest importers create can be removed again.
+
+### Fixed
+- **Traps, variations and vehicles can be removed again.** Nothing the three
+  newest importers created carried the mark that says this module made it, so
+  "Remove ALL imported content" walked straight past all of them and reported
+  the world already clean. They are marked now, and removal takes them along
+  with everything else. Documents imported by an earlier version carry no mark
+  and cannot be reached this way — delete those yourself, because a fresh
+  import makes a second copy beside them rather than adopting the first.
+- **Removing imports now clears the folders it made, too.** The folders every
+  importer creates to sort its work — "ACKS Cookbook" and the book and category
+  folders under it — were never marked as this module's, so removal counted
+  them and then left every one of them standing. Folders made from here on are
+  marked and go with the documents they held. A folder you already had under
+  one of those names is adopted rather than claimed, and stays where it is.
+
+### Added
+- **Traps, variations and vehicles arrive with Import Everything.** All three
+  could previously be reached only by hunting for a macro that did not exist.
+  Each has one now in the import folder, and all three sit in the one-click
+  chain in dependency order — variations after the gear they attach to.
+- **The shield forms import.** Six of them — auxiliary, buckler, crescent,
+  heater, kite and phalanx — arrive as differences you drag onto a shield.
+  Each records where its protection reaches and what takes it away, which is
+  the whole difference between them; how much protection is the shield's own.
+  They are a record for now: nothing applies these conditions for you yet.
+- **Silver imports.** A weapon commissioned in silver arrives as a difference
+  you drag on, priced from your own page. It multiplies the weapon's listed
+  price, so a masterwork surcharge added on top is not multiplied along with it.
+
 ## 2.9.9
 
 Every vehicle on the page arrives, not most of them.

@@ -844,7 +844,15 @@ async function ensureFolderPath(type, names) {
         (collection ?? game.folders).find(
           (fo) => fo.type === type && fo.name === name && (fo.folder?.id ?? null) === parentId,
         ) ??
-        (await Folder.create({ name, type, folder: parentId, sorting: "a" }, pack ? { pack } : {})))();
+        // A folder we make is marked like every document we make: removal
+        // enumerates flagged folders, so an unmarked one is a folder this
+        // module creates and can never take away again. An adopted folder —
+        // one the reader already had under this name — is deliberately left
+        // unmarked, so removal leaves it exactly where it was found.
+        (await Folder.create(
+          { name, type, folder: parentId, sorting: "a", flags: { [MODULE_ID]: { cookbook: { id: `folder.${type}.${name}` } } } },
+          pack ? { pack } : {},
+        )))();
       folderCache.set(key, pending);
     }
     parent = await pending;
