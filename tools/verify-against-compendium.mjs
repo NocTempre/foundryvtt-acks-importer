@@ -45,12 +45,35 @@ const SYSTEM_PACKS = process.env.ACKS_SYSTEM_PACKS ?? "C:/Proj/foundryvtt-acks-c
 /**
  * Which compendium answers for which register kinds. The pack is one list per
  * content type; the register splits proficiencies into two kinds.
+ *
+ * `kind.skill` is in BOTH pairings because the packs disagree with the register
+ * about what a thief skill IS, not about whether it exists. The pack ships
+ * Lockpicking as a proficiency and Backstab / Climb Walls / Hide in Shadows as
+ * class abilities; the register carries all of them as skills, whose ladders
+ * the class entries then reference. Omitting the kind reported thirteen entries
+ * the register holds as absent content, which is the reverse of the truth.
+ *
+ * `refs` names descriptor registries whose TOKENS answer for a pack document
+ * without being documents themselves — the monster-ability pack ships Animal
+ * and Undead as items where the register carries them as creature types on the
+ * monster. That is a modelling difference and it is reported as one: counting
+ * it as covered would hide it, and counting it as missing calls content absent
+ * that a world importing this module does receive.
  */
 const PAIRINGS = [
-  { packs: ["acks-proficiencies"], kinds: ["kind.proficiency", "kind.combatProficiency"], label: "Proficiencies" },
+  {
+    packs: ["acks-proficiencies"],
+    kinds: ["kind.proficiency", "kind.combatProficiency", "kind.skill"],
+    label: "Proficiencies",
+  },
   // Both packs answer for `kind.power`, so they are ONE pairing: split apart,
   // each would report the other's entries as missing from the register.
-  { packs: ["acks-class-abilities", "acks-monster-abilities"], kinds: ["kind.power"], label: "Powers & monster abilities" },
+  {
+    packs: ["acks-class-abilities", "acks-monster-abilities"],
+    kinds: ["kind.power", "kind.skill"],
+    refs: ["creatureType", "subtype"],
+    label: "Powers & monster abilities",
+  },
 ];
 
 /**
@@ -100,15 +123,48 @@ function packAbilities(packDir) {
   return out;
 }
 
-/** Every register entry of the given kinds. */
+/**
+ * Every surface form the named descriptor registries recognise.
+ *
+ * These live under `register/_refs/`, which `registerEntries` cannot reach —
+ * it walks the book directories and skips everything beginning with `_`. A
+ * token is a name the import understands, not a document it produces, so the
+ * caller keeps them in their own bucket rather than folding them into coverage.
+ */
+function refTokens(registries = []) {
+  const out = new Map();
+  for (const r of registries) {
+    const j = readJson(path.join(REGISTER, "_refs", `${r}.json`), null);
+    for (const name of Object.keys(j?.tokens ?? {})) out.set(slug(name), { name, registry: r });
+  }
+  return out;
+}
+
+/**
+ * Every register entry name, whatever its kind, mapped to the kind that holds
+ * it. The packs and the register disagree about what some content IS — the
+ * pack ships Magical Music and Tracking as class abilities where the register
+ * files them as proficiencies — and a pairing that reads only its own kinds
+ * calls those absent. They are answered, under another kind, and reporting
+ * them as gaps sends a chef to author an entry that already exists.
+ */
+function allRegisterNames() {
+  const out = new Map();
+  for (const e of registerEntries(null)) if (!out.has(slug(e.name))) out.set(slug(e.name), e.kind);
+  return out;
+}
+
+/** Every register entry of the given kinds, or of every kind when null. */
 function registerEntries(kinds) {
-  const want = new Set(kinds);
+  const want = kinds ? new Set(kinds) : null;
   const out = [];
   for (const d of fs.readdirSync(REGISTER)) {
     const dir = path.join(REGISTER, d);
     if (d.startsWith("_") || !fs.statSync(dir).isDirectory()) continue;
     for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".json"))) {
-      for (const e of readJson(path.join(dir, f), [])) if (want.has(e.kind)) out.push(e);
+      for (const e of readJson(path.join(dir, f), [])) {
+        if (e?.name && (!want || want.has(e.kind))) out.push(e);
+      }
     }
   }
   return out;
@@ -123,14 +179,18 @@ function main() {
 
   // { "black lore": "Black Lore of Zahar", … } — chef-authored, never guessed.
   const aliases = readJson(ALIAS_FILE, {});
-  const aliasOf = (name) => aliases[slug(name)] ?? null;
+  // Tried on the folded name too, so one "craft" row settles every discipline
+  // the pack splits out rather than needing a line per Bowyer and Gemsmith.
+  const aliasOf = (name) => aliases[slug(name)] ?? aliases[slug(foldDiscipline(name))] ?? null;
 
   const report = [];
+  const anyKind = allRegisterNames();
 
-  for (const { packs, kinds, label } of PAIRINGS) {
+  for (const { packs, kinds, refs, label } of PAIRINGS) {
     const pack = packs.join(" + ");
     const docs = packs.flatMap((p) => packAbilities(path.join(SYSTEM_PACKS, p)));
     if (!docs.length) continue;
+    const tokens = refTokens(refs);
 
     const reg = new Map();
     for (const e of registerEntries(kinds)) {
@@ -156,13 +216,27 @@ function main() {
     const flagIsMeaningful = packs.includes("acks-proficiencies") && ptypes.size > 1;
 
     const missing = [];
+    const descriptor = [];
+    const crossKind = [];
     const flagMismatch = [];
     const seen = new Set();
 
     for (const doc of docs) {
       const hit = resolve(doc.name);
       if (!hit) {
-        missing.push(doc.name);
+        // A descriptor answers for the name without shipping a document, so it
+        // is neither a gap nor coverage — it is the difference, named.
+        const token = tokens.get(slug(doc.name));
+        if (token) {
+          descriptor.push({ name: doc.name, registry: token.registry });
+          continue;
+        }
+        // Answered, but filed under a kind this pairing does not read. Also a
+        // difference rather than a gap: the content is there to import.
+        const alias = aliasOf(doc.name);
+        const elsewhere = anyKind.get(slug(doc.name)) ?? (alias ? anyKind.get(slug(alias)) : null);
+        if (elsewhere) crossKind.push({ name: doc.name, kind: elsewhere });
+        else missing.push(doc.name);
         continue;
       }
       seen.add(slug(hit.name));
@@ -180,7 +254,7 @@ function main() {
     for (const e of registerEntries(kinds)) regNames.set(slug(e.name), e.name);
     const unmatched = [...regNames.entries()].filter(([k]) => !seen.has(k)).map(([, n]) => n);
 
-    report.push({ pack, label, packCount: docs.length, registerCount: regNames.size, missing, unmatched, flagMismatch, flagIsMeaningful });
+    report.push({ pack, label, packCount: docs.length, registerCount: regNames.size, missing, descriptor, crossKind, unmatched, flagMismatch, flagIsMeaningful });
   }
 
   if (JSON_OUT) {
@@ -196,6 +270,22 @@ function main() {
       findings += r.missing.length;
       console.log(`\n  In the compendium, NOT in the register (${r.missing.length}) — a gap, or a rename to alias:`);
       for (const n of r.missing) console.log(`    - ${n}`);
+    }
+    if (r.descriptor.length) {
+      // Not a finding: nothing is missing and nothing needs authoring. It is
+      // printed so the difference stays visible instead of reading as coverage.
+      console.log(
+        `\n  Answered by a DESCRIPTOR, not a document (${r.descriptor.length}) — the pack ships an` +
+          `\n  item where the register carries the name as a type on the creature:`,
+      );
+      for (const d of r.descriptor) console.log(`    - ${d.name}  (${d.registry})`);
+    }
+    if (r.crossKind.length) {
+      console.log(
+        `\n  Answered under ANOTHER KIND (${r.crossKind.length}) — present in the register, filed` +
+          `\n  where this pairing does not look. Content, not a gap:`,
+      );
+      for (const c of r.crossKind) console.log(`    - ${c.name}  (${c.kind})`);
     }
     if (r.unmatched.length) {
       const itemize = r.registerCount <= r.packCount * ITEMIZE_RATIO;
@@ -225,7 +315,9 @@ function main() {
           "\n  anyone set. The register is the only side asserting anything here.",
       );
     }
-    if (!r.missing.length && !r.unmatched.length && !r.flagMismatch.length) console.log("  agree on every matched entry.");
+    if (!r.missing.length && !r.descriptor.length && !r.crossKind.length && !r.unmatched.length && !r.flagMismatch.length) {
+      console.log("  agree on every matched entry.");
+    }
   }
 
   console.log(
