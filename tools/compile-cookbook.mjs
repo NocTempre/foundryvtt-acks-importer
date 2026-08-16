@@ -702,6 +702,89 @@ async function compileMonster(doc, entry, kindRow, glyphChars) {
   };
 }
 
+/**
+ * Validate each authored grid against the reference PDF and emit it as a v2
+ * `grid` instruction.
+ *
+ * The geometry is chef-authored — data-row band, label span, column spans and
+ * their cell patterns — and never a value; every cell materializes from the
+ * seat's own page. Validating live is what stops a mis-typed band shipping: a
+ * box that does not contain the rows it claims fails the compile here rather
+ * than yielding an empty table at someone's table.
+ *
+ * Shared by every kind whose content IS a printed table (the MM's
+ * characteristics-by-tier pages, the equipment chapter's vehicle table), so
+ * they cannot drift apart on how a grid is validated or emitted.
+ */
+async function emitGrids(doc, grids, fields, boxesByPage) {
+  for (const [gname, g] of Object.entries(grids ?? {})) {
+    const gpd = await pageItems(doc, g.page);
+    const inBox = gpd.items.filter((it) => it.x >= g.box.x0 && it.x <= g.box.x1 && it.y >= g.box.y0 && it.y <= g.box.y1);
+    const yRows = rowsByY(inBox, g.rowTol ?? 3).length;
+    if (yRows < (g.expectRows ?? 2)) {
+      throw new Error(`grid "${gname}": ${yRows} y-row(s) in box on p.${g.page} (expected >= ${g.expectRows ?? 2})`);
+    }
+    (boxesByPage[g.page] ??= []).push(g.box);
+    fields[`grids.${gname}`] = {
+      op: "grid", page: g.page, box: g.box, label: g.label, cols: g.cols,
+      ...(g.transpose ? { transpose: true } : {}),
+      ...(g.props ? { props: g.props } : {}),
+      ...(g.dropRows ? { dropRows: g.dropRows } : {}),
+      ...(g.gapMin != null ? { gapMin: g.gapMin } : {}),
+      ...(g.rowTol ? { rowTol: g.rowTol } : {}),
+      ...(g.minCells ? { minCells: g.minCells } : {}),
+    };
+  }
+}
+
+/* -------------------------------------------- */
+/*  Printed-table compilation (kind.vehicle)    */
+/* -------------------------------------------- */
+
+/**
+ * kind.vehicle — a chapter table whose ROWS are the entities, not a definition
+ * with a descriptive block.
+ *
+ * The equipment chapter prints every cart, chariot and howdah as one row of a
+ * grid, so one register entry covers the whole table and the binding makes a
+ * document per row. That is the opposite arrangement from a proficiency, and
+ * it is why this kind gets its own compiler rather than a `locate` mode: there
+ * is no run-in to anchor on and no prose block to bound — there is a heading, a
+ * band of rows, and authored column spans.
+ */
+async function compileVehicleTable(doc, entry, _kindRow) {
+  const page = entry.pages[0];
+  const pd = await pageItems(doc, page);
+  const cols = defColumns(pd);
+  const want = entry.assists?.anchor ?? entry.anchor?.display ?? entry.name;
+  const head = pd.items
+    .filter((it) => it.h >= HEADING_MIN_H && it.str.trim().startsWith(want))
+    .sort((a, b) => a.y - b.y)[0];
+  if (!head) throw new Error(`table heading "${want}" not found on p.${page}`);
+  const col = colOf(head.x, cols);
+  const fields = {
+    name: {
+      op: "expect", page,
+      box: { x0: head.x - 4, x1: head.x + (head.w ?? 80) + 4, y0: head.y - 6, y1: head.y + 6 },
+      text: want,
+    },
+  };
+  const boxes = {};
+  await emitGrids(doc, entry.assists?.grids, fields, boxes);
+  return {
+    id: entry.id,
+    kind: entry.kind,
+    name: entry.name,
+    book: entry.book,
+    cite: entry.cite ?? "",
+    pages: entry.pages,
+    ...(entry.meta ? { meta: entry.meta } : {}),
+    ...(entry.icon ? { icon: entry.icon } : {}),
+    fields,
+    _col: col,
+  };
+}
+
 /* -------------------------------------------- */
 /*  Monster-template compilation                */
 /* -------------------------------------------- */
@@ -742,24 +825,7 @@ async function compileMonsterTemplate(doc, entry, kindRow, bookCtx) {
   };
 
   /* --- authored grids, validated live --- */
-  for (const [gname, g] of Object.entries(t.grids ?? {})) {
-    const gpd = await pageItems(doc, g.page);
-    const inBox = gpd.items.filter((it) => it.x >= g.box.x0 && it.x <= g.box.x1 && it.y >= g.box.y0 && it.y <= g.box.y1);
-    const yRows = rowsByY(inBox, g.rowTol ?? 3).length;
-    if (yRows < (g.expectRows ?? 2)) {
-      throw new Error(`grid "${gname}": ${yRows} y-row(s) in box on p.${g.page} (expected >= ${g.expectRows ?? 2})`);
-    }
-    (gridBoxesByPage[g.page] ??= []).push(g.box);
-    fields[`grids.${gname}`] = {
-      op: "grid", page: g.page, box: g.box, label: g.label, cols: g.cols,
-      ...(g.transpose ? { transpose: true } : {}),
-      ...(g.props ? { props: g.props } : {}),
-      ...(g.dropRows ? { dropRows: g.dropRows } : {}),
-      ...(g.gapMin != null ? { gapMin: g.gapMin } : {}),
-      ...(g.rowTol ? { rowTol: g.rowTol } : {}),
-      ...(g.minCells ? { minCells: g.minCells } : {}),
-    };
-  }
+  await emitGrids(doc, t.grids, fields, gridBoxesByPage);
 
   /* --- the printed "varies by …" stat column, claimed raw --- */
   const labelItems = pd0.items.filter((it) => it.h < HEADING_MIN_H && LABEL_RE.test(it.str.trim()));
@@ -2574,7 +2640,7 @@ async function compileClassMeta(doc, entry) {
  * extracts, not the source book — a content type spans every book). */
 // kind.class routes through compileClass before the definition branch reads
 // this map — its row here feeds only the index's content list.
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps", "kind.variation": "variations" };
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps", "kind.variation": "variations", "kind.vehicle": "vehicles" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -3506,6 +3572,21 @@ async function main() {
               : await compileClassMeta(doc, entry);
           (contentOut["classes"] ??= { schema: "acks-cookbook/3", content: "classes", entries: {} }).entries[entry.id] = compiled;
           console.error(`OK   ${entry.id}: ${Object.keys(compiled.fields).length} instructions [classes]`);
+        } catch (err) {
+          warn(`${entry.id}: ${err.message}`);
+        }
+        continue;
+      }
+      // A kind whose content is a printed TABLE is a definition by role but
+      // not by shape: it has no run-in to anchor on and no prose block to
+      // bound, so it never reaches compileDefinition.
+      if (entry.kind === "kind.vehicle") {
+        try {
+          const compiled = await compileVehicleTable(doc, entry, kindRow);
+          const content = CONTENT_OF[entry.kind];
+          (contentOut[content] ??= { schema: "acks-cookbook/2", content, entries: {} }).entries[entry.id] = compiled;
+          const gridCount = Object.keys(compiled.fields).filter((f) => f.startsWith("grids.")).length;
+          console.error(`OK   ${entry.id}: ${gridCount} grid(s) [${content}]`);
         } catch (err) {
           warn(`${entry.id}: ${err.message}`);
         }

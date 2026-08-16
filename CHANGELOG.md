@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.9.8
+
+The land vehicles drive off your own page.
+
+### Added
+- **Every land vehicle in the equipment chapter imports as a working vehicle.**
+  Nineteen of them — carts, wagons, chariots, howdahs and palanquins — arrive
+  as vehicle actors with their crew, cargo, armour class and structural hit
+  points read from your own table, not as a line item you can only buy.
+- **A vehicle's printed pairs become its speed tiers.** The table gives cargo
+  and movement as two figures, at normal and at heavy load, so a cart hauling
+  its heavier load now arrives already knowing it moves slower for it. That is
+  what lets a small palanquin state its berths honestly: one passenger at the
+  quick pace, two at the slow one.
+- **A howdah rides as passengers, not as crew.** Its cargo figure is printed in
+  parentheses because the creature carries people or freight instead, so those
+  rows fill the passenger count and leave the pace to the beast.
+
 ## 2.9.7
 
 Masterwork comes across from your own page.

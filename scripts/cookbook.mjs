@@ -2860,7 +2860,7 @@ export async function importAbility(id, folderId) {
  * v0.26.0 and produced `category: equipment is not a valid choice` when the
  * ability sheet tried to validate items that should never have been abilities.
  */
-const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend", "kind.trap", "kind.variation"]);
+const NON_ABILITY_KINDS = new Set(["kind.equipment", "kind.class", "kind.classMeta", "kind.powerAppend", "kind.trap", "kind.variation", "kind.vehicle"]);
 
 /** Does this entry bind to an `ability` item? */
 export const isAbilityEntry = (entry) => !NON_ABILITY_KINDS.has(entry?.kind);
@@ -3808,6 +3808,150 @@ export async function importClasses() {
 /* -------------------------------------------- */
 /*  Traps (kind.trap → acks-extras.trap)        */
 /* -------------------------------------------- */
+
+/* -------------------------------------------- */
+/*  Vehicles (kind.vehicle → the vehicle actor) */
+/* -------------------------------------------- */
+
+/** The vehicle ACTOR sub-type acks-extras registers — not an item. */
+const VEHICLE_ACTOR_TYPE = "acks-extras.vehicle";
+
+/**
+ * "60’/30’" → [60, 30]; "12 / 6" → [12, 6]; "80" → [80].
+ *
+ * A segment carrying no digit yields NOTHING rather than zero. The table
+ * prints "By creature" where a howdah's pace belongs, and an absent cell is
+ * absent; reading either as 0 would give a vehicle a capacity of nought and a
+ * speed of nought, both of which look like facts read off the page.
+ */
+const printedPair = (cell) =>
+  String(cell ?? "")
+    .split("/")
+    .map((s) => String(s).replace(/[^\d.]/g, ""))
+    .filter((s) => s !== "")
+    .map(Number)
+    .filter((n) => Number.isFinite(n));
+
+/**
+ * One printed row of the vehicle table as an `acks-extras.vehicle`.
+ *
+ * The table states movement and cargo as PAIRS, and the column notes say what
+ * a pair means: the first figure is at normal encumbrance, the second at
+ * heavy. So the two become speed TIERS rather than one capacity beside one
+ * speed — a cart hauling its heavy load moves at the slower rate, and the tier
+ * row is where the vehicle model already looks for that.
+ *
+ * A cargo figure in PARENTHESES is the table's other convention: the vehicle
+ * carries passengers or that much cargo instead. Those rows are the howdahs,
+ * whose crew column is a choice between two passenger counts rather than a
+ * complement — so they fill `cargo.passengers`, not a crew role, and they get
+ * no speed tiers because their pace is the creature's, not the vehicle's.
+ *
+ * Deliberately NOT read: the draft team. The label names it in prose ("2 heavy
+ * horses", "4 light horses"), and converting those into the heavy-horse
+ * equivalents the schema counts is a judgment about draft values rather than a
+ * reading of this table.
+ */
+export function bindVehicleRow(row, entry, id) {
+  const cells = row?.cells ?? {};
+  // Presentation only: the table sets each row's first letter as a small
+  // capital, which extracts lowercase ("cart, Large"), and a comma at a line
+  // break loses its following space ("Howdah,riding"). Neither is content.
+  const label = String(row?.label ?? "")
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[a-z]/, (c) => c.toUpperCase());
+  const cargoRaw = String(cells.cargo ?? "").trim();
+  const trades = /^\(.*\)$/.test(cargoRaw);
+  const cargo = printedPair(cargoRaw);
+  const speeds = printedPair(cells.movement);
+  const crewRaw = String(cells.crew ?? "").trim();
+
+  const roles = [];
+  let passengers = 0;
+  const orChoice = /^(\d+)\s*or\s*(\d+)$/i.exec(crewRaw);
+  const plus = /^(\d+)\s*\+\s*(\d+)$/.exec(crewRaw);
+  if (orChoice) passengers = Number(orChoice[1]);
+  else if (plus) {
+    roles.push({ key: "driver", label: "Driver", required: Number(plus[1]), aboard: 0, motive: true });
+    roles.push({ key: "warriors", label: "Warriors", required: Number(plus[2]), aboard: 0, motive: false });
+  } else if (/^\d+$/.test(crewRaw)) {
+    roles.push({ key: "driver", label: "Driver", required: Number(crewRaw), aboard: 0, motive: true });
+  }
+
+  const tiers = cargo
+    .map((maxLoadStone, i) => ({ maxLoadStone, feetPerTurn: speeds[i] ?? speeds[0] ?? 0, team: 0 }))
+    .filter((t) => t.maxLoadStone > 0);
+
+  return {
+    name: label,
+    type: VEHICLE_ACTOR_TYPE,
+    ...(entry.icon ? { img: entry.icon } : {}),
+    system: {
+      kind: "land",
+      source: { book: entry.book ?? "rr", cite: entry.cite ?? "", ref: id },
+      description: `<p>@PdfText[${id}]{${entry.cite ?? ""}}</p>`,
+      ...(cargo.length ? { cargo: { capacityStone: cargo[0], ...(passengers ? { passengers } : {}) } } : {}),
+      ...(roles.length ? { crew: { roles } } : {}),
+      ...(tiers.length && !trades ? { speeds: { tiers } } : {}),
+      ...(Number.isFinite(Number(cells.ac)) ? { ac: Number(cells.ac) } : {}),
+      ...(Number.isFinite(Number(cells.shp)) ? { shp: { value: Number(cells.shp), max: Number(cells.shp) } } : {}),
+    },
+  };
+}
+
+/** Every kind.vehicle [id, entry] across the content cookbooks. */
+export function* vehicleEntries() {
+  for (const cb of data.content.values()) {
+    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
+      if (e.kind === "kind.vehicle") yield [defId, e];
+    }
+  }
+}
+
+/**
+ * Import the printed vehicles, one ACTOR per table row.
+ *
+ * Unlike every other binding here this makes actors, because a vehicle is one:
+ * it carries an inventory, a crew and a token. The dedup claim is per ROW and
+ * not per entry — one register entry covers the whole table, so claiming the
+ * entry id would make a second run skip every remaining vehicle because the
+ * first row already existed.
+ */
+export async function importVehicles() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates actors).");
+  if (!CONFIG.Actor.dataModels?.[VEHICLE_ACTOR_TYPE]) {
+    ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — the vehicle actor type is unavailable.`);
+    return [];
+  }
+  const made = [];
+  let skipped = 0;
+  for (const [id, entry] of vehicleEntries()) {
+    const found = cookbookEntry(id);
+    const bookId = found ? bookOf(found) : null;
+    const session = bookId ? ctx.sessionDocs.get(bookId) : null;
+    if (!session) continue; // the book is not connected; there is nothing to read
+    const node = await executeEntry(session.doc, found.cb, data.registers, id);
+    if (!node?.ok) continue;
+    for (const grid of Object.values(node.fields?.grids ?? {})) {
+      for (const row of grid?.rows ?? []) {
+        const rowId = `${id}.${row.key}`;
+        if (await importedItem(rowId)) {
+          skipped++;
+          continue;
+        }
+        const doc = await claimImport(rowId, async () => {
+          const folder = (await ensureItemFolder(id))?.id ?? null;
+          return createDoc(Actor, { ...bindVehicleRow(row, entry, id), folder });
+        });
+        if (doc) made.push(doc);
+      }
+    }
+  }
+  ui.notifications?.info(`${MODULE_ID} | vehicles: ${made.length} imported, ${skipped} already present.`);
+  return made;
+}
 
 /* -------------------------------------------- */
 /*  Variations (kind.variation → acks-extras.*) */
