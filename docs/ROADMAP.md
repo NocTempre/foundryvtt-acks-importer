@@ -195,3 +195,37 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
   `def.prof.command` and `def.prof.leadership` are `audited: false` with no
   effects, so the two proficiencies most central to henchman morale are
   carried by the name fallback alone.
+
+## Which languages a class or a race speaks
+
+An imported class and an imported race both carry an EMPTY `system.languages`,
+so `grantLanguages` in acks-extras has only the Intellect bonus to work with:
+a character bound to an imported Dwarven Vaultguard gets open slots and not one
+named tongue. The taxonomy import (2.9.2) fixed what a language IS; it does not
+say who speaks which.
+
+**Measured 2026-08-15, and the data is not currently reachable:**
+
+- **A class's registered prose does not contain it.** `cookbookProse` on the
+  four spreads checked — Dwarven Vaultguard, Elven Spellsword, Zaharan
+  Ruinguard, Fighter — returns 345–1,913 characters with no sentence matching
+  speak / language / tongue / literate. The register captures a class's
+  *description*, and the languages are not in it.
+- **A race has no register entry at all.** Nothing in `register/**` carries
+  `kind.race` or a `def.race.*` id: `builder-binding.mjs` synthesizes the two
+  races entirely from the custom-class-builder tables (`raw.dwarfRules`,
+  `raw.elfRules`), which carry values and power presence checks and no prose.
+  There is nothing to hang a pattern on.
+
+So this is not a pattern away. It needs new register coverage for the race
+descriptions and a new anchor into the part of a class spread that prints its
+tongues — page analysis against a real book, of the same kind the taxonomy
+recipe took, not a regex bolted onto what is already extracted.
+
+Until then a Judge types the languages into the class or race sheet by hand,
+where the field is free text and `resolveLanguage` will find the world's
+document for whatever name they write.
+
+**A speculative pattern is the wrong answer here.** Guessing the sentence
+would silently write WRONG languages onto every imported class, which for a
+content-generating path is worse than writing none.
