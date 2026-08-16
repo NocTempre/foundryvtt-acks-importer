@@ -10,7 +10,7 @@
  * printed ones with invented numbers.
  */
 import assert from "node:assert";
-import { bindVehicleRow } from "../scripts/cookbook.mjs";
+import { bindVehicleRow, rowClaimKey } from "../scripts/cookbook.mjs";
 
 let pass = 0;
 const check = (label, cond) => { assert.ok(cond, label); pass++; };
@@ -64,5 +64,23 @@ check("a bare row has no tiers", bare.system.speeds === undefined);
 const noPair = build("Barrow", { crew: "1", movement: "40’", cargo: "20" });
 check("a single figure yields one tier", noPair.system.speeds.tiers.length === 1);
 check("that tier keeps the only speed", noPair.system.speeds.tiers[0].feetPerTurn === 40);
+
+/* The dedup claim must tell apart rows the grid's own key cannot. The grid
+   keys on slugLabel, which drops the parenthetical — and the parenthetical is
+   load-bearing here: it names the team and it changes the cargo. Three
+   vehicles went missing in a live import because the claim used that key, and
+   nothing offline noticed because the grid itself returned all the rows. */
+const sameKey = (label) => rowClaimKey({ key: "cartLarge", label });
+check(
+  "two teams of one vehicle claim differently",
+  sameKey("Cart, Large (1 heavy horse)") !== sameKey("Cart, Large (2 heavy horses)"),
+);
+check("a claim folds punctuation away", rowClaimKey({ label: "Cart, Large (1 heavy horse)" }) === "cart-large-1-heavy-horse");
+check(
+  "wagons differing only by team differ",
+  rowClaimKey({ key: "wagon", label: "Wagon (2 heavy horses)" }) !== rowClaimKey({ key: "wagon", label: "Wagon (4 heavy horses)" }),
+);
+check("a row with no label falls back to its key", rowClaimKey({ key: "sledge" }) === "sledge");
+check("an empty row still yields a claim", rowClaimKey({}) === "row");
 
 console.log(`test-vehicles: all ${pass} checks passed`);

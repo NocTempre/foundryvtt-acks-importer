@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.9.9
+
+Every vehicle on the page arrives, not most of them.
+
+### Fixed
+- **The vehicles that differ only by their team now import too.** Three went
+  missing — the two-horse cart, the two-mule cart and the four-horse wagon —
+  because each shares its name with a lighter version of itself and the import
+  treated the second as already present. The team in the parentheses is the
+  whole difference between them, and it is what changes the cargo, so it now
+  tells them apart. Nineteen vehicles import where sixteen did.
+
 ## 2.9.8
 
 The land vehicles drive off your own page.

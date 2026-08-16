@@ -3901,6 +3901,22 @@ export function bindVehicleRow(row, entry, id) {
   };
 }
 
+/**
+ * What makes one table ROW distinct from its neighbours, for the dedup claim.
+ *
+ * NOT the grid's own row key, which is `slugLabel` of the label and therefore
+ * drops the parenthetical: "Cart, Large (1 heavy horse)" and "(2 heavy horses)"
+ * both slug to `cartLarge`, and a claim on that silently skips the second as
+ * already imported. The table distinguishes those rows ONLY by the
+ * parenthetical — it is the team, and it is what changes the cargo — so the
+ * claim is folded from the whole printed label.
+ */
+export const rowClaimKey = (row) =>
+  String(row?.label ?? row?.key ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || String(row?.key ?? "row");
+
 /** Every kind.vehicle [id, entry] across the content cookbooks. */
 export function* vehicleEntries() {
   for (const cb of data.content.values()) {
@@ -3936,7 +3952,7 @@ export async function importVehicles() {
     if (!node?.ok) continue;
     for (const grid of Object.values(node.fields?.grids ?? {})) {
       for (const row of grid?.rows ?? []) {
-        const rowId = `${id}.${row.key}`;
+        const rowId = `${id}.${rowClaimKey(row)}`;
         if (await importedItem(rowId)) {
           skipped++;
           continue;
