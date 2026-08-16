@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.9.6
+
+The printed traps come across from your own book.
+
+### Added
+- **Thirteen traps import with all six of their levels.** The Judge's Journal
+  prints each trap at six levels; every one of the thirteen now arrives as a
+  single document carrying all six, with each level's printed sentence kept
+  whole beside whatever damage could be read out of it. What springs it, which
+  save it allows and how far it reaches are left for you to set — a plausible
+  guess at a save is worse than a blank one, and the book's own words are there
+  to fill it from. Needs ACKS Extras for the trap item type.
+
+### Fixed
+- **A chapter tab no longer prints itself into an entry, and 1st keeps its
+  st.** The two were told apart by how tall a run of small glyphs stood,
+  which had them backwards on some pages: the tab survived as a word of
+  gibberish at the end of an entry, while the ordinal was quietly deleted off
+  every numbered step. Twelve class-power entries get back the ordinals and
+  footnote marks they had been losing.
+- **An entry that runs to the foot of the last column continues onto the next
+  page.** It used to stop at the page break, so the last entry on a spread
+  silently lost whatever it had left to say.
+- **The coverage audit stops reporting content it already has.** It never
+  looked at thief skills or the shared reference tables, and no renames had been
+  recorded, so entries the register holds counted as missing. Proficiencies fall
+  from 16 reported gaps to 1.
+
 ## 2.9.5
 
 A class knows what it speaks even when its own page will not say.
