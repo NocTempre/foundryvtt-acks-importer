@@ -132,7 +132,13 @@ this design forbids. The doctrine that contains them:
    reviewer may relax one, one written rule at a time. Worker-confirmed
    entries record `auditor: "first-pass"` in the register beside `audited`;
    senior sign-offs record none.
-9. **End state.** Per-entry recipes displace scan output entry by entry; the
+9. **Pilot checks sample around a fixed canon.** A recurring verification
+   (extractor smoke tests, audit spot-checks) keeps a canonical example list
+   that runs every time, plus a few randomly-drawn entries per run. A new
+   error class found in a random draw is promoted into the canon so it can
+   never regress unseen; all-canon runs drift into checking only what once
+   broke, all-random runs cannot prove yesterday's fix still holds.
+10. **End state.** Per-entry recipes displace scan output entry by entry; the
    scans remain a first-draft aid whose output is always flagged. When every
    shipped entry is audited, the scans demote to authoring-side tooling and
    principle 1 holds in full again.
