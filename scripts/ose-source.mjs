@@ -19,7 +19,7 @@
  * situation rather than an error.
  */
 import { MODULE_ID } from "./constants.mjs";
-import { OSE_CANONICAL, resolveProfile } from "./ose-statline.mjs";
+import { OSE_CANONICAL, resolveProfile, parseOseStatline } from "./ose-statline.mjs";
 import { LINEAGES } from "./ose-convert.mjs";
 
 export const SETTING_OSE_SOURCES = "oseSources";
@@ -155,4 +155,75 @@ export function learnLabel(rec, key, spelling) {
 /** Record the boxes a Judge confirmed on one page. */
 export function rememberBlocks(rec, page, blocks) {
   return { ...rec, blocks: { ...(rec.blocks ?? {}), [String(page)]: blocks } };
+}
+
+/* -------------------------------------------- */
+/*  What this world has learned                 */
+/* -------------------------------------------- */
+
+/**
+ * Every label spelling this world knows: the canonical set, plus everything
+ * calibrated on any registered source, tagged with which book taught it.
+ *
+ * This pool is deliberately NOT what a book is read with. A source is read with
+ * its own profile and nothing else, because one book's wording silently
+ * changing how a different book parses is the failure that rule exists to
+ * prevent.
+ *
+ * The pool is for text that belongs to no book — a block a Judge pastes in.
+ * There is no source whose reading could be corrupted, the Judge sees the
+ * result in an editable form before anything is created, and the reader reports
+ * which learned spelling fired and which book taught it. So the knowledge
+ * accumulates where it is safe to accumulate: calibrate one adventure's
+ * "HIT DICE" today and every pasted block understands it from then on.
+ */
+export function oseVocabulary(sources = oseSources()) {
+  const labels = {};
+  const taughtBy = {};
+  for (const [key, list] of Object.entries(OSE_CANONICAL.labels)) labels[key] = [...list];
+  for (const rec of Object.values(sources ?? {})) {
+    for (const [key, list] of Object.entries(rec?.profile?.labels ?? {})) {
+      for (const spelling of list ?? []) {
+        const known = (labels[key] ??= []);
+        if (known.some((x) => x.toLowerCase() === String(spelling).toLowerCase())) continue;
+        known.push(spelling);
+        (taughtBy[spelling.toLowerCase()] ??= []).push(rec.label || rec.id);
+      }
+    }
+  }
+  return { labels, taughtBy };
+}
+
+/** Is a spelling one the canonical grammar already knew? */
+const isCanonical = (key, spelling) =>
+  (OSE_CANONICAL.labels[key] ?? []).some((x) => x.toLowerCase() === String(spelling).toLowerCase());
+
+/**
+ * Read a pasted block, first as plain OSE and then with everything this world
+ * has learned, keeping whichever reading recovered more.
+ *
+ * "More" means more FIELDS, never a longer match: a vocabulary that read the
+ * same fields differently would be changing an answer rather than finding one,
+ * and that is a decision for the Judge looking at the form, not for this.
+ *
+ * @returns `{parsed, learned}` — `learned` names each spelling that earned its
+ *          place and the source it came from, so the form can say so.
+ */
+export function parsePastedBlock(text, sources = oseSources()) {
+  const plain = parseOseStatline(text, OSE_CANONICAL);
+  const vocab = oseVocabulary(sources);
+  const pooled = parseOseStatline(text, { ...OSE_CANONICAL, base: "ose.learned", labels: vocab.labels });
+
+  const gained = Object.keys(pooled.fields).filter((k) => plain.fields[k] === undefined);
+  if (!gained.length) return { parsed: plain, learned: [] };
+
+  const learned = [];
+  for (const key of gained) {
+    for (const spelling of vocab.labels[key] ?? []) {
+      if (isCanonical(key, spelling)) continue;
+      if (!new RegExp(`\\b${spelling.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+")}(?![A-Za-z])`, "i").test(text)) continue;
+      learned.push({ field: key, spelling, from: vocab.taughtBy[spelling.toLowerCase()] ?? [] });
+    }
+  }
+  return { parsed: pooled, learned };
 }

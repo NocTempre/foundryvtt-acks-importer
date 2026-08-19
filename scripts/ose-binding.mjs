@@ -44,22 +44,50 @@ export function nameFromCandidate(candidate, fallback = "Imported creature") {
 }
 
 /**
- * Actor data for one located, parsed and converted block. Pure — no Foundry
- * calls — so the shape can be checked without a world.
+ * Actor data from OSE fields that are already settled. Pure — no Foundry calls.
  *
- * @param opts.name       what to call the creature
- * @param opts.candidate  the locator's candidate (box, text, flags)
- * @param opts.source     the registered source record
- * @param opts.page       the PDF page the block was found on
- * @param opts.constants  the guide's constants, or null for an unconverted import
+ * Split from `oseActorData` because a Judge who corrects a misread field needs
+ * that correction to reach the actor. Re-deriving the fields from the raw text
+ * here would silently discard every edit, which is the same class of fault as
+ * converting a value and never writing it: the work is done and then thrown
+ * away between one step and the next.
+ *
+ * `origin` says where the fields came from — a page the locator read, or a
+ * person who typed them — and that reaches the provenance record, because
+ * "this number was read off a scan" and "this number was typed in" deserve
+ * different amounts of trust at the table.
+ *
+ * @param opts.fields   OSE-idiom fields, as `parseOseStatline(...).fields`
+ * @param opts.origin   `"page"` | `"hand"`
+ * @param opts.lineage  which ruleset the fields are written in
  */
-export function oseActorData({ name, candidate, source, page, constants, moraleBounds, folderId = null }) {
-  const profile = profileFor(source);
-  const parsed = parseOseStatline(candidate.text, profile);
-  const converted = convertOse(parsed.fields, constants, {
-    lineage: source?.lineage ?? "ose",
+export function oseActorDataFromFields({
+  name,
+  fields,
+  extra = [],
+  dialect = "ose.canonical",
+  raw = "",
+  source = null,
+  page = null,
+  box = null,
+  origin = "page",
+  lineage,
+  constants,
+  moraleBounds,
+  folderId = null,
+  suspectLineage = false,
+  mergedBlocks = false,
+}) {
+  const converted = convertOse(fields, constants, {
+    lineage: lineage ?? source?.lineage ?? "ose",
     moraleBounds,
   });
+  const where =
+    origin === "hand"
+      ? source?.label
+        ? `${source.label} — entered by hand`
+        : "Entered by hand"
+      : `${source?.label ?? "Imported"} — p.${page}`;
 
   return {
     name: name || "Imported creature",
@@ -69,7 +97,7 @@ export function oseActorData({ name, candidate, source, page, constants, moraleB
       ...converted.system,
       details: {
         ...(converted.system.details ?? {}),
-        biography: `<p><em>${source?.label ?? "Imported"} — p.${page}</em></p>`,
+        biography: `<p><em>${where}</em></p>`,
       },
     },
     items: converted.items ?? [],
@@ -91,28 +119,61 @@ export function oseActorData({ name, candidate, source, page, constants, moraleB
         // things an audit needs and none of which survive in the actor's
         // fields alone.
         ose: {
-          raw: candidate.text,
-          parsed: parsed.fields,
-          extra: parsed.extra,
-          dialect: parsed.dialect,
+          raw,
+          parsed: fields,
+          extra,
+          dialect,
+          origin,
           lineage: converted.lineage,
           sourceId: source?.id ?? null,
           sourceLabel: source?.label ?? "",
           page,
-          box: candidate.box ?? null,
+          box,
           conversions: converted.conversions,
           gaps: converted.gaps,
           notes: converted.notes,
           constants: constants ?? null,
           unconverted: !constants,
-          suspectLineage: !!candidate.suspectLineage,
-          mergedBlocks: !!candidate.mergedBlocks,
+          suspectLineage: !!suspectLineage,
+          mergedBlocks: !!mergedBlocks,
         },
-        cookbook: { id: `${source?.id ?? "ose"}.p${page}`, book: source?.id ?? "ose", kind: "kind.oseMonster", unaudited: true },
+        cookbook: {
+          id: `${source?.id ?? "ose"}.${origin === "hand" ? "hand" : `p${page}`}`,
+          book: source?.id ?? "ose",
+          kind: "kind.oseMonster",
+          unaudited: true,
+        },
       },
     },
   };
 }
+
+/**
+ * Actor data for one located block — parse the candidate's text, then build.
+ *
+ * The PDF path's entry point, kept so callers that have a candidate rather than
+ * fields do not have to know about the split.
+ */
+export function oseActorData({ name, candidate, source, page, constants, moraleBounds, folderId = null }) {
+  const parsed = parseOseStatline(candidate.text, profileFor(source));
+  return oseActorDataFromFields({
+    name,
+    fields: parsed.fields,
+    extra: parsed.extra,
+    dialect: parsed.dialect,
+    raw: candidate.text,
+    source,
+    page,
+    box: candidate.box ?? null,
+    origin: "page",
+    constants,
+    moraleBounds,
+    folderId,
+    suspectLineage: candidate.suspectLineage,
+    mergedBlocks: candidate.mergedBlocks,
+  });
+}
+
 
 /**
  * Were these read from the same printing? A different printing could in

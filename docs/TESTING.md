@@ -98,8 +98,26 @@ be checked without the book.
     now read. Then open a DIFFERENT registered adventure and confirm it did
     **not** learn that spelling — the whole point of a per-source profile.
 
+### Converting by hand
+
+16. Run `api.oseManual()`. Paste a stat block into the box and press **Read
+    it** — the fields must fill with the clauses as written (`SV` holding the
+    whole five-letter row, not a parsed shape). Correct one clause, press
+    **Convert**, and confirm the CORRECTED value is what the preview shows and
+    what the created actor carries. An edit that survives the preview but not
+    the document is the exact fault this surface was split to prevent.
+17. Clear the paste box, fill two or three fields in by hand, and convert. The
+    creature must be created with no source, no page, and `origin: "hand"` in
+    its provenance; its Source tab must read "Entered by hand".
+18. Calibrate an adventure to a wording the canonical grammar lacks (step 14),
+    then paste a block using that wording into `oseManual()`. It must be
+    understood, and the editor must say which spelling was used and which book
+    taught it. This is the accumulating half — a book calibrated once makes
+    every later paste better.
+19. Paste something that is not a stat block. It must say so and change nothing.
+
 ### Teardown
 
-15. Delete every actor created, and remove the registered source. Report which
+20. Delete every actor created, and remove the registered source. Report which
     of the steps above were reached and which were not — a surface that could
     not be exercised is named, not omitted.

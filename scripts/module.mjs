@@ -46,6 +46,7 @@ import {
 import { registerGettingStartedSettings, showGettingStarted } from "./getting-started.mjs";
 import { registerOseSourceSetting } from "./ose-source.mjs";
 import { registerOseSourceDialog, oseBrowseDialog, oseCalibrateDialog, oseConvertAll } from "./ose-app.mjs";
+import { oseManualDialog } from "./ose-manual.mjs";
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
@@ -1778,6 +1779,7 @@ Hooks.once("ready", async () => {
     oseImport: oseBrowseDialog,
     oseCalibrate: oseCalibrateDialog,
     oseConvertAll,
+    oseManual: oseManualDialog,
     RECIPES, BOOKS,
   };
   globalThis.acksImporter = api;

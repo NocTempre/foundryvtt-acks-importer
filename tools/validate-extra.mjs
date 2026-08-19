@@ -134,6 +134,6 @@ if (failed) {
 // Re-exec so each check's own output surfaces and its non-zero exit propagates
 // (execFileSync throws, this process exits non-zero). Sequential and
 // fail-fast: a drift report is noise while the register itself is broken.
-for (const tool of ["lint-register.mjs", "test-ose-statline.mjs", "test-ose-convert.mjs", "test-ose-blocks.mjs", "test-ose-binding.mjs", "test-ose-lang.mjs", "audit-transcription.mjs", "check-prose-boxes.mjs", "check-cookbook-drift.mjs"]) {
+for (const tool of ["lint-register.mjs", "test-ose-statline.mjs", "test-ose-convert.mjs", "test-ose-blocks.mjs", "test-ose-binding.mjs", "test-ose-manual.mjs", "test-ose-lang.mjs", "audit-transcription.mjs", "check-prose-boxes.mjs", "check-cookbook-drift.mjs"]) {
   execFileSync(process.execPath, [path.join(ROOT, "tools", tool)], { stdio: "inherit" });
 }

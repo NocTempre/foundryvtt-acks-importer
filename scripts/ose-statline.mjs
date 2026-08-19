@@ -65,8 +65,39 @@ const NORM = [
   [/¾/g, "3/4"],
 ];
 
+/**
+ * Join a block's lines into one string, closing up words the typesetter broke.
+ *
+ * A hyphen at the END of a line with a lower-case continuation is a broken
+ * word, not punctuation — "(Mag-" over "ic-user 1)" is one word, and only the
+ * line boundary says so. A hyphen anywhere else is the author's.
+ *
+ * This is the grammar's rule rather than the locator's, because text arrives
+ * here from two directions: runs the locator gathered off a page, and text a
+ * Judge pasted in. Pasted text carries the same broken words — it is the same
+ * page, copied — so keeping the rule in one place is what stops the manual path
+ * from being quietly worse at reading than the automatic one.
+ *
+ * @param input  an array of lines, or a string that may contain newlines
+ */
+export function joinLines(input) {
+  const lines = Array.isArray(input) ? input : String(input ?? "").split(/\r?\n/);
+  let out = "";
+  for (const raw of lines) {
+    const t = String(raw ?? "").trim();
+    if (!t) continue;
+    if (!out) {
+      out = t;
+      continue;
+    }
+    if (/-$/.test(out) && /^[a-z]/.test(t)) out = out.slice(0, -1) + t;
+    else out += ` ${t}`;
+  }
+  return out;
+}
+
 const normalize = (s) => {
-  let t = String(s ?? "");
+  let t = joinLines(s);
   for (const [re, to] of NORM) t = t.replace(re, to);
   return t.replace(/\s+/g, " ").trim();
 };
@@ -309,14 +340,20 @@ function labelPattern(labels) {
  * whose reader declines it, is kept verbatim in `extra` — visible to the Judge
  * in review, never guessed at and never dropped.
  *
+ * `segments` returns each label's clause as it was written, which is what lets
+ * a reading be handed back to a person for correction: an editor that offered
+ * the PARSED shape would be asking them to work in this module's data structure
+ * instead of in their own game's idiom, and a corrected clause re-read through
+ * this same function inherits every rule the grammar will ever learn.
+ *
  * @param text     the block as extracted, already joined by the locator
  * @param profile  a resolved profile (see `resolveProfile`)
- * @returns `{fields, extra, dialect, labelsSeen, text}` — never throws
+ * @returns `{fields, segments, extra, dialect, labelsSeen, text}` — never throws
  */
 export function parseOseStatline(text, profile = OSE_CANONICAL) {
   const prof = profile ?? OSE_CANONICAL;
   const src = normalize(text);
-  const out = { text: src, dialect: prof.base ?? "ose.canonical", fields: {}, extra: [], labelsSeen: [] };
+  const out = { text: src, dialect: prof.base ?? "ose.canonical", fields: {}, segments: {}, extra: [], labelsSeen: [] };
   if (!src) return out;
 
   const { re, rows } = labelPattern(prof.labels ?? OSE_CANONICAL.labels);
@@ -355,6 +392,10 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
       out.extra.push(`${h.key}: ${raw}`);
       continue;
     }
+    // The clause as written, kept whether or not its reader made sense of it —
+    // an editor needs the words a person can correct, not only what was
+    // understood.
+    if (raw) out.segments[h.key] = raw;
     let value = null;
     try {
       value = READERS[h.key] ? READERS[h.key](raw) : raw;

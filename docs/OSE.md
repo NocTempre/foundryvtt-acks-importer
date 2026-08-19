@@ -17,7 +17,7 @@ shipped**. What ships is the procedure — a grammar for the stat-block dialect,
 the arithmetic that turns its numbers into ACKS ones, and the gates that stop
 either from guessing.
 
-## The four modules
+## The modules
 
 | Module | Job | Pure? |
 |---|---|---|
@@ -27,14 +27,15 @@ either from guessing.
 | [`ose-source.mjs`](../scripts/ose-source.mjs) | the Judge's source registry | world state |
 | [`ose-binding.mjs`](../scripts/ose-binding.mjs) | build the actor | Foundry |
 | [`ose-app.mjs`](../scripts/ose-app.mjs) | the Judge-facing dialogs | Foundry |
+| [`ose-manual.mjs`](../scripts/ose-manual.mjs) | converting a block by hand | Foundry |
 
 The first three touch neither Foundry nor a PDF, which is why almost all of the
-behaviour is checked offline by `test-ose-blocks`, `test-ose-statline` and
-`test-ose-convert`.
+behaviour is checked offline — `test-ose-blocks`, `test-ose-statline`,
+`test-ose-convert`, `test-ose-binding` and `test-ose-manual`.
 
 ## The flow
 
-Four entry points on `game.modules.get("acks-importer").api` (also
+Five entry points on `game.modules.get("acks-importer").api` (also
 `globalThis.acksImporter`):
 
 | Call | Does |
@@ -43,6 +44,7 @@ Four entry points on `game.modules.get("acks-importer").api` (also
 | `oseImport(sourceId?)` | choose a registered adventure and a page |
 | `oseCalibrate(sourceId, page)` | teach this book a label spelling it alone uses |
 | `oseConvertAll()` | fill the axes that were waiting on the guide |
+| `oseManual()` | paste, correct or type a block with no PDF at all |
 
 The review step is the point of the flow. Nothing imports on the strength of a
 pattern match: the Judge sees the block as printed, what each value converted to
@@ -100,3 +102,40 @@ route and citation behind every converted value, live under
 
 Per-axis mapping, and which axes are gaps, is in the plan of record and in
 `test-ose-convert.mjs`, which asserts every one of them.
+
+## Converting by hand
+
+The automatic path needs a PDF it can read. A scanned adventure has no text
+layer, a block the locator refused is one it could not vouch for, and a creature
+from a blog post or the Judge's own head was never in a book. `oseManual()` is
+the same pipeline with the page taken out: paste a block and it is read, correct
+whatever it got wrong, convert. Or type it from nothing and skip the reading.
+
+**Each field holds its clause in the source game's own idiom** — `9 [10]`,
+`1** (4hp)`, `D13 W14 P13 B16 S15 (Magic-user 1)` — and converting reassembles
+them into a stat line and runs the ordinary grammar over it. A widget per parsed
+value would have been easier and would have frozen the editor at whatever the
+grammar understood the day it was written. As built, every rule the parser ever
+learns reaches hand entry the moment it reaches the parser, with no work here:
+`test-ose-manual.mjs` asserts that the two paths produce identical output from
+the same block.
+
+### What the world has learned
+
+A pasted block is read with **every label spelling calibrated on any registered
+source**, not only the canonical set, and the editor names which spelling fired
+and which book taught it.
+
+This is not the same as the per-source rule, and the difference matters. A BOOK
+is read with its own profile and nothing else, because one book's wording
+silently changing how another parses is the failure that rule exists to prevent.
+Pasted text belongs to no book: there is no reading to corrupt, the Judge sees
+the result in an editable form before anything is created, and the reader says
+where each learned spelling came from. So knowledge accumulates where it is safe
+to — calibrate one adventure's `HIT DICE` today and every pasted block
+understands it from then on.
+
+### Provenance
+
+A hand-converted creature carries the same record as an imported one, with
+`origin: "hand"`, no page and no box. The Source tab reads it unchanged.

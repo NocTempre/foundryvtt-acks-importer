@@ -16,7 +16,7 @@
  * candidates are real is confirmed by the Judge before anything is imported.
  */
 import { detectColumns, colOf } from "./extract.mjs";
-import { OSE_CANONICAL } from "./ose-statline.mjs";
+import { OSE_CANONICAL, joinLines } from "./ose-statline.mjs";
 
 /** Runs further apart than this vertically are different blocks, not one. */
 const LINE_GAP = 14;
@@ -28,25 +28,15 @@ const MIN_OTHER_LABELS = 2;
 /**
  * Join one cluster's runs into a line-aware string.
  *
- * Two things are geometry's job and cannot be done on flat text. A run gap
- * wide enough to be a space becomes one, because the PDF emits none. And a
- * hyphen at the END of a line followed by a lower-case continuation is the
- * typesetter breaking a word, not punctuation — "(Mag-" over "ic-user 1)" is
- * one word, and only the line positions say so.
+ * Restoring the spaces a PDF does not emit is geometry's job and belongs here.
+ * How the resulting LINES join — closing up a word the typesetter broke across
+ * one — is the grammar's rule, shared with text a Judge pastes in, so it lives
+ * there and is applied by `joinLines`.
  */
 export function joinBlockRuns(runs) {
-  const texts = linesOf(runs).map(lineText).filter(Boolean);
-
-  let out = "";
-  for (const t of texts) {
-    if (!out) {
-      out = t;
-      continue;
-    }
-    if (/-$/.test(out) && /^[a-z]/.test(t)) out = out.slice(0, -1) + t;
-    else out += ` ${t}`;
-  }
-  return out.replace(/\s+/g, " ").trim();
+  return joinLines(linesOf(runs).map(lineText).filter(Boolean))
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /**

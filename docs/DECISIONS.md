@@ -983,3 +983,48 @@ written and the snapshots half-captured. That is the gate working. The morale
 mapping — the axis most likely to be silently wrong, and the one the whole run
 was designed around — was correct on the first live attempt: 7→−1, 8→0, 9→+1,
 12→+4, read back off persisted actors.
+
+---
+
+### Hand conversion edits clauses, not parsed values (2026-08-19)
+
+The import path needs a readable PDF, and a good deal of what a Judge wants to
+convert is not one: a scan with no text layer, a block the locator refused
+because it could not tell two creatures apart, a monster off a forum. Those need
+a way in that does not involve a page.
+
+**Ruled: the editor holds each label's CLAUSE, in the source game's idiom, and
+converting re-runs the ordinary grammar over a reassembled stat line.** The
+obvious alternative — a widget per parsed value, a number box for morale and a
+dropdown for the save class — is easier to build and would have frozen the
+editor at whatever the grammar understood on the day it was written. Every rule
+learned afterwards would have needed a second implementation here, and the two
+would have drifted. As ruled, a new hit-dice spelling or a mangled dash reaches
+hand entry the moment it reaches the parser. `parseOseStatline` grew a
+`segments` return for it, which is the clause as written rather than what was
+understood.
+
+**Ruled: pasted text is read with everything the world has learned; a book is
+not.** These look contradictory and are not. The per-source rule exists so one
+book's wording cannot silently change how a different book parses. Pasted text
+belongs to no book — there is no reading to corrupt, the Judge sees the result
+in an editable form before anything exists, and the reader names which learned
+spelling fired and which source taught it. So the pool is safe exactly where the
+per-book restriction is necessary, and calibrating one adventure now makes every
+later paste better.
+
+**Ruled: `oseActorData` splits, and the fields half is the real one.** It
+re-derived its fields from the raw text, so a corrected clause would have been
+discarded between the form and the document — the same fault as converting a
+value and never writing it, which this feature had already shipped once and had
+caught live. `oseActorDataFromFields` takes settled fields; the old entry point
+is a wrapper that parses and delegates.
+
+**Ruled: `origin` is recorded.** "Read off a page" and "typed in by a person"
+deserve different amounts of trust at the table, and the Source tab can only say
+so if the record distinguishes them.
+
+**Cost:** the line-joining rule that closes up a word the typesetter broke
+across a line had been living in the locator, where pasted text never reached
+it. It moved into the grammar as `joinLines`, so both paths get it — pasted
+text is the same page, copied, and carries the same broken words.

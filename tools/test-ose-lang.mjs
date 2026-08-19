@@ -17,7 +17,9 @@ const ROOT = path.join(HERE, "..");
 const PREFIX = "ACKS-IMPORTER.";
 
 const lang = JSON.parse(fs.readFileSync(path.join(ROOT, "lang", "en.json"), "utf8"));
-const src = fs.readFileSync(path.join(ROOT, "scripts", "ose-app.mjs"), "utf8");
+const src = ["ose-app.mjs", "ose-manual.mjs"]
+  .map((f) => fs.readFileSync(path.join(ROOT, "scripts", f), "utf8"))
+  .join("\n");
 
 const missing = [];
 const seen = new Set();
@@ -27,10 +29,20 @@ const want = (key, why) => {
   if (!(PREFIX + key in lang)) missing.push(`${key}  (${why})`);
 };
 
+/**
+ * Dialect and profile identifiers share the `ose.` prefix with the lang keys
+ * and are not lang keys. There is no way to tell them apart by shape, so they
+ * are named here — a short list, and a wrong entry shows up as a key that
+ * silently renders as itself.
+ */
+const NOT_LANG_KEYS = new Set(["ose.hand", "ose.canonical", "ose.learned"]);
+
 // Any literal key in the file, not only the ones directly inside a loc() call —
 // several are chosen by a conditional and handed in, which a call-shaped scan
 // would walk straight past.
-for (const m of src.matchAll(/["'`](ose\.[A-Za-z0-9_.]+)["'`]/g)) want(m[1], "key literal");
+for (const m of src.matchAll(/["'`](ose\.[A-Za-z0-9_.]+)["'`]/g)) {
+  if (!NOT_LANG_KEYS.has(m[1])) want(m[1], "key literal");
+}
 
 // Computed calls: loc(`ose.route.${c.route}`) and friends. The vocabularies
 // that feed them are the converter's own, so they are enumerated here rather

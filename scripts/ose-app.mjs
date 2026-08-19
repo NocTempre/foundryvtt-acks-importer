@@ -185,7 +185,7 @@ export async function oseBrowseDialog(preselect = null) {
 /* -------------------------------------------- */
 
 /** One candidate's per-axis table: printed, on whose authority, and result. */
-function axisTable(converted) {
+export function axisTable(converted) {
   const rows = [
     ...converted.conversions.map(
       (c) =>
@@ -208,7 +208,7 @@ function axisTable(converted) {
  * that skipped anything object-valued showed a correctly converted save row as
  * an em dash, which reads as "nothing happened" to the one person checking.
  */
-function showVal(v, depth = 0) {
+export function showVal(v, depth = 0) {
   if (v === null || v === undefined) return "—";
   if (Array.isArray(v)) return v.map((x) => showVal(x, depth + 1)).join("; ") || "—";
   if (typeof v === "object") {

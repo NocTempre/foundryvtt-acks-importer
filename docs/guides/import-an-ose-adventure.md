@@ -93,9 +93,40 @@ game.modules.get("acks-importer").api.oseConvertAll()
 It fills those in on everything waiting, and tells you how many. Running it
 again does nothing — it only ever touches creatures that were waiting.
 
+## When there is no PDF to read
+
+Some blocks the automatic path cannot take: a scanned adventure with no text in
+it, a block it refused because it could not tell two creatures apart, a monster
+from a blog post, or one you invented. For those:
+
+```
+game.modules.get("acks-importer").api.oseManual()
+```
+
+Paste the block and press **Read it**, and the fields fill in. Correct anything
+it got wrong — each field takes the clause the way your own game writes it, so
+`SV` holds `D13 W14 P13 B16 S15 (Magic-user 1)` and `HD` holds `1** (4hp)`.
+Then **Convert**, check what it produced, and create the creature.
+
+You can also ignore the paste box entirely and just fill the fields in. Nothing
+requires a book at any point.
+
+Two things worth knowing:
+
+- It uses the **same reader** as the PDF path, so anything the importer learns
+  about reading stat blocks applies here too, automatically.
+- It uses **every wording you have calibrated** on any adventure you have
+  registered — teach one book that it says `HIT DICE` and every block you paste
+  afterwards understands it. The editor tells you when that happened and which
+  book taught it.
+
+Anything it could not place is listed as not recognised, and goes nowhere unless
+you move it into a field. That is deliberate: it is better to see that a clause
+was ignored than to find out later that a creature is missing something.
+
 ## Checking a conversion later
 
-Every imported creature has a **Source** tab on its sheet with the original
+Every converted creature — imported or hand-entered — has a **Source** tab on its sheet with the original
 block, the rule behind each converted value, and everything left alone. If a
 number ever looks wrong at the table, that tab is where you check it against
 your book.

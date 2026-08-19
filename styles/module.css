@@ -429,3 +429,38 @@
   color: var(--acks-ink-soft);
   font-style: italic;
 }
+
+/* The hand-conversion editor. Each row is one label's clause in the source
+   game's own idiom, so the fields read like the block they came from — the
+   label narrow and fixed, the clause taking the rest of the width. */
+.acks-importer-ose-fields .acks-importer-ose-row {
+  display: flex;
+  align-items: center;
+  gap: var(--acks-sp-2);
+  margin-bottom: var(--acks-sp-1);
+}
+.acks-importer-ose-fields .acks-importer-ose-row > label {
+  flex: 0 0 4.5em;
+  font-weight: var(--acks-weight-bold);
+  color: var(--acks-ink-soft);
+}
+.acks-importer-ose-fields .acks-importer-ose-row > input {
+  flex: 1 1 auto;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Wording recovered only because a book taught it: a quiet note, because it is
+   the tool working rather than something needing attention. */
+.acks-importer-ose-learned {
+  color: var(--acks-ink-soft);
+  font-style: italic;
+}
+
+/* Text the reader could not place. Not an error — but it goes nowhere unless
+   the Judge moves it, so it is marked rather than muted. */
+.acks-importer-ose-leftover {
+  border-left: 3px solid var(--acks-rule-heavy);
+  padding-left: var(--acks-sp-2);
+  color: var(--acks-ink);
+}
