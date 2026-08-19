@@ -1074,3 +1074,33 @@ the corpus, the latter 141 times across 22 books, presenting as an unexplained
 bare number. Both are one-line fixes and neither was visible from the three
 books the feature was built against. Coverage over the whole corpus went
 72% → 90% on these findings alone.
+
+---
+
+### A label that is also an English word cannot be canonical (2026-08-19)
+
+Several books print `Attacks:`, `Morale` and `Saving Throws:` as stat-block
+labels, and by the evidence rule above — used by unrelated publishers — they
+looked like promotions. Adding all three made coverage WORSE: nine more
+"blocks" appeared and two publishers lost three points apiece.
+
+**Ruled: a spelling earns a canonical place only if it is both used across
+publishers AND unlikely to occur as ordinary prose.** The locator decides what
+is a stat block by counting how many labels a cluster carries, so a label that
+is also an English word manufactures blocks out of room descriptions — and each
+one then reads as a creature with a paragraph stuck to it. Books that really do
+print those words as labels get them on their own profile, where a Judge has
+confirmed what the page is. The measurement is what caught this; the reasoning
+alone said promote.
+
+**Ruled: a sentence that MENTIONS statistics is not a stat line.** Room text
+quotes them constantly — "1d4 giant toads (AC 7 (12), HD 2+2 …) have hopped in",
+"(Use normal goblin stats: …)". `isStatLine` now weighs density: a line of a
+dozen words or more carrying fewer than three stat markers is prose. A real stat
+line is nearly all statistics; prose is long and carries a handful.
+
+**Note on the metric.** Coverage is a share of blocks FOUND, so a locator change
+moves the denominator and percentages stop being comparable across one. The
+density rule took the corpus from 1127 blocks to 1239 and from 1015 read to
+1120 — a hundred more creatures importable, at 92% → 93%. Judge locator work by
+the absolute count and grammar work by the share.

@@ -63,6 +63,7 @@ export function nameFromCandidate(candidate, fallback = "Imported creature") {
  */
 export function oseActorDataFromFields({
   name,
+  blockName = "",
   fields,
   extra = [],
   dialect = "ose.canonical",
@@ -90,7 +91,7 @@ export function oseActorDataFromFields({
       : `${source?.label ?? "Imported"} — p.${page}`;
 
   return {
-    name: name || "Imported creature",
+    name: name || blockName || "Imported creature",
     type: "monster",
     folder: folderId,
     system: {
@@ -157,10 +158,12 @@ export function oseActorDataFromFields({
 export function oseActorData({ name, candidate, source, page, constants, moraleBounds, folderId = null }) {
   const parsed = parseOseStatline(candidate.text, profileFor(source));
   return oseActorDataFromFields({
-    name,
+    // A block that named itself supplies the name when the caller did not.
+    name: name || parsed.name || "",
     fields: parsed.fields,
     extra: parsed.extra,
     dialect: parsed.dialect,
+    blockName: parsed.name ?? "",
     raw: candidate.text,
     source,
     page,

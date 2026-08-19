@@ -20,8 +20,20 @@
  * book's wording can never silently change how a different book parses.
  */
 
-/** The labels OSE prints. Matching is case-insensitive, so `Att`/`ATT` is one
- * spelling; a genuinely different WORD belongs in a per-source profile. */
+/**
+ * The labels OSE prints. Matching is case-insensitive, so `Att`/`ATT` is one
+ * spelling; a genuinely different WORD belongs in a per-source profile.
+ *
+ * A spelling earns a place here only if it is BOTH used by several unrelated
+ * publishers AND unlikely to occur as ordinary prose. The second half is not
+ * fastidiousness: the locator decides what is a stat block by counting how many
+ * labels a cluster carries, so a label that is also an English word manufactures
+ * blocks out of room descriptions. Adding "Attacks", "Morale" and "Saving
+ * Throws" — all genuinely used by books in the corpus — found 9 more "blocks"
+ * and cost two publishers three points of coverage apiece. Books that print
+ * those words as labels get them on their own profile, where a Judge has
+ * confirmed what the page actually is.
+ */
 export const OSE_CANONICAL = Object.freeze({
   base: "ose.canonical",
   labels: Object.freeze({
@@ -122,6 +134,20 @@ function count(tok) {
   if (frac) return +frac[1] / +frac[2];
   const n = Number(t);
   return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * A field whose value is words rather than figures.
+ *
+ * "Varies", "By species", "usually Lawful" — a book saying the value depends on
+ * something it declines to fix. That is an ANSWER, and reporting the field as
+ * unread instead loses it: the converter can gap what it cannot use, but only
+ * if the reader hands it something.
+ */
+function wordOr(v, parsed) {
+  if (parsed !== null && parsed !== undefined) return parsed;
+  const note = String(v ?? "").trim();
+  return note && /[A-Za-z]/.test(note) ? { note } : null;
 }
 
 /* -------------------------------------------- */
@@ -237,7 +263,8 @@ function readThac0(v) {
  */
 function readMv(v) {
   const out = [];
-  const re = /(\d+)\s*'?\s*(?:\(\s*(\d+)\s*'?\s*\))?\s*([A-Za-z]+)?/g;
+  // The mode may be two words — books write "in water" as often as "swimming".
+  const re = /(\d+)\s*'?\s*(?:\(\s*(\d+)\s*'?\s*\))?\s*((?:in|when)\s+[A-Za-z]+|[A-Za-z]+)?/g;
   let m;
   while ((m = re.exec(v)) !== null) {
     if (!m[1]) continue;
@@ -405,7 +432,7 @@ function readAtt(v) {
  * `att` is excluded because its reader stores the whole clause in `.text`, so
  * nothing is lost there — and a comma legitimately separates attack modes.
  */
-const RESIDUE_FIELDS = new Set(["ac", "hd", "thac0", "mv", "sv", "ml", "al", "xp", "na", "tt", "level"]);
+const RESIDUE_FIELDS = new Set(["ac", "hd", "thac0", "mv", "sv", "ml", "al", "xp", "na", "level"]);
 
 /**
  * Where a clause really ends: the first comma OUTSIDE any bracket, or -1.
@@ -437,17 +464,20 @@ function topLevelComma(s) {
 const READERS = {
   ac: readAc,
   hd: readHd,
-  hp: (v) => readHpList(v),
+  hp: (v) => wordOr(v, readHpList(v)),
   att: readAtt,
   thac0: readThac0,
   mv: readMv,
   sv: readSv,
-  ml: (v) => int(v),
-  al: (v) => v.replace(/[.,;]+$/, "").trim() || null,
-  xp: (v) => int(v),
+  ml: (v) => wordOr(v, int(v)),
+  al: (v) => {
+    const t = String(v ?? "").replace(/[.,;]+$/, "").trim();
+    return t || null;
+  },
+  xp: (v) => wordOr(v, int(v)),
   na: readNa,
   tt: (v) => v.replace(/[.,;]+$/, "").trim() || null,
-  level: (v) => int(v),
+  level: (v) => wordOr(v, int(v)),
 };
 
 /* -------------------------------------------- */
@@ -522,7 +552,14 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
   }
   if (hits[0].at > 0) {
     const lead = src.slice(0, hits[0].at).replace(/[,;]\s*$/, "").trim();
-    if (lead) out.extra.push(lead);
+    // Text before the first label, ending in a colon, is the creature naming
+    // itself — "Brood-Mother Nightworm:". That is the one thing a stat block
+    // does not label and the one thing every import needs, so it is read as a
+    // name rather than reported as something nobody could place. Prose that
+    // merely runs up to the block still goes to `extra`, where it belongs.
+    const named = /^(.{1,60}?)\s*:$/.exec(lead);
+    if (named) out.name = named[1].trim();
+    else if (lead) out.extra.push(lead);
   }
 
   for (let i = 0; i < hits.length; i++) {

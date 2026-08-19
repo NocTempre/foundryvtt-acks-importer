@@ -271,7 +271,7 @@ export async function oseReviewDialog(sourceId, page) {
       c.mergedBlocks ? loc("ose.warnMerged") : null,
       !constants ? loc("ose.warnNoGuide") : null,
     ].filter(Boolean);
-    return { i, candidate: c, ose, blocked, warn };
+    return { i, candidate: c, ose, blocked, warn, suggested: parseOseStatline(c.text, profile).name ?? "" };
   });
 
   const blocks = previews
@@ -284,7 +284,7 @@ export async function oseReviewDialog(sourceId, page) {
         </legend>
         ${p.warn.length ? `<p class="acks-importer-ose-warn">${p.warn.map(esc).join("<br>")}</p>` : ""}
         <div class="form-group"><label>${loc("ose.creatureName")}</label>
-          <input type="text" name="name-${p.i}" placeholder="${esc(loc("ose.creaturePlaceholder"))}"></div>
+          <input type="text" name="name-${p.i}" value="${esc(p.suggested)}" placeholder="${esc(loc("ose.creaturePlaceholder"))}"></div>
         <pre class="acks-importer-ose-raw">${esc(p.ose.raw)}</pre>
         ${axisTable({ conversions: p.ose.conversions, gaps: p.ose.gaps })}
         ${p.ose.extra?.length ? `<p class="notes">${loc("ose.unread")}: ${esc(p.ose.extra.join(" · "))}</p>` : ""}

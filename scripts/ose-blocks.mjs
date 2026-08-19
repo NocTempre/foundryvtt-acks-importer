@@ -83,8 +83,22 @@ function linesOf(runs) {
  */
 function isStatLine(text, labelRe) {
   labelRe.lastIndex = 0;
-  if (labelRe.test(text)) return true;
-  return /\b\d+d\d+\b/.test(text) || /\[\s*[+-]?\d+\s*\]/.test(text) || /\b[DWPBS]\d+\b/.test(text);
+  const markers =
+    (text.match(labelRe)?.length ?? 0) +
+    (text.match(/\b\d+d\d+\b/g)?.length ?? 0) +
+    (text.match(/\[\s*[+-]?\d+\s*\]/g)?.length ?? 0) +
+    (text.match(/\b[DWPBSRH]\d+\b/g)?.length ?? 0);
+  if (!markers) return false;
+
+  // A sentence that MENTIONS statistics is not a stat line. Room text quotes
+  // them constantly — "1d4 giant toads (AC 7 (12), HD 2+2 …) have hopped in",
+  // "(Use normal goblin stats: …)" — and admitting those lines drags whole
+  // paragraphs into a candidate, which then reads as a creature with prose
+  // stuck to it. A real stat line is dense: it is nearly all statistics. Prose
+  // is long and carries a handful.
+  const words = text.split(/\s+/).filter(Boolean).length;
+  if (words >= 12 && markers < 3) return false;
+  return true;
 }
 
 /** Bounding box of a set of runs, padded so the box re-selects them exactly. */

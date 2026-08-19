@@ -188,7 +188,7 @@ async function readIntoForm({ raw, name, lineage }, prefill) {
     ui.notifications.warn(`${MODULE_ID} | ${loc("ose.manualUnreadable")}`);
   }
   return oseManualDialog({
-    name,
+    name: name || parsed.name || "",
     lineage,
     raw,
     segments: parsed.segments,

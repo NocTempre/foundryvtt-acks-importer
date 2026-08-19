@@ -86,6 +86,18 @@ if (!files.length) {
 const unread = new Map(); // clause shapes the grammar left over
 const labels = new Map(); // words standing where a label would stand
 const fieldHits = new Map(); // how often each field was read at all
+const soleBlocker = new Map(); // the ONE shape holding an otherwise-clean block back
+const blocksByLeftovers = new Map(); // how far from clean the unread blocks are
+// Per publisher, because the reference publisher and the rest are different
+// problems: one prints the format the grammar is modelled on, the others print
+// their own reading of it.
+const byPublisher = new Map();
+const pubOf = (rel) => rel.split(/[\\/]/)[0] || "(root)";
+const forPub = (rel) => {
+  const k = pubOf(rel);
+  if (!byPublisher.has(k)) byPublisher.set(k, { clean: 0, readable: 0 });
+  return byPublisher.get(k);
+};
 const stats = { books: 0, unopened: 0, pages: 0, blocks: 0, suspect: 0, merged: 0, clean: 0 };
 
 for (const file of files) {
@@ -123,7 +135,18 @@ for (const file of files) {
 
       const parsed = parseOseStatline(c.text, OSE_CANONICAL);
       for (const key of Object.keys(parsed.fields)) bump(fieldHits, key, key);
-      if (!parsed.extra.length) stats.clean++;
+      const pub = forPub(rel);
+      pub.readable++;
+      if (!parsed.extra.length) {
+        stats.clean++;
+        pub.clean++;
+      }
+      // How far from clean each block is. A block held back by ONE leftover is
+      // worth more than its share of the ranking: fixing that one shape makes
+      // the whole block read, where a block with four is four rules away.
+      const n = parsed.extra.length;
+      if (n) blocksByLeftovers.set(n, (blocksByLeftovers.get(n) ?? 0) + 1);
+      if (n === 1) bump(soleBlocker, shapeOf(parsed.extra[0]), parsed.extra[0]).books.add(rel);
       for (const leftover of parsed.extra) {
         bump(unread, shapeOf(leftover), leftover).books.add(rel);
       }
@@ -152,6 +175,32 @@ if (!unreadRows.length) console.log("  none — every block read completely.");
 for (const [shape, row] of unreadRows) {
   console.log(`  ${String(row.count).padStart(4)}×  ${row.books.size} book(s)  ${shape}`);
   if (SAMPLES) console.log(`        e.g. ${row.sample}`);
+}
+
+console.log(`\n--- by publisher ---`);
+for (const [pub, s] of [...byPublisher.entries()].sort((a, b) => b[1].readable - a[1].readable)) {
+  console.log(`  ${pct(s.clean, s.readable).padStart(4)}  ${String(s.clean).padStart(4)}/${String(s.readable).padEnd(5)} ${pub}`);
+}
+
+console.log(`\n--- the ONE shape holding an otherwise-clean block back ---`);
+console.log(`    (fixing a row here makes that many whole blocks read)`);
+const soleRows = rank(soleBlocker).slice(0, TOP);
+if (!soleRows.length) console.log("  none.");
+let recoverable = 0;
+for (const [shape, row] of soleRows) {
+  recoverable += row.count;
+  console.log(`  ${String(row.count).padStart(4)}×  ${row.books.size} book(s)  ${shape}`);
+  if (SAMPLES) console.log(`        e.g. ${row.sample}`);
+}
+const readableTotal = stats.blocks - stats.suspect - stats.merged;
+console.log(
+  `  --> ${recoverable} block(s) recoverable from the rows above, taking coverage to ` +
+    `${pct(stats.clean + recoverable, readableTotal)}`,
+);
+
+console.log(`\n--- how far the unread blocks are from clean ---`);
+for (const [n, c] of [...blocksByLeftovers.entries()].sort((a, b) => a[0] - b[0])) {
+  console.log(`  ${String(c).padStart(4)} block(s) with ${n} leftover(s)`);
 }
 
 console.log(`\n--- words standing where a label would stand ---`);
