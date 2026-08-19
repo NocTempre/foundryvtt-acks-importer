@@ -20,6 +20,8 @@ raw PNG path, so those links survive the next refresh.
 | Register an OSE adventure | Naming a third-party book yourself, because a PDF's own title is often the file it was exported from | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-register.png) |
 | Review an OSE conversion | Each block as printed, what every field converted to and on whose authority, and what was deliberately left alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-review.png) |
 | Calibrate a book's wording | A publisher heading its hit dice differently, taught to that adventure alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-calibrate.png) |
+| Convert a block by hand | Paste a stat block and it fills the fields; correct anything the reader got wrong before converting | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual.png) |
+| Check a hand conversion | What each field became and on whose authority, with everything deliberately left alone listed beneath | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual-confirm.png) |
 
 Snapshots are captured during a live-verification session against the release
 (`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged from data that was

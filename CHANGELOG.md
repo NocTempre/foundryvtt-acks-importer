@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.11.0
+
+Convert a stat block with no book to point at, and read the ones you have far better.
+
+### Added
+- **Convert a stat block by hand.** Some blocks the automatic path cannot take:
+  a scanned adventure with no text in it, a block it refused because it could
+  not tell two creatures apart, a monster from a forum, or one you invented.
+  Paste it and press Read, correct anything it got wrong, and convert — or
+  ignore the paste box and just fill the fields in. Each field takes the clause
+  the way your own game writes it, and the same reader handles both paths, so
+  nothing drifts apart between them.
+- **A block the importer would not vouch for is no longer a dead end.** Tick
+  "correct by hand" and its text goes to the editor, so everything found on a
+  page is reachable whether or not it could be read automatically.
+- **Pasted blocks understand every wording you have taught it.** Calibrate one
+  adventure to say `HIT DICE` and every block you paste afterwards reads it —
+  and the editor tells you which wording was used and which book taught it.
+
+### Improved
+- **Far more of what your books print is now understood.** Across a library of
+  93 adventures the reader went from 72% to 93% of stat blocks read completely.
+  Among the things it now reads: hit dice headed `Hit Dice`, saving throws
+  headed `Saves`, the B/X save letters (D R H B S as well as D W P B S), a
+  printed `Level`, hit points written as `(hp 4)` or as a list for a group,
+  treasure written as a list, movement modes of two words, and experience awards
+  in the thousands — which were being cut in half at the comma.
+- **A creature that names itself now arrives named.** A block headed
+  "Brood-Mother Nightworm:" fills in the name box for you.
+- **Prose that merely mentions statistics is no longer mistaken for a stat
+  block.** Room text quotes armour classes and hit dice constantly, and those
+  paragraphs were being read as creatures.
+
+### Fixed
+- **A saving-throw row printed in the other letter set is no longer half-read.**
+  A block using B/X's Rays and Hold in place of Wands and Paralysis matched
+  three letters of five and quietly produced a creature with three saving
+  throws. A row is now taken only when it is complete, and reported when it is
+  not.
+- **Experience awards of a thousand or more.** `XP 1,250` was read as 1.
+- **A group's hit points.** `(hp 4, 6, 7)` lost everything after the first
+  figure; all of them are kept now.
+
 ## 2.10.0
 
 Your own OSE adventures, converted by ACKS II's own rules.

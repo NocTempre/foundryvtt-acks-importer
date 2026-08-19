@@ -225,6 +225,34 @@ check(
   JSON.stringify(["Frobnicator 4"]),
 );
 
+/* --- a block that names itself ------------------------------------------- */
+
+// Text before the first label, ending in a colon, is the creature naming
+// itself. It is the one thing a stat block never labels and every import needs,
+// so it fills the name box rather than being reported as unplaceable. Neither
+// sample book happens to contain one, so this is the only coverage there is.
+{
+  const named = parseOseStatline("Brood-Mother Nightworm: AC 3 [16], HD 8, ML 10");
+  check("the name is taken", named.name, "Brood-Mother Nightworm");
+  check("and the stats still read", named.fields.hd, { count: 8 });
+  check("with nothing left over", named.extra, []);
+
+  // A lettered sub-heading is the same shape.
+  check("a lettered heading counts", parseOseStatline("a. Lesser: AC 5 [14], HD 2").name, "a. Lesser");
+
+  // Prose running up to a block is NOT a name, even though it also precedes
+  // the first label — it has no colon and belongs in extra.
+  const prose = parseOseStatline("A squat grey thing lurks here. AC 5 [14], HD 2, ML 8");
+  ok("prose is not mistaken for a name", prose.name === undefined, String(prose.name));
+  ok("and is still surfaced", prose.extra.length === 1, JSON.stringify(prose.extra));
+
+  // Nor is a whole sentence that happens to end in a colon.
+  const longLead = parseOseStatline(
+    "The following creatures guard the vault and will attack anyone who enters without the sigil: AC 5 [14], HD 2",
+  );
+  ok("an over-long lead is not a name", longLead.name === undefined, String(longLead.name));
+}
+
 if (failed) {
   console.error(`\nose-statline: ${failed} failure(s)`);
   process.exit(1);
