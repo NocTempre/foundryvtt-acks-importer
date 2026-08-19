@@ -21,6 +21,7 @@ export const FILES = {
   bta: `${LIB}\\ByThisAxe_digital.pdf`,
   ax2: `${LIB_AX}\\AX2_Secrets_of_the_Nethercity_-_Bookmarked.pdf`,
   ax3: `${LIB_AX}\\AX3_Capital_of_the_Borderlands.pdf`,
+  scg: `${LIB}\\ACKSII_System_Compatibility_Guide_FINAL_r4_2nd_Printing.pdf`,
 };
 
 /**

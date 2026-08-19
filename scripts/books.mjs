@@ -56,6 +56,18 @@ export const BOOKS = {
     titleRe: /Capital of the Borderlands/i,
     printedOffset: 2,
   },
+  // The conversion instrument. It unlocks the OSE import path: the constants
+  // that turn a foreign stat block into ACKS II values are printed here, so
+  // they are read from the reader's own copy rather than shipped. The metadata
+  // title carries the publisher's own spelling ("Compatability"), so the regex
+  // gates on the stem both spellings share.
+  scg: {
+    label: "ACKS II System Compatibility Guide",
+    short: "SCG",
+    pages: 12,
+    titleRe: /System Compat/i,
+    printedOffset: 4,
+  },
 };
 
 

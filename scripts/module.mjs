@@ -44,6 +44,8 @@ import {
   cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
 } from "./cookbook.mjs";
 import { registerGettingStartedSettings, showGettingStarted } from "./getting-started.mjs";
+import { registerOseSourceSetting } from "./ose-source.mjs";
+import { registerOseSourceDialog, oseBrowseDialog, oseCalibrateDialog, oseConvertAll } from "./ose-app.mjs";
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
@@ -1696,6 +1698,9 @@ async function onRevealClick(event) {
 
 Hooks.once("init", () => {
   game.settings.register(MODULE_ID, SETTING_DYNAMIC, { scope: "world", config: false, type: Object, default: {} });
+  // Judge-registered OSE sources. World-scoped rather than shipped: these are
+  // other publishers' books, fingerprinted against the copy the Judge owns.
+  registerOseSourceSetting();
   // Where imports land. A world compendium keeps hundreds of imported monsters
   // out of the sidebar and makes them drag-and-droppable reference material;
   // the world-document default stays for GMs who edit imports in place.
@@ -1766,6 +1771,13 @@ Hooks.once("ready", async () => {
     importWeapons, importArmor,
     importClasses, cookbookUpdateClasses, importTraps, importVariations, importVehicles,
     gettingStarted: showGettingStarted,
+    // Importing another game's books (docs/OSE.md). Separate entry points
+    // because a third-party source is registered by the Judge rather than
+    // shipped, so it never appears in the book list the rest of these use.
+    oseRegister: registerOseSourceDialog,
+    oseImport: oseBrowseDialog,
+    oseCalibrate: oseCalibrateDialog,
+    oseConvertAll,
     RECIPES, BOOKS,
   };
   globalThis.acksImporter = api;

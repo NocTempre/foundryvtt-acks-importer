@@ -87,6 +87,15 @@ export async function loadCookbook() {
   return n + c > 0;
 }
 
+/**
+ * Accessors for consumers outside this module. The OSE path needs the compiled
+ * `constants` file, the shared registers, and whichever book documents this
+ * seat has open — all of which live here and nowhere else.
+ */
+export const cookbookContentFile = (name) => data.content.get(name) ?? null;
+export const cookbookRegisters = () => data.registers;
+export const cookbookSessionDoc = (bookId) => ctx?.sessionDocs?.get(bookId)?.doc ?? null;
+
 /** "mm.griffon#combat" -> { id, section } (section null when absent). */
 const splitId = (full) => {
   const [id, section] = String(full ?? "").split("#");
@@ -698,8 +707,14 @@ const packOpts = async (type) => {
   return pack ? { pack } : {};
 };
 
-/** Create a document in the configured target (world or compendium). */
-const createDoc = async (cls, data, opts = {}) => cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) });
+/**
+ * Create a document in the configured target (world or compendium).
+ *
+ * Exported because every import path has to honour the same target setting; a
+ * second creator calling `Actor.create` directly would quietly ignore the
+ * Judge's choice to keep imports in a compendium.
+ */
+export const createDoc = async (cls, data, opts = {}) => cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) });
 
 /**
  * Every Item this module may already have imported, indexed by cookbook id, in

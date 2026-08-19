@@ -786,6 +786,59 @@ async function compileVehicleTable(doc, entry, _kindRow) {
 }
 
 /* -------------------------------------------- */
+/*  Constant compilation                        */
+/* -------------------------------------------- */
+
+/**
+ * kind.constant — one printed number a shipped procedure takes as an argument.
+ *
+ * Two instructions and no prose: an `expect` on a clause that carries no digit,
+ * and an `int` read of the clause that carries the number. The compiler
+ * validates both against the reference printing and emits GEOMETRY ONLY — the
+ * number it read is deliberately not written anywhere, because shipping it is
+ * the thing this kind exists to avoid.
+ *
+ * The anchor is what makes that safe: a printing that moves the text fails the
+ * expect and the entry degrades to a stub, rather than reading an integer out
+ * of whatever sentence now occupies the box.
+ */
+async function compileConstants(doc, entry, _kindRow) {
+  const page = entry.assists?.value?.page ?? entry.pages[0];
+  const pd = await pageItems(doc, page);
+  const anchor = entry.assists?.expect;
+  const value = entry.assists?.value;
+  if (!anchor?.box || !value?.box) throw new Error(`missing anchor/value assist`);
+
+  const anchorText = joinRuns(runsIn(pd, { box: anchor.box }));
+  if (anchorText !== anchor.text) {
+    throw new Error(`anchor box reads ${JSON.stringify(anchorText)}, register says ${JSON.stringify(anchor.text)}`);
+  }
+  // Confirm the value box resolves to an integer on THIS printing. The result
+  // is asserted and discarded; only the box ships.
+  const valueText = joinRuns(runsIn(pd, { box: value.box }));
+  if (!/(-?[\d,]+)/.test(valueText)) {
+    throw new Error(`value box reads no integer: ${JSON.stringify(valueText)}`);
+  }
+
+  return {
+    id: entry.id,
+    kind: entry.kind,
+    name: entry.name,
+    book: entry.book,
+    cite: entry.cite ?? "",
+    pages: entry.pages,
+    ...(entry.meta ? { meta: entry.meta } : {}),
+    fields: {
+      // The expect rides the `name` field on purpose: executeEntry gates the
+      // entry's `ok` on that field alone, so a moved printing fails the whole
+      // entry instead of quietly returning a number from the wrong sentence.
+      name: { op: "expect", page: anchor.page ?? page, box: anchor.box, text: anchor.text },
+      value: { op: "value", page, box: value.box, pattern: "int" },
+    },
+  };
+}
+
+/* -------------------------------------------- */
 /*  Monster-template compilation                */
 /* -------------------------------------------- */
 
@@ -2643,7 +2696,7 @@ async function compileClassMeta(doc, entry) {
  * extracts, not the source book — a content type spans every book). */
 // kind.class routes through compileClass before the definition branch reads
 // this map — its row here feeds only the index's content list.
-const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps", "kind.variation": "variations", "kind.vehicle": "vehicles" };
+const CONTENT_OF = { "kind.proficiency": "proficiencies", "kind.power": "powers", "kind.skill": "skills", "kind.combatProficiency": "proficiencies", "kind.equipment": "equipment", "kind.class": "classes", "kind.classMeta": "classes", "kind.trap": "traps", "kind.variation": "variations", "kind.vehicle": "vehicles", "kind.constant": "constants" };
 
 /** Definition id slug — must match the seeder so alias targets resolve. */
 const slugOf = (s) =>
@@ -3590,6 +3643,19 @@ async function main() {
           (contentOut[content] ??= { schema: "acks-cookbook/2", content, entries: {} }).entries[entry.id] = compiled;
           const gridCount = Object.keys(compiled.fields).filter((f) => f.startsWith("grids.")).length;
           console.error(`OK   ${entry.id}: ${gridCount} grid(s) [${content}]`);
+        } catch (err) {
+          warn(`${entry.id}: ${err.message}`);
+        }
+        continue;
+      }
+      // Like kind.vehicle: a definition by role, but with no prose block to
+      // bound, so it never reaches compileDefinition.
+      if (entry.kind === "kind.constant") {
+        try {
+          const compiled = await compileConstants(doc, entry, kindRow);
+          const content = CONTENT_OF[entry.kind];
+          (contentOut[content] ??= { schema: "acks-cookbook/2", content, entries: {} }).entries[entry.id] = compiled;
+          console.error(`OK   ${entry.id}: constant [${content}]`);
         } catch (err) {
           warn(`${entry.id}: ${err.message}`);
         }

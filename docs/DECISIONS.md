@@ -831,3 +831,155 @@ glues inter-run spaces out. That is not defensive style, it is the measured
 behaviour of the source — `ElfTongues:`, `theCommon`, `AncientZaharan`,
 `called“Common”`. The last of those cost a release: 2.9.3 shipped with the
 common tongue silently unfound, so every human class imported speaking nothing.
+
+---
+
+### The Compatibility Guide becomes a book the reader connects (2026-08-19)
+
+`tools/harvest-conversions.mjs` has said since it was written that the System
+Compatibility Guide "needs NO recipe … only the CONCLUSION ships", and its OGL
+name table ships exactly that way. The OSE path needed the guide's *other* half
+— the arithmetic on printed page 2 — and the same posture would have shipped
+four integers read off a page.
+
+**Ruled: `scg` joins `BOOKS`, and the constants are extracted per reader.** The
+rule is structural and ships in `ose-convert.mjs`; the numbers arrive as an
+argument, the shape `formation/jumping.mjs` already uses for printed values it
+needs but may not carry. This is deliberately stricter than the standing ruling
+for the same book, and stricter than `stats.mjs`'s save table.
+
+**Ruled: the anchor carries no standalone number.** Each constant is an `expect`
+on a clause that names the conversion, plus an `int` read of the clause that
+carries it. A printing that moves the text fails the anchor and the entry
+degrades to a stub, instead of reading an integer out of whatever sentence now
+occupies the box. `lint-register.mjs` enforces the no-number rule on the anchor,
+and the digit test is for a STANDALONE number, because the lineage lists that
+make the best anchors name editions like "3E".
+
+**Rejected: a gate that lists the forbidden values.** The obvious check —
+"`ose-convert.mjs` must not contain 9, 10, 11 or 20" — writes those numbers into
+a tracked file and defeats itself. `validate-extra.mjs` §3 is an ALLOW list
+instead: every numeric literal in the converter must be one of six structural
+ones, each justified in the comment. Strictly stronger, and it names nothing.
+
+**Cost:** a `kind.constant` with its own compiler branch, because a constant is
+a definition by role with no heading to locate and no prose block to bound —
+the same shape problem `kind.vehicle` has.
+
+---
+
+### Morale is mapped from the scale's endpoints, not clamped (2026-08-19)
+
+OSE morale is a 2d6 score, 2–12. The ACKS field admits −6…+4 and *hard-clamps*
+(`monster-data.mjs`). `cookbook.mjs`'s `bindNpc` clamps too, correctly, because
+an AX quick-stat line is already on the ACKS scale. Reusing that binder for OSE
+would have pinned every morale of 5 or more to +4 — most of any book's roster.
+
+**Ruled: the two scales are the same width, so the endpoints fix the mapping.**
+Eleven values each; the lowest morale in one is the lowest in the other, giving
+2→−6, 8→0, 12→+4. Nothing is chosen. OSE's steady 7–8 landing on the ACKS normal
+of 0 is the corroboration, not the derivation.
+
+**Ruled: the offset is read, never written down.** `moraleOffset()` takes the
+ACKS bounds from the live schema and the OSE bounds from the dice, so the
+converter holds no morale constant and a system that rebalanced the field would
+not silently acquire a wrong mapping. Where the widths differ, no endpoint
+mapping exists and the axis becomes a gap.
+
+**Ruled: this is a derivation, not a printed rule.** The guide is silent on
+morale. The Source tab labels the route "scale endpoints" rather than citing the
+guide, so a Judge can see which values rest on a printed rule and which do not.
+
+**Ruled: `ose-convert.mjs` never reaches a clamp.** A score outside 2–12 is a
+mis-read and becomes a gap; it is not squeezed into range.
+
+---
+
+### A source is registered by the Judge, and a dialect belongs to one book (2026-08-19)
+
+**Ruled: page count is the fingerprint; the document title is evidence only.**
+One of the sample books carries its author's word-processor filename in its
+metadata title, so a registry that trusted titles would mis-name it. Page count
+survives the per-customer watermarking that makes bytes useless, and a Judge can
+read it off any file.
+
+**Ruled: ambiguity is resolved by asking, not by refusing.** `identifyBook`
+refuses to name a book on ambiguous evidence, which is right for a shipped
+registry. Two adventures of the same length is an ordinary situation, and the
+Judge knows which file they just picked — so `identifyOseSource` returns a
+single answer only on more than page count alone, and the caller asks otherwise.
+
+**Ruled: a label spelling learned from one book changes only that book.** One
+sample heads its hit dice "HIT DICE". Widening the shared alternation to
+`HD|HIT DICE` is this project's named standing failure mode — it converts one
+verified reading into an unverified claim about every book nobody has opened.
+The spelling lands on that source's profile row and nowhere else, and
+`test-ose-statline.mjs` asserts the canonical profile does not learn it.
+
+**Ruled: what the geometry cannot separate is marked, not converted.** Two
+armour-class labels in one candidate means two creatures were gathered
+together — a narrow stat block set inside a prose column, a sub-column the
+page-wide histogram cannot see. The grammar would still return a full-looking
+reading of two creatures mixed, so the candidate carries `mergedBlocks` and
+stays out of any unattended path. A block from a different game carries
+`suspectLineage` for the same reason: read as OSE, its ascending armour class
+inverts silently.
+
+**Cost, and what it bought:** the locator segments on stat-bearing LINES rather
+than vertical gaps, because a block set inside body text has no gap above or
+below it. Getting there cost two real bugs, both from reading the raw run
+concatenation instead of the geometry: the PDF emits no space characters, so
+"ML 5" arrives as `ML` and `5` with a gap between them and every word-boundary
+test failed on the whole line.
+
+---
+
+### Three things a converter cannot tell you, found in one live run (2026-08-19)
+
+The OSE path's offline suites were green — 5 files, every axis asserted, the
+constants round-tripping off the real guide. The first live run found three
+bugs, and the shape they share is the lesson: **each one sits in the gap between
+a value being computed correctly and that value arriving where anything reads
+it.** A suite that stops at the converter cannot see any of them.
+
+**The extended stat block was computed and then dropped.** `convertOse` returned
+`extras` — hit-dice rating, saves-as, the speed table, the encounter numbers —
+and `oseActorData` never assigned it to the document. Every one of those fields
+was correct in the converter's output and absent from the created actor. The
+offline tests asserted `converted.extras`, which was right, and never asserted
+the document, which was wrong. `test-ose-binding.mjs` now asserts the document.
+
+**A creature opened on a sheet that could not show its own provenance.** The
+Full Monster sheet registers for `monster` but is deliberately NOT the default
+for it, so an imported creature landed on a sheet with no Source tab — the audit
+surface existed and was unreachable by ordinary use. Fixed by pinning
+`flags.core.sheetClass` on the imported actor, **not** by changing its type: an
+OSE monster is not an `acks-extras.animal`, and `monster` is what every other
+import in this module already creates.
+
+**Calibration never fired, on any book.** `unknownLabels` passed a one-label
+profile into the block finder to widen the net, and did the opposite: a
+candidate needs several distinct labels before it is a block at all, so the
+narrowed profile matched nothing anywhere — including the pages that most needed
+the prompt. The consequence was worse than a missing prompt, because of the
+fourth finding below.
+
+**A clause under an unrecognised label was swallowed without trace.** In this
+idiom a comma separates fields, so words that are not a label fall inside the
+PREVIOUS field's segment. Every reader takes what it recognises off the front,
+so a block reading `AC 7 [12], HIT DICE 1 (4hp)` reported an armour class and
+lost the hit dice entirely — no gap, no warning, nothing in `extra`. The residue
+rule had been applied only to single-token fields; it now covers every field
+whose reader does not keep its clause verbatim.
+
+**Ruled: an offline suite for an import path must assert the DOCUMENT, not the
+transform.** The three highest-value checks written after this run — the extras
+flag, the pinned sheet, the surviving unknown clause — were all cheap, all
+offline, and all absent because the suite tested the function that was easy to
+test. Each was added with the pre-fix code confirmed failing first.
+
+**Cost:** the release stopped at the gate with the version bumped, the changelog
+written and the snapshots half-captured. That is the gate working. The morale
+mapping — the axis most likely to be silently wrong, and the one the whole run
+was designed around — was correct on the first live attempt: 7→−1, 8→0, 9→+1,
+12→+4, read back off persisted actors.

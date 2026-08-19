@@ -19,10 +19,14 @@ topic, because the pipeline has three independently-versioned surfaces:
   frozen instruction set.
 - [RECIPES.md](RECIPES.md) — the offline authoring pipeline that produces it.
 - [BINDING-FOUNDRY.md](BINDING-FOUNDRY.md) — how the Foundry engine consumes it.
+- [OSE.md](OSE.md) — importing another game's books: the Judge-registered
+  source registry, the stat-block grammar, and the conversion instrument.
 - [EXTRACTION.md](EXTRACTION.md) — **read first for any extraction task**: the
   map of the extraction engine and pipeline operators, and the running ledger
   of extractor gotchas (double-strikes, column starvation, run seams — each
   row points at its gate).
+
+[TESTING.md](TESTING.md) carries the live-test recipes — the go-live gate.
 
 [GALLERY.md](GALLERY.md) indexes the guides and the release each screenshot came
 from.

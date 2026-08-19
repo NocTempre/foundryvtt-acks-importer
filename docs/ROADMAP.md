@@ -492,3 +492,39 @@ language reference in either book is the *Bonus Languages* POWER — which sever
 races may take and which grants a count rather than naming a list. So this is
 not a page we have failed to read: the human default is the correct answer until
 Autarch prints one, and nobody should re-open it looking for the page.
+
+## OSE: what the first cut does not do
+
+The path is built for monsters. Everything below is scoped out on purpose, not
+missing by accident.
+
+- **Areas, journals, treasure and NPCs.** A keyed adventure is a second grammar:
+  a numbered heading opening a column, a roster line carrying a count and
+  per-instance hit points ("2 golems: stats on p6, hp 14, 18"), run-in feature
+  labels holding loot, and `Area N` cross-references that want to become links.
+  Each publisher keys areas differently, so the heading pattern belongs on the
+  per-source profile beside the stat-block labels. `cookbookImportJournals` is
+  the path it should build through.
+- **Maps and scenes.** Deferred entirely. Area text carries its printed map
+  references as text; no Scene, no walls, no token placement.
+- **Treasure-type letters.** Transcribed and flagged, never mapped — the two
+  games' letters do not denote the same hoards and the guide prints no
+  correspondence.
+- **The ascending lineage.** ShadowDark and 5e-ish OSR blocks are detected and
+  refused. The guide prints their armour-class rule, but range bands and bare
+  ability modifiers have no ACKS counterpart, so it is a second grammar with
+  several more gaps.
+- **Percentile and x-in-6 conversion.** The guide prints both ladders; they are
+  thief-skill and dungeoneering prose, not stat-block fields. Reading the ladder
+  in one instruction also wants `value`'s documented `split`, which is not
+  implemented — `docs/COOKBOOK.md` describes it but `applyPattern` has no branch
+  for it. Fix the doc or the code before relying on either.
+- **Class import.** The guide maps the B-X dwarf and elf onto ACKS classes, and
+  the converter already uses that for saves-as. Importing them as playable
+  classes is the class pipeline's job, not this one's.
+- **Shareable dialect profiles.** A profile is geometry and label vocabulary
+  with no values in it, so it could be exported for other Judges of the same
+  book. It needs its own IP gate first.
+- **The export direction.** ACKS II out to OSE. Note that the guide's forward
+  and reverse formulas are deliberately not inverses — the reverse ones assume a
+  fixed difficulty — so a round trip is off by one on saves and proficiencies.

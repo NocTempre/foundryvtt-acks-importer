@@ -1,0 +1,175 @@
+/**
+ * Turning a converted OSE stat block into a Foundry actor.
+ *
+ * Deliberately NOT an extension of cookbook.mjs's `bindNpc`. That binder reads
+ * an ACKS quick-stat line, whose morale is already on the ACKS scale and whose
+ * saves come off the fighter progression — both correct there and both wrong
+ * here. Reusing it would clamp every OSE morale of 5 or more to the maximum
+ * and overwrite the book's printed saving throws with a derived row.
+ *
+ * Everything the grammar read is stored on the actor whether or not it became
+ * an ACKS field, together with how each value was reached, so the conversion
+ * can be audited on the sheet against the page it came from.
+ */
+import { MODULE_ID } from "./constants.mjs";
+import { convertOse } from "./ose-convert.mjs";
+import { parseOseStatline } from "./ose-statline.mjs";
+import { profileFor } from "./ose-source.mjs";
+
+/**
+ * The `details.morale` field's own bounds, from the live schema.
+ *
+ * Read rather than written down: the endpoint mapping is derived from the two
+ * scales' widths, so the ACKS half must come from whatever the system actually
+ * declares. A system that rebalanced the field would otherwise get a silently
+ * wrong mapping. Returns null when the field cannot be found, and the
+ * converter then reports morale as a gap instead of guessing.
+ */
+export function moraleBoundsFromSchema() {
+  try {
+    const model = CONFIG?.Actor?.dataModels?.monster;
+    const field = model?.schema?.getField?.("details.morale");
+    const { min, max } = field ?? {};
+    return Number.isFinite(min) && Number.isFinite(max) ? { min, max } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Strip a stat block off the front of a candidate to guess the creature's name. */
+export function nameFromCandidate(candidate, fallback = "Imported creature") {
+  const lead = (candidate?.leadingText ?? "").trim();
+  if (lead) return lead.slice(0, 60);
+  return fallback;
+}
+
+/**
+ * Actor data for one located, parsed and converted block. Pure — no Foundry
+ * calls — so the shape can be checked without a world.
+ *
+ * @param opts.name       what to call the creature
+ * @param opts.candidate  the locator's candidate (box, text, flags)
+ * @param opts.source     the registered source record
+ * @param opts.page       the PDF page the block was found on
+ * @param opts.constants  the guide's constants, or null for an unconverted import
+ */
+export function oseActorData({ name, candidate, source, page, constants, moraleBounds, folderId = null }) {
+  const profile = profileFor(source);
+  const parsed = parseOseStatline(candidate.text, profile);
+  const converted = convertOse(parsed.fields, constants, {
+    lineage: source?.lineage ?? "ose",
+    moraleBounds,
+  });
+
+  return {
+    name: name || "Imported creature",
+    type: "monster",
+    folder: folderId,
+    system: {
+      ...converted.system,
+      details: {
+        ...(converted.system.details ?? {}),
+        biography: `<p><em>${source?.label ?? "Imported"} — p.${page}</em></p>`,
+      },
+    },
+    items: converted.items ?? [],
+    flags: {
+      // The extended stat block. Hit-dice rating, saves-as, the speed table and
+      // the encounter numbers have no home in the core schema and are read from
+      // this flag by the Full Monster sheet — converting them and then not
+      // writing them here loses every one of them silently.
+      "acks-extras": { extras: converted.extras ?? {} },
+      // Open on the sheet that can actually show the provenance below. The Full
+      // Monster sheet registers for `monster` but is not the default for it, so
+      // without this an imported creature lands on a sheet with no Source tab
+      // and the audit trail is invisible to the Judge who needs it.
+      core: { sheetClass: "acks-extras.FullMonsterSheet" },
+      [MODULE_ID]: {
+        // The whole provenance record. `raw` is the block exactly as extracted,
+        // `parsed` is what the grammar made of it in OSE's own idiom, and
+        // `conversions` says how each ACKS value was reached — the three
+        // things an audit needs and none of which survive in the actor's
+        // fields alone.
+        ose: {
+          raw: candidate.text,
+          parsed: parsed.fields,
+          extra: parsed.extra,
+          dialect: parsed.dialect,
+          lineage: converted.lineage,
+          sourceId: source?.id ?? null,
+          sourceLabel: source?.label ?? "",
+          page,
+          box: candidate.box ?? null,
+          conversions: converted.conversions,
+          gaps: converted.gaps,
+          notes: converted.notes,
+          constants: constants ?? null,
+          unconverted: !constants,
+          suspectLineage: !!candidate.suspectLineage,
+          mergedBlocks: !!candidate.mergedBlocks,
+        },
+        cookbook: { id: `${source?.id ?? "ose"}.p${page}`, book: source?.id ?? "ose", kind: "kind.oseMonster", unaudited: true },
+      },
+    },
+  };
+}
+
+/**
+ * Were these read from the same printing? A different printing could in
+ * principle carry different constants, and that IS worth re-converting for —
+ * so the comparison is on the values, not merely on whether any were stored.
+ */
+function sameConstants(a, b) {
+  if (!a || !b) return false;
+  return Object.keys(b).every((k) => a[k] === b[k]);
+}
+
+/**
+ * Re-run the conversion on an actor imported without the guide.
+ *
+ * Idempotent, and it only ever ADDS the axes that needed arithmetic — the
+ * fields that came off the page directly are already correct and are left
+ * alone. A Judge can therefore import a whole adventure today and connect the
+ * Compatibility Guide next week without re-importing anything.
+ */
+export function reconversionFor(actor, constants, moraleBounds) {
+  const rec = actor?.flags?.[MODULE_ID]?.ose;
+  if (!rec?.parsed || !constants) return null;
+  // Already done, with these same constants: there is nothing to add, and
+  // re-writing the axes would overwrite whatever the Judge has since corrected
+  // by hand. Deciding that here rather than trusting the caller's filter is the
+  // difference between a pass that is idempotent and one that merely looks it.
+  if (rec.unconverted === false && sameConstants(rec.constants, constants)) return null;
+  const converted = convertOse(rec.parsed, constants, { lineage: rec.lineage ?? "ose", moraleBounds });
+  const update = {};
+  // Only the axes the guide unlocks; everything else already landed.
+  if (converted.system.aac) update["system.aac.value"] = converted.system.aac.value;
+  if (converted.system.thac0) update["system.thac0.throw"] = converted.system.thac0.throw;
+  if (!Object.keys(update).length) return null;
+  update[`flags.${MODULE_ID}.ose.conversions`] = converted.conversions;
+  update[`flags.${MODULE_ID}.ose.gaps`] = converted.gaps;
+  update[`flags.${MODULE_ID}.ose.constants`] = constants;
+  update[`flags.${MODULE_ID}.ose.unconverted`] = false;
+  return update;
+}
+
+/** Every actor in the world imported from an OSE source without the guide. */
+export const unconvertedOseActors = () =>
+  game.actors.filter((a) => a.flags?.[MODULE_ID]?.ose?.unconverted);
+
+/**
+ * Fill in the arithmetic axes on every unconverted OSE actor.
+ * Returns the number updated.
+ */
+export async function convertUnconvertedOse(constants) {
+  if (!constants) return 0;
+  const bounds = moraleBoundsFromSchema();
+  const updates = [];
+  for (const actor of unconvertedOseActors()) {
+    const u = reconversionFor(actor, constants, bounds);
+    if (u) updates.push({ _id: actor.id, ...u });
+  }
+  if (!updates.length) return 0;
+  await Actor.updateDocuments(updates);
+  return updates.length;
+}

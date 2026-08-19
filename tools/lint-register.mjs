@@ -122,9 +122,25 @@ for (const dirent of fs.existsSync(REGISTER) ? fs.readdirSync(REGISTER, { withFi
       if (e.book !== bookId) err(`${id}: book "${e.book}" != directory "${bookId}"`);
       if (!Array.isArray(e.pages) || !e.pages.every((p) => Number.isInteger(p) && p > 0)) err(`${id}: pages must be positive ints`);
       if (!e.name) err(`${id}: name required`);
-      const anchorKeys = Object.keys(e.anchor ?? {});
-      if (anchorKeys.length !== 1 || !["display", "runin", "label", "subheading"].includes(anchorKeys[0])) {
-        err(`${id}: anchor must have exactly one of display|runin|label|subheading`);
+      // A constant is a clause in the middle of a paragraph, not a titled
+      // block: it has no heading of any kind to locate, so it is anchored by
+      // an authored box carrying an `expect` instead. Its assists are checked
+      // below in place of the anchor.
+      if (e.kind === "kind.constant") {
+        const a = e.assists ?? {};
+        if (!a.expect?.box || typeof a.expect.text !== "string") err(`${id}: constant needs assists.expect {box, text}`);
+        if (!a.value?.box) err(`${id}: constant needs assists.value {box}`);
+        // The anchor must not contain the value it guards, or the number ships
+        // in the cookbook after all. Edition names glue their digit to a letter
+        // ("3E", "5E"), so only a STANDALONE number is the value leaking.
+        if (/(?:^|[^A-Za-z0-9])\d+(?![A-Za-z])/.test(a.expect?.text ?? "")) {
+          err(`${id}: expect text carries a standalone number — anchor on a clause without the value`);
+        }
+      } else {
+        const anchorKeys = Object.keys(e.anchor ?? {});
+        if (anchorKeys.length !== 1 || !["display", "runin", "label", "subheading"].includes(anchorKeys[0])) {
+          err(`${id}: anchor must have exactly one of display|runin|label|subheading`);
+        }
       }
       if (e.aliases && !Array.isArray(e.aliases)) err(`${id}: aliases must be an array`);
       // An icon must at least be SHAPED like a path every seat is guaranteed

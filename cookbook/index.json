@@ -6,6 +6,7 @@
   ],
   "content": [
     "classes",
+    "constants",
     "equipment",
     "powers",
     "proficiencies",

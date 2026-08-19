@@ -93,6 +93,39 @@ const rel = (f) => path.relative(ROOT, f).split(path.sep).join("/");
   if (skipped.size) console.log(`validate-extra: icon check skipped for ${[...skipped].join(", ")} paths (no install/checkout found)`);
 }
 
+/* 3. The OSE converter carries no printed constant.
+ *
+ * Its whole arrangement is that the System Compatibility Guide's numbers
+ * arrive as arguments, read from the reader's own copy. A gate that listed the
+ * forbidden values would write them down in a tracked file and so defeat
+ * itself; this is an ALLOW list instead. Every numeric literal in the module
+ * must be one of a few structural ones, each justified here — anything else is
+ * a value that belongs in the `constants` argument.
+ *
+ *   0, 1  identities, counters, indexes, and the floor of a count
+ *   2, 6  the OSE morale die (2d6) — the dice, not a printed table
+ *   4, 8  hit-die sides; both systems roll d8 per hit die and d4 below one
+ */
+{
+  const ALLOWED = new Set([0, 1, 2, 4, 6, 8]);
+  const f = path.join(ROOT, "scripts", "ose-convert.mjs");
+  if (fs.existsSync(f)) {
+    // Comments, strings and REGEX LITERALS are not numeric literals — a
+    // character class like [^a-z0-9] is spelling, not a value.
+    const bare = fs
+      .readFileSync(f, "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/(^|[^:/])\/\/[^\n]*/g, "$1 ")
+      .replace(/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\]|\\.)*`/g, '""')
+      .replace(/([(=,:[!&|?+\s])\/(?:[^/\\\n[]|\\.|\[(?:[^\]\\\n]|\\.)*\])+\/[gimsuy]*/g, "$1RE");
+    for (const m of bare.matchAll(/\b\d+(?:\.\d+)?\b/g)) {
+      if (!ALLOWED.has(Number(m[0]))) {
+        fail(`scripts/ose-convert.mjs carries the literal ${m[0]} — a printed constant belongs in the \`constants\` argument, not the converter`);
+      }
+    }
+  }
+}
+
 if (failed) {
   console.error("validate-extra: inline guards FAILED");
   process.exit(1);
@@ -101,6 +134,6 @@ if (failed) {
 // Re-exec so each check's own output surfaces and its non-zero exit propagates
 // (execFileSync throws, this process exits non-zero). Sequential and
 // fail-fast: a drift report is noise while the register itself is broken.
-for (const tool of ["lint-register.mjs", "audit-transcription.mjs", "check-prose-boxes.mjs", "check-cookbook-drift.mjs"]) {
+for (const tool of ["lint-register.mjs", "test-ose-statline.mjs", "test-ose-convert.mjs", "test-ose-blocks.mjs", "test-ose-binding.mjs", "test-ose-lang.mjs", "audit-transcription.mjs", "check-prose-boxes.mjs", "check-cookbook-drift.mjs"]) {
   execFileSync(process.execPath, [path.join(ROOT, "tools", tool)], { stdio: "inherit" });
 }

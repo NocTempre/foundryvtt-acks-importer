@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.10.0
+
+Your own OSE adventures, converted by ACKS II's own rules.
+
+### Added
+- **Import a monster from an Old-School Essentials adventure you own.** Register
+  the PDF, pick a page, and the stat blocks on it are found, read and converted
+  — armour class, hit dice, attacks, saving throws, movement, morale and
+  alignment. B/X, BECMI, Labyrinth Lord and LOTFP read the same way. Your file
+  is opened in your browser and nowhere else, and nothing from it is stored
+  except the creatures you choose to import. See the new guide, *Importing an
+  OSE adventure*.
+- **The System Compatibility Guide is now a book you can connect.** It carries
+  the arithmetic that converts a foreign stat block, and those numbers are read
+  from your own copy rather than shipped with the module. Without it an import
+  still works: everything that needs no arithmetic is filled in, armour class
+  and attack throw are marked as waiting, and one command fills them in later
+  once the guide is connected.
+- **A Source tab on every converted creature** (with acks-extras 4.13.0). It
+  shows the stat block as printed, each converted field with the rule behind it,
+  and every field deliberately left alone. If a number ever looks wrong at the
+  table, that tab is where you check it against your book.
+- **Books that word things differently can be taught.** Where a publisher heads
+  its hit dice `HIT DICE` rather than `HD`, you can say so once and that
+  adventure reads it that way. What you teach applies to that book alone.
+
+### Notes
+- **Some fields are deliberately never filled in.** Experience, treasure type, a
+  single printed saving throw, and a class ACKS II does not have are all left at
+  their defaults, because neither rulebook says what they should become. The
+  printed value is kept and shown on the Source tab, so you can enter it
+  yourself if you want it.
+- **Stat blocks from other games are refused rather than converted.** Some
+  adventures print two systems side by side; a block with an ascending armour
+  class would come out inverted if read as OSE, so it cannot be imported by
+  mistake. The same applies where two creatures' blocks could not be told apart.
+
 ## 2.9.13
 
 The price list gets a shelf of its own.
