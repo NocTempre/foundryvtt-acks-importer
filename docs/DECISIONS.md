@@ -1028,3 +1028,49 @@ so if the record distinguishes them.
 across a line had been living in the locator, where pasted text never reached
 it. It moved into the grammar as `joinLines`, so both paths get it — pasted
 text is the same page, copied, and carries the same broken words.
+
+---
+
+### The corpus is the feedback loop, and evidence promotes a spelling (2026-08-19)
+
+A block that has to be corrected by hand is a **defect report against the
+grammar**. The manual editor exists so a Judge is never stuck; it is not where a
+misreading is supposed to end. `tools/ose-coverage.mjs` sweeps the local
+third-party library and ranks what the grammar could not read, so those reports
+arrive in bulk instead of one Judge at a time. Take the top line, write the
+rule, run it again — the number that matters is the share of blocks read
+completely.
+
+**Ruled: the report is SHAPES, never values.** Every digit run folds to `#`, so
+one finding covers every book that prints that shape. A shape is what a rule is
+written against, and a report of shapes carries no publisher's numbers — which
+is what makes it safe to read, quote and act on. It prints to stdout and writes
+nothing: a coverage file in the repo would be a corpus of other publishers'
+stat lines in a tracked file.
+
+**Ruled: multiple independent books promote a spelling from per-source to
+canonical.** This AMENDS the same-day ruling that a spelling learned from a book
+stays on that book's profile. That ruling was right on the evidence it had —
+ONE book heading its hit dice `HIT DICE`, from which generalising is this
+project's named standing failure. The new evidence is different in kind: a sweep
+of 93 books found `Hit Dice` in four independent titles across two publishers,
+and `Saves D# R# H# B# S#` — B/X's own letter names — in several more. A wording
+several unrelated publishers use is the family's, not one book's. The per-source
+mechanism stays exactly as it was for everything that has been seen once.
+
+**Ruled: a partial reading is worse than none, and the corpus is how you find
+them.** The alternate save letters did not fail loudly. `SV D12 R13 H14 B15 S16`
+matched three of five letters and quietly produced a creature with three saving
+throws, the other two left at their defaults with nothing to show the
+difference. A row is now accepted only when its letters make up a complete known
+set; anything else is reported. The same rule now guards the bare-number
+fallback, which used to turn a broken row into a confident single value.
+
+**Cost, and what it says about the method:** the two largest findings in the
+whole sweep were bugs in rules added earlier the same day. The residue cut,
+introduced so nothing read is dropped, cut at the first comma anywhere — so it
+severed a group's hit points (`(hp 4, 6, 7)`) and every thousands separator in
+the corpus, the latter 141 times across 22 books, presenting as an unexplained
+bare number. Both are one-line fixes and neither was visible from the three
+books the feature was built against. Coverage over the whole corpus went
+72% → 90% on these findings alone.

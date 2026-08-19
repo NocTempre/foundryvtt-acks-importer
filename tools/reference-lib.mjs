@@ -12,6 +12,22 @@ import fs from "node:fs";
 export const LIB = "C:\\Proj\\acks-reference\\ACKSII";
 export const LIB_AX = "C:\\Proj\\acks-reference\\AX";
 
+/**
+ * Third-party OSE and B-X adventures, for testing the stat-block grammar
+ * against the range of things publishers actually print.
+ *
+ * Not a list of files, because it is not a fixed set: it is whatever this
+ * machine's owner has bought, arranged however they arranged it, and it grows.
+ * Tools walk it rather than name anything in it.
+ *
+ * The same LOCAL-ONLY rules apply as to the ACKS library, and one more that
+ * matters more here: a coverage report over this corpus is full of other
+ * publishers' stat lines, so no tool may write one into the repo. Report
+ * SHAPES, print to stdout, and keep the values on the machine that owns the
+ * books.
+ */
+export const LIB_OSE = "C:\\Proj\\ose-reference";
+
 /** Book id -> the exact printing the register's page numbers were read from. */
 export const FILES = {
   rr: `${LIB}\\ACKSII_Revised_Rulebook_DIGITAL_FINAL_r10_2nd_Printing.pdf`,

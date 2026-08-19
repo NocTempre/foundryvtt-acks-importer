@@ -160,7 +160,11 @@ export function convertOse(parsed, constants, opts = {}) {
   // OSE prints both progressions, so the two routes check each other. A
   // disagreement means the block was mis-read (a sheared column, a box that
   // caught a neighbour) and produces a gap rather than a guessed winner.
-  if (f.ac) {
+  if (f.ac?.note) {
+    // An armour class stated in words is a real answer and not a number; it is
+    // reported so the Judge can act on it, never guessed at.
+    gap("ac", f.ac.note, "not-a-number");
+  } else if (f.ac) {
     if (!constants) {
       gap("ac", f.ac.descending, "needs-guide");
     } else {
@@ -186,6 +190,12 @@ export function convertOse(parsed, constants, opts = {}) {
       extras.hd = hd;
       took("hd", f.hd, "raw-derivation", hd, "both systems rate monsters in hit dice");
     }
+    // A creature too slight to rate in hit dice printed its hit die instead.
+    // That IS the roll formula, so it is used as one.
+    if (f.hd.hpDie) {
+      system.hp = { hd: f.hd.hpDie };
+      took("hd", f.hd.hpDie, "transcribed", f.hd.hpDie, "printed hit die");
+    }
     // A hit die is d8 in both systems, and both drop a sub-1 HD monster to a
     // d4 — so the roll formula is derivable without consulting the guide.
     if (Number.isFinite(f.hd.count)) {
@@ -205,7 +215,9 @@ export function convertOse(parsed, constants, opts = {}) {
   // only the to-hit-AC-0 number is not converted: recovering the bonus from it
   // needs OSE's own internal identity, which the guide does not print and
   // which is therefore not a rule this importer may apply.
-  if (f.thac0) {
+  if (f.thac0?.note) {
+    gap("thac0", f.thac0.note, "not-a-number");
+  } else if (f.thac0) {
     if (!Number.isFinite(f.thac0.ascendingBonus)) {
       gap("thac0", f.thac0.toHitAc0, "no-attack-bonus-printed");
     } else if (!constants) {
@@ -254,6 +266,17 @@ export function convertOse(parsed, constants, opts = {}) {
     // One number is one statement. Spreading it across five saves would be
     // four values this book never printed.
     gap("saves", f.sv.single, "single-save-printed");
+  } else if (f.sv?.note) {
+    gap("saves", f.sv.note, "not-a-number");
+  } else if (f.sv?.asCreature) {
+    // A save row stated as "as a vampire" is complete and unresolvable here:
+    // this module has no bestiary to look the creature up in.
+    gap("saves", `as ${f.sv.asCreature}`, "saves-by-reference");
+  } else if (f.sv?.partial) {
+    // Letters that make up no complete set. Writing the ones that happened to
+    // be recognised would give the creature some of its saving throws and
+    // leave the rest at their defaults, with nothing to show the difference.
+    gap("saves", Object.entries(f.sv.partial).map(([k, v]) => `${k}${v}`).join(" "), "incomplete-save-row");
   }
 
   if (f.sv?.saveAs) {
@@ -266,6 +289,15 @@ export function convertOse(parsed, constants, opts = {}) {
       extras.saveAs = saveAs;
       took("saveAs", f.sv.saveAs, cls ? "guide" : "raw-derivation", saveAs, cls ? "SCG p.1" : "printed level");
     }
+  }
+
+  // An NPC block prints its level as a field of its own rather than inside the
+  // save clause. It is the same statement, so it fills the same slot — but only
+  // where the save clause did not already say so, since that one is the more
+  // specific.
+  if (Number.isFinite(f.level) && !Number.isFinite(extras.saveAs?.level)) {
+    extras.saveAs = { ...(extras.saveAs ?? {}), level: f.level };
+    took("level", f.level, "transcribed", f.level, "printed level");
   }
 
   /* --- Morale ------------------------------------------------------------ */

@@ -26,17 +26,18 @@ export const OSE_CANONICAL = Object.freeze({
   base: "ose.canonical",
   labels: Object.freeze({
     ac: ["AC"],
-    hd: ["HD"],
+    hd: ["HD", "Hit Dice"],
     hp: ["hp"],
     att: ["Att"],
     thac0: ["THAC0"],
     mv: ["MV"],
-    sv: ["SV"],
+    sv: ["SV", "Saves"],
     ml: ["ML"],
     al: ["AL"],
     xp: ["XP"],
     na: ["NA"],
     tt: ["TT"],
+    level: ["Level"],
   }),
   saveForm: "five",
   mvOrder: "explorationFirst",
@@ -137,7 +138,14 @@ function count(tok) {
  */
 function readAc(v) {
   const m = /(-?\d+)\s*(?:\[\s*([+-]?\d+)\s*\])?/.exec(v);
-  if (!m) return null;
+  // Not every armour class is a number. A creature that cannot be attacked
+  // prints a sentence where the figure goes, and that sentence is the answer —
+  // keeping it as a note beats reporting the field as unread, which is what
+  // returning null would do.
+  if (!m) {
+    const note = String(v ?? "").trim();
+    return note ? { note } : null;
+  }
   const out = { descending: parseInt(m[1], 10) };
   if (m[2] != null) out.ascending = parseInt(m[2], 10);
   else out.bare = true;
@@ -147,23 +155,73 @@ function readAc(v) {
 /** `1**`, `4*`, `1+1*`, `1-1`, `1/2`, `40*`. Asterisks mark XP-bearing specials. */
 function readHd(v) {
   const m = /^\s*(\d+(?:\s*\/\s*\d+)?)\s*([+-]\s*\d+)?\s*(\*+)?/.exec(v);
-  if (!m) return null;
+  if (!m) {
+    // Some creatures are too slight to rate in hit dice at all and print a hit
+    // die instead — "HD (1d3)". That is a statement about hit points, not a
+    // missing hit-dice rating, so it is recorded as one.
+    const die = /\(\s*(\d+d\d+(?:[+-]\d+)?)\s*\)/i.exec(v);
+    return die ? { hpDie: die[1] } : null;
+  }
   const out = { count: count(m[1].replace(/\s+/g, "")) };
   if (m[2]) out.bonus = parseInt(m[2].replace(/\s+/g, ""), 10);
   if (m[3]) out.asterisks = m[3].length;
   return out;
 }
 
-/** `(4hp)`, `(9 hp)`, `(13hp)` — printed inside the hit-dice clause. */
+/**
+ * Hit points, printed inside the hit-dice clause.
+ *
+ * `(4hp)` and `(hp 4)` are the same statement written two ways, and a group
+ * prints one figure per creature — `(hp 4, 6, 7)`. The first is the creature's
+ * own; the rest belong to its fellows, and are kept rather than dropped so a
+ * Judge placing three of them can see what the page allotted each.
+ */
 function readHp(v) {
-  const m = /\(\s*(\d+)\s*hp\s*\)/i.exec(v);
-  return m ? parseInt(m[1], 10) : null;
+  const m = /\(\s*(?:hp\s*)?(\d+(?:\s*,\s*\d+)*)\s*(?:hp)?\s*\)/i.exec(v);
+  if (!m) return null;
+  const all = m[1].split(",").map((n) => parseInt(n.trim(), 10)).filter(Number.isFinite);
+  return all.length ? all[0] : null;
 }
 
-/** `19 [0]`, `16 [+3]`, `18 [1]`, or a bare `19`. */
+/**
+ * Hit points under their own label, where a group prints one figure per
+ * creature and no brackets — "hp 3, 3, 4". The first is this creature’s.
+ */
+function readHpList(v) {
+  const all = String(v ?? "")
+    .split(",")
+    .map((n) => parseInt(String(n).trim(), 10))
+    .filter(Number.isFinite);
+  return all.length ? all[0] : null;
+}
+
+/** Every hit-point figure printed under a bare hp label, when more than one. */
+function readHpListEach(v) {
+  const all = String(v ?? "")
+    .split(",")
+    .map((n) => parseInt(String(n).trim(), 10))
+    .filter(Number.isFinite);
+  return all.length > 1 ? all : null;
+}
+
+/** Every hit-point figure in a group's clause, when it printed more than one. */
+function readHpEach(v) {
+  const m = /\(\s*(?:hp\s*)?(\d+(?:\s*,\s*\d+)*)\s*(?:hp)?\s*\)/i.exec(v);
+  if (!m) return null;
+  const all = m[1].split(",").map((n) => parseInt(n.trim(), 10)).filter(Number.isFinite);
+  return all.length > 1 ? all : null;
+}
+
+/** `19 [0]`, `16 [+3]`, `18 [1]`, a bare `19`, or a value stated in words. */
 function readThac0(v) {
   const m = /(\d+)\s*(?:\[\s*([+-]?\d+)\s*\])?/.exec(v);
-  if (!m) return null;
+  // "By weapon" is an answer, not an absence: the figure depends on something
+  // the block declines to fix. Kept as a note so the field reads as stated
+  // rather than as unread.
+  if (!m) {
+    const note = String(v ?? "").trim();
+    return note ? { note } : null;
+  }
   const out = { toHitAc0: parseInt(m[1], 10) };
   if (m[2] != null) out.ascendingBonus = parseInt(m[2], 10);
   else out.bare = true;
@@ -194,6 +252,21 @@ function readMv(v) {
 }
 
 /**
+ * The letter sets books print the five saving throws under.
+ *
+ * Both name the same five categories. B/X and several of its descendants write
+ * Rays where Old-School Essentials writes Wands, and Hold where it writes
+ * Paralysis; `as` maps the alternates onto the first set's letters so everything
+ * downstream sees one vocabulary. Found in the corpus, not guessed: a sweep of
+ * the third-party library turned up `Saves D# R# H# B# S#` across several
+ * publishers.
+ */
+const SAVE_LETTER_SETS = [
+  { id: "dwpbs", letters: ["D", "W", "P", "B", "S"] },
+  { id: "drhbs", letters: ["D", "R", "H", "B", "S"], as: { R: "W", H: "P" } },
+];
+
+/**
  * `D13 W14 P13 B16 S15 (Magic-user 1)`, `D12 W13 P14 B15 S16`, `14`, `14 (3)`.
  *
  * The five-letter row and the single number are DIFFERENT printings, not one
@@ -204,9 +277,28 @@ function readMv(v) {
  */
 function readSv(v) {
   const out = {};
-  const five = {};
-  for (const m of v.matchAll(/\b([DWPBS])\s*(\d+)/g)) five[m[1]] = parseInt(m[2], 10);
-  if (Object.keys(five).length) out.row = five;
+
+  // The five saves, and the two letter sets books print them under. B/X and its
+  // descendants name the same categories differently — Rays for Wands, Hold for
+  // Paralysis — and a reader that knows only one set does not fail on the other,
+  // it succeeds PARTLY: three letters match, two are invisible, and the creature
+  // silently gets three saving throws. So the row is only accepted when the
+  // letters actually make up a complete known set.
+  const printed = {};
+  for (const m of v.matchAll(/\b([DWPBSRH])\s*(\d+)/g)) printed[m[1]] = parseInt(m[2], 10);
+  const seen = Object.keys(printed);
+  if (seen.length) {
+    const set = SAVE_LETTER_SETS.find((s) => s.letters.every((l) => printed[l] !== undefined));
+    if (set) {
+      out.row = {};
+      for (const letter of set.letters) out.row[(set.as ?? {})[letter] ?? letter] = printed[letter];
+      if (set.id !== "dwpbs") out.letterSet = set.id;
+    } else {
+      // Letters that belong to no complete set: report them rather than build a
+      // row out of whichever ones happened to be recognised.
+      out.partial = printed;
+    }
+  }
 
   // The parenthetical names the class and level the creature saves as.
   const paren = /\(([^)]*)\)/.exec(v);
@@ -218,8 +310,25 @@ function readSv(v) {
     else if (inner) out.saveAs = { token: inner };
   }
 
-  if (!out.row) {
-    // A lone number, with any class parenthetical already taken above.
+  // "Saves as a vampire" is a whole save row, stated by reference to a creature
+  // this grammar has never heard of. It is a real answer and it is not one this
+  // module can resolve, so it is recorded for the converter to report rather
+  // than left to look like an unreadable clause.
+  const asCreature = /^\s*as\s+(?:a\s+|an\s+)?([A-Za-z][A-Za-z' -]{1,30}?)\s*\.?\s*$/i.exec(v);
+  if (!out.row && asCreature) out.asCreature = asCreature[1].trim();
+
+  // A save row stated in words — "By class" — same as the armour class and the
+  // attack throw above.
+  if (!out.row && !out.asCreature && !seen.length && /[A-Za-z]/.test(v) && !/^s*d/.test(v)) {
+    const note = String(v).trim();
+    if (note) out.note = note;
+  }
+
+  // A lone number is a DIFFERENT printing, not a fallback for a row that would
+  // not assemble: where save letters were present but made up no complete set,
+  // reading the first figure as "the" saving throw would turn a broken row into
+  // a confident single value.
+  if (!out.row && !out.asCreature && !out.note && !seen.length) {
     const bare = int(v.replace(/\([^)]*\)/g, ""));
     if (bare != null) out.single = bare;
   }
@@ -296,12 +405,39 @@ function readAtt(v) {
  * `att` is excluded because its reader stores the whole clause in `.text`, so
  * nothing is lost there — and a comma legitimately separates attack modes.
  */
-const RESIDUE_FIELDS = new Set(["ac", "hd", "hp", "thac0", "mv", "sv", "ml", "al", "xp", "na", "tt"]);
+const RESIDUE_FIELDS = new Set(["ac", "hd", "thac0", "mv", "sv", "ml", "al", "xp", "na", "tt", "level"]);
+
+/**
+ * Where a clause really ends: the first comma OUTSIDE any bracket, or -1.
+ *
+ * A parenthetical routinely holds commas of its own — a group of creatures
+ * prints its hit points as "(hp 4, 6, 7)" — and cutting at the first comma
+ * found anywhere severs that list, keeping the head and reporting the tail as
+ * unread. The corpus sweep found this as four separate mystery shapes (`#)`,
+ * `#, #)`, `#, #, #)`) before it was one bug.
+ */
+function topLevelComma(s) {
+  let depth = 0;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === "(" || c === "[") depth++;
+    else if (c === ")" || c === "]") depth = Math.max(0, depth - 1);
+    else if (c === "," && depth === 0) {
+      // A comma between digits is a thousands separator, not a boundary
+      // between clauses. Cutting there turns an experience award of 1,250 into
+      // a 1 and a loose 250 — which is what the corpus sweep found, 141 times
+      // across 22 books, as an unexplained bare number.
+      if (/\d/.test(s[i - 1] ?? "") && /\d/.test(s[i + 1] ?? "")) continue;
+      return i;
+    }
+  }
+  return -1;
+}
 
 const READERS = {
   ac: readAc,
   hd: readHd,
-  hp: (v) => int(v),
+  hp: (v) => readHpList(v),
   att: readAtt,
   thac0: readThac0,
   mv: readMv,
@@ -311,6 +447,7 @@ const READERS = {
   xp: (v) => int(v),
   na: readNa,
   tt: (v) => v.replace(/[.,;]+$/, "").trim() || null,
+  level: (v) => int(v),
 };
 
 /* -------------------------------------------- */
@@ -359,8 +496,22 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
   const { re, rows } = labelPattern(prof.labels ?? OSE_CANONICAL.labels);
   const byFolded = new Map(rows.map((r) => [fold(r.s), r.key]));
 
+  // Bracket depth at every position. A label word inside a parenthetical is
+  // not a label — a hit-point list prints as "(hp 4, 6, 7)" and the "hp" in it
+  // belongs to the hit-dice clause, not to a field of its own. Reading it as a
+  // label splits one clause into two and strands the rest of the list.
+  const depth = new Array(src.length).fill(0);
+  let d = 0;
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (c === "(" || c === "[") d++;
+    depth[i] = d;
+    if (c === ")" || c === "]") d = Math.max(0, d - 1);
+  }
+
   const hits = [];
   for (const m of src.matchAll(re)) {
+    if (depth[m.index] > 0) continue;
     const key = byFolded.get(fold(m[1]));
     if (key) hits.push({ key, at: m.index, end: m.index + m[0].length });
   }
@@ -379,7 +530,7 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
     let raw = src.slice(h.end, hits[i + 1]?.at ?? src.length).replace(/^[:\s]+/, "").replace(/[,;]\s*$/, "").trim();
     out.labelsSeen.push(h.key);
     if (RESIDUE_FIELDS.has(h.key)) {
-      const comma = raw.indexOf(",");
+      const comma = topLevelComma(raw);
       if (comma >= 0) {
         const residue = raw.slice(comma + 1).trim();
         if (residue) out.extra.push(residue);
@@ -407,10 +558,16 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
       continue;
     }
     out.fields[h.key] = value;
+    if (h.key === "hp" && out.fields.hpEach === undefined) {
+      const each = readHpListEach(raw);
+      if (each) out.fields.hpEach = each;
+    }
     // Hit points print inside the hit-dice clause rather than under a label.
     if (h.key === "hd" && out.fields.hp === undefined) {
       const hp = readHp(raw);
       if (hp != null) out.fields.hp = hp;
+      const each = readHpEach(raw);
+      if (each) out.fields.hpEach = each;
     }
   }
   return out;

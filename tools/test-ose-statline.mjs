@@ -107,15 +107,21 @@ check(
 
 // A book that heads its hit dice differently gets its own profile. The
 // canonical profile must be untouched by it.
-const wld = resolveProfile({ base: "ose.demo", labels: { hd: ["HIT DICE"], att: ["ATT"] }, saveForm: "single" });
-const dialect = parseOseStatline("AC 6 [13], HIT DICE 4 (17hp), ATT 1 × slam (1d10), SV 13, ML 9", wld);
+const wld = resolveProfile({ base: "ose.demo", labels: { hd: ["HITPOINTS DICE"], att: ["ATT"] }, saveForm: "single" });
+const dialect = parseOseStatline("AC 6 [13], HITPOINTS DICE 4 (17hp), ATT 1 × slam (1d10), SV 13, ML 9", wld);
 check("dialect hd", dialect.fields.hd, { count: 4 });
 check("dialect hp", dialect.fields.hp, 17);
 check("dialect att", dialect.fields.att.modes[0].name, "slam");
 check("dialect tag", dialect.dialect, "ose.demo");
-ok("canonical unchanged by the dialect", OSE_CANONICAL.labels.hd.join() === "HD", OSE_CANONICAL.labels.hd.join());
+// The point is that the shared profile is not MUTATED by a per-source one —
+// not that it holds any particular list, which the corpus keeps changing.
+ok(
+  "canonical unchanged by the dialect",
+  !OSE_CANONICAL.labels.hd.some((x) => x.toLowerCase() === "hitpoints dice"),
+  OSE_CANONICAL.labels.hd.join(),
+);
 // ...and the canonical profile must NOT read that book's wording.
-check("canonical does not learn HIT DICE", parseOseStatline("AC 6 [13], HIT DICE 4 (17hp)").fields.hd, undefined);
+check("canonical does not learn HITPOINTS DICE", parseOseStatline("AC 6 [13], HITPOINTS DICE 4 (17hp)").fields.hd, undefined);
 
 /* --- nothing is dropped, nothing throws ---------------------------------- */
 
@@ -125,7 +131,14 @@ check("prose is preserved", prose.extra.length, 1);
 
 const mangled = parseOseStatline("AC, HD, Att, THAC0 [ , MV (, SV D, ML, AL, XP");
 ok("mangled block does not throw", true);
-ok("mangled block keeps its pieces", mangled.extra.length > 0, JSON.stringify(mangled.extra));
+// Its pieces survive SOMEWHERE — as a field the reader made sense of, as a note
+// where the value was words, or in `extra`. Which container holds them matters
+// far less than that nothing vanished.
+ok(
+  "mangled block keeps its pieces",
+  mangled.extra.length > 0 || Object.keys(mangled.fields).length > 0,
+  JSON.stringify({ fields: mangled.fields, extra: mangled.extra }),
+);
 
 check("empty input", parseOseStatline("").fields, {});
 check("null input", parseOseStatline(null).fields, {});
@@ -136,14 +149,14 @@ ok("unknown clause surfaces", JSON.stringify(trailing.extra).includes("Frobnicat
 
 /* --- an unrecognised label's clause is never swallowed -------------------- */
 
-// Found live: a book heading its hit dice "HIT DICE" under a profile that has
+// Found live: a book heading its hit dice "HITPOINTS DICE" under a profile that has
 // never heard of it. The words are not a label, so they fall inside the
 // PREVIOUS field's segment — and every reader takes what it recognises off the
 // front and dropped the rest without a trace. No gap, no warning, no hit points.
 {
-  const foreign = parseOseStatline("AC 7 [12], HIT DICE 1 (4hp), Att 1 x bite (1d4), ML 7, AL Neutral");
+  const foreign = parseOseStatline("AC 7 [12], HITPOINTS DICE 1 (4hp), Att 1 x bite (1d4), ML 7, AL Neutral");
   check("the armour class still reads", foreign.fields.ac, { descending: 7, ascending: 12 });
-  ok("the unknown clause is not lost", JSON.stringify(foreign.extra).includes("HIT DICE 1 (4hp)"), JSON.stringify(foreign.extra));
+  ok("the unknown clause is not lost", JSON.stringify(foreign.extra).includes("HITPOINTS DICE 1 (4hp)"), JSON.stringify(foreign.extra));
   ok("and no hit dice are invented from it", foreign.fields.hd === undefined);
 }
 
@@ -154,6 +167,63 @@ ok("unknown clause surfaces", JSON.stringify(trailing.extra).includes("Frobnicat
   check("the attack clause is kept whole", att.fields.att.text, "1 x claw (1d4), 1 x bite (1d6)");
   check("morale still reads past it", att.fields.ml, 6);
 }
+
+/* --- rules the corpus asked for ------------------------------------------ */
+
+// Sweeping the third-party library is what turns "this block did not fit" into
+// a rule. Each group below was a ranked finding in that report before it was a
+// rule here.
+
+// B/X and several descendants name two of the five saves differently — Rays for
+// Wands, Hold for Paralysis. Knowing only one set does not fail on the other, it
+// succeeds PARTLY: three letters match, two are invisible, and the creature
+// quietly ends up with three saving throws.
+{
+  const alt = parseOseStatline("AC 5 [14], HD 3, SV D12 R13 H14 B15 S16, ML 8");
+  check("alternate letters normalise", alt.fields.sv.row, { D: 12, W: 13, P: 14, B: 15, S: 16 });
+  check("and the set is recorded", alt.fields.sv.letterSet, "drhbs");
+  const std = parseOseStatline("AC 5 [14], HD 3, SV D12 W13 P14 B15 S16, ML 8");
+  check("the usual letters still read", std.fields.sv.row, { D: 12, W: 13, P: 14, B: 15, S: 16 });
+  ok("and are not marked as an alternate", std.fields.sv.letterSet === undefined);
+  // "Saves" as the label, found across several publishers.
+  check("Saves is a spelling of SV", parseOseStatline("AC 5 [14], Saves D12 R13 H14 B15 S16").fields.sv.row.W, 13);
+  // Letters belonging to no complete set must not become a row.
+  const partial = parseOseStatline("AC 5 [14], SV D12 B15 S16, ML 8");
+  ok("an incomplete row is not built", partial.fields.sv.row === undefined, JSON.stringify(partial.fields.sv));
+  check("it is reported instead", partial.fields.sv.partial, { D: 12, B: 15, S: 16 });
+}
+
+// NPC blocks print a level of their own rather than inside the save clause.
+check("a printed level reads", parseOseStatline("AC 5 [14], HD 3, Level 2, ML 8").fields.level, 2);
+
+// A label word inside a parenthetical is not a label. A group's hit points
+// print as "(hp 4, 6, 7)", and reading that "hp" as a field of its own splits
+// the clause and strands the rest of the list.
+{
+  const group = parseOseStatline("AC 6 [13], HD 1 (hp 18, 20), ML 8, AL Neutral");
+  check("the hit-dice clause stays whole", group.fields.hd, { count: 1 });
+  check("the first figure is the creature's", group.fields.hp, 18);
+  check("and its fellows are kept", group.fields.hpEach, [18, 20]);
+  check("morale still reads past it", group.fields.ml, 8);
+  check("nothing is left over", group.extra, []);
+
+  const three = parseOseStatline("AC 6 [13], HD 2 (hp 7, 9, 10), Att 1 x claw (1d4), ML 8");
+  check("a longer list reads", three.fields.hpEach, [7, 9, 10]);
+  check("and the attack after it survives", three.fields.att.modes[0].name, "claw");
+  check("with nothing left over", three.extra, []);
+}
+
+// Both spellings of a single creature's hit points.
+check("hp after the number", parseOseStatline("AC 5 [14], HD 1 (4hp)").fields.hp, 4);
+check("hp before the number", parseOseStatline("AC 5 [14], HD 1 (hp 4)").fields.hp, 4);
+ok("a single figure lists no fellows", parseOseStatline("AC 5 [14], HD 1 (4hp)").fields.hpEach === undefined);
+
+// The residue cut must respect brackets, or it severs the very lists above.
+check(
+  "an unlabelled clause is still surfaced",
+  JSON.stringify(parseOseStatline("AC 7 [12], HD 1 (4hp), ML 8, Frobnicator 4").extra),
+  JSON.stringify(["Frobnicator 4"]),
+);
 
 if (failed) {
   console.error(`\nose-statline: ${failed} failure(s)`);

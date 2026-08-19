@@ -93,10 +93,10 @@ check("stage A still carries the extras", stageA.flags["acks-extras"].extras.hd,
 
 // A label the profile does not know must reach the document, so the Judge can
 // see it was there. Silently dropping it is the failure this asserts against.
-const foreignLabel = build("AC 7 [12], HIT DICE 1 (4hp), Att 1 x bite (1d4), ML 7, AL Neutral");
+const foreignLabel = build("AC 7 [12], VITALITY 1 (4hp), Att 1 x bite (1d4), ML 7, AL Neutral");
 ok(
   "an unknown label's clause survives to the document",
-  JSON.stringify(foreignLabel.flags["acks-importer"].ose.extra).includes("HIT DICE"),
+  JSON.stringify(foreignLabel.flags["acks-importer"].ose.extra).includes("VITALITY"),
   JSON.stringify(foreignLabel.flags["acks-importer"].ose.extra),
 );
 

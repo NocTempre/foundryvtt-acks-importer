@@ -7,7 +7,9 @@
  * grammar read, what each value converted to and on whose authority, and every
  * axis the converter refused — and then decides. A candidate the locator marked
  * as another game's stat block, or as two creatures read as one, cannot be
- * imported by pressing the ordinary button at all.
+ * imported by pressing the ordinary button at all — it is offered to the hand
+ * editor instead, so a block the geometry will not vouch for is still reachable
+ * rather than a dead end.
  *
  * Source PDFs are session-only, exactly as the shipped books are. Nothing about
  * a third-party book is written to disk beyond the Judge's own registry entry:
@@ -33,6 +35,7 @@ import {
 import { oseActorData, moraleBoundsFromSchema, convertUnconvertedOse } from "./ose-binding.mjs";
 import { createDoc, cookbookContentFile, cookbookRegisters, cookbookSessionDoc } from "./cookbook.mjs";
 import { readScgConstants } from "./scg-constants.mjs";
+import { oseManualDialog } from "./ose-manual.mjs";
 
 /** Opened source PDFs, this session only. */
 export const oseDocs = new Map();
@@ -276,12 +279,12 @@ export async function oseReviewDialog(sourceId, page) {
       (p) => `
       <fieldset class="acks-importer-ose-block${p.blocked ? " acks-importer-ose-blocked" : ""}">
         <legend>
-          <label><input type="checkbox" name="sel" value="${p.i}"${p.blocked ? " disabled" : ""}>
-          ${loc("ose.candidate", { n: p.i + 1 })}</label>
+          <label><input type="checkbox" name="${p.blocked ? "hand" : "sel"}" value="${p.i}">
+          ${loc("ose.candidate", { n: p.i + 1 })}${p.blocked ? ` — ${loc("ose.sendToHand")}` : ""}</label>
         </legend>
         ${p.warn.length ? `<p class="acks-importer-ose-warn">${p.warn.map(esc).join("<br>")}</p>` : ""}
         <div class="form-group"><label>${loc("ose.creatureName")}</label>
-          <input type="text" name="name-${p.i}" ${p.blocked ? "disabled" : ""} placeholder="${esc(loc("ose.creaturePlaceholder"))}"></div>
+          <input type="text" name="name-${p.i}" placeholder="${esc(loc("ose.creaturePlaceholder"))}"></div>
         <pre class="acks-importer-ose-raw">${esc(p.ose.raw)}</pre>
         ${axisTable({ conversions: p.ose.conversions, gaps: p.ose.gaps })}
         ${p.ose.extra?.length ? `<p class="notes">${loc("ose.unread")}: ${esc(p.ose.extra.join(" · "))}</p>` : ""}
@@ -304,9 +307,21 @@ export async function oseReviewDialog(sourceId, page) {
       callback: async (event, button) => {
         const form = button.form;
         const picked = [...form.querySelectorAll('input[name="sel"]:checked')].map((el) => previews[+el.value]);
-        if (!picked.length) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.nothingPicked")}`);
-        const names = Object.fromEntries(picked.map((p) => [p.i, form.elements[`name-${p.i}`]?.value?.trim() ?? ""]));
-        return importOseBlocks(rec, page, picked, names, constants, bounds);
+        const byHand = [...form.querySelectorAll('input[name="hand"]:checked')].map((el) => previews[+el.value]);
+        if (!picked.length && !byHand.length) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.nothingPicked")}`);
+        const nameOf = (p) => form.elements[`name-${p.i}`]?.value?.trim() ?? "";
+        if (picked.length) {
+          const names = Object.fromEntries(picked.map((p) => [p.i, nameOf(p)]));
+          await importOseBlocks(rec, page, picked, names, constants, bounds);
+        }
+        // A block the locator would not vouch for is not a dead end: its text
+        // goes to the hand editor, where a person can settle what the geometry
+        // could not. That is what keeps every block the sweep FINDS reachable,
+        // whether or not the grammar could read it.
+        for (const p of byHand) {
+          await oseManualDialog({ name: nameOf(p), lineage: rec.lineage, raw: p.ose.raw });
+        }
+        return null;
       },
     },
   });

@@ -248,6 +248,32 @@ try {
   failed++;
 }
 
+/* --- rules the corpus asked for ------------------------------------------ */
+
+// An incomplete save row must not become some saving throws and some defaults.
+{
+  const partial = run("AC 5 [14], SV D12 B15 S16, ML 8");
+  ok("no save row is written", partial.system.saves === undefined, JSON.stringify(partial.system.saves));
+  check("and it says why", gapFor(partial, "saves").reason, "incomplete-save-row");
+}
+
+// The alternate letters convert exactly like the usual ones — they are the same
+// five categories under other names, so the ACKS values must be identical.
+{
+  const alt = run("AC 5 [14], SV D11 R12 H10 B14 S13 (3)").system.saves;
+  const std = run("AC 5 [14], SV D11 W12 P10 B14 S13 (3)").system.saves;
+  check("both letter sets give the same saves", alt, std);
+}
+
+// A level printed as its own field fills the same slot as one inside the save
+// clause — but never overrides it, since that one is the more specific.
+{
+  const own = run("AC 5 [14], HD 3, Level 2, ML 8");
+  check("a printed level reaches saves-as", own.extras.saveAs.level, 2);
+  const both = run("AC 5 [14], SV D11 W12 P10 B14 S13 (5), Level 2");
+  check("the save clause wins where both print", both.extras.saveAs.level, 5);
+}
+
 if (failed) {
   console.error(`\nose-convert: ${failed} failure(s)`);
   process.exit(1);

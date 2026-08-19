@@ -139,3 +139,64 @@ understands it from then on.
 
 A hand-converted creature carries the same record as an imported one, with
 `origin: "hand"`, no page and no box. The Source tab reads it unchanged.
+
+## Improving the grammar
+
+A block that has to be corrected by hand is a **defect report against the
+parser**, not a case the manual editor exists to absorb. The editor is there so
+a Judge is never stuck; the misreading is still meant to become a rule.
+
+```bash
+node tools/ose-coverage.mjs                 # every book in the library
+node tools/ose-coverage.mjs --book carcass  # one title
+node tools/ose-coverage.mjs --samples       # one real clause per finding
+```
+
+It sweeps the local OSE library named by `LIB_OSE` in `tools/reference-lib.mjs`
+— LOCAL-ONLY, whatever the machine's owner owns — and ranks what the grammar
+could not read. Take the top line, write the rule, run it again. The number to
+move is the share of blocks read completely.
+
+**Findings are SHAPES, not values.** Every digit run folds to `#`, so
+`HIT DICE 2 (9hp)` and `HIT DICE 11 (48hp)` are one finding, and the report
+carries no publisher's numbers. It prints to stdout and writes nothing — a
+coverage file in the repo would be a corpus of other publishers' stat lines in a
+tracked file.
+
+### What the sweep is for
+
+Two things, and the second is the surprising one.
+
+It finds **wordings the grammar has never seen** — `Hit Dice` for `HD`, `Saves`
+for `SV`, B/X's own `D R H B S` save letters. A wording several unrelated
+publishers use is the family's rather than one book's, and that evidence is what
+promotes it from a per-source profile into the canonical set (see DECISIONS).
+
+It also finds **bugs in rules already written**, which no amount of staring at
+three sample books will. The two largest findings in the first full sweep were
+both from the same earlier rule: the residue cut severed a group's hit points at
+the comma inside `(hp 4, 6, 7)`, and severed every thousands separator in the
+corpus — 141 times across 22 books, presenting as an unexplained bare number.
+
+### A partial reading is worse than none
+
+The alternate save letters did not fail loudly. `SV D12 R13 H14 B15 S16` matched
+three of five and quietly produced a creature with three saving throws, the rest
+at their defaults with nothing to mark the difference. A row is now accepted
+only when its letters make up a complete known set; anything else is reported as
+a gap. When a rule is added here, prefer refusing to guessing — a gap is visible
+on the Source tab and a wrong number is not.
+
+### Where it stands
+
+Last full sweep: **1127 blocks across 93 books, 90% read completely** from the
+text alone, up from 72% before the corpus was used as a feedback loop. What
+remains is long tail — the largest single finding is six occurrences in two
+books — and it is what the per-source calibration and the hand editor exist for.
+
+The two halves are meant to add up. The grammar reads what publishers write in
+common; a wording only one book uses is calibrated onto that book; and anything
+the geometry will not vouch for is offered to the hand editor rather than
+refused outright. **Every block the sweep finds is reachable**, whether or not
+the parser could read it — that is the number that has to be 100%, and the 90%
+is how much of it happens without a person.

@@ -191,11 +191,13 @@ for (const bad of [null, undefined, {}, { items: [] }, { items: [{ x: 0, y: 0, h
 }
 
 
-/** A page whose hit dice are headed with a word the canonical profile lacks. */
+/** A page headed with a word the canonical profile does not know. The word is
+ * invented on purpose: a real one keeps getting promoted into the canon by the
+ * corpus, and this test is about DETECTING the unknown, not about any label. */
 function pageWithUnknownLabel() {
   return page(
     filler(40, 200),
-    line(40, 100, "AC", "7", "[12],", "HIT", "DICE", "1", "(4hp),", "Att", "1", "x", "bite", "(1d4),"),
+    line(40, 100, "AC", "7", "[12],", "VITALITY", "1", "(4hp),", "Att", "1", "x", "bite", "(1d4),"),
     line(40, 112, "THAC0", "17", "[+2],", "MV", "90", "(30),", "ML", "7,", "AL", "Neutral,", "XP", "13"),
   );
 }
@@ -215,7 +217,7 @@ function pageWithUnknownLabel() {
   const unknown = unknownLabels(page);
   ok(
     "the unfamiliar label is reported",
-    unknown.some((u) => u.label.toUpperCase() === "HIT DICE"),
+    unknown.some((u) => u.label.toUpperCase() === "VITALITY"),
     JSON.stringify(unknown),
   );
   // A page whose labels are all known must stay quiet, or every import nags.

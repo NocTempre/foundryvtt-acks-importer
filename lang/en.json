@@ -260,5 +260,10 @@
   "ACKS-IMPORTER.ose.manualBack": "Back to the fields",
   "ACKS-IMPORTER.ose.manualCreate": "Create the creature",
   "ACKS-IMPORTER.ose.manualMade": "Created “{name}”.",
-  "ACKS-IMPORTER.ose.manualMadeUnconverted": "Created “{name}” — armour class and attack throw still need the System Compatibility Guide."
+  "ACKS-IMPORTER.ose.manualMadeUnconverted": "Created “{name}” — armour class and attack throw still need the System Compatibility Guide.",
+  "ACKS-IMPORTER.ose.field.level": "Level",
+  "ACKS-IMPORTER.ose.gap.incomplete-save-row": "the printed saving throws make up no complete set",
+  "ACKS-IMPORTER.ose.gap.not-a-number": "the armour class is stated in words, not a figure",
+  "ACKS-IMPORTER.ose.gap.saves-by-reference": "the saving throws are stated as another creature’s",
+  "ACKS-IMPORTER.ose.sendToHand": "correct by hand"
 }
