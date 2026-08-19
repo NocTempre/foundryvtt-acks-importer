@@ -5,17 +5,25 @@ cookbook and its authoring pipeline are [COOKBOOK.md](COOKBOOK.md) and
 [RECIPES.md](RECIPES.md); this is the fourth surface, and the only one whose
 source books nobody has authored recipes for.
 
-## Why it is not a cookbook book
+## Two ways a book is read
 
-Every ACKS book in [`scripts/books.mjs`](../scripts/books.mjs) has hand-authored
-page geometry compiled against one exact printing. That works for seven books
-and cannot work for third-party adventures: there are thousands, none has a
-recipe, and a module cannot ship a list of other publishers' books anyway.
+**Most books have no recipe, and never will.** There are thousands of OSE
+adventures, and a source with no cookbook is registered by the Judge, in the
+world, and never shipped. What ships for those is the procedure — a grammar for
+the stat-block dialect, the arithmetic that turns its numbers into ACKS ones,
+and the gates that stop either from guessing. That path reads about nine blocks
+in ten with no authoring at all.
 
-So an OSE source is **registered by the Judge, in the world, and never
-shipped**. What ships is the procedure — a grammar for the stat-block dialect,
-the arithmetic that turns its numbers into ACKS ones, and the gates that stop
-either from guessing.
+**A named few are authored and shipped.** Where a title is worth taking to
+completion it gets a cookbook like an ACKS book: boxes the grammar could not
+find on its own, plus the prose, tables and art that geometry can reach and a
+stat-block reader cannot. The list is a deliberate IP ruling rather than an open
+door — see DECISIONS, "Third-party books get shipped cookbooks".
+
+Both are the same pipeline. **An authored entry supplies the BOX; the shipped
+grammar still does the reading** — so a rule the corpus teaches improves the
+authored books too, and an authored book can never drift into a private dialect
+of its own.
 
 ## The modules
 

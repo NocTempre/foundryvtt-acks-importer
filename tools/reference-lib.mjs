@@ -41,6 +41,19 @@ export const FILES = {
 };
 
 /**
+ * The authored third-party titles, by book id.
+ *
+ * Only books that have a cookbook are named here; the rest of the OSE library
+ * is walked rather than listed, because it is whatever this machine's owner
+ * bought and it grows. Separate from FILES so `referenceComplete` keeps meaning
+ * "the ACKS library is whole" — an OSE title missing from a machine stops that
+ * book's compile, not the family's.
+ */
+export const OSE_FILES = {
+  qd1: `${LIB_OSE}\\Necrotic Gnome\\Quick Delve _1_ Milk\\Quick_Delve_1_-_Milk.pdf`,
+};
+
+/**
  * True only when EVERY book is readable. A partial library still lets the
  * compiler do useful per-book work, but it cannot reproduce the whole cookbook
  * — so the drift check needs the stricter question, not "some book is here".

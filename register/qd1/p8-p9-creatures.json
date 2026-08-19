@@ -1,0 +1,94 @@
+[
+  {
+    "id": "qd1.apprentices",
+    "kind": "kind.oseMonster",
+    "book": "qd1",
+    "name": "Apprentices",
+    "anchor": {
+      "display": "appRentiCes"
+    },
+    "pages": [
+      8
+    ],
+    "assists": {
+      "block": {
+        "page": 8,
+        "box": {
+          "x0": 36,
+          "x1": 194.1592,
+          "y0": 462.50039999999996,
+          "y1": 503.00039999999996
+        }
+      }
+    }
+  },
+  {
+    "id": "qd1.chocolategolems",
+    "kind": "kind.oseMonster",
+    "book": "qd1",
+    "name": "Chocolategolems",
+    "anchor": {
+      "display": "CHoColategolems"
+    },
+    "pages": [
+      8
+    ],
+    "assists": {
+      "block": {
+        "page": 8,
+        "box": {
+          "x0": 215.7638,
+          "x1": 378.86140000000006,
+          "y0": 241.69429999999994,
+          "y1": 282.19429999999994
+        }
+      }
+    }
+  },
+  {
+    "id": "qd1.dwarves",
+    "kind": "kind.oseMonster",
+    "book": "qd1",
+    "name": "Dwarves",
+    "anchor": {
+      "display": "dwaRves"
+    },
+    "pages": [
+      9
+    ],
+    "assists": {
+      "block": {
+        "page": 9,
+        "box": {
+          "x0": 40,
+          "x1": 199.8619,
+          "y0": 186.74029999999993,
+          "y1": 227.24029999999993
+        }
+      }
+    }
+  },
+  {
+    "id": "qd1.skeletons",
+    "kind": "kind.oseMonster",
+    "book": "qd1",
+    "name": "Skeletons",
+    "anchor": {
+      "display": "skeletons"
+    },
+    "pages": [
+      9
+    ],
+    "assists": {
+      "block": {
+        "page": 9,
+        "box": {
+          "x0": 219.7638,
+          "x1": 383.4858000000002,
+          "y0": 126.74029999999993,
+          "y1": 167.24029999999993
+        }
+      }
+    }
+  }
+]

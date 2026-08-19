@@ -1,0 +1,198 @@
+{
+  "schema": "acks-cookbook/2",
+  "book": {
+    "id": "qd1",
+    "label": "Quick Delve #1: Milk",
+    "short": "QD1",
+    "pages": 20,
+    "titleRe": "^Milk$"
+  },
+  "entries": {
+    "qd1.apprentices": {
+      "id": "qd1.apprentices",
+      "kind": "kind.oseMonster",
+      "name": "Apprentices",
+      "book": "qd1",
+      "cite": "",
+      "pages": [
+        8
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 8,
+          "box": {
+            "x0": 36,
+            "x1": 194.1592,
+            "y0": 462.50039999999996,
+            "y1": 503.00039999999996
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23
+            ]
+          }
+        }
+      }
+    },
+    "qd1.chocolategolems": {
+      "id": "qd1.chocolategolems",
+      "kind": "kind.oseMonster",
+      "name": "Chocolategolems",
+      "book": "qd1",
+      "cite": "",
+      "pages": [
+        8
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 8,
+          "box": {
+            "x0": 215.7638,
+            "x1": 378.86140000000006,
+            "y0": 241.69429999999994,
+            "y1": 282.19429999999994
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22
+            ]
+          }
+        }
+      }
+    },
+    "qd1.dwarves": {
+      "id": "qd1.dwarves",
+      "kind": "kind.oseMonster",
+      "name": "Dwarves",
+      "book": "qd1",
+      "cite": "",
+      "pages": [
+        9
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 9,
+          "box": {
+            "x0": 40,
+            "x1": 199.8619,
+            "y0": 186.74029999999993,
+            "y1": 227.24029999999993
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "qd1.skeletons": {
+      "id": "qd1.skeletons",
+      "kind": "kind.oseMonster",
+      "name": "Skeletons",
+      "book": "qd1",
+      "cite": "",
+      "pages": [
+        9
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 9,
+          "box": {
+            "x0": 219.7638,
+            "x1": 383.4858000000002,
+            "y0": 126.74029999999993,
+            "y1": 167.24029999999993
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    }
+  }
+}

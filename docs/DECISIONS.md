@@ -1104,3 +1104,40 @@ moves the denominator and percentages stop being comparable across one. The
 density rule took the corpus from 1127 blocks to 1239 and from 1015 read to
 1120 — a hundred more creatures importable, at 92% → 93%. Judge locator work by
 the absolute count and grammar work by the share.
+
+---
+
+### Third-party books get shipped cookbooks (2026-08-19)
+
+`docs/OSE.md` said the opposite in as many words — "a module cannot ship a list
+of other publishers' books anyway" — and the whole OSE path was built on that:
+a grammar that ships, sources that are registered per world and never shipped.
+
+**Ruled by the IP reviewer: named third-party titles get full cookbooks,
+shipped like the ACKS books.** The scope is the OSE Advanced Fantasy Referee's
+Tome, the Dolmenwood Monster Book, and the Quick Delves, Wicked Little Delves
+and Planar Compass series. The target is 100% coverage — geometry patches where
+the grammar cannot reach, plus prose, tables, and art for creature entries —
+and keyed locations become location actors as well.
+
+The reviewer is the only one who can make this call: `ip-doctrine.md` says the
+value rule needs a human, and this is that rule applied to whose books may be
+recipe'd in public. Recorded here rather than assumed, because the shipped
+posture now differs between the ACKS library and everything else only by who
+authored it, and a later session reading OSE.md alone would conclude the
+reverse.
+
+**What does NOT change.** Structure ships and content is imported, exactly as
+before: a cookbook carries boxes, anchors and citations, never values or prose.
+Every number and every sentence still arrives from the reader's own copy at run
+time. The IP gates are unchanged and still apply — `lint-register.mjs` caps and
+`ip-scan.mjs` still refuse book text in tracked files, whoever published it.
+
+**Ruled: an OSE cookbook entry supplies GEOMETRY, and the existing grammar does
+the reading.** `kind.monster` is shaped for the Monstrous Manual's bold
+label/value rows and cannot read an inline OSE stat line. Rather than a second
+reader, an OSE entry names the box and the shipped `ose-statline.mjs` reads what
+comes out of it — so the corpus-driven grammar and the hand-authored books
+improve together instead of drifting apart. That is what makes 100% reachable:
+geometry solves precisely the cases the locator cannot find, and the grammar
+already reads 93% of what it does find.

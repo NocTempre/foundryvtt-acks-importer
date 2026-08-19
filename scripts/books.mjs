@@ -56,6 +56,15 @@ export const BOOKS = {
     titleRe: /Capital of the Borderlands/i,
     printedOffset: 2,
   },
+  // Authored third-party titles (DECISIONS: "Third-party books get shipped
+  // cookbooks"). Everything else in the OSE library is registered per world and
+  // never shipped; these are the named exceptions.
+  qd1: {
+    label: "Quick Delve #1: Milk",
+    short: "QD1",
+    pages: 20,
+    titleRe: /^Milk$/i,
+  },
   // The conversion instrument. It unlocks the OSE import path: the constants
   // that turn a foreign stat block into ACKS II values are printed here, so
   // they are read from the reader's own copy rather than shipped. The metadata
