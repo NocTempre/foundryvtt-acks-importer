@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/direction.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookOrganize) return ui.notifications.warn(\"acks-importer | organizing needs a newer module build.\");\napi.cookbookOrganize();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookOrganize !== \"function\") return ui.notifications.warn(\"acks-importer | Organize Cookbook Documents (GM) needs a newer build of this module.\");\napi.cookbookOrganize();",
   "folder": "ackscFldTools000",
   "sort": 400,
   "ownership": {

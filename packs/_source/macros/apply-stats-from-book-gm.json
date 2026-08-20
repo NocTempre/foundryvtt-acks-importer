@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/combat.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.applyStats();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.applyStats !== \"function\") return ui.notifications.warn(\"acks-importer | Apply Stats from Book (GM) needs a newer build of this module.\");\napi.applyStats();",
   "folder": "ackscFldTools000",
   "sort": 420,
   "ownership": {

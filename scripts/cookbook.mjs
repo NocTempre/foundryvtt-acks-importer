@@ -1146,9 +1146,10 @@ const sysObject = (doc) =>
 
 /**
  * GM: delete EVERY document this module imported — actors (monsters,
- * templates, families, NPCs), world abilities, journals, roll tables, and the
- * folders they were filed in. Identified by our own cookbook flag, so
- * hand-made documents are never touched. The counterpart to "import all":
+ * templates, families, NPCs), world abilities, journals, roll tables, the
+ * folders they were filed in, and the rules-table documents the ruledata
+ * provider materialized on import. Identified by our own cookbook flag (the
+ * provider identifies its own), so hand-made documents are never touched. The counterpart to "import all":
  * a clean slate for re-importing after a recipe change, and the reset the
  * test cycle needs.
  *
@@ -1171,11 +1172,20 @@ export async function cookbookRemoveImports() {
     (p) => p.metadata.packageType === "world" && String(p.metadata.label ?? "").startsWith(`${FOLDER_NAME} — `),
   );
   const packed = ourPacks.reduce((n, p) => n + p.index.size, 0);
-  const total = groups.reduce((n, [, docs]) => n + docs.length, 0) + packed;
+  // The rules-table import also materialized documents — RollTables, their
+  // folders, and the JSON journal — through the ruledata provider (ACKS
+  // Extras), which stamps no cookbook flag. The provider owns them, so it
+  // counts and removes them here. The imported table DATA (the world store
+  // the automation reads) deliberately stays: removing documents is a tidy-up,
+  // not an un-import.
+  const ruledata = globalThis.acksExtras?.lib?.services?.get?.("ruledata-import");
+  const materialized = ruledata?.countMaterializedDocs?.() ?? 0;
+  const total = groups.reduce((n, [, docs]) => n + docs.length, 0) + packed + materialized;
   if (!total) return ui.notifications.info("acks-importer | nothing imported by this module to remove.");
   const lines = [
     ...groups.filter(([, d]) => d.length).map(([type, d]) => `${d.length} ${type}(s)`),
     ...(packed ? [`${packed} in ${ourPacks.length} compendium(s)`] : []),
+    ...(materialized ? [`${materialized} materialized rules-table document(s)`] : []),
   ].join(", ");
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: "acks-importer — Remove Imports" },
@@ -1194,6 +1204,9 @@ export async function cookbookRemoveImports() {
   // "ACKS Cookbook — Actor" left behind is just clutter.
   for (const p of ourPacks) {
     await p.deleteCompendium().catch((err) => console.warn(`${MODULE_ID} | remove pack ${p.collection}`, err));
+  }
+  if (materialized) {
+    await ruledata.removeMaterializedDocs().catch((err) => console.warn(`${MODULE_ID} | remove materialized rules tables`, err));
   }
   packCache.clear();
   folderCache.clear();
@@ -4053,8 +4066,58 @@ export async function importClasses() {
   }
   await inheritRaceTongues(made);
   await syncRaceTongues(made);
+  await materializeClassTemplates(made);
   ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
   return made;
+}
+
+/**
+ * Materialize template packages for a set of class documents: each printed
+ * template row becomes a core `bundle` Item of repairable world documents,
+ * and the class gains a generated 3d6 RollTable linking them. ACKS Extras
+ * owns the shape (`acksExtras.classes.templates.materializeTemplates`) —
+ * this side only supplies the folders. Idempotent; silently a no-op when
+ * extras is absent or a document carries no template rows.
+ */
+async function materializeClassTemplates(docs, { create = true } = {}) {
+  const api = globalThis.acksExtras?.classes?.templates;
+  if (!api?.materializeTemplates) return null;
+  const totals = { created: 0, relinked: 0, skippedEdited: 0, unresolved: 0 };
+  let touched = 0;
+  for (const doc of docs ?? []) {
+    if (doc?.type !== CLASS_ITEM_TYPE || !(doc.system?.templates?.length > 0)) continue;
+    // A relink-only pass creates no folders — it has nothing to file.
+    const folder = create ? ((await ensureFolderPath("Item", [FOLDER_NAME, "Classes", "Templates", doc.name]))?.id ?? null) : null;
+    const tableFolder = create ? ((await ensureFolderPath("RollTable", [FOLDER_NAME, "Class Templates"]))?.id ?? null) : null;
+    const report = await api.materializeTemplates(doc, { folder, tableFolder, create });
+    for (const key of Object.keys(totals)) totals[key] += report?.[key]?.length ?? 0;
+    touched++;
+  }
+  return touched ? totals : null;
+}
+
+/**
+ * GM: build (or repair the links of) every class's template packages.
+ * Document-driven — works off the class documents already in the world, so a
+ * world imported long ago upgrades with NO book connected. Re-running never
+ * clobbers a Judge's repair: an edited document is skipped and counted.
+ */
+export async function importTemplatePackages() {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (creates items).");
+  if (!globalThis.acksExtras?.classes?.templates?.materializeTemplates) {
+    ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — template packages need its classes API.`);
+    return null;
+  }
+  const targets = (game.items ?? []).filter((i) => i.type === CLASS_ITEM_TYPE && (i.system?.templates?.length ?? 0) > 0);
+  if (!targets.length) {
+    ui.notifications?.info(`${MODULE_ID} | no class documents with template rows — import classes first.`);
+    return null;
+  }
+  const totals = await materializeClassTemplates(targets);
+  ui.notifications?.info(
+    `${MODULE_ID} | template packages: ${totals.created} created, ${totals.relinked} relinked, ${totals.skippedEdited} skipped (edited).`,
+  );
+  return totals;
 }
 
 /* -------------------------------------------- */
@@ -4543,6 +4606,11 @@ export async function cookbookUpdateClasses() {
   }
   await inheritRaceTongues(targets);
   await syncRaceTongues(targets);
+  // The update above replaced each document's whole `system`, which wipes the
+  // rows' cached bundle uuids — this re-derives them from the bundles' own
+  // flags and re-strips the arrays it restored, so a package is never handed
+  // over twice.
+  await materializeClassTemplates(targets);
   ui.notifications?.info(`${MODULE_ID} | classes updated: ${updated}.`);
   return updated;
 }

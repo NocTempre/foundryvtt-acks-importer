@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/eye.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.cookbookDebug();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookDebug !== \"function\") return ui.notifications.warn(\"acks-importer | Debug Raw Extraction (GM) needs a newer build of this module.\");\napi.cookbookDebug();",
   "folder": "ackscFldTools000",
   "sort": 430,
   "ownership": {

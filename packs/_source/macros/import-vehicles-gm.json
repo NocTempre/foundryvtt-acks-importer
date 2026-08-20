@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/stone-path.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importVehicles) return ui.notifications.warn(\"acks-importer | vehicle import needs a newer module build.\");\napi.importVehicles();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importVehicles !== \"function\") return ui.notifications.warn(\"acks-importer | Import Vehicles (GM) needs a newer build of this module.\");\napi.importVehicles();",
   "folder": "ackscFldImport00",
-  "sort": 230,
+  "sort": 250,
   "ownership": {
     "default": 2
   },

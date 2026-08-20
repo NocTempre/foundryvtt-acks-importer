@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/mystery-man.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.cookbookImport();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookImport !== \"function\") return ui.notifications.warn(\"acks-importer | Import Monsters & NPCs — choose from a list (GM) needs a newer build of this module.\");\napi.cookbookImport();",
   "folder": "ackscFldImport00",
   "sort": 200,
   "ownership": {

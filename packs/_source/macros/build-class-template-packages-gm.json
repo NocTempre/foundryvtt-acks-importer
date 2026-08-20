@@ -1,0 +1,20 @@
+{
+  "_id": "ackscMacClassTpl",
+  "_key": "!macros!ackscMacClassTpl",
+  "name": "Build Class Template Packages (GM)",
+  "type": "script",
+  "img": "icons/svg/chest.svg",
+  "scope": "global",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importTemplatePackages !== \"function\") return ui.notifications.warn(\"acks-importer | Build Class Template Packages (GM) needs a newer build of this module.\");\napi.importTemplatePackages();",
+  "folder": "ackscFldAbils000",
+  "sort": 350,
+  "ownership": {
+    "default": 2
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14",
+    "createdTime": 1784332800000,
+    "modifiedTime": 1784332800000
+  }
+}

@@ -15,11 +15,11 @@
  * only the number of clicks changes.
  *
  * PoC api (globalThis.acksImporter / game.modules.get("acks-importer").api):
- *   connectBook()    pick a book + your local PDF (location remembered)
- *   reconnectBooks() reopen this seat's remembered books (runs on join too)
+ *   connectBook()    pick books + local PDFs, or the folder holding them
+ *   reconnectBooks() retry the silent reopen, then the Books dialog
+ *   bookStatus()     the same Books dialog: every book's state + controls
  *   browseAndLoad()  GM: pick a page, choose headings, load actors/items
  *   applyStats()     fill monster actors from the connected book
- *   bookStatus()     which books are open / remembered / absent on this seat
  *   forgetBooks()    drop remembered locations + this session's prose
  */
 import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE } from "./constants.mjs";
@@ -40,14 +40,14 @@ import {
   cookbookCanReveal, cookbookProse, cookbookCount, refillMonster, resolveAbilities,
   importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
   importWeapons, importArmor, forgetImportedIndex,
-  importClasses, cookbookUpdateClasses, importTraps, importVariations, importVehicles,
+  importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
   cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
 } from "./cookbook.mjs";
 import { registerGettingStartedSettings, showGettingStarted } from "./getting-started.mjs";
 import { registerOseSourceSetting } from "./ose-source.mjs";
 import { registerOseSourceDialog, oseBrowseDialog, oseCalibrateDialog, oseConvertAll } from "./ose-app.mjs";
 import { oseManualDialog } from "./ose-manual.mjs";
-import { importOseBook, authoredOseBooks } from "./ose-book.mjs";
+import { importOseBook, importOseAreas, authoredOseBooks } from "./ose-book.mjs";
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
@@ -162,6 +162,7 @@ async function locations() {
   }
   const out = new Map();
   keys.forEach((key, i) => {
+    if (key === DIR_KEY) return; // the remembered folder is not a book record
     const record = asLocation(values[i]);
     if (!record) return;
     // A book this build no longer reads (the Judge's Screen inserts, whose
@@ -188,6 +189,24 @@ const rememberFile = (bookId, file) =>
   locationPut(bookId, { kind: "file", name: file.name, size: file.size, lastModified: file.lastModified }).catch((err) =>
     console.warn(`${MODULE_ID} | could not remember ${file.name}`, err),
   );
+
+/**
+ * The remembered PARENT FOLDER, under a reserved key in the same store — not a
+ * book record, and never surfaced as one. A seat that connected by pointing at
+ * the folder holding its PDFs gets the whole shelf back in ONE permission
+ * gesture next session: the directory handle re-grants once and every book
+ * inside re-reads from it, where per-file handles cost one gesture each.
+ * Forget Books clears it with everything else (locationClear sweeps the store).
+ */
+const DIR_KEY = "__folder__";
+const dirPut = (handle) =>
+  idbOp("readwrite", (s) => s.put({ kind: "dir", handle, name: handle.name ?? null }, DIR_KEY)).catch((err) =>
+    console.warn(`${MODULE_ID} | could not remember the folder`, err),
+  );
+async function dirGet() {
+  const record = await idbOp("readonly", (s) => s.get(DIR_KEY)).catch(() => null);
+  return record?.kind === "dir" && record.handle ? record : null;
+}
 
 /* -------------------------------------------- */
 /*  Refresh bridge (short-lived byte cache)     */
@@ -700,6 +719,20 @@ async function connectBookDialog(capture) {
     .map(([id, b]) => `<option value="${id}">${b.label}${mark(id)}</option>`)
     .join("");
   const fsa = fsaAvailable();
+  // The folder route needs no book selection at all: the folder is a group,
+  // and the group self-identifies (see connectFolderPicks). It is offered on
+  // every seat — as a picker button where the File System Access API exists
+  // (which also remembers the folder for one-gesture reconnects), as a
+  // directory input everywhere else.
+  const folderRow = `
+    <hr>
+    <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFolderLabel`)}</label>
+      ${
+        fsa
+          ? `<button type="button" data-connect-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFolderGo`)}</button>`
+          : `<input type="file" name="pdfdir" webkitdirectory>`
+      }</div>
+    <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.${fsa ? "connectFolderNote" : "connectFolderNoteFile"}`)}</p>`;
   const fileRow = fsa
     ? `<p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectNoteFsa`)}</p>`
     : `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFile`)}</label>
@@ -716,7 +749,8 @@ async function connectBookDialog(capture) {
     <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectBook`)}</label>
       <select class="acks-importer-book-select" name="book" multiple size="${Math.min(Object.keys(BOOKS).length, 6)}">${options}</select></div>
     <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectBulkNote`)}</p>
-    ${fileRow}`;
+    ${fileRow}
+    ${folderRow}`;
   return foundry.applications.api.DialogV2.prompt({
     // Resizable because the book list grows with the shipped book count: the
     // dialog class gives the content a scroll region, and the handle is how a
@@ -724,7 +758,35 @@ async function connectBookDialog(capture) {
     window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.connectTitle`), resizable: true },
     classes: ["acks-ui", "acks-importer-dialog"],
     content: dialogContent(content),
-    render: (event, dialog) => capture(dialog),
+    render: (event, dialog) => {
+      capture(dialog);
+      const root = dialog.element ?? dialog;
+      // Folder connect acts the moment it is answered, then gets the dialog
+      // out of the way — the group needs no book selection, so leaving the
+      // form up would only invite a second, conflicting gesture.
+      root.querySelector("[data-connect-folder]")?.addEventListener("click", async () => {
+        let dir;
+        try {
+          // First await after the click: the picker spends the gesture.
+          dir = await window.showDirectoryPicker();
+        } catch (err) {
+          if (err?.name !== "AbortError") throw err;
+          return; // dismissing the OS picker is an answer, not a failure
+        }
+        dialog.close();
+        const handles = await pdfHandlesIn(dir);
+        if (!handles.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.folderNoPdfs`));
+        const picks = [];
+        for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
+        return connectFolderPicks(picks, { remember: dir });
+      });
+      root.querySelector("input[name=pdfdir]")?.addEventListener("change", async (ev) => {
+        const files = [...(ev.currentTarget.files ?? [])].filter((f) => /\.pdf$/i.test(f.name));
+        if (!files.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.folderNoPdfs`));
+        dialog.close();
+        return connectFolderPicks(files.map((file) => ({ file })));
+      });
+    },
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.connectGo`),
       callback: async (event, button) => {
@@ -968,27 +1030,104 @@ async function connectSeveral(picks, candidates = Object.keys(BOOKS)) {
 }
 
 /**
- * The join-time offer: one row per book that could not reopen itself.
+ * Every PDF file handle under a directory handle, one level of subfolders deep
+ * — enough for a shelf sorted into "Core"/"Adventures", shallow enough that
+ * pointing at a whole drive does not become a filesystem crawl. Capped for the
+ * same reason; the cap is far above any real shelf.
+ */
+async function pdfHandlesIn(dirHandle, depth = 1) {
+  const out = [];
+  for await (const entry of dirHandle.values()) {
+    if (out.length >= 200) break;
+    if (entry.kind === "file" && /\.pdf$/i.test(entry.name)) out.push(entry);
+    else if (entry.kind === "directory" && depth > 0) out.push(...(await pdfHandlesIn(entry, depth - 1)));
+  }
+  return out;
+}
+
+/**
+ * Connect every recognised book among a folder's PDFs.
+ *
+ * A folder is a GROUP, so only evidence places a file — remembered name, byte
+ * size, or the book's title in the filename — and the positional fallback the
+ * connect dialog uses for hand-named books never runs here: a folder full of
+ * adventures must not have one dealt into an empty slot. Unrecognised PDFs are
+ * NORMAL in a folder (that is where the rest of a collection lives), so they
+ * are counted in the toast and named only on the console, not warned about.
+ *
+ * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  the folder's PDFs
+ * @param {object} [options]
+ * @param {FileSystemDirectoryHandle} [options.remember]  the folder itself, for one-gesture group reconnects
+ */
+async function connectFolderPicks(picks, { remember = null } = {}) {
+  const candidates = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
+  if (!candidates.length) {
+    return ui.notifications.info(
+      game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllOpen`, {
+        books: [...sessionDocs.keys()].map((id) => BOOKS[id]?.label ?? id).join(", "),
+      }),
+    );
+  }
+  const byFile = new Map(picks.map((pick) => [pick.file, pick]));
+  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], candidates, await locations());
+  // The folder is worth remembering even when nothing matched yet — the books
+  // may land in it later, and the group reconnect re-scans on every use.
+  if (remember) await dirPut(remember);
+  if (unmatched.length) {
+    console.log(`${MODULE_ID} | folder scan: ${unmatched.length} PDF(s) matched no book — ${unmatched.map((f) => f.name).join(", ")}`);
+  }
+  if (!matched.size) {
+    return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.folderNone`));
+  }
+  const done = await ingestPairs(matched, byFile, { announce: false });
+  if (done.length) {
+    ui.notifications.info(
+      game.i18n.format(`${LANG_PREFIX}.ui.folderDone`, { count: done.length, books: done.join(", ") }) +
+        (unmatched.length ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.folderSkipped`, { skipped: unmatched.length })}` : ""),
+    );
+  }
+  return done;
+}
+
+/**
+ * The one "Your Books" surface: every book this build reads, its state on this
+ * seat, and the control that changes that state. Status, the join-time
+ * reconnect offer, and the on-demand reconnect all open THIS dialog — they
+ * used to be three surfaces (a row dialog, a toast, and a console dump), and a
+ * reader could not tell from the macro list which one would show them anything.
  *
  * One control PER BOOK, not one button for the lot, because re-granting file
  * permission consumes the user gesture that authorized it — a single click can
  * only ever unlock the first book, which is exactly how a three-book seat used
  * to end up with one book open and no explanation. A row therefore carries its
  * own Unlock (handle), Retry (path) or file picker, acts the moment it is
- * used, and says what happened; the dialog closes itself once nothing is left.
+ * used, and says what happened; the dialog closes itself once no remembered
+ * book is left waiting.
  *
- * The one control that CAN answer for several books at once is a plain file
- * picker, which grants no persistent permission and so consumes nothing: any
- * seat with two or more books waiting gets a "choose them all" row above the
- * per-book ones — handle seats included, whose remembered handles are kept so
- * next session still offers the one-click Unlock. That is the difference
- * between three round trips through the OS file dialog every reload and one.
+ * Two controls CAN answer for several books at once. A plain file picker
+ * grants no persistent permission and so consumes nothing: any seat with two
+ * or more books waiting gets a "choose them all" row above the per-book ones —
+ * handle seats included, whose remembered handles are kept so next session
+ * still offers the one-click Unlock. And a remembered parent FOLDER re-grants
+ * as a directory in one gesture, after which every book inside re-reads from
+ * it with no further asking — the group case the per-file rules cannot reach.
  */
-const offerReconnect = (pending) => singleton("reconnect", (capture) => offerReconnectDialog(pending, capture));
+const openBooksDialog = () => singleton("books", (capture) => booksDialog(capture));
 
-async function offerReconnectDialog(pending, capture) {
+async function booksDialog(capture) {
   const records = await locations();
+  const dir = fsaAvailable() ? await dirGet() : null;
+  const pending = Object.keys(BOOKS).filter((id) => records.has(id) && !sessionDocs.has(id));
   const esc = foundry.utils.escapeHTML ?? ((s) => s);
+  // What a connection unlocks — the scope figures Book Status used to print to
+  // the console, now on the row they describe.
+  const scopeOf = (id) => {
+    const entries = cookbookCount(id);
+    const recipes = allRecipes().filter((r) => r.book === id).length;
+    return [entries ? `${entries} cookbook entr${entries === 1 ? "y" : "ies"}` : "", recipes ? `${recipes} recipe(s)` : ""]
+      .filter(Boolean)
+      .join(" + ");
+  };
   const control = (id, record) => {
     if (record?.kind === "file") {
       return `<input type="file" name="pdf-${esc(id)}" data-book="${esc(id)}" accept="application/pdf">`;
@@ -1001,15 +1140,37 @@ async function offerReconnectDialog(pending, capture) {
     if (record?.kind === "url") return game.i18n.format(`${LANG_PREFIX}.ui.reconnectUrlFailed`, { where: esc(record.url) });
     return game.i18n.format(`${LANG_PREFIX}.ui.reconnectHandle`, { where: esc(describeLocation(record)) });
   };
-  const rows = pending
-    .map((id) => {
+  const rows = Object.entries(BOOKS)
+    .map(([id, book]) => {
       const record = records.get(id);
+      const scope = scopeOf(id);
+      if (sessionDocs.has(id)) {
+        return `<div class="acks-importer-reconnect-row acks-importer-reconnect-done" data-row="${esc(id)}">
+          <div class="acks-importer-reconnect-head"><strong>${esc(book.label)}</strong></div>
+          <p class="notes" data-status="${esc(id)}">${game.i18n.format(`${LANG_PREFIX}.ui.booksOpen`, {
+            scope: scope || game.i18n.localize(`${LANG_PREFIX}.ui.booksNoScope`),
+          })}${record ? ` [${esc(describeLocation(record))}]` : ""}</p>
+        </div>`;
+      }
+      if (record) {
+        return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
+          <div class="acks-importer-reconnect-head">
+            <strong>${esc(book.label)}</strong>
+            ${control(id, record)}
+          </div>
+          <p class="notes" data-status="${esc(id)}">${why(record)}</p>
+        </div>`;
+      }
+      // Never connected on this seat: the row says what connecting would
+      // unlock and hands over to the Connect dialog, where books are named.
       return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
         <div class="acks-importer-reconnect-head">
-          <strong>${esc(BOOKS[id]?.label ?? id)}</strong>
-          ${control(id, record)}
+          <strong>${esc(book.label)}</strong>
+          <button type="button" data-open-connect>${game.i18n.localize(`${LANG_PREFIX}.ui.booksConnectGo`)}</button>
         </div>
-        <p class="notes" data-status="${esc(id)}">${why(record)}</p>
+        <p class="notes" data-status="${esc(id)}">${game.i18n.format(`${LANG_PREFIX}.ui.booksAbsent`, {
+          scope: scope || game.i18n.localize(`${LANG_PREFIX}.ui.booksNoScope`),
+        })}</p>
       </div>`;
     })
     .join("");
@@ -1032,14 +1193,48 @@ async function offerReconnectDialog(pending, capture) {
            <p class="notes" data-status-bulk>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectAllNote`)}</p>
          </div>`
       : "";
+  // The remembered folder beats every per-file control when it exists: one
+  // permission gesture on the directory, and everything inside re-reads.
+  const folderUnlock =
+    dir && pending.length
+      ? `<div class="acks-importer-reconnect-row acks-importer-reconnect-bulk">
+           <div class="acks-importer-reconnect-head">
+             <strong>${game.i18n.format(`${LANG_PREFIX}.ui.reconnectFolderHead`, { name: esc(dir.name ?? "") })}</strong>
+             <button type="button" data-unlock-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderGo`)}</button>
+           </div>
+           <p class="notes" data-status-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderNote`)}</p>
+         </div>`
+      : "";
+
+  // The refresh bridge is invisible when it works, which makes "why did that
+  // reload cost me a picker?" unanswerable without saying its state out loud.
+  // The dialog carries the short form; the console keeps the full detail.
+  const windowMs = cacheWindowMs();
+  const stamp = stampGet();
+  const cached = await idbOp("readonly", (s) => s.getAllKeys(), IDB_BYTES).catch(() => []);
+  const bridge = !windowMs
+    ? "refresh bridge: off — every page reload re-picks"
+    : `refresh bridge: ${windowMs / 1000}s window, ${cached?.length ?? 0} book(s) bridged` +
+      (stamp ? `, stamped ${Math.round((Date.now() - stamp) / 1000)}s ago` : ", not stamped yet") +
+      `; this page was away ${((performance.timeOrigin - stamp) / 1000).toFixed(1)}s before starting`;
+  const stateOf = (id) =>
+    sessionDocs.has(id) ? "OPEN this session" : records.has(id) ? `remembered [${describeLocation(records.get(id))}]` : "not connected";
+  console.log(
+    `${MODULE_ID} | book status (this seat):\n${Object.entries(BOOKS)
+      .map(([id, b]) => `${b.label}: ${stateOf(id)}${scopeOf(id) ? ` — ${scopeOf(id)}` : ""}`)
+      .join("\n")}\n${bridge}`,
+  );
 
   return foundry.applications.api.DialogV2.prompt({
-    // One row per waiting book, so the height is the reader's library, not a
+    // One row per book, so the height is the reader's library, not a
     // constant: scroll region from the dialog class, handle from `resizable`.
-    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectTitle`), resizable: true },
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.booksTitle`), resizable: true },
     classes: ["acks-ui", "acks-importer-dialog"],
     position: { width: 480 },
-    content: dialogContent(`<p>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectBody`)}</p>${bulk}${rows}`),
+    content: dialogContent(
+      `<p>${game.i18n.localize(`${LANG_PREFIX}.ui.booksBody`)}</p>${folderUnlock}${bulk}${rows}
+       <p class="notes">${esc(bridge)} · ${game.i18n.localize(`${LANG_PREFIX}.ui.statusNote`)}</p>`,
+    ),
     // Dismissing this is a legitimate answer ("not tonight"), not an error to
     // throw out of the ready hook.
     rejectClose: false,
@@ -1148,6 +1343,72 @@ async function offerReconnectDialog(pending, capture) {
           }
         });
       }
+
+      // Never-connected rows hand over to the Connect dialog, where books are
+      // named; this dialog closes first, because its rows are a snapshot that
+      // a connection would immediately date.
+      for (const button of root.querySelectorAll("button[data-open-connect]")) {
+        button.addEventListener("click", () => {
+          dialog.close();
+          connectBook();
+        });
+      }
+
+      // The folder route: one permission gesture on the remembered directory,
+      // then every book found inside re-reads with no further asking. Matches
+      // run against every book not open — a folder can reconnect what was
+      // waiting AND connect a book this seat never named.
+      const folderBtn = root.querySelector("[data-unlock-folder]");
+      folderBtn?.addEventListener("click", async () => {
+        const status = root.querySelector("[data-status-folder]");
+        const say = (text) => {
+          if (status) status.textContent = text;
+        };
+        folderBtn.disabled = true;
+        try {
+          let perm = await dir.handle.queryPermission({ mode: "read" });
+          if (perm === "prompt") perm = await dir.handle.requestPermission({ mode: "read" });
+          if (perm !== "granted") {
+            say(game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderDenied`));
+            folderBtn.disabled = false;
+            return;
+          }
+          const handles = await pdfHandlesIn(dir.handle);
+          const byFile = new Map();
+          for (const handle of handles) byFile.set(await handle.getFile(), handle);
+          const candidates = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
+          const { matched } = matchFilesToBooks([...byFile.keys()], candidates, records);
+          if (!matched.size) {
+            say(game.i18n.localize(`${LANG_PREFIX}.ui.folderNone`));
+            folderBtn.disabled = false;
+            return;
+          }
+          let opened = 0;
+          // Sequentially — several ACKS PDFs parsed at once is hundreds of
+          // megabytes in flight.
+          for (const [bookId, file] of matched) {
+            try {
+              await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
+              const handle = byFile.get(file);
+              // The per-file handle is remembered too, so the per-row Unlock
+              // still works next session even if the folder record is lost.
+              await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size }).catch((err) =>
+                console.warn(`${MODULE_ID} | could not remember ${bookId} from the folder`, err),
+              );
+              opened++;
+              settle(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
+            } catch (err) {
+              console.error(`${MODULE_ID} | folder reconnect ${bookId} from ${file.name}`, err);
+              settle(bookId, false, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
+            }
+          }
+          say(game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllDone`, { count: opened }));
+        } catch (err) {
+          console.error(`${MODULE_ID} | folder reconnect`, err);
+          say(game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
+        }
+        folderBtn.disabled = false;
+      });
     },
     ok: {
       label: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectDone`),
@@ -1166,65 +1427,26 @@ async function offerReconnectDialog(pending, capture) {
 }
 
 /**
- * Reconnect on demand — the same pass that runs on join, for a seat that
- * dismissed the dialog or plugged its drive in afterwards.
+ * Reconnect on demand — retry the silent pass that runs on join (a plugged-in
+ * drive or restored network may answer it now), then open the Books dialog,
+ * whatever the outcome: a dialog that shows every book open IS the "all open"
+ * report, where the old toast left nothing on screen to check it against.
  */
 async function reconnectBooks() {
-  const pending = await restoreBooks();
-  if (!pending.length) {
-    const open = [...sessionDocs.keys()].map((id) => BOOKS[id]?.label ?? id);
-    return ui.notifications.info(
-      open.length
-        ? game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllOpen`, { books: open.join(", ") })
-        : game.i18n.localize(`${LANG_PREFIX}.ui.reconnectNothing`),
-    );
-  }
-  return offerReconnect(pending);
+  await restoreBooks();
+  return openBooksDialog();
 }
 
 /**
- * Which books this seat can read, and how much of each.
- *
- * The count used to be `allRecipes()` — the handful of hand-written PoC
- * recipes — against `proseMem`, the prose extracted eagerly on connect. Both
- * predate the cookbook, so a seat holding the whole MM was told about a
- * denominator of a dozen and a numerator that starts at zero and stays there,
- * because cookbook prose is extracted lazily per reveal and never lands in
- * proseMem. The number was not wrong so much as measuring something nobody
- * asked about. What a reader wants to know is how many SHIPPED entries this
- * book's connection unlocks.
+ * Which books this seat can read, and how much of each — the same Books
+ * dialog reconnect opens, because state and the control that changes it
+ * belong on one surface. The console keeps the per-book detail line and the
+ * refresh-bridge state (see booksDialog); the scope figures count SHIPPED
+ * cookbook entries, not extracted prose — prose is lazy and a count of it
+ * measures nothing a reader asked about.
  */
 async function bookStatus() {
-  const records = await locations();
-  const lines = [];
-  for (const [id, book] of Object.entries(BOOKS)) {
-    const entries = cookbookCount(id);
-    const recipes = allRecipes().filter((r) => r.book === id).length;
-    const scope = [entries ? `${entries} cookbook entr${entries === 1 ? "y" : "ies"}` : "", recipes ? `${recipes} recipe(s)` : ""]
-      .filter(Boolean)
-      .join(" + ");
-    const record = records.get(id);
-    // Naming the remembered location is the whole point of remembering it: a
-    // reader who moved or renamed the file can see that from here.
-    const where = record ? ` [${record.kind}: ${describeLocation(record)}]` : "";
-    let state;
-    if (sessionDocs.has(id)) state = `OPEN this session — ${scope || "nothing shipped for it yet"} readable${where}`;
-    else if (record) state = `location remembered${where} — reconnect this session to read ${scope || "it"}`;
-    else state = `not connected on this seat${scope ? ` — would unlock ${scope}` : ""}`;
-    lines.push(`${book.label}: ${state}`);
-  }
-  // The bridge is invisible when it works, which makes "why did that reload
-  // cost me a picker?" unanswerable without saying its state out loud.
-  const windowMs = cacheWindowMs();
-  const stamp = stampGet();
-  const cached = await idbOp("readonly", (s) => s.getAllKeys(), IDB_BYTES).catch(() => []);
-  const bridge = !windowMs
-    ? "refresh bridge: off — every page reload re-picks"
-    : `refresh bridge: ${windowMs / 1000}s window, ${cached?.length ?? 0} book(s) bridged` +
-      (stamp ? `, stamped ${Math.round((Date.now() - stamp) / 1000)}s ago` : ", not stamped yet") +
-      `; this page was away ${((performance.timeOrigin - stamp) / 1000).toFixed(1)}s before starting`;
-  ui.notifications.info(`acks-importer | ${game.i18n.localize(`${LANG_PREFIX}.ui.statusNote`)} Console has per-book detail.`);
-  console.log(`${MODULE_ID} | book status (this seat):\n${lines.join("\n")}\n${bridge}`);
+  return openBooksDialog();
 }
 
 async function forgetBooks() {
@@ -1771,7 +1993,7 @@ Hooks.once("ready", async () => {
     cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
     importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
     importWeapons, importArmor,
-    importClasses, cookbookUpdateClasses, importTraps, importVariations, importVehicles,
+    importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
     gettingStarted: showGettingStarted,
     // Importing another game's books (docs/OSE.md). Separate entry points
     // because a third-party source is registered by the Judge rather than
@@ -1782,6 +2004,7 @@ Hooks.once("ready", async () => {
     oseConvertAll,
     oseManual: oseManualDialog,
     oseImportBook: importOseBook,
+    oseImportAreas: importOseAreas,
     oseAuthoredBooks: authoredOseBooks,
     RECIPES, BOOKS,
   };
@@ -1809,6 +2032,6 @@ Hooks.once("ready", async () => {
   // with nothing remembered at all is (probably) brand new — that seat gets
   // the Getting Started walkthrough instead, never both dialogs.
   const pending = await restoreBooks();
-  if (pending.length) await offerReconnect(pending);
+  if (pending.length) await openBooksDialog();
   else if (!sessionDocs.size && !(await locations()).size) await showGettingStarted();
 });

@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/d20-grey.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookImportRollTables) return ui.notifications.warn(\"acks-importer | adventure roll tables need a newer module build.\");\napi.cookbookImportRollTables();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookImportRollTables !== \"function\") return ui.notifications.warn(\"acks-importer | Import Adventure Roll Tables (GM) needs a newer build of this module.\");\napi.cookbookImportRollTables();",
   "folder": "ackscFldImport00",
-  "sort": 230,
+  "sort": 270,
   "ownership": {
     "default": 2
   },

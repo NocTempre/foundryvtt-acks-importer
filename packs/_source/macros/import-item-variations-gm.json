@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/upgrade.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importVariations) return ui.notifications.warn(\"acks-importer | variation import needs a newer module build.\");\napi.importVariations();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importVariations !== \"function\") return ui.notifications.warn(\"acks-importer | Import Item Variations (GM) needs a newer build of this module.\");\napi.importVariations();",
   "folder": "ackscFldImport00",
-  "sort": 225,
+  "sort": 240,
   "ownership": {
     "default": 2
   },

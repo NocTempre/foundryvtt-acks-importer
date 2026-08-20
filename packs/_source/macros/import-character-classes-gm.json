@@ -3,11 +3,11 @@
   "_key": "!macros!ackscMacClassAll",
   "name": "Import Character Classes (GM)",
   "type": "script",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "icons/svg/cowled.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importClasses) return ui.notifications.warn(\"acks-importer | class import needs a newer module build.\");\napi.importClasses();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importClasses !== \"function\") return ui.notifications.warn(\"acks-importer | Import Character Classes (GM) needs a newer build of this module.\");\napi.importClasses();",
   "folder": "ackscFldImport00",
-  "sort": 215,
+  "sort": 220,
   "ownership": {
     "default": 2
   },

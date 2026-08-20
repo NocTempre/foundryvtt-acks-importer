@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/item-bag.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importAllEquipment) return ui.notifications.warn(\"acks-importer | equipment import needs a newer module build.\");\nconst r = await api.importAllEquipment();\nui.notifications.info(`acks-importer | equipment: ${r.created} created, ${r.total} in the cookbook.`);",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importAllEquipment !== \"function\") return ui.notifications.warn(\"acks-importer | Import ALL Equipment needs a newer build of this module.\");\nconst r = await api.importAllEquipment();\nui.notifications.info(`acks-importer | equipment: ${r.created} created, ${r.total} in the cookbook.`);",
   "folder": "ackscFldAbils000",
   "sort": 320,
   "ownership": {

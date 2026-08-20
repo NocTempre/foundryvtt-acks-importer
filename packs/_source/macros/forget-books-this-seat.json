@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/blind.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.forgetBooks();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.forgetBooks !== \"function\") return ui.notifications.warn(\"acks-importer | Forget Books (this seat) needs a newer build of this module.\");\napi.forgetBooks();",
   "folder": "ackscFldSetup000",
-  "sort": 120,
+  "sort": 130,
   "ownership": {
     "default": 2
   },

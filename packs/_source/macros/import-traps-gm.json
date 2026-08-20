@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/trap.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.importTraps) return ui.notifications.warn(\"acks-importer | trap import needs a newer module build.\");\napi.importTraps();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.importTraps !== \"function\") return ui.notifications.warn(\"acks-importer | Import Traps (GM) needs a newer build of this module.\");\napi.importTraps();",
   "folder": "ackscFldImport00",
-  "sort": 220,
+  "sort": 230,
   "ownership": {
     "default": 2
   },

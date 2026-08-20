@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/cancel.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookRemoveImports) return ui.notifications.warn(\"acks-importer | removing imports needs a newer module build.\");\napi.cookbookRemoveImports();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookRemoveImports !== \"function\") return ui.notifications.warn(\"acks-importer | Remove ALL Imports (GM) needs a newer build of this module.\");\napi.cookbookRemoveImports();",
   "folder": "ackscFldImport00",
-  "sort": 290,
+  "sort": 299,
   "ownership": {
     "default": 2
   },

@@ -353,7 +353,9 @@ inventory. Both are the abilities/magic model's to own, not the splitter's.
 
 Until then the pieces are all items, correctly separated, and a Judge deletes
 the two that are not gear. That is a tidier failure than the alternative and it
-loses nothing.
+loses nothing — and since template packages (2026-08-19, DECISIONS), the
+deletion has a concrete surface: remove the row from the template's bundle,
+once, and every character generated afterwards is clean.
 
 ## The system compendiums this importer does NOT yet replace
 

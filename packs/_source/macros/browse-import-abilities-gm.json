@@ -5,7 +5,7 @@
   "type": "script",
   "img": "icons/svg/book.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.cookbookImportAbilitiesDialog();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookImportAbilitiesDialog !== \"function\") return ui.notifications.warn(\"acks-importer | Browse & Import Abilities (GM) needs a newer build of this module.\");\napi.cookbookImportAbilitiesDialog();",
   "folder": "ackscFldAbils000",
   "sort": 300,
   "ownership": {

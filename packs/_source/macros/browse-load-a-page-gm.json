@@ -3,9 +3,9 @@
   "_key": "!macros!ackscMacBrowse00",
   "name": "Browse & Load a Page (GM)",
   "type": "script",
-  "img": "icons/svg/direction.svg",
+  "img": "icons/svg/hanging-sign.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.browseAndLoad();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.browseAndLoad !== \"function\") return ui.notifications.warn(\"acks-importer | Browse & Load a Page (GM) needs a newer build of this module.\");\napi.browseAndLoad();",
   "folder": "ackscFldTools000",
   "sort": 410,
   "ownership": {

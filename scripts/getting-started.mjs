@@ -65,6 +65,12 @@ const GM_STEPS = [
   ["stepTraps", (api) => api.importTraps()],
   ["stepVehicles", (api) => api.importVehicles()],
   ["stepClasses", (api) => api.importClasses()],
+  // Template packages resolve their gear against the equipment imported above
+  // and their rows against the classes just landed — so they follow both.
+  // Also the upgrade path for a world whose classes were imported before
+  // packages existed (importClasses skips classes already present, so it
+  // alone never revisits them).
+  ["stepTemplatePackages", (api) => api.importTemplatePackages()],
   ["stepMonsters", (api) => api.cookbookImportMonsters()],
   ["stepCompanions", (api) => api.cookbookFillCompanions()],
   ["stepJournals", (api) => api.cookbookImportJournals()],

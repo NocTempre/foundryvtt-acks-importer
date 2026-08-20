@@ -5,9 +5,9 @@
   "type": "script",
   "img": "icons/svg/pawprint.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\napi.cookbookFillCompanions();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookFillCompanions !== \"function\") return ui.notifications.warn(\"acks-importer | Fill Companion Slots (GM) needs a newer build of this module.\");\napi.cookbookFillCompanions();",
   "folder": "ackscFldAbils000",
-  "sort": 340,
+  "sort": 360,
   "ownership": {
     "default": 2
   },

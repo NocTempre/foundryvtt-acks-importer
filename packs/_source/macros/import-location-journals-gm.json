@@ -3,11 +3,11 @@
   "_key": "!macros!ackscMacAdvJourn",
   "name": "Import Location Journals (GM)",
   "type": "script",
-  "img": "icons/svg/book.svg",
+  "img": "icons/svg/village.svg",
   "scope": "global",
-  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (!api.cookbookImportJournals) return ui.notifications.warn(\"acks-importer | location journals need a newer module build.\");\napi.cookbookImportJournals();",
+  "command": "const api = globalThis.acksImporter;\nif (!api) return ui.notifications.warn(\"acks-importer | module not ready (is it enabled?).\");\nif (typeof api.cookbookImportJournals !== \"function\") return ui.notifications.warn(\"acks-importer | Import Location Journals (GM) needs a newer build of this module.\");\napi.cookbookImportJournals();",
   "folder": "ackscFldImport00",
-  "sort": 220,
+  "sort": 260,
   "ownership": {
     "default": 2
   },
