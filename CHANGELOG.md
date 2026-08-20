@@ -1,5 +1,62 @@
 # Changelog
 
+## 2.13.0
+
+### Added
+- **Character classes import their starting templates as packages.** With ACKS
+  Extras 4.14.0, each printed template is also built as a container of the
+  abilities and gear it grants, filed under
+  `ACKS Cookbook / Classes / Templates`, with a 3d6 roll table per class. That
+  is what makes a mis-imported piece of starting kit repairable once, rather
+  than on every character generated from it. A **Build Class Template Packages
+  (GM)** macro brings worlds whose classes were imported earlier up to the same
+  shape, and needs no book connected — it works from the class documents already
+  in the world. Importing or updating classes relinks the packages and never
+  overwrites a document you have repaired.
+- **Imported creatures carry their book's own prose.** Nearly every creature
+  from the eleven authored books (476 of 483) now arrives with its
+  description — the text above the stat block and the text below it — and with
+  its own tables: what it hoards, what it carries, the rows it is stated in.
+  Words are no longer welded together at line breaks on the way in.
+- **An entry that was never one creature imports as a generator.** A block
+  printing a hit-dice range used to arrive as the weakest member of its kind
+  with the rest gone; a retainer printed at three levels arrived as three
+  strangers sharing a name. Both now build the same varies-by-rank generator
+  documents the Monstrous Manual's ranked entries already use.
+- **The Dolmenwood Monster Book fills out: 79 entries become 165, each with
+  its portrait.** The book prints one monster to a page with a full
+  illustration beside it; the entries were being lost to page-geometry bugs,
+  and the missing art was the symptom. Pictures are now claimed by the entry
+  whose region holds them, so one illustration can no longer land on four
+  different monsters.
+- **Keyed rooms import as places you can build on.** Quick Delves 1 to 3 and
+  Planar Compass 1 to 3 ship their numbered areas — 117 of them — and each
+  arrives as a location actor nested inside a location standing for the
+  adventure itself, with its description read from your own copy. A room is a
+  place rather than a page of notes, so it can hold what is stored there, who
+  lives there, and the market it runs, instead of needing a second document
+  kept in step by hand. Wicked Little Delves keys its rooms another way and
+  ships none rather than guess.
+- **One Books dialog for status and reconnecting.** Book Status, the offer to
+  reconnect when you join, and reconnecting on demand all open the same
+  dialog: every book shows as open, remembered, or absent, with the controls
+  to unlock, retry, or connect right on its row — nothing is sent to the
+  console anymore. The separate Reconnect macro leaves the pack; worlds that
+  imported it keep a working copy.
+- **Connect a whole shelf at once.** The connect dialog can take the folder
+  your PDFs live in: every book inside identifies itself by its own evidence,
+  and on browsers that can remember a folder, next session one permission
+  gesture re-opens all of them. PDFs it does not recognize are counted and
+  left alone.
+
+### Changed
+- **Every shipped macro fails politely on an older module build** — "needs a
+  newer build of this module" instead of an error — and the macro folders sort
+  their contents in a stable order again.
+- **Remove All Imports also sweeps the rules-table documents** materialized
+  into the world by ACKS Extras' ruledata provider. Documents only, counted
+  in the confirmation; the imported table data itself stays registered.
+
 ## 2.12.0
 
 Eleven third-party books now import in one press, and the reader got harder to

@@ -234,15 +234,20 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
     return 0;
   }
   const cb = cookbookBookFile(bookId);
-  const doc = cookbookSessionDoc(bookId);
   if (!cb?.entries) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNoCookbook", { book: bookId })}`), 0;
-  if (!doc) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNotConnected", { book: BOOKS[bookId]?.label ?? bookId })}`), 0;
 
-  const registers = cookbookRegisters();
   const label = BOOKS[bookId]?.label ?? bookId;
   const short = BOOKS[bookId]?.short ?? bookId;
   const ids = Object.keys(cb.entries).filter((id) => cb.entries[id].kind === "kind.oseLocation");
+  // Asked BEFORE the book is required. An adventure that ships no keyed areas
+  // needs no PDF to say so, and answering "connect your book first" to a
+  // question the cookbook already settles sends a Judge to find a file that
+  // would not have changed the answer.
   if (!ids.length) return ui.notifications.info(`${MODULE_ID} | ${loc("ose.areasNone", { book: label })}`), 0;
+
+  const doc = cookbookSessionDoc(bookId);
+  if (!doc) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNotConnected", { book: label })}`), 0;
+  const registers = cookbookRegisters();
 
   // The adventure first, so every room has something to sit inside.
   const adventure = await createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId }));

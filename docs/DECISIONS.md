@@ -7,6 +7,41 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Template packages: extras owns the shape, this side owns the folders (2026-08-19)
+
+**Problem.** A class's starting templates imported as data rows on the class
+document, so a mis-classified piece of starting gear (the Wonderworker's staff
+as an unwieldable `item`) had no single document a Judge could repair — the
+fix was re-import or per-character surgery.
+
+**Ruled (user):** templates materialize as core `bundle` Items of linked,
+repairable world documents, with a generated 3d6 RollTable per class. The
+materializer lives in **acks-extras** (`acksExtras.classes.templates
+.materializeTemplates`) because it is document-driven — it works off the
+class document's own rows, needs no book, and owns the class model, the base
+resolver and the skin layer. This side calls it after `importClasses` and
+`cookbookUpdateClasses` (whose whole-`system` rewrite wipes the rows' cached
+bundle uuids; the call re-derives them from the bundles' own flags) and ships
+`importTemplatePackages()` — macro, api, Getting Started step after classes —
+as the no-book upgrade path for worlds imported before packages existed.
+Folders are this side's only contribution: bundles and their gear under
+`ACKS Cookbook / Classes / Templates / <Class>`, tables under `ACKS Cookbook /
+Class Templates`. Created documents carry an `asImported` snapshot; an edited
+one is skipped and counted, never clobbered — the ruling's whole point is
+that a Judge's repair survives every re-run. Shape, ownership and the apply
+path: acks-extras `docs/classes/MODEL.md` § Template packages; the ruling
+record is its `DECISIONS.md` 2026-08-19.
+
+**Rejected:** minting `def.class.*.tpl.*` cookbook ids for generated
+documents (they are derivations of a class document, not book entries; the
+extras `templatePart` flag is their identity, and a cookbook id would drag
+them into importedItem claims they must not answer).
+
+**Cost:** `cookbookUpdateClasses`' confirm says hand edits on the CLASS are
+replaced, and that stays true — but bundles and gear are separate documents
+the update never touches, which the confirm text does not say. Accepted; the
+skip report names what was preserved.
+
 ### A block that reaches the foot of the last column turns the page (2026-08-16)
 
 **Problem.** `subheading` entries followed a column turn but not a page turn,
@@ -1282,3 +1317,103 @@ the stat block and a rule that guessed would claim it.
 
 Warnings went 289 → 0. The number that mattered was never 289; it was the
 thirteen nobody could see.
+
+### The book connectors are one surface, and a folder is a group (2026-08-20)
+
+**Ruled: Book Status, the join-time reconnect offer, and on-demand reconnect
+all open a single Books dialog; the separate Reconnect macro is dropped from
+the pack; the Connect dialog gains a parent-folder route; and every shipped
+macro runs behind the same two guards with a unique in-folder sort.**
+
+The four "Your Book" macros had four surfaces: a walkthrough window, a form
+dialog, a toast-or-dialog, and a console dump behind a toast that said to go
+read the console. A reader could not tell from the macro list which button
+would show them anything — the reported symptom was an X drawn over Reconnect
+and a line under Book Status. Status and the control that changes it now share
+one dialog: every book renders a row (open / remembered / absent), remembered
+rows keep their per-gesture Unlock/Retry/picker controls, absent rows hand
+over to Connect, and the refresh-bridge state prints on the dialog instead of
+only the console. `api.reconnectBooks()` survives for old worlds' imported
+macros and opens the same dialog after retrying the silent pass.
+
+The folder route answers the group case the per-file rules cannot: picking the
+folder that holds the PDFs self-identifies every book inside (evidence-only
+matching — remembered name, size, title-in-filename; the connect dialog's
+positional fallback never runs against a folder, because a folder full of
+adventures must not have one dealt into an empty slot). On File System Access
+seats the directory handle is remembered under a reserved store key, so next
+session ONE permission gesture re-grants the whole shelf — the per-book
+gesture rule binds file handles, not directories. Elsewhere a
+`webkitdirectory` input scans the same way and falls back to name-only
+records. Unrecognised PDFs are counted, named on the console, and never
+warned about — in a folder they are the normal case.
+
+Macro commands were also normalized: every macro runs its api function behind
+the same ready-guard and exists-guard (older module builds get "needs a newer
+build", not a TypeError), and the Import folder's duplicate sort keys (two
+220s, two 230s) — which rendered in load order, i.e. no order — are unique
+again. Remove ALL Imports now also sweeps the rules-table documents the
+ruledata provider materialized (contract v1.3, ACKS Extras): documents only,
+counted in the confirm; the imported table DATA stays registered, because
+removing documents is a tidy-up, not an un-import.
+
+### A picture is pointed at, not reasoned toward (2026-08-20)
+
+**Ruled: an entry POINTS at its illustration — page, XObject name, box — and the
+harvester decides which entry a picture belongs to once per page, by
+containment.**
+
+Proximity was tried twice and was wrong both times. Measured per creature, it
+handed one bestiary picture to every creature on the page: 81 distinct images
+covering 224 assignments in the Referee's Tome, `img_p23_1` shared by acolyte,
+amphisbaena, ankheg and ape. Measured per picture, it ignored which COLUMN the
+picture was in and gave a Rhagodessa's portrait to a Robber Fly two columns
+away. A picture standing inside an entry's own region is that entry's, regions
+do not overlap, and what is left over goes to the nearest entry that still has
+none — no tie-break, and nothing claimed twice.
+
+**What actually held coverage down was not matching at all.** The Monster Book
+prints one creature to a page with a full portrait beside it — 123 illustrated
+pages — and only 17 had produced an ENTRY. The pictures were never hard to find;
+the creatures were, and the missing art was the symptom. Two page-geometry
+faults were behind it, both recorded in the harvester: a bestiary that sets its
+opening description large enough to read as a heading, so the nearest heading
+over a block is flavour text and the real title sits above it; and a region
+whose span ends exactly at the next column's edge, where an inclusive skip test
+passed over the column the art lives in. 79 entries became 165, and art went
+from a quarter of the corpus to better than a third.
+
+The lower size bound came down with it. Containment does the real work — an
+ornament must stand inside a creature's own entry AND be the largest thing there
+— so the stricter bound was discarding more than half of what one book holds.
+
+### A keyed room is a place, not a page of prose (2026-08-20)
+
+**Ruled: `kind.oseLocation` binds to an `acks-extras.location` actor, and the
+adventure becomes a location the rooms nest inside.**
+
+The obvious binding is a journal page. A place in this family is an ACTOR — it
+has a parent it sits inside, a roster of what lives there, contents, and
+optionally a market — and a room imported as prose can never grow any of that.
+The Judge who later wants the storefront to hold the goods it sells would have
+to build a second document and keep the two in step by hand. So the room arrives
+as the thing a room is, and its text arrives as every imported text does: a lazy
+tag against the reader's own copy.
+
+Locating them needs no grammar and no confidence rules, which is why
+`harvest-ose-areas.mjs` is a separate tool rather than a mode of the creature
+harvester: a keyed area announces itself with a number and a full stop, and a
+heading that is not numbered is not one.
+
+**Two anchoring faults, both found by RUNNING the compiled entries rather than
+reading them.** An area title is regularly split across runs ("5." then "The
+Docks"), so testing one item's prefix found nothing — headings are matched as
+headings now, joined from their runs. And two areas are regularly titled side by
+side, so a box spanning the whole baseline reads as one run-on heading matching
+neither; the expect box is the heading's own column. The second failed at
+IMPORT rather than at compile, which is the worst place for it: the entry looks
+authored and quietly imports nothing. Five of seventeen in one book became zero
+of a hundred and seventeen.
+
+Wicked Little Delves ships no areas. It keys its rooms another way, and a tool
+that guessed would invent areas rather than find them.

@@ -8,6 +8,71 @@ needs, the steps that exercise it, and the observable that proves each one.
 geometry with no Foundry at all. They gate the arithmetic; only a live run
 gates that anything reaches a document.
 
+## Book connectors (the Books dialog + folder connect)
+
+### Fixtures
+
+- Two or more ACKS II PDFs **the tester owns**, placed together in one folder
+  along with at least one unrelated PDF (the unrelated file is part of the
+  check — it must be left alone).
+- A seat whose remembered locations can be emptied: run "Forget Books (this
+  seat)" first so the walk starts from the blank state.
+
+### Steps
+
+1. "Book Status & Reconnect (this seat)" with nothing connected.
+   *Observable:* a dialog (not a toast) listing EVERY book as "not connected",
+   each with a Connect… button and its would-unlock scope count; the
+   refresh-bridge line renders in the dialog footer and the per-book detail in
+   the console.
+2. "Connect Your Book (this seat)" → "Connect a folder…" → the fixture folder.
+   *Observable:* every ACKS book in the folder connects in one trip (one toast
+   naming them, plus the ignored-count clause); the unrelated PDF is named on
+   the console only, never warned about; sheet prose renders.
+3. Reload the page past the bridge window (or set the bridge to 0), then open
+   Book Status & Reconnect.
+   *Observable:* a "Your folder" row with "Reopen from folder"; ONE click
+   grants directory permission and every book reconnects — rows flip to open
+   one by one and the dialog closes itself when none are left waiting.
+4. Reopen the dialog with everything open.
+   *Observable:* every row shows "Open this session" with its scope; no
+   controls except absent rows' Connect…; closing warns about nothing.
+5. `acksImporter.reconnectBooks()` from the console.
+   *Observable:* the SAME dialog (singleton — a second call fronts it, never
+   stacks a twin).
+6. Non-FSA fallback: repeat step 2 on an insecure origin or Firefox seat.
+   *Observable:* the folder control is a directory input; books connect the
+   same way and are remembered by NAME (next join offers pickers, not
+   unlocks).
+
+### Teardown
+
+"Forget Books (this seat)"; confirm the dialog then shows every book absent
+and no folder row.
+
+## Remove ALL Imports sweeps materialized rules tables
+
+Import rules tables ("Import Rules Tables (GM)", then "Create Foundry Tables
+from Rules Import (GM)"), confirm the sidebar holds "ACKS Imported Tables"
+with per-doc subfolders and readable names, then run "Remove ALL Imports
+(GM)". *Observable:* the confirm counts the materialized rules-table
+documents; afterwards the folder tree, its RollTables, and the "ACKS Ruledata
+(Imported)" journal are all gone, while the imported table DATA still answers
+(the ruledata browser still lists tables, and re-running Create Foundry
+Tables rebuilds the documents without re-importing).
+
+## Class template packages
+
+The recipe lives with the surface's owner: acks-extras
+`docs/classes/TESTING.md` § Template packages. This repo's own observables
+inside that recipe: `importTemplatePackages()` (macro "Build Class Template
+Packages (GM)", Getting Started step after classes) materializes with NO book
+connected; bundles and gear land under `ACKS Cookbook / Classes / Templates /
+<Class>` and tables under `ACKS Cookbook / Class Templates`; and after
+`cookbookUpdateClasses()` the rows' bundle links are re-derived and a
+Judge-edited document shows up in the skipped count rather than being
+rewritten.
+
 ## OSE import
 
 ### Fixtures
@@ -163,3 +228,36 @@ is what separates them.
 
 8. Delete the folders and every actor in them. Report which books were
    exercised and which were not reached.
+
+## Keyed areas as places
+
+117 numbered rooms across Quick Delves 1-3 and Planar Compass 1-3 import as
+`acks-extras.location` actors. Requires the adventure's own PDF connected.
+
+### Fixtures
+
+1. A folder to import into, created for the test and deleted after.
+
+### Steps
+
+2. `api.oseImportAreas("qd1", { folderId })`. Expect **17 rooms plus one
+   location for the adventure** — the count matters, because the failure this
+   path had was silent: an entry that compiled cleanly and refused at import,
+   leaving a book that looked authored and produced nothing.
+3. Confirm every room's `system.parentUuid` is the adventure's uuid. Nesting is
+   the reason this binds to an actor rather than a journal page; unparented
+   rooms are the feature not working, not a cosmetic difference.
+4. Open a room and confirm its notes resolve to the printed text — description
+   AND the roster line beneath it ("5 skeletons: Stats on p7, hp 3, 6, 7, 7,
+   8"). The words must arrive from the reader's copy, never from the cookbook.
+5. Check one room's name against the page. The number leads ("2. Statue Hall")
+   so the rooms sort as the map is keyed; a title that wrapped onto a second
+   line must be whole, not cut at the wrap.
+6. Import a book that ships none (`wld1`) and confirm it says so rather than
+   inventing rooms.
+
+### Teardown
+
+7. Delete the folder and every actor in it. Filter what you delete by
+   `flags["acks-importer"].ose` — a parallel session's fixtures live in the same
+   world, and deleting theirs is the mistake this line exists to prevent.
