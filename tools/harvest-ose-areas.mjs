@@ -208,6 +208,14 @@ if (!WRITE) {
   process.exit(0);
 }
 
+// A book with no keyed areas gets no file. An empty register reads as "someone
+// authored areas here and found none", which is a different claim from "this
+// book keys its rooms another way" — and it is the second that is true.
+if (!rows.length) {
+  console.error(`${BOOK}: nothing to write`);
+  process.exit(0);
+}
+
 const dir = path.join(HERE, "..", "register", BOOK);
 fs.mkdirSync(dir, { recursive: true });
 const out = path.join(dir, `p${from}-p${to}-areas.json`);
