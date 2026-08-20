@@ -896,6 +896,62 @@ async function compileVehicleTable(doc, entry, _kindRow) {
 /* -------------------------------------------- */
 
 /**
+ * kind.oseLocation — a keyed area of an authored OSE/B-X adventure.
+ *
+ * The lightest composite there is: an anchor proving the heading still titles
+ * this room, and the prose boxes its text occupies. No stat block, because a
+ * room has none — what lives in it is a creature entry of its own.
+ */
+async function compileOseLocation(doc, entry, _kindRow) {
+  const page = entry.pages[0];
+  const pd = await pageItems(doc, page);
+  const want = entry.anchor?.display;
+  const fields = {};
+  if (want) {
+    // Found the way the harvester found it — as a HEADING, joined from its runs
+    // — because an area title is regularly split across items ("5." then "The
+    // Docks") and no single one of them carries the name to test against.
+    const head = listHeadings(pd)
+      .filter((h) => h.mode === "display" && String(h.text ?? "").replace(/\s+/g, " ").trim().startsWith(want.slice(0, 12)))
+      .sort((x, y) => x.y - y.y)[0];
+    if (!head) throw new Error(`area heading "${want.slice(0, 24)}" not found on p.${page}`);
+    // The heading's own COLUMN, not its whole baseline: two areas are regularly
+    // titled side by side, and a box spanning both reads as one run-on heading
+    // that matches neither. Refused at import rather than at compile, which is
+    // the worst place for it — the entry looks authored and imports nothing.
+    const cols = detectColumns(pd.items);
+    const line = pd.items.filter(
+      (it) => Math.abs(it.y - head.y) <= 3 && it.h >= HEADING_MIN_H && colOf(it.x, cols) === head.col,
+    );
+    if (!line.length) throw new Error(`area heading "${want.slice(0, 24)}" has no runs on p.${page}`);
+    fields.name = {
+      op: "expect",
+      page,
+      box: {
+        x0: Math.min(...line.map((it) => it.x)) - 4,
+        x1: Math.max(...line.map((it) => it.x + (it.w ?? 0))) + 4,
+        y0: head.y - 6,
+        y1: head.y + 6,
+      },
+      text: want,
+    };
+  }
+  await emitProse(doc, entry, fields);
+  if (!fields.description) throw new Error("no prose boxes — an area with no text is not an area");
+
+  return {
+    id: entry.id,
+    kind: entry.kind,
+    name: entry.name,
+    book: entry.book,
+    cite: entry.cite ?? "",
+    pages: entry.pages,
+    ...(entry.meta ? { meta: entry.meta } : {}),
+    fields,
+  };
+}
+
+/**
  * kind.oseMonster — a creature in an authored OSE/B-X book.
  *
  * The entry supplies GEOMETRY and the shipped grammar does the reading, so what
@@ -3868,6 +3924,19 @@ async function main() {
           const compiled = await compileOseMonster(doc, entry, kindRow);
           out.entries[entry.id] = compiled;
           console.error(`OK   ${entry.id}: creature box [${entry.book}]`);
+        } catch (err) {
+          warn(`${entry.id}: ${err.message}`);
+        }
+        continue;
+      }
+      // A keyed area of an authored adventure: a heading and the boxes its
+      // text occupies. Composite by role, so it lands in the per-book file
+      // beside the creatures it shares an adventure with.
+      if (entry.kind === "kind.oseLocation") {
+        try {
+          const compiled = await compileOseLocation(doc, entry, kindRow);
+          out.entries[entry.id] = compiled;
+          console.error(`OK   ${entry.id}: keyed area [${entry.book}]`);
         } catch (err) {
           warn(`${entry.id}: ${err.message}`);
         }

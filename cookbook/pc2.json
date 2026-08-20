@@ -934,6 +934,241 @@
           ]
         }
       }
+    },
+    "pc2.area1": {
+      "id": "pc2.area1",
+      "kind": "kind.oseLocation",
+      "name": "1. Determine Astral Conditions",
+      "book": "pc2",
+      "cite": "",
+      "pages": [
+        34
+      ],
+      "meta": {
+        "areaKey": "1",
+        "areaTitle": "Determine Astral Conditions",
+        "areaSlug": "determineAstralConditions"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 34,
+          "box": {
+            "x0": 87.9749,
+            "x1": 188.03889999999996,
+            "y0": 273.15299999999996,
+            "y1": 285.15299999999996
+          },
+          "text": "1. Determine Astral"
+        },
+        "description": {
+          "op": "text",
+          "page": 34,
+          "paras": [
+            {
+              "box": {
+                "x0": 63.1969,
+                "x1": 209.37189999999995,
+                "y0": 304.15299999999996,
+                "y1": 340.15299999999996
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 63.1969,
+                "x1": 211.31699999999995,
+                "y0": 350.15299999999996,
+                "y1": 532.1533
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13,
+                  14,
+                  15,
+                  16,
+                  17,
+                  18,
+                  19,
+                  21,
+                  22
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 223.719,
+                "x1": 368.13999999999976,
+                "y0": 96.44299999999993,
+                "y1": 235.44299999999993
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  13,
+                  14,
+                  15,
+                  16
+                ],
+                "mergeHyphen": [
+                  3
+                ]
+              }
+            },
+            {
+              "box": {
+                "x0": 223.719,
+                "x1": 365.795,
+                "y0": 263.4429999999999,
+                "y1": 349.443
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "pc2.area2": {
+      "id": "pc2.area2",
+      "kind": "kind.oseLocation",
+      "name": "2. Description",
+      "book": "pc2",
+      "cite": "",
+      "pages": [
+        34
+      ],
+      "meta": {
+        "areaKey": "2",
+        "areaTitle": "Description",
+        "areaSlug": "description"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 34,
+          "box": {
+            "x0": 260.635,
+            "x1": 336.423,
+            "y0": 244.44299999999993,
+            "y1": 256.4429999999999
+          },
+          "text": "2. Description"
+        },
+        "description": {
+          "op": "text",
+          "page": 34,
+          "paras": [
+            {
+              "box": {
+                "x0": 223.719,
+                "x1": 365.795,
+                "y0": 263.4429999999999,
+                "y1": 349.443
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "pc2.area3": {
+      "id": "pc2.area3",
+      "kind": "kind.oseLocation",
+      "name": "3. End of Aperture",
+      "book": "pc2",
+      "cite": "",
+      "pages": [
+        34
+      ],
+      "meta": {
+        "areaKey": "3",
+        "areaTitle": "End of Aperture",
+        "areaSlug": "endOfAperture"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 34,
+          "box": {
+            "x0": 250.759,
+            "x1": 346.299,
+            "y0": 358.443,
+            "y1": 370.443
+          },
+          "text": "3. End of Aperture"
+        },
+        "description": {
+          "op": "text",
+          "page": 34,
+          "paras": [
+            {
+              "box": {
+                "x0": 223.719,
+                "x1": 370.9799999999999,
+                "y0": 377.443,
+                "y1": 413.443
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

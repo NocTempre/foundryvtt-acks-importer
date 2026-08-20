@@ -18,6 +18,7 @@ import { executeEntry } from "./executor.mjs";
 import { parseOseStatline, PROFILES, OSE_CANONICAL } from "./ose-statline.mjs";
 import { oseActorDataFromFields, moraleBoundsFromSchema } from "./ose-binding.mjs";
 import { isRangedCreature, oseTemplateDataFromFields, oseTemplateFromGroup } from "./ose-template.mjs";
+import { oseLocationData, oseAdventureData } from "./ose-location.mjs";
 import { currentScgConstants } from "./ose-app.mjs";
 import {
   createDoc,
@@ -38,7 +39,10 @@ export function authoredOseBooks() {
     const cb = cookbookBookFile(id);
     if (!cb?.entries) continue;
     const creatures = Object.values(cb.entries).filter((e) => e.kind === "kind.oseMonster");
-    if (creatures.length) out.push({ id, label: BOOKS[id].label, count: creatures.length, open: !!cookbookSessionDoc(id) });
+    const areas = Object.values(cb.entries).filter((e) => e.kind === "kind.oseLocation");
+    if (creatures.length || areas.length) {
+      out.push({ id, label: BOOKS[id].label, count: creatures.length, areas: areas.length, open: !!cookbookSessionDoc(id) });
+    }
   }
   return out;
 }
@@ -210,4 +214,73 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     })}${templates ? ` ${loc("ose.bookTemplates", { n: templates })}` : ""}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
   );
   return made + templates;
+}
+
+/**
+ * Import an authored adventure's KEYED AREAS as places.
+ *
+ * The adventure becomes a location of its own and the rooms nest inside it, so
+ * a keyed dungeon arrives as a dungeon rather than as seventeen unrelated
+ * actors sharing a numbering convention. Each room's text is a lazy tag, read
+ * from the reader's copy when the sheet asks — the same contract the creatures
+ * and the ACKS books use.
+ *
+ * @param bookId  an authored book id whose PDF this seat has connected
+ * @param opts.folderId  where the places land
+ */
+export async function importOseAreas(bookId, { folderId = null } = {}) {
+  if (!game.user.isGM) {
+    ui.notifications.warn(`${MODULE_ID} | GM only (creates documents).`);
+    return 0;
+  }
+  const cb = cookbookBookFile(bookId);
+  const doc = cookbookSessionDoc(bookId);
+  if (!cb?.entries) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNoCookbook", { book: bookId })}`), 0;
+  if (!doc) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNotConnected", { book: BOOKS[bookId]?.label ?? bookId })}`), 0;
+
+  const registers = cookbookRegisters();
+  const label = BOOKS[bookId]?.label ?? bookId;
+  const short = BOOKS[bookId]?.short ?? bookId;
+  const ids = Object.keys(cb.entries).filter((id) => cb.entries[id].kind === "kind.oseLocation");
+  if (!ids.length) return ui.notifications.info(`${MODULE_ID} | ${loc("ose.areasNone", { book: label })}`), 0;
+
+  // The adventure first, so every room has something to sit inside.
+  const adventure = await createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId }));
+  const bar = progressBar(loc("ose.areasImporting", { book: label }), ids.length);
+  const pageCache = new Map();
+
+  let made = 0;
+  let refused = 0;
+  for (const id of ids) {
+    const entry = cb.entries[id];
+    bar.step(entry.name ?? id);
+    // The anchor proves the heading still titles this room. A printing that
+    // moved the text fails here rather than importing whatever now occupies
+    // those coordinates.
+    const res = await executeEntry(doc, cb, registers, id, { pageCache });
+    if (!res?.ok) {
+      refused++;
+      continue;
+    }
+    const place = await createDoc(
+      Actor,
+      oseLocationData({
+        name: entry.name,
+        entryId: id,
+        cite: entry.cite || `${short} p.${entry.pages?.[0] ?? "?"}`,
+        page: entry.pages?.[0] ?? null,
+        book: bookId,
+        bookLabel: label,
+        areaKey: entry.meta?.areaKey ?? "",
+        parentUuid: adventure?.uuid ?? "",
+        folderId,
+      }),
+    );
+    if (place) made++;
+  }
+  bar.finish();
+  ui.notifications.info(
+    `${MODULE_ID} | ${loc("ose.areasDone", { n: made, book: label })}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
+  );
+  return made;
 }
