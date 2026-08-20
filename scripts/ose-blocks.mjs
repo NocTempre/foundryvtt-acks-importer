@@ -101,6 +101,20 @@ function isStatLine(text, labelRe) {
   return true;
 }
 
+/**
+ * A test for "this line is statistics, not prose", built once per profile.
+ *
+ * The same judgement the locator makes when it decides what a block is, offered
+ * to whatever needs the opposite answer. A book that sets its stat block as a
+ * TABLE leaves cells outside whatever box the locator drew, and those cells sit
+ * exactly where a description would — so harvesting prose without this rule
+ * gives a creature whose description opens "Morale 10 XP 80".
+ */
+export function statLineTest(profile = OSE_CANONICAL) {
+  const { re } = labelProbe(profile);
+  return (text) => isStatLine(String(text ?? ""), re);
+}
+
 /** Bounding box of a set of runs, padded so the box re-selects them exactly. */
 const boxOf = (runs) => ({
   x0: Math.min(...runs.map((r) => r.x)) - 2,
@@ -157,7 +171,9 @@ export function looksNonDescending(text) {
  * threshold, because a label clearing `HEADING_MIN_H` would already have been a
  * heading — the whole point is that it does not.
  *
- * @returns the label text, or null when nothing above the block is set larger
+ * @returns `{text, y}` for the label, or null when nothing above is set larger.
+ *          The `y` matters as much as the text: it is where the creature's
+ *          entry begins, and so where its description begins.
  */
 export function runinLabelAbove(pageData, candidate, within = 60) {
   const all = (pageData?.items ?? []).filter((it) => String(it.str).trim());
@@ -186,7 +202,9 @@ export function runinLabelAbove(pageData, candidate, within = 60) {
   if (!taller.length) return null;
   // Nearest of the taller lines: a column can carry this creature's label and
   // the tail of the previous one's above it.
-  return lineText(taller[taller.length - 1]) || null;
+  const line = taller[taller.length - 1];
+  const text = lineText(line);
+  return text ? { text, y: line.y } : null;
 }
 
 export function findStatBlocks(pageData, profile = OSE_CANONICAL) {

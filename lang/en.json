@@ -271,5 +271,6 @@
   "ACKS-IMPORTER.ose.bookImporting": "Importing creatures from {book}…",
   "ACKS-IMPORTER.ose.bookDone": "Imported {n} creature(s) from {book}.",
   "ACKS-IMPORTER.ose.bookDoneUnconverted": "Imported {n} creature(s) from {book} — armour class and attack throw still need the System Compatibility Guide.",
-  "ACKS-IMPORTER.ose.bookRefused": "{n} entr(ies) did not match this printing and were skipped."
+  "ACKS-IMPORTER.ose.bookRefused": "{n} entr(ies) did not match this printing and were skipped.",
+  "ACKS-IMPORTER.ose.bookTemplates": "{n} of them stat a range of hit dice and became generator actors you can stamp creatures from."
 }

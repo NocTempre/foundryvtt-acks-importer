@@ -30,13 +30,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { openBook, pageItems, listHeadings, pageArtPlacements } from "../scripts/extract.mjs";
-import { findStatBlocks, runinLabelAbove } from "../scripts/ose-blocks.mjs";
+import { openBook, pageItems, listHeadings, pageArtPlacements, detectColumns } from "../scripts/extract.mjs";
+import { findStatBlocks, runinLabelAbove, statLineTest } from "../scripts/ose-blocks.mjs";
 import { parseOseStatline, PROFILES, OSE_CANONICAL } from "../scripts/ose-statline.mjs";
 import { BOOKS } from "../scripts/books.mjs";
 import { OSE_FILES } from "./reference-lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+/** Items this tall are display headings, not body text (ose-blocks' rule). */
+const HEADING_MIN_H = 12;
+/** Top of the body area: above this sit running heads and folios. */
+const PAGE_TOP = 50;
 const argv = process.argv.slice(2);
 const BOOK = argv.find((a) => !a.startsWith("--"));
 const WRITE = argv.includes("--write");
@@ -118,6 +122,116 @@ function nameProblem(s) {
   return null;
 }
 
+/**
+ * The x-range of a text column, widening over neighbours too narrow to be one.
+ *
+ * A hanging indent defeats the x-histogram: Dolmenwood sets run-in labels at
+ * x48 and their prose at x93, and detection reports two columns 40 points
+ * apart. A description harvested against those gets the labels and none of the
+ * text — every paragraph truncated to its first line, which looks like a
+ * paragraph-splitting bug and is not one.
+ *
+ * A real body column on these pages is upwards of 200 points wide, so anything
+ * closer than half that is one column being read as two. The locator keeps the
+ * RAW columns — a stat block is found by clustering within whichever it sits in
+ * — so this widens the region instead of renumbering them.
+ */
+function columnSpan(cols, col, pageWidth, minWidth = 120) {
+  let from = col;
+  while (from > 0 && cols[from] - cols[from - 1] < minWidth) from--;
+  let to = col + 1;
+  while (to < cols.length && cols[to] - cols[to - 1] < minWidth) to++;
+  return { x0: cols[from] - 6, x1: to < cols.length ? cols[to] - 8 : pageWidth };
+}
+
+/**
+ * The paragraph boxes of a creature's description.
+ *
+ * A bestiary entry is a heading, some prose, the stat block, and usually more
+ * prose under it before the next heading — so the description is the creature's
+ * own column between its heading and the next boundary, with the block's own
+ * band taken out of the middle. Both halves matter: on a page of the Referee's
+ * Tome the text under the block is as long as the text over it, and an entry
+ * harvested without it arrives with its combat notes missing.
+ *
+ * Boxes, never text. What the paragraphs SAY is read from the reader's own copy
+ * at import time; this only records where on the page to look.
+ *
+ * @param bounds  `{x0, x1}` of the block's column, and `{startY, endY}` — the
+ *                creature's entry, from its name to whatever comes next
+ * @returns one box per paragraph, in reading order
+ */
+function proseBoxesFor(pd, c, bounds, isStat) {
+  const { x0, x1, startY, endY } = bounds;
+  const items = pd.items.filter(
+    (it) =>
+      String(it.str).trim() &&
+      (it.h ?? 0) < HEADING_MIN_H &&
+      it.x >= x0 &&
+      it.x <= x1 &&
+      it.y > startY + 4 &&
+      it.y < endY - 2 &&
+      // The block is not description, and neither is the line its label sits on.
+      !(it.y > c.box.y0 - 3 && it.y < c.box.y1 + 3),
+  );
+  if (!items.length) return [];
+
+  const lines = [];
+  for (const it of [...items].sort((a, b) => a.y - b.y || a.x - b.x)) {
+    const line = lines.find((l) => Math.abs(l.y - it.y) <= 3);
+    if (line) line.items.push(it);
+    else lines.push({ y: it.y, items: [it] });
+  }
+  lines.sort((a, b) => a.y - b.y);
+
+  // A book that sets its stat block as a TABLE leaves cells the block box never
+  // covered, sitting immediately above or below it where a description would.
+  // Those are the block continuing, not prose.
+  //
+  // Only the run ADJACENT to the block is dropped, and the moment a real line
+  // of prose appears the dropping stops. Tables further down belong to the
+  // creature — what it hoards, what it carries — and are part of its entry
+  // exactly as its paragraphs are. A rule that dropped every stat-shaped line
+  // would take those too, which is the opposite of what authoring is for.
+  const isProse = lines.map((l) => !isStat(l.items.map((i) => i.str).join(" ")));
+  const keep = lines.map(() => true);
+  // Downward from just under the block, and upward from just over it: each run
+  // stops at the first line that reads as prose.
+  for (let i = lines.findIndex((l) => l.y > c.box.y1); i >= 0 && i < lines.length; i++) {
+    if (isProse[i]) break;
+    keep[i] = false;
+  }
+  for (let i = lines.findLastIndex((l) => l.y < c.box.y0); i >= 0; i--) {
+    if (isProse[i]) break;
+    keep[i] = false;
+  }
+  const kept = lines.filter((_, i) => keep[i]);
+  if (!kept.length) return [];
+  lines.length = 0;
+  lines.push(...kept);
+
+  // Paragraph pitch from the page itself: a gap noticeably wider than the
+  // body's own leading is a paragraph break, and the leading differs per book.
+  const gaps = lines.slice(1).map((l, i) => l.y - lines[i].y).filter((g) => g > 0).sort((a, b) => a - b);
+  const pitch = gaps.length ? gaps[Math.floor(gaps.length / 2)] : 12;
+
+  const groups = [[lines[0]]];
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].y - lines[i - 1].y > pitch * 1.3) groups.push([lines[i]]);
+    else groups[groups.length - 1].push(lines[i]);
+  }
+
+  return groups.map((g) => {
+    const all = g.flatMap((l) => l.items);
+    return {
+      x0: Math.min(...all.map((i) => i.x)) - 2,
+      x1: Math.max(...all.map((i) => i.x + (i.w ?? 0))) + 2,
+      y0: Math.min(...all.map((i) => i.y)) - 3,
+      y1: Math.max(...all.map((i) => i.y)) + 3,
+    };
+  });
+}
+
 /** Register id slug, matching the family's camel-cased convention. */
 const slugOf = (s) =>
   String(s ?? "")
@@ -132,6 +246,8 @@ const slugOf = (s) =>
 // A book that declares a dialect is LOCATED with it too: the labels a profile
 // adds are what make its blocks countable as blocks.
 const PROFILE = PROFILES[BOOKS[BOOK]?.profile] ?? OSE_CANONICAL;
+/** "Is this line statistics rather than prose", built once for this book. */
+const isStatText = statLineTest(PROFILE);
 
 const { doc, numPages } = await openBook(fs.readFileSync(file));
 const from = RANGE?.from ?? 1;
@@ -162,6 +278,15 @@ for (let page = from; page <= to; page++) {
     );
   } catch {
     placements = [];
+  }
+
+  const cols = detectColumns(pd.items);
+  // Every run-in label on the page, so one creature description stops where the
+  // next creature is named even when neither carries a heading.
+  const runinYs = [];
+  for (const cand of candidates) {
+    const r = runinLabelAbove(pd, cand);
+    if (r) runinYs.push({ col: cand.col, y: r.y });
   }
 
   // Each illustration belongs to ONE creature — the block nearest it — rather
@@ -203,7 +328,7 @@ for (let page = from; page <= to; page++) {
     // heading a bestiary sets over it. The heading is last because it is the
     // one that can belong to something other than this creature.
     const runin = runinLabelAbove(pd, c);
-    const name = fixSmallCaps((parsed.name || runin || above?.text || "").replace(/\s+/g, " ").trim()).slice(0, 58);
+    const name = fixSmallCaps((parsed.name || runin?.text || above?.text || "").replace(/\s+/g, " ").trim()).slice(0, 58);
     if (!name) {
       skipped.push({ page, why: "no name found above or in the block", text: c.text.slice(0, 60) });
       continue;
@@ -215,16 +340,67 @@ for (let page = from; page <= to; page++) {
     }
     const art = artFor.get(c)?.a;
 
+    // The creature's entry: from whatever named it, down to the next thing that
+    // starts an entry in the same column — another heading, another run-in
+    // label, another block. Nothing is claimed past that, so one creature's
+    // description can never absorb the creature after it.
+    const nameY = runin?.y ?? (above && !parsed.name ? above.y : null);
+    // Where an entry ENDS in a given column: the next thing that starts one —
+    // another heading, another block, another run-in label.
+    const startsIn = (col, after) =>
+      Math.min(
+        pd.height - 30,
+        ...[
+          ...heads.filter((h) => Math.abs((h.col ?? 0) - col) < 1).map((h) => h.y),
+          ...candidates.filter((o) => o !== c && o.col === col).map((o) => o.box.y0),
+          ...runinYs.filter((r) => r.col === col && r.y !== nameY).map((r) => r.y),
+        ].filter((y) => y > after),
+      );
+
+    // The entry runs from whatever named it to that boundary, and CONTINUES in
+    // the columns after it. Following it across is what a two-column entry
+    // needs; it costs a one-column book nothing, because the next column starts
+    // with its own creature's heading and so contributes an empty region.
+    const prose = [];
+    for (let col = c.col; col < cols.length; col++) {
+      if (cols[col] === undefined) break;
+      const span = columnSpan(cols, col, pd.width);
+      const own = col === c.col;
+      const startY = own ? (nameY ?? c.box.y0 - 1) : PAGE_TOP;
+      const endY = startsIn(col, own ? c.box.y1 + 2 : startY);
+      if (endY <= startY) break;
+      prose.push(...proseBoxesFor(pd, c, { ...span, startY, endY }, isStatText));
+      // The span may already have swallowed the columns after this one.
+      while (col + 1 < cols.length && cols[col + 1] - 8 <= span.x1) col++;
+    }
+
     let id = `${BOOK}.${slugOf(name)}`;
     let n = 2;
     while (seen.has(id)) id = `${BOOK}.${slugOf(name)}${n++}`;
     seen.add(id);
+
+    // "Level 3 Bard (Troubadour)" is not a monster of its own: it is one step
+    // of a creature the book prints a block per step for. Recording the group
+    // and the step lets the import build ONE generator instead of three
+    // unrelated actors. Derived from the register NAME, which this tool wrote
+    // — never from the page, which says nothing about grouping.
+    const step = /^Level\s+(\d+)\s+([A-Za-z][A-Za-z-]*)\s*(?:\(([^)]*)\))?$/.exec(name);
+    const meta = step
+      ? {
+          templateGroup: slugOf(step[2]),
+          templateName: step[2],
+          templateAxis: "level",
+          templateKey: step[1],
+          templateLabel: `Level ${step[1]}${step[3] ? ` (${step[3]})` : ""}`.slice(0, 58),
+        }
+      : null;
 
     rows.push({
       id,
       kind: "kind.oseMonster",
       book: BOOK,
       name,
+      ...(meta ? { meta } : {}),
       // The anchor is what the PAGE says, not the tidied name: an expect must
       // match the extraction byte for byte.
       anchor: { display: (above?.text ?? name).slice(0, 58) },
@@ -235,6 +411,7 @@ for (let page = from; page <= to; page++) {
         // block. Its XObject NAME is the association that matters: a page with
         // two creatures has two images, and the largest-image rule would give
         // both of them the same one.
+        ...(prose.length ? { prose: prose.map((box) => ({ page, box })) } : {}),
         ...(art ? { art: { page, name: art.name, box: { x0: art.x, x1: art.x + art.w, y0: art.y, y1: art.y + art.h } } } : {}),
       },
     });
@@ -246,7 +423,10 @@ for (const s of skipped) console.error(`  skipped p.${s.page} — ${s.why}`);
 if (skipped.length) console.error(`  (${skipped.length} need hand authoring; the locator would not vouch for them)`);
 
 if (!WRITE) {
-  for (const r of rows.slice(0, 12)) console.error(`  ${r.id}  p.${r.pages[0]}`);
+  for (const r of rows.slice(0, 12)) {
+    const pr = r.assists.prose?.length ?? 0;
+    console.error(`  ${r.id}  p.${r.pages[0]}  prose:${pr}${r.assists.art ? " art" : ""}`);
+  }
   console.error(`\n(dry run — pass --write to emit register/${BOOK}/)`);
   process.exit(0);
 }

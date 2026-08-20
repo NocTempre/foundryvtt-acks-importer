@@ -3088,6 +3088,124 @@
                 ]
               },
               "section": "combat"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 83,
+                "y1": 129
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 141,
+                "y1": 219
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ]
+              },
+              "section": "ecology",
+              "dropText": "Ecology"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 233,
+                "y1": 289
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              },
+              "section": "ecology"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 303,
+                "y1": 329
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              },
+              "section": "ecology"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 341,
+                "y1": 379
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              "section": "ecology"
+            },
+            {
+              "box": {
+                "x0": 295,
+                "x1": 612,
+                "y0": 393,
+                "y1": 449
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  16,
+                  17,
+                  18
+                ]
+              },
+              "section": "ecology"
             }
           ]
         },
@@ -15319,6 +15437,125 @@
                 ],
                 "mergeHyphen": [
                   0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 83,
+                "y1": 179
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 193,
+                "y1": 279
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  10,
+                  12,
+                  14
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 293,
+                "y1": 339
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 353,
+                "y1": 409
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 423,
+                "y1": 499
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "mergeHyphen": [
+                  2
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 513,
+                "y1": 559
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
                 ]
               },
               "section": "appearance"
@@ -38746,6 +38983,120 @@
               },
               "section": "ecology",
               "dropText": "Ecology"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 216,
+                "y1": 368.0997
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  5,
+                  7,
+                  9,
+                  10,
+                  12,
+                  13,
+                  14,
+                  15,
+                  17,
+                  18
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 392.9998,
+                "y1": 398.9998
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 412.9998,
+                "y1": 418.9998
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 432.9998,
+                "y1": 438.9998
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 482.9998,
+                "y1": 488.9998
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 502.9998,
+                "y1": 508.9998
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 562.9998,
+                "y1": 568.9998
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 105,
+                "x1": 324,
+                "y0": 692.9998,
+                "y1": 708.9998
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
             }
           ]
         },
@@ -120449,6 +120800,132 @@
                 ],
                 "mergeHyphen": [
                   1
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 243,
+                "y1": 309
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 323,
+                "y1": 389
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 65,
+                "x1": 324,
+                "y0": 403,
+                "y1": 449
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 83,
+                "y1": 139
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 153,
+                "y1": 169
+              },
+              "fixes": {
+                "joinSpace": [
+                  0
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 183,
+                "y1": 209
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1
+                ]
+              },
+              "section": "appearance"
+            },
+            {
+              "box": {
+                "x0": 325,
+                "x1": 612,
+                "y0": 223,
+                "y1": 267.15650000000005
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  2,
+                  3,
+                  5
                 ]
               },
               "section": "appearance"
@@ -215503,13 +215980,6 @@
     ],
     "49": [
       {
-        "x0": 567,
-        "x1": 612,
-        "y0": 0,
-        "y1": 792,
-        "reason": "margin-furniture"
-      },
-      {
         "x0": 0,
         "x1": 612,
         "y0": 0,
@@ -217931,6 +218401,13 @@
         "y0": 0,
         "y1": 50,
         "reason": "running-head"
+      },
+      {
+        "x0": 325,
+        "x1": 612,
+        "y0": 262,
+        "y1": 792,
+        "reason": "rules section, not this creature"
       }
     ],
     "212": [

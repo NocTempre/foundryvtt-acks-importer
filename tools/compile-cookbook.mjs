@@ -165,6 +165,66 @@ const isDamageSeg = (s) => {
 };
 const inBoxRaw = (it, box) => it.x >= box.x0 && it.x <= box.x1 && it.y >= box.y0 && it.y <= box.y1;
 
+/** Top of the MM body area: above this sit the running head and chapter tab. */
+const MM_BODY_TOP = 50;
+
+/** How far above a claimed box that box's own caption line can sit. */
+const CAPTION_BAND = 24;
+
+/**
+ * Drop the caption line that labels a claimed box, and return what is really
+ * unaccounted for.
+ *
+ * A stat column and a grid each carry a line naming them — "Amphisbaena Primary
+ * Characteristics" — which binds nothing and is furniture in the same sense as
+ * a running head. Reporting it made 276 of the Monstrous Manual's 289 residue
+ * warnings identical and meaningless, and hid the thirteen entries where real
+ * PROSE was going unclaimed.
+ *
+ * Only ONE line per band is dropped, and only a line lying wholly inside it. A
+ * paragraph the boxes genuinely missed runs to several lines, so it still warns
+ * — quieter by its first line, never silent. That is the property that matters:
+ * this suppresses a known label, not an unknown quantity of text.
+ */
+function dropCaptionLines(residual, boxes) {
+  if (!residual.length || !boxes.length) return residual;
+  const bands = boxes.map((b) => ({ x0: b.x0, x1: b.x1, y0: b.y0 - CAPTION_BAND, y1: b.y0 }));
+
+  const lines = [];
+  for (const it of [...residual].sort((a, b) => a.y - b.y || a.x - b.x)) {
+    const line = lines.find((l) => Math.abs(l.y - it.y) <= 3);
+    if (line) line.items.push(it);
+    else lines.push({ y: it.y, items: [it] });
+  }
+
+  const dropped = new Set();
+  const used = new Set();
+  for (const line of lines) {
+    const band = bands.findIndex((b, i) => !used.has(i) && line.items.every((it) => inBoxRaw(it, b)));
+    if (band < 0) continue;
+    used.add(band);
+    for (const it of line.items) dropped.add(it);
+  }
+  return residual.filter((it) => !dropped.has(it));
+}
+
+/** Every box an entry's compiled instructions claim on one page. */
+function claimedBoxesOn(fields, page) {
+  const out = [];
+  for (const instr of Object.values(fields)) {
+    if (instr.op === "text") {
+      for (const para of instr.paras ?? []) if ((para.page ?? instr.page) === page && para.box) out.push(para.box);
+    } else if (instr.op === "attacks" && instr.page === page) {
+      if (instr.attacksBox) out.push(instr.attacksBox);
+      if (instr.damageBox) out.push(instr.damageBox);
+    } else if (instr.page === page) {
+      if (instr.box) out.push(instr.box);
+      for (const b of instr.boxes ?? []) out.push(b);
+    }
+  }
+  return out;
+}
+
 const warns = [];
 const warn = (s) => {
   warns.push(s);
@@ -405,9 +465,19 @@ async function compileMonster(doc, entry, kindRow, glyphChars) {
   }
   let stopY = laterHeads[0]?.y ? laterHeads[0].y - 4 : pd.height;
   if (assists.descStopHeading) {
-    const stopHead = laterHeads.find((h) => h.text.toLowerCase().startsWith(assists.descStopHeading.toLowerCase()));
+    const wanted = (h) => h.text.toLowerCase().startsWith(assists.descStopHeading.toLowerCase());
+    const stopHead = laterHeads.find(wanted);
     if (stopHead) stopY = stopHead.y - 4;
-    else warn(`${entry.id}: assists.descStopHeading "${assists.descStopHeading}" not found`);
+    // A long entry's stop heading can sit in a column the description SPILLS
+    // into. Naming it there says the description runs PAST this column's
+    // sub-headings — "Lycanthropic Forms" is part of the entry, not the start
+    // of something else — so this column runs to the foot of the page and the
+    // named heading bounds the column it actually sits in.
+    else if (assists.descColumns > 1 && anchors.some((a) => a.col > anchor.col && wanted(a))) {
+      stopY = pd.height;
+    } else {
+      warn(`${entry.id}: assists.descStopHeading "${assists.descStopHeading}" not found`);
+    }
   }
 
   const bodyIn = (p, x0, x1, y0, y1) =>
@@ -442,12 +512,38 @@ async function compileMonster(doc, entry, kindRow, glyphChars) {
   const sectionAnchors = descItems
     .filter((it) => SECTION_LABELS[it.str.trim()])
     .sort((a, b) => a.y - b.y);
-  const descParas = paragraphBoxes(toLines(descItems), proseBox.x0, proseBox.x1).map((p) => withFixes(p, pd));
-  for (const p of descParas) {
-    const above = [...sectionAnchors].reverse().find((a) => a.y <= p.box.y0 + 8);
-    p.section = above ? SECTION_LABELS[above.str.trim()] : "appearance";
-    const owns = sectionAnchors.find((a) => a.y >= p.box.y0 && a.y <= p.box.y1);
-    if (owns) p.dropText = owns.str.trim();
+  const classify = (paras, labels) => {
+    for (const p of paras) {
+      const above = [...labels].reverse().find((a) => a.y <= p.box.y0 + 8);
+      p.section = above ? SECTION_LABELS[above.str.trim()] : "appearance";
+      const owns = labels.find((a) => a.y >= p.box.y0 && a.y <= p.box.y1);
+      if (owns) p.dropText = owns.str.trim();
+    }
+    return paras;
+  };
+  const descParas = classify(
+    paragraphBoxes(toLines(descItems), proseBox.x0, proseBox.x1).map((p) => withFixes(p, pd)),
+    sectionAnchors,
+  );
+
+  // An entry too long for one column continues in the next. This is AUTHORED
+  // per entry rather than detected, because everywhere else in the book the
+  // next column holds the stat block — a rule that guessed would claim it, and
+  // claim it wrongly. Each spilled column runs from the top of the body area to
+  // its own first heading, which is exactly where a `descStopHeading` sits when
+  // a chef named one.
+  const spill = Math.max(1, assists.descColumns ?? 1) - 1;
+  for (let k = 1; k <= spill; k++) {
+    const cx = cols[anchor.col + k];
+    if (cx === undefined) break;
+    const nx = cols[anchor.col + k + 1];
+    const x0 = cx - 5;
+    const x1 = nx ? nx - 6 : pd.width;
+    const head = anchors.filter((a) => a.col === anchor.col + k).sort((a, b) => a.y - b.y)[0];
+    const items = bodyIn(pd, x0, x1, MM_BODY_TOP, head ? head.y - 4 : pd.height);
+    if (!items.length) continue;
+    const labels = items.filter((it) => SECTION_LABELS[it.str.trim()]).sort((a, b) => a.y - b.y);
+    descParas.push(...classify(paragraphBoxes(toLines(items), x0, x1).map((p) => withFixes(p, pd)), labels));
   }
   if (!sectionAnchors.length && descParas.length > 2) {
     console.error(`NOTE ${entry.id}: no section labels in description (${descParas.length} paras) — agent classification candidate`);
@@ -679,14 +775,24 @@ async function compileMonster(doc, entry, kindRow, glyphChars) {
       for (const r of runsIn(pd, { box: instr.damageBox })) claimed.add(r);
     } else if (instr.box || instr.boxes) for (const r of runsIn(pd, instr)) claimed.add(r);
   }
-  const residual = pd.items.filter((it) => !claimed.has(it));
+  // Display-height items are structure — a chapter opener, a monster heading —
+  // not the BODY text this triage is about, and the sibling check on
+  // continuation pages has always said so.
+  const residual = pd.items.filter((it) => it.h < HEADING_MIN_H && !claimed.has(it));
   const marginBoxes = [];
   if (residual.some((it) => it.x < 45)) marginBoxes.push({ x0: 0, x1: 45, y0: 0, y1: pd.height, reason: "margin-furniture" });
   if (residual.some((it) => it.x > pd.width - 45)) marginBoxes.push({ x0: pd.width - 45, x1: pd.width, y0: 0, y1: pd.height, reason: "margin-furniture" });
   // Running head / chapter tab band above the content area.
   if (residual.some((it) => it.y < 50)) marginBoxes.push({ x0: 0, x1: pd.width, y0: 0, y1: 50, reason: "running-head" });
+  // Chef-authored skips: text on this page that belongs to no entry — a
+  // general rules section printed under a creature, a decorative footer. The
+  // AX path has always had these; a monster page needs them for the same
+  // reason, and recording one is how a chef says "seen, and not mine".
+  for (const sk of assists.skips ?? []) {
+    if ((sk.page ?? page) === page) marginBoxes.push({ ...sk.box, reason: sk.reason ?? "recorded-skip" });
+  }
   const inSkips = (it) => marginBoxes.some((b) => inBoxRaw(it, b));
-  const leftover = residual.filter((it) => !inSkips(it));
+  const leftover = dropCaptionLines(residual.filter((it) => !inSkips(it)), claimedBoxesOn(fields, page));
   if (leftover.length) {
     warn(`${entry.id}: ${leftover.length} unclaimed body item(s) on p.${page} e.g. ${leftover.slice(0, 3).map((i) => JSON.stringify(i.str.slice(0, 24))).join(" ")}`);
   }
@@ -875,11 +981,19 @@ async function compileOseMonster(doc, entry, _kindRow) {
 async function emitProse(doc, entry, fields) {
   const paras = entry.assists?.prose;
   if (!Array.isArray(paras) || !paras.length) return;
-  fields.description = {
-    op: "text",
-    page: paras[0].page ?? entry.pages[0],
-    paras: paras.map((p) => ({ box: p.box, ...(p.fixes ? { fixes: p.fixes } : {}) })),
-  };
+  const page = paras[0].page ?? entry.pages[0];
+  // The same joining fixes the monster path computes. Without them the runs
+  // concatenate as the PDF stored them and the text arrives with its words
+  // welded at every line break — "mandiblesand 10 legs".
+  const byPage = new Map();
+  const out = [];
+  for (const p of paras) {
+    const pp = p.page ?? page;
+    if (!byPage.has(pp)) byPage.set(pp, await pageItems(doc, pp));
+    const instr = { box: p.box, ...(p.fixes ? { fixes: p.fixes } : {}) };
+    out.push(withFixes(instr, byPage.get(pp)));
+  }
+  fields.description = { op: "text", page, paras: out };
 }
 
 /* -------------------------------------------- */
@@ -1210,7 +1324,7 @@ async function compileMonsterTemplate(doc, entry, kindRow, bookCtx) {
     if (residual.some((it) => it.x < 45)) boxes.push({ x0: 0, x1: 45, y0: 0, y1: pd.height, reason: "margin-furniture" });
     if (residual.some((it) => it.x > pd.width - 45)) boxes.push({ x0: pd.width - 45, x1: pd.width, y0: 0, y1: pd.height, reason: "margin-furniture" });
     if (residual.some((it) => it.y < 50)) boxes.push({ x0: 0, x1: pd.width, y0: 0, y1: 50, reason: "running-head" });
-    const leftover = residual.filter((it) => !inAnyBox(it, boxes));
+    const leftover = dropCaptionLines(residual.filter((it) => !inAnyBox(it, boxes)), claimedBoxesOn(fields, p));
     if (leftover.length) {
       warn(`${entry.id}: ${leftover.length} unclaimed body item(s) on p.${p} e.g. ${leftover.slice(0, 3).map((i) => JSON.stringify(i.str.slice(0, 24))).join(" ")}`);
     }

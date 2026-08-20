@@ -17,6 +17,7 @@ import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
 import { executeEntry } from "./executor.mjs";
 import { parseOseStatline, PROFILES, OSE_CANONICAL } from "./ose-statline.mjs";
 import { oseActorDataFromFields, moraleBoundsFromSchema } from "./ose-binding.mjs";
+import { isRangedCreature, oseTemplateDataFromFields, oseTemplateFromGroup } from "./ose-template.mjs";
 import { currentScgConstants } from "./ose-app.mjs";
 import {
   createDoc,
@@ -77,6 +78,11 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
 
   let made = 0;
   let refused = 0;
+  let templates = 0;
+  /** Entries that are steps of one creature, gathered by their group key. */
+  const groups = {};
+  // Where the entry says it came from, for the lazy prose tag.
+  const citeOf = (e) => e.cite || `${BOOKS[bookId]?.short ?? bookId} p.${e.pages?.[0] ?? "?"}`;
   for (const id of ids) {
     const entry = cb.entries[id];
     bar.step(entry.name ?? id);
@@ -88,6 +94,58 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
       continue;
     }
     const parsed = parseOseStatline(res.fields.block, profile);
+    // One step of a creature the book prints a block per step for. Held back,
+    // and built as a single generator once every step has been read.
+    if (entry.meta?.templateGroup) {
+      const g = (groups[entry.meta.templateGroup] ??= {
+        name: entry.meta.templateName ?? entry.name,
+        axisKey: entry.meta.templateAxis ?? "level",
+        members: [],
+      });
+      g.members.push({
+        key: entry.meta.templateKey ?? String(g.members.length + 1),
+        label: entry.meta.templateLabel ?? entry.name,
+        fields: parsed.fields,
+        raw: res.fields.block,
+        page: entry.pages?.[0] ?? null,
+        box: entry.fields?.block?.box ?? null,
+        entryId: id,
+      });
+      continue;
+    }
+    // A block that prints a RANGE of hit dice is not one creature. It becomes a
+    // generator actor whose axis carries the printed figures, rather than a
+    // single monster frozen at the bottom of its own range.
+    if (isRangedCreature(parsed.fields)) {
+      const tpl = oseTemplateDataFromFields({
+        name: entry.name,
+        fields: parsed.fields,
+        extra: parsed.extra,
+        raw: res.fields.block,
+        source: { id: bookId, label: BOOKS[bookId]?.label ?? bookId, lineage },
+        page: entry.pages?.[0] ?? null,
+        box: entry.fields?.block?.box ?? null,
+        lineage,
+        constants,
+        moraleBounds: bounds,
+        folderId,
+        cite: entry.cite ?? "",
+      });
+      tpl.system.details = { biography: `<p>@PdfText[${id}]{${citeOf(entry)}}</p>` };
+      const generator = await createDoc(Actor, tpl);
+      if (generator) {
+        templates++;
+        if (importArt && entry.fields?.art) {
+          await importArt(generator, doc, {
+            id,
+            page: entry.fields.art.page ?? entry.pages?.[0],
+            name: entry.fields.art.name ?? null,
+            box: entry.fields.art.box ?? null,
+          });
+        }
+      }
+      continue;
+    }
     const data = oseActorDataFromFields({
       name: entry.name,
       fields: parsed.fields,
@@ -107,7 +165,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     // prose is read from the reader's own copy when the sheet asks for it.
     data.system.details = {
       ...(data.system.details ?? {}),
-      biography: `<p>@PdfText[${id}]{${entry.cite || `${BOOKS[bookId]?.short ?? bookId} p.${entry.pages?.[0] ?? "?"}`}}</p>`,
+      biography: `<p>@PdfText[${id}]{${citeOf(entry)}}</p>`,
     };
 
     const actor = await createDoc(Actor, data);
@@ -122,12 +180,34 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
       });
     }
   }
+  // Each gathered group is one generator. Its options are complete printed
+  // blocks, so this converts nothing the single-creature path would not.
+  for (const g of Object.values(groups)) {
+    if (!g.members.length) continue;
+    g.members.sort((a, b) => Number(a.key) - Number(b.key) || String(a.key).localeCompare(String(b.key)));
+    const made2 = await createDoc(
+      Actor,
+      oseTemplateFromGroup({
+        name: g.name,
+        axisKey: g.axisKey,
+        axisLabel: g.axisKey === "level" ? "Level" : g.axisKey,
+        members: g.members,
+        source: { id: bookId, label: BOOKS[bookId]?.label ?? bookId, lineage },
+        lineage,
+        constants,
+        moraleBounds: bounds,
+        folderId,
+      }),
+    );
+    if (made2) templates++;
+  }
+
   bar.finish();
   ui.notifications.info(
     `${MODULE_ID} | ${loc(constants ? "ose.bookDone" : "ose.bookDoneUnconverted", {
       n: made,
       book: BOOKS[bookId]?.label ?? bookId,
-    })}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
+    })}${templates ? ` ${loc("ose.bookTemplates", { n: templates })}` : ""}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
   );
-  return made;
+  return made + templates;
 }

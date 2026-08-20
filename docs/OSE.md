@@ -241,6 +241,20 @@ than refused. **Every block the sweep finds is reachable**, whether or not the
 parser could read it — that is the number that has to be 100%, and the 74% is
 how much of it happens without a person.
 
+### A creature the book states as a range
+
+Some entries are not one creature. Eleven Referee's Tome entries print
+`HD 3 to 8` in a single block; twenty-one Dolmenwood retainers print a block per
+level. Both become **generator actors** (`acks-extras.template`) with one axis,
+rather than a creature frozen at the bottom of its own range or three unrelated
+monsters that share a name.
+
+What each route may claim differs. A group of entries derives nothing — every
+option is its own printed block. A printed range transcribes the hit points for
+each step, and fills the attack throw between the printed ends only when the
+bonus divides evenly across the range; where it does not, those steps carry no
+throw and the gap says why. See DECISIONS.
+
 ### The authored books
 
 Eleven third-party books ship a cookbook: **483 creature entries, 96% read

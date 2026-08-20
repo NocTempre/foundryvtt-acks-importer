@@ -59,7 +59,8 @@
       "display": "Attercop, Demonic"
     },
     "assists": {
-      "spoilsPage": 30
+      "spoilsPage": 30,
+      "descColumns": 2
     }
   },
   {
@@ -264,6 +265,9 @@
     "name": "Beastman",
     "anchor": {
       "display": "Beastman"
+    },
+    "assists": {
+      "descColumns": 2
     }
   },
   {
@@ -1201,6 +1205,9 @@
     "name": "Chaos Hulk",
     "anchor": {
       "display": "Chaos Hulk"
+    },
+    "assists": {
+      "descColumns": 2
     }
   },
   {
@@ -3039,7 +3046,20 @@
     },
     "assists": {
       "noSpoils": true,
-      "descStopHeading": "The Disease of Lycanthropy"
+      "descStopHeading": "The Disease of Lycanthropy",
+      "descColumns": 2,
+      "skips": [
+        {
+          "page": 211,
+          "box": {
+            "x0": 325,
+            "x1": 612,
+            "y0": 262,
+            "y1": 792
+          },
+          "reason": "rules section, not this creature"
+        }
+      ]
     }
   },
   {

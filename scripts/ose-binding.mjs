@@ -49,6 +49,22 @@ export function saveFieldNames() {
 }
 
 /**
+ * A converted `system` with its saves under the names this schema really has.
+ *
+ * Every path that writes a document goes through here — the single creature,
+ * and each option of a generator — because a key with no field behind it is
+ * dropped in silence, and a generator drops it once per creature it stamps.
+ */
+export function withSchemaSaveNames(system) {
+  const saves = system?.saves;
+  if (!saves) return system;
+  const named = saveFieldNames();
+  const out = {};
+  for (const [key, value] of Object.entries(saves)) out[named[key] ?? key] = value;
+  return { ...system, saves: out };
+}
+
+/**
  * The `details.morale` field's own bounds, from the live schema.
  *
  * Read rather than written down: the endpoint mapping is derived from the two
@@ -124,21 +140,14 @@ export function oseActorDataFromFields({
 
   // Saves go in under the names this system's schema actually declares; see
   // `saveFieldNames`. A key with no field behind it is dropped without a word.
-  const saves = converted.system.saves;
-  let systemSaves = saves;
-  if (saves) {
-    const named = saveFieldNames();
-    systemSaves = {};
-    for (const [key, value] of Object.entries(saves)) systemSaves[named[key] ?? key] = value;
-  }
+  const renamed = withSchemaSaveNames(converted.system);
 
   return {
     name: name || blockName || "Imported creature",
     type: "monster",
     folder: folderId,
     system: {
-      ...converted.system,
-      ...(saves ? { saves: systemSaves } : {}),
+      ...renamed,
       details: {
         ...(converted.system.details ?? {}),
         biography: `<p><em>${where}</em></p>`,

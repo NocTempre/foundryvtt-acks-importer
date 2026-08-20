@@ -241,6 +241,26 @@ function readHd(v) {
   const out = { count: count(m[1].replace(/\s+/g, "")) };
   if (m[2]) out.bonus = parseInt(m[2].replace(/\s+/g, ""), 10);
   if (m[3]) out.asterisks = m[3].length;
+
+  // "HD 3** to 8**" — one creature the book stats across a RANGE of hit dice.
+  // Read as a single figure it becomes the weakest member of its own kind and
+  // the rest of the range is silently gone; recorded as a range, the binder can
+  // build the generator the entry actually describes.
+  const to = /\bto\s+(\d+(?:\s*\/\s*\d+)?)/i.exec(v);
+  if (to) {
+    const hi = count(to[1].replace(/\s+/g, ""));
+    if (Number.isFinite(hi) && hi > out.count) out.countMax = hi;
+  }
+  // How the range's hit points are printed: a figure per step
+  // ("(13/18/22/27/31 /36hp)") or a rate ("(8hp per HD)"). Both are the book's
+  // own values, transcribed, never a roll this importer invents.
+  const per = /\(\s*(\d+)\s*hp\s+per\s+HD\s*\)/i.exec(v);
+  if (per) out.hpPerHd = parseInt(per[1], 10);
+  else {
+    const steps = /\(([\d\s/]+?)\s*hp\s*\)/i.exec(v);
+    const list = steps ? steps[1].split("/").map((s) => parseInt(s.trim(), 10)).filter(Number.isFinite) : [];
+    if (list.length > 1) out.hpSteps = list;
+  }
   return out;
 }
 
@@ -313,6 +333,13 @@ function readThac0(v) {
   const out = { toHitAc0: parseInt(m[1], 10) };
   if (m[2] != null) out.ascendingBonus = parseInt(m[2], 10);
   else out.bare = true;
+  // "By HD (17 [+2] to 12 [+7])" — the throw at each end of a hit-dice range.
+  // Both ends are printed; what happens between them is not, and stays unsaid.
+  const hi = /\bto\s+(\d+)\s*\[\s*([+-]?\d+)\s*\]/i.exec(v);
+  if (hi) {
+    out.toHitAc0Max = parseInt(hi[1], 10);
+    out.ascendingBonusMax = parseInt(hi[2], 10);
+  }
   return out;
 }
 

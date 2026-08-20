@@ -1213,3 +1213,72 @@ creatures the page never illustrated with no art, which is correct.
 The cost is fewer rows — dmb 166 to 79, and 120 of 483 entries carry art (25%)
 rather than a nominal 66%. A wrong name is the first thing a Judge reads and the last thing
 they think to check; a missing one is a gap a human closes in a minute.
+
+### Saves go in under the names the SYSTEM has, not the ones ACKS II is moving to (2026-08-19)
+
+**Ruled: the binder renames converted saves to whatever the target schema
+actually declares, and the converter keeps emitting the ACKS II names.**
+
+Found live, and unfindable offline. The converter emits `blast` and
+`implements`; release `acks` 14.0.1 still calls those saves `breath` and `wand`,
+and a Foundry `SchemaField` DROPS a key it has no field for — without an error,
+a warning, or a trace. Every OSE creature imported against that build arrived
+with four of its five saving throws, and the fifth was gone before the document
+existed. No mocked check could see it, because the mock has whatever fields the
+test gives it.
+
+The rename lives in the binder, not the converter: the converter stays free of
+Foundry, and the choice is made where the live schema can be read. A build
+carrying the new name is written under the new name, so this expires by itself
+instead of becoming a permanent alias. Every path that writes a document goes
+through the one helper — a generator would otherwise drop the save once per
+creature it stamps.
+
+### A creature stated across a range is a generator, not a creature (2026-08-19)
+
+**Ruled: a block printing "HD 3 to 8", or a series of blocks printing one step
+each, becomes an `acks-extras.template` actor.**
+
+Eleven Referee's Tome entries print a range in one block; twenty-one Dolmenwood
+retainers print a block per level. Read as single creatures the first kind
+arrives as the WEAKEST member of its own kind — a three-hit-dice ankheg, with
+the other five steps leaving no trace — and the second arrives as three
+unrelated monsters that happen to share a name.
+
+The family already had the right document. `acks-extras.template` was built for
+the Monstrous Manual's four varies-by-rank entries, and a varies-by-hit-dice
+entry is the same shape, so this uses it rather than inventing a second
+mechanism. The two routes differ in what they must prove:
+
+- **Several entries, one axis.** Nothing is derived: every option carries its own
+  printed block, fully converted. Grouping is declared in the register
+  (`meta.templateGroup`), derived from the entry NAME this tool wrote — never
+  from the page, which says nothing about grouping.
+- **One entry, a printed range.** Each step's hit points are printed and are
+  transcribed. The attack throw is printed only at the two ENDS, so the steps
+  between are filled ONLY when the bonus divides evenly across the range — the
+  book's own table restricted to those rows. Where it does not divide, the
+  middle of the range carries no throw at all and the gap says why. A plausible
+  straight line through unprinted figures is invention wearing arithmetic's
+  clothes, and refusing is the whole reason this is safe to ship.
+
+### A caption is furniture, and 276 identical warnings hid thirteen real ones (2026-08-19)
+
+**Ruled: residue triage drops the caption line that labels a claimed box, and
+`compileMonster` gains the `descColumns` and `skips` assists the AX path had.**
+
+The Monstrous Manual compiled with 289 residue warnings. 276 were the same
+thing — "Amphisbaena Primary Characteristics", the line naming the stat column
+under it — which binds nothing and is furniture exactly as a running head is.
+Behind them sat thirteen entries where real PROSE was going unclaimed, including
+one whose description was missing 88 items because it spilled into a second
+column the single-column prose model never looked at.
+
+Only ONE line per band is dropped, and only a line lying wholly inside it: a
+paragraph the boxes genuinely missed runs to several lines and still warns,
+quieter by its first line and never silent. `descColumns` is authored per entry
+rather than detected, because everywhere else in the book the next column holds
+the stat block and a rule that guessed would claim it.
+
+Warnings went 289 → 0. The number that mattered was never 289; it was the
+thirteen nobody could see.
