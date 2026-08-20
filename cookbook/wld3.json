@@ -1,0 +1,125 @@
+{
+  "schema": "acks-cookbook/2",
+  "book": {
+    "id": "wld3",
+    "label": "Wicked Little Delves, vol 3",
+    "short": "WLD3",
+    "pages": 29,
+    "titleRe": "Wickedv3"
+  },
+  "entries": {
+    "wld3.oseGuide": {
+      "id": "wld3.oseGuide",
+      "kind": "kind.oseMonster",
+      "name": "Ose Guide",
+      "book": "wld3",
+      "cite": "",
+      "pages": [
+        5
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 5,
+          "box": {
+            "x0": 133.75999475,
+            "x1": 229.14762234999998,
+            "y0": 44.39999775000001,
+            "y1": 56.39999775000001
+          },
+          "text": "OSE guide"
+        },
+        "block": {
+          "op": "value",
+          "page": 5,
+          "box": {
+            "x0": 19.59999925,
+            "x1": 168.3757604244143,
+            "y0": 152.879997,
+            "y1": 196.91999850000002
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17
+            ]
+          }
+        }
+      }
+    },
+    "wld3.oseGuide2": {
+      "id": "wld3.oseGuide2",
+      "kind": "kind.oseMonster",
+      "name": "Ose Guide",
+      "book": "wld3",
+      "cite": "",
+      "pages": [
+        5
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 5,
+          "box": {
+            "x0": 133.75999475,
+            "x1": 229.14762234999998,
+            "y0": 44.39999775000001,
+            "y1": 56.39999775000001
+          },
+          "text": "OSE guide"
+        },
+        "block": {
+          "op": "value",
+          "page": 5,
+          "box": {
+            "x0": 19.59999925,
+            "x1": 165.65575474999997,
+            "y0": 375.83999625,
+            "y1": 419.88002025
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18
+            ]
+          }
+        }
+      }
+    }
+  }
+}

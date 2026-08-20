@@ -65,6 +65,72 @@ export const BOOKS = {
     pages: 20,
     titleRe: /^Milk$/i,
   },
+  qd2: {
+    label: "Quick Delve #2: The Grotesques' Grotto",
+    short: "QD2",
+    pages: 20,
+    titleRe: /Grotesques/i,
+  },
+  qd3: {
+    label: "Quick Delve #3: Against the Horselord",
+    short: "QD3",
+    pages: 24,
+    titleRe: /Against the Horselord/i,
+  },
+  aft: {
+    label: "OSE Advanced Fantasy Referee's Tome",
+    short: "AFT",
+    pages: 257,
+    titleRe: /Referee/i,
+  },
+  dmb: {
+    label: "Dolmenwood Monster Book",
+    short: "DMB",
+    pages: 137,
+    titleRe: /Dolmenwood/i,
+    // Not OSE, despite the shelf it sits on: ascending armour class printed
+    // alone, hit points as a die expression, a label per movement mode, and
+    // "Morale"/"Enc"/"Hoard" for ML/NA/TT. Read as OSE, a bare "AC 14" converts
+    // as descending and lands five points of armour from the page.
+    profile: "ose.dolmenwood",
+    lineage: "dolmenwood",
+  },
+  wld1: {
+    label: "Wicked Little Delves, vol 1",
+    short: "WLD1",
+    pages: 25,
+    titleRe: /Wickedv1/i,
+  },
+  wld2: {
+    label: "Wicked Little Delves, vol 2",
+    short: "WLD2",
+    pages: 25,
+    titleRe: /Wickedv2/i,
+  },
+  wld3: {
+    label: "Wicked Little Delves, vol 3",
+    short: "WLD3",
+    pages: 29,
+    titleRe: /Wickedv3/i,
+  },
+  pc1: {
+    label: "Planar Compass, Issue 1",
+    short: "PC1",
+    pages: 60,
+    titleRe: /Planar\s*Compass\s*1/i,
+  },
+  pc2: {
+    label: "Planar Compass, Issue 2",
+    short: "PC2",
+    pages: 72,
+    titleRe: /Planar\s*Compass\s*2/i,
+  },
+  pc3: {
+    label: "Planar Compass, Issue 3",
+    short: "PC3",
+    pages: 72,
+    titleRe: /Planar\s*Compass\s*3/i,
+  },
   // The conversion instrument. It unlocks the OSE import path: the constants
   // that turn a foreign stat block into ACKS II values are printed here, so
   // they are read from the reader's own copy rather than shipped. The metadata

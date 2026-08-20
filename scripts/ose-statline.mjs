@@ -55,13 +55,63 @@ export const OSE_CANONICAL = Object.freeze({
   mvOrder: "explorationFirst",
 });
 
-/** Merge a per-source override onto the canonical profile (labels merge by key). */
+/**
+ * Dolmenwood's own block, which is OSE-adjacent but not OSE.
+ *
+ * The Monster Book prints an ASCENDING armour class with no bracket, hit points
+ * as the die expression and its total ("HP 4d8 (18)"), one speed per movement
+ * mode on its own label, an attack bonus inside the attack instead of a THAC0
+ * line, and the words "Morale", "Enc" and "Hoard" where OSE writes ML, NA and
+ * TT. Read against `ose.canonical` every one of those is either lost or — worse
+ * — read as its OSE homograph: a bare "AC 14" converts as descending and lands
+ * five points of armour away from what the page says.
+ *
+ * It is a profile rather than a widening of the canonical labels because
+ * "Morale" and "Speed" are ordinary English: adding them to the labels every
+ * book is read with manufactures stat blocks out of room descriptions, which is
+ * the failure recorded above.
+ */
+export const DOLMENWOOD = Object.freeze({
+  base: "ose.dolmenwood",
+  labels: Object.freeze({
+    ...OSE_CANONICAL.labels,
+    hp: ["HP", "hp"],
+    sv: ["SV", "Saves"],
+    ml: ["ML", "Morale"],
+    mv: ["MV", "Speed"],
+    na: ["NA", "Enc"],
+    tt: ["TT", "Hoard"],
+    mvFly: ["Fly"],
+    mvSwim: ["Swim"],
+    mvBurrow: ["Burrow"],
+  }),
+  saveForm: "five",
+  mvOrder: "singleSpeed",
+});
+
+/** Profiles a shipped book may name, by id. */
+export const PROFILES = Object.freeze({ "ose.canonical": OSE_CANONICAL, "ose.dolmenwood": DOLMENWOOD });
+
+/**
+ * Merge a per-source override onto a shipped profile (labels merge by key).
+ *
+ * `base` is the SOURCE's own dialect tag — the name recorded on everything it
+ * imports — and is the source's to choose. `extends` names which of `PROFILES`
+ * to start from, and defaults to canonical OSE.
+ *
+ * The two are separate because a whole line of books shares a dialect: the
+ * corpus sweep finds "Morale" 228 times across ten books and "Speed" 202 times
+ * across nine. A Judge calibrating one of them should start from that dialect
+ * and correct it, rather than teach it a label at a time from OSE — while the
+ * book still imports under its own name.
+ */
 export function resolveProfile(override) {
   if (!override) return OSE_CANONICAL;
+  const from = PROFILES[override.extends] ?? OSE_CANONICAL;
   return {
-    ...OSE_CANONICAL,
+    ...from,
     ...override,
-    labels: { ...OSE_CANONICAL.labels, ...(override.labels ?? {}) },
+    labels: { ...from.labels, ...(override.labels ?? {}) },
   };
 }
 
@@ -214,11 +264,23 @@ function readHp(v) {
  * creature and no brackets — "hp 3, 3, 4". The first is this creature’s.
  */
 function readHpList(v) {
-  const all = String(v ?? "")
+  const s = String(v ?? "");
+  // "4d8 (18)" prints the hit-die expression and the total rolled from it. The
+  // hit points are the total; a plain integer read takes the DIE COUNT instead
+  // and gives a four-hit-dice monster four hit points.
+  const dice = /^\s*\d+\s*d\s*\d+[^()]*\(\s*(\d+)\s*\)/i.exec(s);
+  if (dice) return parseInt(dice[1], 10);
+  const all = s
     .split(",")
     .map((n) => parseInt(String(n).trim(), 10))
     .filter(Number.isFinite);
   return all.length ? all[0] : null;
+}
+
+/** The die expression a hit-point clause may lead with — "4d8" of "4d8 (18)". */
+function readHpDice(v) {
+  const m = /^\s*(\d+)\s*d\s*(\d+)/i.exec(String(v ?? ""));
+  return m ? { count: parseInt(m[1], 10), die: `${m[1]}d${m[2]}` } : null;
 }
 
 /** Every hit-point figure printed under a bare hp label, when more than one. */
@@ -332,7 +394,12 @@ function readSv(v) {
   if (paren) {
     const inner = paren[1].trim();
     const named = /^(.*?)\s*(\d+)\s*$/.exec(inner);
-    if (named && named[1]) out.saveAs = { token: named[1].trim(), level: parseInt(named[2], 10) };
+    // A class token is a word. "SV By HD (3 to 8)" states a RANGE of hit dice,
+    // and reading its tail as a class gives a creature that saves as a "3 to"
+    // of level 8 — a token no lookup can resolve, so it becomes a gap that
+    // reads like missing data rather than the range it actually is.
+    const isClassWord = named && /[A-Za-z]/.test(named[1]) && !/\d/.test(named[1]);
+    if (isClassWord) out.saveAs = { token: named[1].trim(), level: parseInt(named[2], 10) };
     else if (/^\d+$/.test(inner)) out.saveAs = { level: parseInt(inner, 10) };
     else if (inner) out.saveAs = { token: inner };
   }
@@ -408,10 +475,16 @@ function readAtt(v) {
       const m = /^(\d+)\s*x\s*(.+)$/i.exec(s);
       const body = m ? m[2].trim() : s;
       const dmg = /\(([^)]*\d+d\d+[^)]*)\)/i.exec(body);
+      // Some dialects print the attack bonus inside the attack — "2 hooves
+      // (+1, 1d4)" — instead of on a THAC0 line. It is the same figure under a
+      // different typography, so it is read here and the converter decides what
+      // it is worth.
+      const bon = /\(\s*([+-]\s*\d+)\s*(?:,|\))/.exec(body);
       return {
         ...(m ? { count: parseInt(m[1], 10) } : {}),
         name: body.replace(/\s*\([^)]*\)\s*$/, "").trim(),
         ...(dmg ? { damage: dmg[1].trim() } : {}),
+        ...(bon ? { bonus: parseInt(bon[1].replace(/\s+/g, ""), 10) } : {}),
         text: s,
       };
     });
@@ -520,7 +593,7 @@ function labelPattern(labels) {
 export function parseOseStatline(text, profile = OSE_CANONICAL) {
   const prof = profile ?? OSE_CANONICAL;
   const src = normalize(text);
-  const out = { text: src, dialect: prof.base ?? "ose.canonical", fields: {}, segments: {}, extra: [], labelsSeen: [] };
+  const out = { text: src, dialect: prof.base ?? "ose.canonical", fields: {}, segments: {}, extra: [], labelsSeen: [], unknown: [] };
   if (!src) return out;
 
   const { re, rows } = labelPattern(prof.labels ?? OSE_CANONICAL.labels);
@@ -542,9 +615,34 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
   const hits = [];
   for (const m of src.matchAll(re)) {
     if (depth[m.index] > 0) continue;
+    // "THAC0 By HD (17 [+2] to 12 [+7])" — a variable-hit-dice creature says its
+    // attack throw follows its hit dice. The "HD" there NAMES the other field
+    // rather than opening it, so reading it as a label cuts the range away from
+    // the throw it belongs to and reports it as a repeated hit-dice clause.
+    if (/\bby\s+$/i.test(src.slice(0, m.index))) continue;
     const key = byFolded.get(fold(m[1]));
     if (key) hits.push({ key, at: m.index, end: m.index + m[0].length });
   }
+
+  // A label this profile does not know still ENDS the clause before it. Without
+  // this, an unfamiliar dialect is not reported as unfamiliar — it is absorbed:
+  // Dolmenwood's "Att 2 hooves (+1, 1d4) Speed 80 Morale 7" read as an attack
+  // whose text happens to run on, leaving `extra` empty and every coverage
+  // measurement calling the block perfectly understood while its speed and
+  // morale were inside the attack string. Silence is the one failure a
+  // corpus-driven grammar cannot learn from, so an unknown label is cut out and
+  // named, and the reader who adds a profile row sees exactly what to add.
+  //
+  // Label shape here is deliberately narrow: a capitalised word followed by a
+  // number, at bracket depth zero. Attack text names its weapons in lower case
+  // and puts its dice in brackets, so it does not collide.
+  const covered = (i) => hits.some((h) => i >= h.at && i < h.end);
+  for (const m of src.matchAll(/(?:^|[\s,;])([A-Z][A-Za-z]{2,}(?:\s+[A-Z][A-Za-z]{2,})?)\s+(?=[-+–]?\d)/g)) {
+    const at = m.index + m[0].indexOf(m[1]);
+    if (depth[at] > 0 || covered(at)) continue;
+    hits.push({ key: null, word: m[1], at, end: at + m[1].length });
+  }
+  hits.sort((a, b) => a.at - b.at);
 
   if (!hits.length) {
     out.extra.push(src);
@@ -565,6 +663,13 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
   for (let i = 0; i < hits.length; i++) {
     const h = hits[i];
     let raw = src.slice(h.end, hits[i + 1]?.at ?? src.length).replace(/^[:\s]+/, "").replace(/[,;]\s*$/, "").trim();
+    if (h.key === null) {
+      // Reported under the label the page actually printed, so the profile row
+      // that would read it can be written straight off the report.
+      out.unknown.push(h.word);
+      out.extra.push(`${h.word} ${raw}`.trim());
+      continue;
+    }
     out.labelsSeen.push(h.key);
     if (RESIDUE_FIELDS.has(h.key)) {
       const comma = topLevelComma(raw);
@@ -598,6 +703,17 @@ export function parseOseStatline(text, profile = OSE_CANONICAL) {
     if (h.key === "hp" && out.fields.hpEach === undefined) {
       const each = readHpListEach(raw);
       if (each) out.fields.hpEach = each;
+    }
+    // A block that prints its hit points as dice has stated its hit dice too —
+    // "HP 4d8" says four of them — so a dialect with no HD line of its own is
+    // not left without one. Reading it here rather than in the converter keeps
+    // it a report of what is printed instead of a rule about what HD means.
+    if (h.key === "hp" && out.fields.hd === undefined) {
+      const dice = readHpDice(raw);
+      if (dice) {
+        out.fields.hd = { count: dice.count };
+        out.fields.hpDie = dice.die;
+      }
     }
     // Hit points print inside the hit-dice clause rather than under a label.
     if (h.key === "hd" && out.fields.hp === undefined) {

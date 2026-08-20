@@ -1,0 +1,640 @@
+{
+  "schema": "acks-cookbook/2",
+  "book": {
+    "id": "qd3",
+    "label": "Quick Delve #3: Against the Horselord",
+    "short": "QD3",
+    "pages": 24,
+    "titleRe": "Against the Horselord"
+  },
+  "entries": {
+    "qd3.archers": {
+      "id": "qd3.archers",
+      "kind": "kind.oseMonster",
+      "name": "Archers",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        7
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 7,
+          "box": {
+            "x0": 40,
+            "x1": 203.76419999999996,
+            "y0": 157.69429999999994,
+            "y1": 209.69429999999994
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              7,
+              9,
+              10,
+              13,
+              14,
+              15,
+              16,
+              18,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29
+            ]
+          }
+        }
+      }
+    },
+    "qd3.centaurs": {
+      "id": "qd3.centaurs",
+      "kind": "kind.oseMonster",
+      "name": "Centaurs",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        7
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 7,
+          "box": {
+            "x0": 40,
+            "x1": 201.814,
+            "y0": 288.19429999999994,
+            "y1": 328.69429999999994
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "qd3.footsoldiers": {
+      "id": "qd3.footsoldiers",
+      "kind": "kind.oseMonster",
+      "name": "Foot Soldiers",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        7
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 7,
+          "box": {
+            "x0": 219.7638,
+            "x1": 380.835,
+            "y0": 193.69429999999994,
+            "y1": 234.19429999999994
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ]
+          }
+        }
+      }
+    },
+    "qd3.servants": {
+      "id": "qd3.servants",
+      "kind": "kind.oseMonster",
+      "name": "Servants",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        7
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 7,
+          "box": {
+            "x0": 219.7637,
+            "x1": 381.07610000000005,
+            "y0": 512.6943,
+            "y1": 541.6943
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 7,
+          "name": "img_p6_1",
+          "box": {
+            "x0": 42,
+            "x1": 201.7637802,
+            "y0": 355.28073029999996,
+            "y1": 542.7779898
+          }
+        }
+      }
+    },
+    "qd3.orsunn": {
+      "id": "qd3.orsunn",
+      "kind": "kind.oseMonster",
+      "name": "Orsunn",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        12
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 12,
+          "box": {
+            "x0": 34,
+            "x1": 123.7185,
+            "y0": 49.240299999999934,
+            "y1": 61.240299999999934
+          },
+          "text": "9. Taxidermy"
+        },
+        "block": {
+          "op": "value",
+          "page": 12,
+          "box": {
+            "x0": 41,
+            "x1": 192.40109999999999,
+            "y0": 469.65,
+            "y1": 510.15
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 12,
+          "name": "img_p11_1",
+          "box": {
+            "x0": 217.7637634,
+            "x1": 377.5275635,
+            "y0": 42.00042619999988,
+            "y1": 193.81163409999994
+          }
+        }
+      }
+    },
+    "qd3.piers": {
+      "id": "qd3.piers",
+      "kind": "kind.oseMonster",
+      "name": "Piers (5th Level Fighter)",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        14
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 14,
+          "box": {
+            "x0": 220.7638,
+            "x1": 369.4782,
+            "y0": 107.72109999999998,
+            "y1": 148.22109999999998
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "qd3.eira": {
+      "id": "qd3.eira",
+      "kind": "kind.oseMonster",
+      "name": "Eira",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        15
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 15,
+          "box": {
+            "x0": 38,
+            "x1": 116.1235,
+            "y0": 49.240299999999934,
+            "y1": 61.240299999999934
+          },
+          "text": "13. Hallway"
+        },
+        "block": {
+          "op": "value",
+          "page": 15,
+          "box": {
+            "x0": 45,
+            "x1": 187.2344,
+            "y0": 215.69179999999994,
+            "y1": 256.19179999999994
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "qd3.horseZombie": {
+      "id": "qd3.horseZombie",
+      "kind": "kind.oseMonster",
+      "name": "Horse Zombie",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        16
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 16,
+          "box": {
+            "x0": 220.7637,
+            "x1": 370.67150000000004,
+            "y0": 107.47109999999998,
+            "y1": 147.97109999999998
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "qd3.horseSpecter": {
+      "id": "qd3.horseSpecter",
+      "kind": "kind.oseMonster",
+      "name": "Horse Specter",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        16
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 16,
+          "box": {
+            "x0": 220.7637,
+            "x1": 372.6697,
+            "y0": 289.27619999999996,
+            "y1": 341.27619999999996
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              15,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              26,
+              27,
+              28
+            ]
+          }
+        }
+      }
+    },
+    "qd3.nuckelavee": {
+      "id": "qd3.nuckelavee",
+      "kind": "kind.oseMonster",
+      "name": "Nuckelavee",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        17
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 17,
+          "box": {
+            "x0": 224.7638,
+            "x1": 376.43480000000005,
+            "y0": 107.47129999999993,
+            "y1": 159.47129999999993
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22
+            ]
+          }
+        }
+      }
+    },
+    "qd3.magnu": {
+      "id": "qd3.magnu",
+      "kind": "kind.oseMonster",
+      "name": "Magnu",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        17
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 17,
+          "box": {
+            "x0": 224.7638,
+            "x1": 375.1128000000002,
+            "y0": 400.38469999999995,
+            "y1": 440.88469999999995
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              14,
+              16,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27
+            ]
+          }
+        }
+      }
+    },
+    "qd3.finnian": {
+      "id": "qd3.finnian",
+      "kind": "kind.oseMonster",
+      "name": "Finnian (4th Level Fighter)",
+      "book": "qd3",
+      "cite": "",
+      "pages": [
+        18
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 18,
+          "box": {
+            "x0": 213.7638,
+            "x1": 362.7323,
+            "y0": 208.84029999999996,
+            "y1": 220.84029999999996
+          },
+          "text": "20. Finnian’s Chamber"
+        },
+        "block": {
+          "op": "value",
+          "page": 18,
+          "box": {
+            "x0": 220.7638,
+            "x1": 369.3396,
+            "y0": 507.94129999999996,
+            "y1": 548.4413
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              10,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 18,
+          "name": "img_p17_1",
+          "box": {
+            "x0": 38,
+            "x1": 197.7637904,
+            "y0": 42.00042619999999,
+            "y1": 178.92390159999997
+          }
+        }
+      }
+    }
+  }
+}

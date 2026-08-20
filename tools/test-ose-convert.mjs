@@ -5,7 +5,7 @@
  * that is the whole arrangement under test. The stat blocks are invented; only
  * their shapes come from real books.
  */
-import { parseOseStatline, resolveProfile } from "../scripts/ose-statline.mjs";
+import { parseOseStatline, resolveProfile, DOLMENWOOD } from "../scripts/ose-statline.mjs";
 import { convertOse, moraleOffset, LINEAGES } from "../scripts/ose-convert.mjs";
 import { reconversionFor } from "../scripts/ose-binding.mjs";
 
@@ -272,6 +272,33 @@ try {
   check("a printed level reaches saves-as", own.extras.saveAs.level, 2);
   const both = run("AC 5 [14], SV D11 W12 P10 B14 S13 (5), Level 2");
   check("the save clause wins where both print", both.extras.saveAs.level, 5);
+}
+
+/* --- Dolmenwood: the same printed number, the opposite meaning ------------ */
+
+// A lone "AC 12" is descending in OSE and ascending in Dolmenwood. Reading it
+// with the wrong lineage is silent — both produce a plausible armour class —
+// so the two routes are asserted against each other rather than in isolation.
+{
+  const line = "Level 2 AC 12 HP 2d8 (9) Saves D12 R13 H14 B15 S16 Att 2 hooves (+1, 1d4) Speed 80 Morale 7 XP 35";
+  const dw = convertOse(parseOseStatline(line, DOLMENWOOD).fields, K, { lineage: "dolmenwood", moraleBounds: BOUNDS });
+  const os = convertOse(parseOseStatline(line, DOLMENWOOD).fields, K, { lineage: "ose", moraleBounds: BOUNDS });
+  check("a bare ac converts by the ASCENDING route under Dolmenwood", dw.system.aac, { value: 12 - K.acAscending });
+  check("and by the descending route under OSE", os.system.aac, { value: K.acDescending - 12 });
+  ok("which are not the same answer", dw.system.aac.value !== os.system.aac.value);
+
+  check("the attack bonus printed inside the attack reaches the throw", dw.system.thac0, { throw: K.attackThrow - 1 });
+  check("morale still maps through the endpoints", dw.system.details.morale, 7 - 8);
+  check("the speed label lands on the base movement", dw.system.movement.base, 80);
+  // The die is transcribed, never assumed: "HP 1d4" must not be rolled on a d8
+  // because the derived formula says one hit die means d8.
+  {
+    const small = convertOse(parseOseStatline("Level 1 AC 12 HP 1d4 (2) Saves D12 R13 H14 B15 S16 Morale 7", DOLMENWOOD).fields, K, { lineage: "dolmenwood", moraleBounds: BOUNDS });
+    check("the printed hit die beats the derived one", small.system.hp.hd, "1d4");
+    check("and the printed hit points come with it", small.system.hp.value, 2);
+  }
+
+  ok("an unsupported lineage still refuses outright", convertOse({}, K, { lineage: "nonesuch" }).gaps.some((g) => g.axis === "lineage"));
 }
 
 if (failed) {

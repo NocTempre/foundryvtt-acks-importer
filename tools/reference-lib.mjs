@@ -51,6 +51,16 @@ export const FILES = {
  */
 export const OSE_FILES = {
   qd1: `${LIB_OSE}\\Necrotic Gnome\\Quick Delve _1_ Milk\\Quick_Delve_1_-_Milk.pdf`,
+  qd2: `${LIB_OSE}\\Necrotic Gnome\\Quick Delve _2_ The Grotesques' Grotto\\Quick_Delve_2_-_The_Grotesques_Grotto.pdf`,
+  qd3: `${LIB_OSE}\\Necrotic Gnome\\Quick Delve _3_ Against the Horselord\\Quick_Delve_3_-_Against_the_Horselord.pdf`,
+  aft: `${LIB_OSE}\\Necrotic Gnome\\Old-School Essentials Advanced Fantasy Referee's Tome\\Advanced_Fantasy_Referees_Tome_v1-3.pdf`,
+  dmb: `${LIB_OSE}\\Necrotic Gnome\\Dolmenwood Monster Book\\Dolmenwood_Monster_Book.pdf`,
+  wld1: `${LIB_OSE}\\Dungeon Age Adventures\\Wicked Little Delves, vol 1\\Wicked-Little-Delves-vol1.pdf`,
+  wld2: `${LIB_OSE}\\Dungeon Age Adventures\\Wicked Little Delves, vol 2\\Wicked-Little-Delves-vol2.pdf`,
+  wld3: `${LIB_OSE}\\Dungeon Age Adventures\\Wicked Little Delves, vol 3\\Wicked-Little-Delves-vol3.pdf`,
+  pc1: `${LIB_OSE}\\Planar Compass\\Planar Compass Issue 1\\PlanarCompass1v1-4.pdf`,
+  pc2: `${LIB_OSE}\\Planar Compass\\Planar Compass Issue 2\\PlanarCompass2v2.pdf`,
+  pc3: `${LIB_OSE}\\Planar Compass\\Planar Compass Issue 3\\PlanarCompass3_v2_Screen.pdf`,
 };
 
 /**

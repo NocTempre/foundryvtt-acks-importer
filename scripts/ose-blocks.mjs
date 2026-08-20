@@ -144,6 +144,51 @@ export function looksNonDescending(text) {
  * @param profile   a resolved profile (see ose-statline's `resolveProfile`)
  * @returns candidates in reading order, each `{box, runs, text, labels, coverage, suspectLineage}`
  */
+/**
+ * The run-in label immediately above a block, in the block's own column.
+ *
+ * A keyed adventure names its monsters in the margin of the room they occupy,
+ * not in a heading: the nearest DISPLAY heading over a stat block is the area
+ * ("9. Interrogation Chamber"), while the creature's name sits a line above the
+ * block in the same column, set one point larger than the body around it.
+ * Reading the heading instead produces an actor named after a room.
+ *
+ * Identified by size relative to the BLOCK's own text rather than an absolute
+ * threshold, because a label clearing `HEADING_MIN_H` would already have been a
+ * heading — the whole point is that it does not.
+ *
+ * @returns the label text, or null when nothing above the block is set larger
+ */
+export function runinLabelAbove(pageData, candidate, within = 60) {
+  const all = (pageData?.items ?? []).filter((it) => String(it.str).trim());
+  if (!all.length || !candidate?.box) return null;
+  const cols = detectColumns(pageData.items ?? []);
+
+  const above = all.filter(
+    (it) =>
+      colOf(it.x, cols) === candidate.col &&
+      it.y < candidate.box.y0 - 0.5 &&
+      it.y > candidate.box.y0 - within &&
+      (it.h ?? 0) < HEADING_MIN_H,
+  );
+  if (!above.length) return null;
+
+  const lines = linesOf(above);
+  // Calibrate against the PROSE, not against the block: these books set a stat
+  // block smaller than the paragraph describing it, so "taller than the block"
+  // matches the description too and names the creature after its own flavour
+  // text. The label is the line that stands out from what surrounds it, so the
+  // reference height is the typical line above the block.
+  const heights = lines.map((l) => Math.max(...l.items.map((it) => it.h ?? 0))).sort((a, b) => a - b);
+  const proseH = heights[Math.floor(heights.length / 2)];
+
+  const taller = lines.filter((l) => Math.max(...l.items.map((it) => it.h ?? 0)) > proseH + 0.5);
+  if (!taller.length) return null;
+  // Nearest of the taller lines: a column can carry this creature's label and
+  // the tail of the previous one's above it.
+  return lineText(taller[taller.length - 1]) || null;
+}
+
 export function findStatBlocks(pageData, profile = OSE_CANONICAL) {
   const items = (pageData?.items ?? []).filter((it) => it.h < HEADING_MIN_H && String(it.str).trim());
   if (!items.length) return [];

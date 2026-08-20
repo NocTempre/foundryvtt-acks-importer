@@ -117,6 +117,36 @@ for (const bad of [{ text: "" }, { text: "not a stat block at all" }, { text: "A
   }
 }
 
+/* --- the saves go in under the names the SYSTEM has ----------------------- */
+
+// Found live against acks 14.0.1: the converter emits `blast`, that build has
+// only `breath`, and a SchemaField drops a key it has no field for — so the
+// creature arrived with four of its five saving throws and nothing said so.
+{
+  const line = "AC 6 [13], HD 4 (18hp), Att 1 x fist (1d6), SV D10 W11 P12 B13 S14, ML 8, AL Neutral";
+  const build = (fields) => {
+    const prev = globalThis.CONFIG;
+    globalThis.CONFIG = { Actor: { dataModels: { monster: { schema: { getField: (p) => (p === "saves" ? { fields } : undefined) } } } } };
+    try {
+      return oseActorData({
+        candidate: { text: line, box: null },
+        source: { id: "t", label: "T", lineage: "ose" },
+        page: 1, constants: K, moraleBounds: BOUNDS,
+      });
+    } finally {
+      globalThis.CONFIG = prev;
+    }
+  };
+
+  const older = build({ paralysis: {}, death: {}, breath: {}, implements: {}, spell: {}, wand: {} });
+  check("the blast save lands on the name that build has", older.system.saves.breath, { value: 13 });
+  ok("and not on one it would drop", older.system.saves.blast === undefined);
+
+  const newer = build({ paralysis: {}, death: {}, blast: {}, implements: {}, spell: {} });
+  check("a build with the new name gets the new name", newer.system.saves.blast, { value: 13 });
+  ok("and is not given the old one", newer.system.saves.breath === undefined);
+}
+
 if (failed) {
   console.error(`\nose-binding: ${failed} failure(s)`);
   process.exit(1);

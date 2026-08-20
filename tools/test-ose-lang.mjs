@@ -17,7 +17,7 @@ const ROOT = path.join(HERE, "..");
 const PREFIX = "ACKS-IMPORTER.";
 
 const lang = JSON.parse(fs.readFileSync(path.join(ROOT, "lang", "en.json"), "utf8"));
-const src = ["ose-app.mjs", "ose-manual.mjs"]
+const src = ["ose-app.mjs", "ose-manual.mjs", "ose-book.mjs"]
   .map((f) => fs.readFileSync(path.join(ROOT, "scripts", f), "utf8"))
   .join("\n");
 
@@ -35,7 +35,7 @@ const want = (key, why) => {
  * are named here — a short list, and a wrong entry shows up as a key that
  * silently renders as itself.
  */
-const NOT_LANG_KEYS = new Set(["ose.hand", "ose.canonical", "ose.learned"]);
+const NOT_LANG_KEYS = new Set(["ose.hand", "ose.canonical", "ose.learned", "ose.authored"]);
 
 // Any literal key in the file, not only the ones directly inside a loc() call —
 // several are chosen by a conditional and handed in, which a call-shaped scan

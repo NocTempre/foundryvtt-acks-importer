@@ -66,11 +66,24 @@ const spill = matchFilesToBooks([file("ACKS II Judges Journal.pdf")], ["jj", "mm
 check("a surplus file finds its own book", spill.matched.get("jj")?.name === "ACKS II Judges Journal.pdf");
 check("a book with no candidate file stays closed", !spill.matched.has("mm"));
 
-/* Fingerprints. Page counts are distinct across the registry, so an untitled
- * printing is still identified; a title, where there is one, must agree. */
+/* Fingerprints: a title, where the printing carries one, must agree. */
 check("page count + title names the book", identifyBook(BOOKS.jj.pages, "ACKS II Judges Journal") === "jj");
 check("an untitled printing is named by count alone", identifyBook(BOOKS.ax2.pages, "") === "ax2");
-check("every registry page count is distinct", new Set(Object.values(BOOKS).map((b) => b.pages)).size === Object.keys(BOOKS).length);
+// Page counts were once distinct across the whole registry, which made every
+// printing identifiable with or without a title. Third-party titles ended that
+// — two Quick Delves both run to 20 pages — so what has to hold is the safety
+// property underneath: a count shared by two books identifies NEITHER unless a
+// title separates them, and a count belonging to one book still names it when
+// the printing carries no metadata title at all, as every AX book does.
+{
+  const counts = Object.values(BOOKS).map((b) => b.pages);
+  const shared = new Set(counts.filter((c, i) => counts.indexOf(c) !== i));
+  for (const [id, book] of Object.entries(BOOKS)) {
+    const untitled = identifyBook(book.pages, "");
+    if (shared.has(book.pages)) check(`a shared page count names nobody untitled (${id})`, untitled === null);
+    else check(`a unique page count names its book untitled (${id})`, untitled === id);
+  }
+}
 // A short printing of a book this build has never seen names nobody, which is
 // what keeps edition drift a warning rather than a refusal.
 check("an unknown page count names nobody", identifyBook(9999, "ACKS II Revised Rulebook") === null);

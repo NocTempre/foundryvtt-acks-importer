@@ -1,5 +1,55 @@
 # Changelog
 
+## 2.12.0
+
+Eleven third-party books now import in one press, and the reader got harder to
+fool.
+
+### Added
+- **Eleven books ship ready to import.** Connect your own copy and press
+  import — no page-hunting, no calibration, no picking blocks off a page. The
+  OSE Advanced Fantasy Referee's Tome (340 creatures), the Dolmenwood Monster
+  Book (79), all three Quick Delves, all three Wicked Little Delves and Planar
+  Compass issues 1 to 3: 483 creatures in all, each carrying the page it came
+  from, the block exactly as printed on its Source tab, and the book's own
+  illustration where the page has one for that creature.
+- **Dolmenwood is read as Dolmenwood.** The Monster Book shares OSE's shelf and
+  prints a different block: an armour class that counts the other way, hit
+  points as dice, a speed for each way a creature moves, and Morale, Enc and
+  Hoard where OSE writes ML, NA and TT. Read as though it were OSE, its armour
+  class lands several points out and looks entirely reasonable on the sheet. It
+  now declares its own dialect, and nothing else you import is affected.
+- **A source can start from a dialect instead of from scratch.** A publisher's
+  whole line usually shares one block shape, so calibrating one of its books can
+  begin from that shape and correct it, rather than teaching a label at a time.
+- **A wording the reader does not know is reported instead of absorbed.** It
+  used to run quietly into the field before it, so a book in an unfamiliar
+  dialect looked like it had been read perfectly. Anything that cannot be placed
+  is now named, under the word your book actually prints.
+
+### Fixed
+- **A saving throw went missing on every import.** ACKS II is renaming two
+  saves, and on the current system build the new name has nothing behind it — so
+  the blast save was dropped on the way into the document, silently, and
+  creatures arrived with four of their five. Saves now go in under the names
+  your system actually has, whichever build you are on.
+- **Hit dice were rolled on the wrong die.** A block printing "HP 1d4" was given
+  a d8, because the die was worked out from the number of hit dice instead of
+  read from the page. What the page prints now wins.
+- **A creature could be named after the room it stood in.** Names came from the
+  nearest heading, which in a keyed adventure is the area and in some bestiaries
+  is a line of description — so monsters could arrive called "13. Hallway", or a
+  fragment of a sentence. Names now come from the block itself or the label
+  beside it, and anything reading like a sentence or an area number is left for
+  a person rather than guessed at.
+- **One illustration could end up on four different monsters.** Art was matched
+  by asking each creature for its nearest picture, so a bestiary page carrying
+  one picture gave it to everything on the page. Each picture now belongs to a
+  single creature, and creatures the page never illustrated have none.
+- **A variable-hit-dice creature lost its attack throw.** "THAC0 By HD (17 [+2]
+  to 12 [+7])" read that "HD" as the start of a new field and cut the range away
+  from the throw it belonged to.
+
 ## 2.11.0
 
 Convert a stat block with no book to point at, and read the ones you have far better.

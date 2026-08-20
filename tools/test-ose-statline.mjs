@@ -7,7 +7,7 @@
  * business in a tracked file. A shape is exercised by its shape, not by its
  * values.
  */
-import { parseOseStatline, resolveProfile, OSE_CANONICAL } from "../scripts/ose-statline.mjs";
+import { parseOseStatline, resolveProfile, OSE_CANONICAL, DOLMENWOOD } from "../scripts/ose-statline.mjs";
 
 let failed = 0;
 const check = (name, got, want) => {
@@ -251,6 +251,43 @@ check(
     "The following creatures guard the vault and will attack anyone who enters without the sigil: AC 5 [14], HD 2",
   );
   ok("an over-long lead is not a name", longLead.name === undefined, String(longLead.name));
+}
+
+
+/* --- Dolmenwood: a dialect, not a widening -------------------------------- */
+
+// The Monster Book is B-X's cousin and prints none of B-X's spellings: an
+// ascending armour class alone, hit points as dice, a label per movement mode.
+// Numbers here are invented; only the SHAPE is the book's.
+{
+  const line = "Level 2 AC 12 HP 2d8 (9) Saves D12 R13 H14 B15 S16 Att 2 hooves (+1, 1d4) Speed 80 Fly 40 Morale 7 Enc 1d6 XP 35";
+
+  const dw = parseOseStatline(line, DOLMENWOOD);
+  check("hit points are the total, not the die count", dw.fields.hp, 9);
+  check("and the die expression states the hit dice", dw.fields.hd, { count: 2 });
+  check("the speed label is read as movement", dw.fields.mv, [{ mode: "land", exploration: 80 }]);
+  check("morale reads through the dialect's own word", dw.fields.ml, 7);
+  check("the attack carries the bonus printed inside it", dw.fields.att.modes[0].bonus, 1);
+  ok("and nothing is left over", dw.extra.length === 0, JSON.stringify(dw.extra));
+
+  // The same line read as canonical OSE must REPORT what it cannot place. This
+  // is the property that makes the corpus teachable: silence would have the
+  // grammar absorb speed and morale into the attack text and call it a clean
+  // read, which is how the dialect went unnoticed in the first place.
+  const asOse = parseOseStatline(line);
+  ok("canonical OSE names the labels it does not know", asOse.unknown.includes("Speed") && asOse.unknown.includes("Morale"), JSON.stringify(asOse.unknown));
+  ok("and does not swallow them into the attack", !/Speed/.test(asOse.fields.att?.text ?? ""), asOse.fields.att?.text);
+}
+
+// A source may start from a shipped dialect rather than from OSE, and still
+// import under its own name. A whole publisher line shares one block shape, so
+// calibration begins from that shape instead of rebuilding it label by label.
+{
+  const line = "Level 2 AC 12 HP 2d8 (9) Saves D12 R13 H14 B15 S16 Speed 80 Morale 7 XP 35";
+  const src = resolveProfile({ base: "ose.mybook", extends: "ose.dolmenwood" });
+  check("the source keeps its own dialect tag", parseOseStatline(line, src).dialect, "ose.mybook");
+  check("but reads with the dialect it extends", parseOseStatline(line, src).fields.ml, 7);
+  ok("and canonical OSE is unchanged by it", OSE_CANONICAL.labels.ml.length === 1, JSON.stringify(OSE_CANONICAL.labels.ml));
 }
 
 if (failed) {

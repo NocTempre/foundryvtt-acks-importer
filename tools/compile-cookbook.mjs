@@ -849,7 +849,12 @@ async function compileOseMonster(doc, entry, _kindRow) {
 
   await emitProse(doc, entry, fields).catch(() => {});
   if (entry.assists?.art) {
-    fields.art = { op: "art", page: entry.assists.art.page ?? page, box: entry.assists.art.box };
+    fields.art = {
+      op: "art",
+      page: entry.assists.art.page ?? page,
+      ...(entry.assists.art.name ? { name: entry.assists.art.name } : {}),
+      box: entry.assists.art.box,
+    };
   }
 
   return {

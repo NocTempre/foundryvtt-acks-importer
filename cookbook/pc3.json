@@ -1,0 +1,538 @@
+{
+  "schema": "acks-cookbook/2",
+  "book": {
+    "id": "pc3",
+    "label": "Planar Compass, Issue 3",
+    "short": "PC3",
+    "pages": 72,
+    "titleRe": "Planar\\s*Compass\\s*3"
+  },
+  "entries": {
+    "pc3.priestOfordo": {
+      "id": "pc3.priestOfordo",
+      "kind": "kind.oseMonster",
+      "name": "Priest Ofordo",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        42
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 18.4807,
+            "x1": 171.23269999999997,
+            "y0": 209.57000000000005,
+            "y1": 258.77000000000004
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 42,
+          "name": "img_p41_1",
+          "box": {
+            "x0": 17.1408,
+            "x1": 182.27533799999998,
+            "y0": 441.33200000000005,
+            "y1": 572.035194
+          }
+        }
+      }
+    },
+    "pc3.clockworkGuard": {
+      "id": "pc3.clockworkGuard",
+      "kind": "kind.oseMonster",
+      "name": "Clockwork Guard",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        42
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 42,
+          "box": {
+            "x0": 194.101,
+            "x1": 288.201,
+            "y0": 103.53100000000006,
+            "y1": 115.53100000000006
+          },
+          "text": "Clockwork Guard"
+        },
+        "block": {
+          "op": "value",
+          "page": 42,
+          "box": {
+            "x0": 196.215,
+            "x1": 354.105,
+            "y0": 130.69700000000006,
+            "y1": 184.69700000000006
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21
+            ]
+          }
+        }
+      }
+    },
+    "pc3.caelligo": {
+      "id": "pc3.caelligo",
+      "kind": "kind.oseMonster",
+      "name": "Caelligo",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        50
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 50,
+          "box": {
+            "x0": 195.64,
+            "x1": 241.62,
+            "y0": 29.923000000000002,
+            "y1": 41.923
+          },
+          "text": "Caelligo"
+        },
+        "block": {
+          "op": "value",
+          "page": 50,
+          "box": {
+            "x0": 196.995,
+            "x1": 356.3349999999999,
+            "y0": 242.92900000000003,
+            "y1": 308.92900000000003
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 50,
+          "name": "img_p49_1",
+          "box": {
+            "x0": 6.07788,
+            "x1": 221.07850499999998,
+            "y0": 284.87700000000007,
+            "y1": 570.1521150000001
+          }
+        }
+      }
+    },
+    "pc3.clockworkSeaWyrm": {
+      "id": "pc3.clockworkSeaWyrm",
+      "kind": "kind.oseMonster",
+      "name": "Clockwork Sea Wyrm",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        52
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 52,
+          "box": {
+            "x0": 195.843,
+            "x1": 313.247,
+            "y0": 43.10800000000006,
+            "y1": 55.10800000000006
+          },
+          "text": "Clockwork Sea Wyrm"
+        },
+        "block": {
+          "op": "value",
+          "page": 52,
+          "box": {
+            "x0": 197.909,
+            "x1": 349.1129999999999,
+            "y0": 115.95900000000006,
+            "y1": 165.15900000000005
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 52,
+          "name": "img_p51_1",
+          "box": {
+            "x0": 3.18966,
+            "x1": 397.895733,
+            "y0": 343.66100000000006,
+            "y1": 582.4412040000001
+          }
+        }
+      }
+    },
+    "pc3.knightRotar": {
+      "id": "pc3.knightRotar",
+      "kind": "kind.oseMonster",
+      "name": "Knight Rotar",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        55
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 55,
+          "box": {
+            "x0": 61.3728,
+            "x1": 140.1058,
+            "y0": 30.267000000000053,
+            "y1": 42.26700000000005
+          },
+          "text": "Knight Rotar"
+        },
+        "block": {
+          "op": "value",
+          "page": 55,
+          "box": {
+            "x0": 62.833,
+            "x1": 135.043,
+            "y0": 127.46100000000007,
+            "y1": 181.46100000000007
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        }
+      }
+    },
+    "pc3.vigilantOfordo": {
+      "id": "pc3.vigilantOfordo",
+      "kind": "kind.oseMonster",
+      "name": "Vigilant Ofordo",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        65
+      ],
+      "fields": {
+        "block": {
+          "op": "value",
+          "page": 65,
+          "box": {
+            "x0": 64.3352,
+            "x1": 226.87900000000002,
+            "y0": 397.06800000000004,
+            "y1": 446.26800000000003
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 65,
+          "name": "img_p64_1",
+          "box": {
+            "x0": 176.373,
+            "x1": 410.760164,
+            "y0": 340.3190000000001,
+            "y1": 595.463021
+          }
+        }
+      }
+    },
+    "pc3.theTraitor": {
+      "id": "pc3.theTraitor",
+      "kind": "kind.oseMonster",
+      "name": "The Traitor",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        67
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 67,
+          "box": {
+            "x0": 240.669,
+            "x1": 306.713,
+            "y0": 30.079000000000065,
+            "y1": 42.079000000000065
+          },
+          "text": "The Traitor"
+        },
+        "block": {
+          "op": "value",
+          "page": 67,
+          "box": {
+            "x0": 242.558,
+            "x1": 392.318,
+            "y0": 81.15600000000006,
+            "y1": 133.15600000000006
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 67,
+          "name": "img_p66_1",
+          "box": {
+            "x0": 31.6965,
+            "x1": 216.22860100000003,
+            "y0": 410.26000000000005,
+            "y1": 595.764346
+          }
+        }
+      }
+    },
+    "pc3.giantClockworkBeetle": {
+      "id": "pc3.giantClockworkBeetle",
+      "kind": "kind.oseMonster",
+      "name": "Giant Clockwork Beetle",
+      "book": "pc3",
+      "cite": "",
+      "pages": [
+        70
+      ],
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 70,
+          "box": {
+            "x0": 18.4096,
+            "x1": 142.68960000000004,
+            "y0": 291.65400000000005,
+            "y1": 303.65400000000005
+          },
+          "text": "Giant Clockwork Beetle"
+        },
+        "block": {
+          "op": "value",
+          "page": 70,
+          "box": {
+            "x0": 18.3068,
+            "x1": 173.87700000000004,
+            "y0": 343.7710000000001,
+            "y1": 386.571
+          },
+          "pattern": "raw",
+          "fixes": {
+            "joinSpace": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23
+            ]
+          }
+        },
+        "art": {
+          "op": "art",
+          "page": 70,
+          "name": "img_p69_1",
+          "box": {
+            "x0": 186.259,
+            "x1": 382.85407,
+            "y0": 363.74700000000007,
+            "y1": 558.2702250000001
+          }
+        }
+      }
+    }
+  }
+}

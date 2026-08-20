@@ -265,5 +265,11 @@
   "ACKS-IMPORTER.ose.gap.incomplete-save-row": "the printed saving throws make up no complete set",
   "ACKS-IMPORTER.ose.gap.not-a-number": "the armour class is stated in words, not a figure",
   "ACKS-IMPORTER.ose.gap.saves-by-reference": "the saving throws are stated as another creature’s",
-  "ACKS-IMPORTER.ose.sendToHand": "correct by hand"
+  "ACKS-IMPORTER.ose.sendToHand": "correct by hand",
+  "ACKS-IMPORTER.ose.bookNoCookbook": "No authored recipes ship for {book}.",
+  "ACKS-IMPORTER.ose.bookNotConnected": "Connect {book} first — its creatures are read from your own copy.",
+  "ACKS-IMPORTER.ose.bookImporting": "Importing creatures from {book}…",
+  "ACKS-IMPORTER.ose.bookDone": "Imported {n} creature(s) from {book}.",
+  "ACKS-IMPORTER.ose.bookDoneUnconverted": "Imported {n} creature(s) from {book} — armour class and attack throw still need the System Compatibility Guide.",
+  "ACKS-IMPORTER.ose.bookRefused": "{n} entr(ies) did not match this printing and were skipped."
 }

@@ -26,16 +26,22 @@
  *     a book's roster to the maximum. See `moraleOffset`.
  */
 
-/** Damage-bearing OSE lineages, and how their armour class is printed. All of
- * the B-X family print DESCENDING; the ascending families are refused for now
- * because their other fields (range bands, bare ability modifiers) have no
- * ACKS equivalent and would need a second grammar. */
+/** Damage-bearing lineages, and how each prints an armour class that arrives
+ * with no second figure beside it. The B-X family print DESCENDING. Dolmenwood
+ * keeps B-X's saves, morale and hit dice but prints its armour class ASCENDING
+ * and alone, so a number that looks identical on the page means the opposite
+ * thing — which is exactly why the lineage answers this and the grammar, which
+ * only reports what is printed, does not.
+ *
+ * Lineages whose OTHER fields have no ACKS equivalent (range bands, bare
+ * ability modifiers) are still refused; the locator flags them first. */
 export const LINEAGES = Object.freeze({
   ose: { label: "Old-School Essentials", ac: "descending" },
   bx: { label: "B/X", ac: "descending" },
   becmi: { label: "BECMI", ac: "descending" },
   ll: { label: "Labyrinth Lord", ac: "descending" },
   lotfp: { label: "Lamentations of the Flame Princess", ac: "descending" },
+  dolmenwood: { label: "Dolmenwood", ac: "ascending" },
 });
 
 /** OSE's morale is a 2d6 score: the die sets the range, not a printed table. */
@@ -172,8 +178,17 @@ export function convertOse(parsed, constants, opts = {}) {
     if (!constants) {
       gap("ac", f.ac.descending, "needs-guide");
     } else {
-      const viaDescending = Number.isFinite(f.ac.descending) ? constants.acDescending - f.ac.descending : null;
-      const viaAscending = Number.isFinite(f.ac.ascending) ? f.ac.ascending - constants.acAscending : null;
+      // The grammar records the first printed figure as `descending` and marks
+      // the block `bare` when no bracket followed, because which progression a
+      // lone number belongs to is the lineage's answer, not the page's.
+      const loneAscending = f.ac.bare && lin.ac === "ascending";
+      const viaDescending =
+        !loneAscending && Number.isFinite(f.ac.descending) ? constants.acDescending - f.ac.descending : null;
+      const viaAscending = Number.isFinite(f.ac.ascending)
+        ? f.ac.ascending - constants.acAscending
+        : loneAscending && Number.isFinite(f.ac.descending)
+          ? f.ac.descending - constants.acAscending
+          : null;
       if (viaDescending != null && viaAscending != null && viaDescending !== viaAscending) {
         gap("ac", `${f.ac.descending} [${f.ac.ascending}]`, "progressions-disagree");
       } else {
@@ -209,6 +224,14 @@ export function convertOse(parsed, constants, opts = {}) {
       system.hp = { hd: `${whole}d${sides}${bonus}` };
     }
   }
+  // A block that prints its hit points as a die expression has stated the die
+  // itself, and it is not always the d8 the count-derived formula assumes: a
+  // Dolmenwood kilnling prints "HP 1d4" and would otherwise be rolled on a d8.
+  // Transcription beats derivation wherever the page actually says.
+  if (f.hpDie) {
+    system.hp = { ...(system.hp ?? {}), hd: f.hpDie };
+    took("hd", f.hpDie, "transcribed", f.hpDie, "printed hit die");
+  }
   if (Number.isFinite(f.hp)) {
     system.hp = { ...(system.hp ?? {}), value: f.hp, max: f.hp };
     took("hp", f.hp, "transcribed", f.hp, "printed hit points");
@@ -219,7 +242,14 @@ export function convertOse(parsed, constants, opts = {}) {
   // only the to-hit-AC-0 number is not converted: recovering the bonus from it
   // needs OSE's own internal identity, which the guide does not print and
   // which is therefore not a rule this importer may apply.
-  if (f.thac0?.note) {
+  // A dialect with no THAC0 line at all prints the same attack bonus inside the
+  // attack ("2 hooves (+1, 1d4)"). It is the guide's "attack bonus" wherever it
+  // is typeset, so it converts by the same rule rather than becoming a gap.
+  const attBonus = f.thac0 ? null : (f.att?.modes ?? []).map((m) => m.bonus).find(Number.isFinite);
+  if (Number.isFinite(attBonus)) {
+    if (!constants) gap("thac0", attBonus, "needs-guide");
+    else system.thac0 = { throw: took("thac0", attBonus, "guide", constants.attackThrow - attBonus, "SCG p.2") };
+  } else if (f.thac0?.note) {
     gap("thac0", f.thac0.note, "not-a-number");
   } else if (f.thac0) {
     if (!Number.isFinite(f.thac0.ascendingBonus)) {
@@ -237,9 +267,21 @@ export function convertOse(parsed, constants, opts = {}) {
   // OSE prints the exploration rate first with the combat rate parenthesised.
   // The ACKS Monstrous Manual prints them the other way round, so the two
   // must never share a mapping.
-  if (Array.isArray(f.mv) && f.mv.length) {
+  // A dialect that gives each movement mode its own label prints the mode in
+  // the label rather than beside the figure, so those rows are folded in here
+  // and read by the same reader as the rest.
+  const modeRows = [];
+  for (const [key, mode] of [["mvFly", "flying"], ["mvSwim", "swimming"], ["mvBurrow", "burrowing"]]) {
+    // parseFloat, not parseInt with a radix: this file may carry no bare
+    // integer literal at all, so that a printed constant can never hide as one.
+    const n = parseFloat(String(f[key] ?? ""));
+    if (Number.isFinite(n)) modeRows.push({ mode, exploration: n });
+  }
+  const mvRows = [...(Array.isArray(f.mv) ? f.mv : []), ...modeRows];
+
+  if (mvRows.length) {
     const speeds = [];
-    for (const row of f.mv) {
+    for (const row of mvRows) {
       const type = SPEED_TYPE[fold(row.mode)] ?? "land";
       speeds.push({
         type,
@@ -249,7 +291,7 @@ export function convertOse(parsed, constants, opts = {}) {
       });
     }
     extras.speeds = speeds;
-    const land = f.mv.find((r) => (SPEED_TYPE[fold(r.mode)] ?? "land") === "land") ?? f.mv[0];
+    const land = mvRows.find((r) => (SPEED_TYPE[fold(r.mode)] ?? "land") === "land") ?? mvRows[0];
     if (Number.isFinite(land?.exploration)) {
       system.movement = { base: took("mv", land.exploration, "raw-derivation", land.exploration, "exploration rate is the ACKS base") };
     }

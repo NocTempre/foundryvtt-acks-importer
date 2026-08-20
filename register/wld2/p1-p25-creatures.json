@@ -1,0 +1,48 @@
+[
+  {
+    "id": "wld2.oseGuide",
+    "kind": "kind.oseMonster",
+    "book": "wld2",
+    "name": "Ose Guide",
+    "anchor": {
+      "display": "OSE guide"
+    },
+    "pages": [
+      5
+    ],
+    "assists": {
+      "block": {
+        "page": 5,
+        "box": {
+          "x0": 19.59999925,
+          "x1": 165.62467235,
+          "y0": 165.47999925,
+          "y1": 196.91999850000002
+        }
+      }
+    }
+  },
+  {
+    "id": "wld2.oseGuide2",
+    "kind": "kind.oseMonster",
+    "book": "wld2",
+    "name": "Ose Guide",
+    "anchor": {
+      "display": "OSE guide"
+    },
+    "pages": [
+      5
+    ],
+    "assists": {
+      "block": {
+        "page": 5,
+        "box": {
+          "x0": 19.59999925,
+          "x1": 165.77575774999997,
+          "y0": 415.91999849999996,
+          "y1": 459.83999625
+        }
+      }
+    }
+  }
+]

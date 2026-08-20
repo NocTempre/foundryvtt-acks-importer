@@ -1,0 +1,183 @@
+[
+  {
+    "id": "pc2.crawlerVine",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Crawler Vine",
+    "anchor": {
+      "display": "Crawler Vine"
+    },
+    "pages": [
+      8
+    ],
+    "assists": {
+      "block": {
+        "page": 8,
+        "box": {
+          "x0": 71.7008,
+          "x1": 204.31500000000003,
+          "y0": 232.15299999999996,
+          "y1": 288.15299999999996
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.straggler",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Straggler",
+    "anchor": {
+      "display": "Straggler"
+    },
+    "pages": [
+      8
+    ],
+    "assists": {
+      "block": {
+        "page": 8,
+        "box": {
+          "x0": 71.7008,
+          "x1": 204.315,
+          "y0": 398.15299999999996,
+          "y1": 454.15299999999996
+        }
+      },
+      "art": {
+        "page": 8,
+        "name": "img_p7_1",
+        "box": {
+          "x0": 227.21859999999998,
+          "x1": 371.45859999999993,
+          "y0": 313.7689999999999,
+          "y1": 530.0089999999999
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.algaeBloom",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Algae Bloom",
+    "anchor": {
+      "display": "Algae Bloom"
+    },
+    "pages": [
+      8
+    ],
+    "assists": {
+      "block": {
+        "page": 8,
+        "box": {
+          "x0": 232.223,
+          "x1": 364.83799999999997,
+          "y0": 169.13299999999998,
+          "y1": 225.13299999999998
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.astralAmphiptere",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Astral Amphiptere",
+    "anchor": {
+      "display": "Astral Amphiptere"
+    },
+    "pages": [
+      9
+    ],
+    "assists": {
+      "block": {
+        "page": 9,
+        "box": {
+          "x0": 54.6929,
+          "x1": 224.404,
+          "y0": 202.15299999999996,
+          "y1": 238.15299999999996
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.kearLarva",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Kear Larva",
+    "anchor": {
+      "display": "Kear Larva"
+    },
+    "pages": [
+      18
+    ],
+    "assists": {
+      "block": {
+        "page": 18,
+        "box": {
+          "x0": 232.223,
+          "x1": 364.83600000000007,
+          "y0": 202.15299999999996,
+          "y1": 258.15299999999996
+        }
+      },
+      "art": {
+        "page": 18,
+        "name": "img_p17_1",
+        "box": {
+          "x0": 65.07689700000003,
+          "x1": 371.46008000000006,
+          "y0": 388.511211,
+          "y1": 543.931701
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.kearPupa",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Kear Pupa",
+    "anchor": {
+      "display": "Kear Pupa"
+    },
+    "pages": [
+      19
+    ],
+    "assists": {
+      "block": {
+        "page": 19,
+        "box": {
+          "x0": 54.6929,
+          "x1": 187.30600000000004,
+          "y0": 239.13299999999998,
+          "y1": 305.133
+        }
+      }
+    }
+  },
+  {
+    "id": "pc2.kearImago",
+    "kind": "kind.oseMonster",
+    "book": "pc2",
+    "name": "Kear Imago",
+    "anchor": {
+      "display": "Kear Imago"
+    },
+    "pages": [
+      19
+    ],
+    "assists": {
+      "block": {
+        "page": 19,
+        "box": {
+          "x0": 215.215,
+          "x1": 347.831,
+          "y0": 239.13299999999998,
+          "y1": 315.133
+        }
+      }
+    }
+  }
+]

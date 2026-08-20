@@ -121,3 +121,45 @@ be checked without the book.
 20. Delete every actor created, and remove the registered source. Report which
     of the steps above were reached and which were not — a surface that could
     not be exercised is named, not omitted.
+
+## Authored OSE books
+
+Eleven third-party books ship a cookbook of creature boxes. The path is
+`importOseBook(bookId)` — no registration, no calibration, no block picking.
+Requires the book's own PDF connected this session; the fingerprints are page
+count plus metadata title, and two Quick Delves share a page count, so a title
+is what separates them.
+
+### Fixtures
+
+1. A folder to import into, created for the test and deleted after. Never import
+   an authored book into the world root — 340 actors are hard to find again.
+
+### Steps
+
+2. `game.modules.get("acks-importer").api.authoredOseBooks()` lists the shipped
+   books with their creature counts and whether each is open this session. A
+   book whose PDF is not connected must report `open: false` and must not be
+   importable — check the refusal, not just the list.
+3. Import a SMALL book first (`qd1`, six creatures). Confirm: actors created
+   with the cookbook's names, a Source tab on each, and `@PdfText` biography
+   resolving against the reader's own copy.
+4. **Check a name against the page.** The harvester's names are gated but not
+   proofread; an actor named after a room or a sentence is the failure that gate
+   exists to prevent, and it is visible only here.
+5. **Check an illustration against the page.** Each picture goes to the block
+   nearest it, so a creature the page never illustrated correctly has none. What
+   must NOT appear is one picture on several unrelated creatures.
+6. Import `dmb` and verify the DIALECT end to end. A Dolmenwood block prints
+   its armour class ascending and alone, so the sheet must show an armour class
+   that IMPROVES with the printed number — the same figure read as OSE lands
+   several points the other way and looks entirely plausible. Confirm against
+   the page for at least one creature, and confirm `flags["acks-importer"].ose`
+   records `lineage: "dolmenwood"`.
+7. Re-import the same book into a second folder and confirm the first set is
+   untouched — the path creates, it never updates in place.
+
+### Teardown
+
+8. Delete the folders and every actor in them. Report which books were
+   exercised and which were not reached.

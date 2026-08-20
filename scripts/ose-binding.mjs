@@ -17,6 +17,38 @@ import { parseOseStatline } from "./ose-statline.mjs";
 import { profileFor } from "./ose-source.mjs";
 
 /**
+ * ACKS II's saves are being renamed, and both spellings are in the wild.
+ *
+ * The converter emits the ACKS II names, `blast` and `implements`. The system on
+ * the other side may not have them yet — release `acks` 14.0.1 still calls them
+ * `breath` and `wand` — and a SchemaField silently DROPS a key it has no field
+ * for. A creature imported against that build therefore kept four of its five
+ * saving throws and said nothing: the fifth was gone before the document
+ * existed, which is why no offline check could see it.
+ *
+ * Renaming here rather than in the converter keeps the converter free of
+ * Foundry and puts the choice where the target schema can be read. A build
+ * carrying the new name is written under the new name, so this expires by
+ * itself rather than becoming a permanent alias.
+ *
+ * @returns canonical save key -> the key this system's schema really has
+ */
+export function saveFieldNames() {
+  const legacy = { blast: "breath", implements: "wand" };
+  const out = {};
+  let fields = null;
+  try {
+    fields = CONFIG?.Actor?.dataModels?.monster?.schema?.getField?.("saves")?.fields ?? null;
+  } catch {
+    fields = null;
+  }
+  for (const [canonical, older] of Object.entries(legacy)) {
+    out[canonical] = fields && !fields[canonical] && fields[older] ? older : canonical;
+  }
+  return out;
+}
+
+/**
  * The `details.morale` field's own bounds, from the live schema.
  *
  * Read rather than written down: the endpoint mapping is derived from the two
@@ -90,12 +122,23 @@ export function oseActorDataFromFields({
         : "Entered by hand"
       : `${source?.label ?? "Imported"} — p.${page}`;
 
+  // Saves go in under the names this system's schema actually declares; see
+  // `saveFieldNames`. A key with no field behind it is dropped without a word.
+  const saves = converted.system.saves;
+  let systemSaves = saves;
+  if (saves) {
+    const named = saveFieldNames();
+    systemSaves = {};
+    for (const [key, value] of Object.entries(saves)) systemSaves[named[key] ?? key] = value;
+  }
+
   return {
     name: name || blockName || "Imported creature",
     type: "monster",
     folder: folderId,
     system: {
       ...converted.system,
+      ...(saves ? { saves: systemSaves } : {}),
       details: {
         ...(converted.system.details ?? {}),
         biography: `<p><em>${where}</em></p>`,

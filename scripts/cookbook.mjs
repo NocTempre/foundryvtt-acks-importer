@@ -95,6 +95,9 @@ export async function loadCookbook() {
 export const cookbookContentFile = (name) => data.content.get(name) ?? null;
 export const cookbookRegisters = () => data.registers;
 export const cookbookSessionDoc = (bookId) => ctx?.sessionDocs?.get(bookId)?.doc ?? null;
+export const cookbookBookFile = (bookId) => data.books.get(bookId) ?? null;
+/** The seat-side art importer, injected by the module. Null outside Foundry. */
+export const cookbookArtImporter = () => ctx?.importArtForPage ?? null;
 
 /** "mm.griffon#combat" -> { id, section } (section null when absent). */
 const splitId = (full) => {

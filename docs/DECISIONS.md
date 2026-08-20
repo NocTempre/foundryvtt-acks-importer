@@ -1141,3 +1141,75 @@ comes out of it — so the corpus-driven grammar and the hand-authored books
 improve together instead of drifting apart. That is what makes 100% reachable:
 geometry solves precisely the cases the locator cannot find, and the grammar
 already reads 93% of what it does find.
+
+### Silence is the failure a corpus-driven grammar cannot learn from (2026-08-19)
+
+**Ruled: an unrecognised label ENDS the clause before it and is reported under
+the word the page printed.** Previously only a KNOWN label bounded a clause, so
+an unknown one fell inside its neighbour: the Dolmenwood line
+
+    Att 2 hooves (+1, 1d4) Speed 80 Morale 7 XP 35
+
+read as an attack whose text happened to run on, with `extra` empty. Every
+measurement then called the block perfectly understood while its speed and its
+morale sat inside an attack string, and the sweep that exists to find gaps
+reported none.
+
+The cost is measured and was worth paying. The Monster Book's honest score is
+**11%**, not the 94% the sweep had been reporting — the 83 points between them
+were entirely swallowed text. Three other books moved by a point or two for the
+same reason. A number that only ever moves up is not a measurement.
+
+**Rejected: widening the canonical labels instead.** That is the failure already
+recorded under *A label that is also an English word cannot be canonical* —
+"Morale" and "Speed" are ordinary English, and teaching every book to read them
+manufactures stat blocks out of room descriptions. The boundary rule is narrow
+on purpose: a capitalised word followed by a number, at bracket depth zero.
+Attack text names its weapons in lower case and brackets its dice, so it does
+not collide.
+
+### Dolmenwood is a dialect and a lineage, not a spelling (2026-08-19)
+
+**Ruled: `dmb` declares `profile: "ose.dolmenwood"` and `lineage: "dolmenwood"`,
+and the lineage answers what a lone armour class means.** The Monster Book sits
+on the OSE shelf and prints none of OSE's block: an ASCENDING armour class with
+no bracket beside it, hit points as a die expression and its total ("HP 4d8
+(18)"), one label per movement mode, an attack bonus inside the attack instead
+of a THAC0 line, and Morale/Enc/Hoard for ML/NA/TT.
+
+The armour class is why this could not be left to a profile alone. "AC 14" is
+valid OSE and valid Dolmenwood and means opposite things; read with the wrong
+lineage it converts five points away from the page and looks entirely plausible
+on the sheet. So the grammar keeps reporting the first printed figure without
+deciding what it is, `readAc` marks the block `bare`, and `LINEAGES` — which
+already recorded a progression per family — decides. Reading dmb correctly took
+it from 11% to 90%.
+
+**Rejected: refusing dmb until a Dolmenwood importer exists.** Its saves, morale
+and hit dice are B-X's; only four axes differ, and gap-and-flag already covers
+what a dialect cannot reach.
+
+### A harvested name is checked, and one picture belongs to one creature (2026-08-19)
+
+**Ruled: the harvester emits a creature only when the name and the art can be
+defended, and reports the rest for hand authoring.** Both defaults were wrong in
+the same direction — they produced output that looked complete.
+
+*Names.* The nearest display heading is not always the creature's. A bestiary
+that sets descriptive prose large gave actors called "And Bony Claws. Servants
+of Grim, Forgotten Gods, Doomed t" — 87 of dmb's 166 rows. A keyed adventure's
+nearest heading is the ROOM, so Quick Delve monsters were named "13. Hallway".
+Now the name comes from the block itself, else a RUN-IN LABEL in the block's own
+column (calibrated against the surrounding prose height, because these books set
+a stat block SMALLER than the paragraph describing it), else the display
+heading — and a name that reads as an area key or a sentence is refused.
+
+*Art.* Each illustration goes to the block nearest IT, not each block to the
+illustration nearest itself. The second rule gave one picture to every creature
+on the page: 81 distinct images covering 224 assignments in aft, `img_p23_1`
+shared by acolyte, amphisbaena, ankheg and ape. Matching image-first leaves
+creatures the page never illustrated with no art, which is correct.
+
+The cost is fewer rows — dmb 166 to 79, and 120 of 483 entries carry art (25%)
+rather than a nominal 66%. A wrong name is the first thing a Judge reads and the last thing
+they think to check; a missing one is a gap a human closes in a minute.

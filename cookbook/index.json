@@ -1,9 +1,19 @@
 {
   "books": [
+    "aft",
     "ax2",
     "ax3",
+    "dmb",
     "mm",
-    "qd1"
+    "pc1",
+    "pc2",
+    "pc3",
+    "qd1",
+    "qd2",
+    "qd3",
+    "wld1",
+    "wld2",
+    "wld3"
   ],
   "content": [
     "classes",

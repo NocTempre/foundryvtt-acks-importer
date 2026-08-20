@@ -87,6 +87,27 @@ The canonical OSE labels ship. A book that heads its hit dice differently gets a
 widened shared grammar. Widening is how one verified reading of one book becomes
 an unverified claim about every book nobody has opened; see DECISIONS.
 
+A SHIPPED book says the same thing in `books.mjs`: `profile` names an entry in
+`PROFILES`, `lineage` names a row in `LINEAGES`. Both default to OSE, so a book
+declaring neither is read exactly as before. The Dolmenwood Monster Book is the
+first to use them — `ose.dolmenwood` and lineage `dolmenwood` — and the profile
+is what the harvester LOCATES it with too, since the labels a profile adds are
+what make its blocks countable as blocks.
+
+The lineage exists separately from the profile because of the armour class. A
+lone "AC 14" is valid in both dialects and means opposite things; the grammar
+reports the printed figure and marks the block `bare`, and the lineage decides
+which progression it belongs to.
+
+### An unknown label ends the clause
+
+A label the profile does not know still bounds the clause before it, and is
+reported under the word the page printed. Without that, an unfamiliar dialect is
+not reported as unfamiliar — it is absorbed into its neighbour, `extra` comes
+back empty, and the sweep calls the block perfectly understood. So a leftover
+naming a label is the grammar asking for a profile row, and the row can be
+written straight off the report.
+
 ## What is refused rather than converted
 
 Three things the locator marks instead of importing:
@@ -197,14 +218,35 @@ on the Source tab and a wrong number is not.
 
 ### Where it stands
 
-Last full sweep: **1127 blocks across 93 books, 90% read completely** from the
-text alone, up from 72% before the corpus was used as a feedback loop. What
-remains is long tail — the largest single finding is six occurrences in two
-books — and it is what the per-source calibration and the hand editor exist for.
+Last full sweep: **1239 blocks across 93 books, 74% read completely** from the
+text alone, reading every book as canonical OSE.
 
-The two halves are meant to add up. The grammar reads what publishers write in
-common; a wording only one book uses is calibrated onto that book; and anything
-the geometry will not vouch for is offered to the hand editor rather than
-refused outright. **Every block the sweep finds is reachable**, whether or not
-the parser could read it — that is the number that has to be 100%, and the 90%
-is how much of it happens without a person.
+That number went DOWN from a reported 90%, and the drop is the measurement
+getting honest rather than the grammar getting worse. Until an unknown label
+bounded a clause, one absorbed the other and the sweep called the result a clean
+read; the 90% was counting swallowed text as understood. Nothing was fixed by
+finding this, and nothing was broken by it — the same blocks read the same way.
+Only the report changed.
+
+What the honest report says is that the largest remaining gap is **one dialect,
+not a long tail**: "Morale" appears 228 times across ten books and "Speed" 202
+times across nine. Those are Dolmenwood-line books, and the dialect that reads
+them now ships. A source calibrated with `extends: "ose.dolmenwood"` starts from
+it; `dmb` uses it directly.
+
+The two halves are still meant to add up. The grammar reads what publishers
+write in common; a wording only one book uses is calibrated onto that book; and
+anything the geometry will not vouch for is offered to the hand editor rather
+than refused. **Every block the sweep finds is reachable**, whether or not the
+parser could read it — that is the number that has to be 100%, and the 74% is
+how much of it happens without a person.
+
+### The authored books
+
+Eleven third-party books ship a cookbook: **483 creature entries, 96% read
+completely**, each with the page it came from and the block as printed. 120
+carry the book's own illustration — a bestiary illustrates a subset of what it
+lists, and a creature the page never drew has none rather than a neighbour's.
+
+    qd1 100%   qd2 100%   qd3 100%   aft  98%   dmb  90%   wld1-3 100%
+    pc1  95%   pc2  86%   pc3  88%

@@ -30,9 +30,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { openBook, pageItems, listHeadings } from "../scripts/extract.mjs";
-import { findStatBlocks } from "../scripts/ose-blocks.mjs";
-import { parseOseStatline } from "../scripts/ose-statline.mjs";
+import { openBook, pageItems, listHeadings, pageArtPlacements } from "../scripts/extract.mjs";
+import { findStatBlocks, runinLabelAbove } from "../scripts/ose-blocks.mjs";
+import { parseOseStatline, PROFILES, OSE_CANONICAL } from "../scripts/ose-statline.mjs";
 import { BOOKS } from "../scripts/books.mjs";
 import { OSE_FILES } from "./reference-lib.mjs";
 
@@ -70,12 +70,52 @@ if (!fs.existsSync(file)) {
 function fixSmallCaps(s) {
   const t = String(s ?? "").trim();
   if (!t) return t;
-  const mangled = /[a-z][A-Z]/.test(t) || /(^|\s)[a-z]/.test(t.replace(/(^|\s)(of|the|and|a|an|to|in)\b/gi, "$1X"));
+  // A heading set entirely in capitals is typography too — an index-style
+  // bestiary head reads "BURROWING BEETLE, GIANT" where the page shows a
+  // small-caps line, and an actor should not shout its own name.
+  const allCaps = /[A-Z]/.test(t) && !/[a-z]/.test(t);
+  const mangled =
+    allCaps || /[a-z][A-Z]/.test(t) || /(^|\s)[a-z]/.test(t.replace(/(^|\s)(of|the|and|a|an|to|in)\b/gi, "$1X"));
   if (!mangled) return t;
   return t
     .toLowerCase()
     .replace(/\b[a-z]/g, (c) => c.toUpperCase())
     .replace(/\b(Of|The|And|A|An|To|In)\b/g, (w, _m, i) => (i === 0 ? w : w.toLowerCase()));
+}
+
+/**
+ * Why this string is not a creature name, or null when it is plausibly one.
+ *
+ * The heading above a block is not always the creature's. Two shapes defeat it,
+ * and both produce an actor whose name is the first thing a Judge reads and the
+ * last thing they think to check:
+ *
+ * - a bestiary that sets descriptive prose large enough to pass for a heading,
+ *   giving "And Bony Claws. Servants of Grim, Forgotten Gods, Doomed t";
+ * - a keyed adventure, where the nearest heading is the ROOM ("13. Hallway")
+ *   and the creature is named — if at all — inside the block itself.
+ *
+ * So a name is short, unpunctuated, does not open mid-sentence, and never
+ * carries an area key. A block that fails goes to the chef rather than to the
+ * world: no name is a gap a human closes, a wrong name is one nobody sees.
+ */
+function nameProblem(s) {
+  const t = String(s ?? "").trim();
+  if (!t) return "empty";
+  if (/^\d+\s*[.)]/.test(t) || /^\d+\s+[-–—]/.test(t)) return "area key, not a creature name";
+  if (t.length > 42 || t.split(/\s+/).length > 5) return "too long for a name";
+  // Sentence punctuation inside means a sentence was captured, not a name.
+  if (/[.;:!?]/.test(t.slice(0, -1))) return "sentence punctuation";
+  // A name is not a sentence, so it does not end in a full stop, and it does
+  // not join its parts with a conjunction ("Ravines, and Tangled Woods").
+  if (/\.$/.test(t)) return "ends a sentence";
+  if (/,\s*(and|or)\b/i.test(t)) return "reads as a list";
+  // A name may open with an article; it never opens with a conjunction or a
+  // preposition, which is exactly what a mid-sentence capture does.
+  if (/^(and|or|but|with|for|from|in|on|at|to|of|they|it|its|their)\b/i.test(t)) return "opens mid-sentence";
+  // Two or more commas is a list, not a name ("Mud Pools, and Lightless Caverns").
+  if ((t.match(/,/g) ?? []).length > 1) return "reads as a list";
+  return null;
 }
 
 /** Register id slug, matching the family's camel-cased convention. */
@@ -88,6 +128,10 @@ const slugOf = (s) =>
     .map((w, i) => (i ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase()))
     .join("")
     .slice(0, 40);
+
+// A book that declares a dialect is LOCATED with it too: the labels a profile
+// adds are what make its blocks countable as blocks.
+const PROFILE = PROFILES[BOOKS[BOOK]?.profile] ?? OSE_CANONICAL;
 
 const { doc, numPages } = await openBook(fs.readFileSync(file));
 const from = RANGE?.from ?? 1;
@@ -105,7 +149,43 @@ for (let page = from; page <= to; page++) {
     continue;
   }
   const heads = listHeadings(pd).filter((h) => h.mode === "display");
-  const candidates = findStatBlocks(pd);
+  const candidates = findStatBlocks(pd, PROFILE);
+
+  // Illustrations on this page, worth associating with a creature. A placement
+  // covering most of the page is a background or a full-bleed spread, and a
+  // small one is a rule, a bullet or a border ornament — neither is a portrait.
+  let placements = [];
+  try {
+    const pageArea = (pd.width ?? 612) * (pd.height ?? 792);
+    placements = (await pageArtPlacements(doc, page)).filter(
+      (a) => a.w >= 80 && a.h >= 80 && a.w * a.h < pageArea * 0.7,
+    );
+  } catch {
+    placements = [];
+  }
+
+  // Each illustration belongs to ONE creature — the block nearest it — rather
+  // than each creature taking the illustration nearest itself. The difference is
+  // not cosmetic: a bestiary page carries four stat blocks and one picture, and
+  // nearest-picture-per-creature hands that picture to all four. Matching the
+  // other way round leaves three creatures with no art, which is right, because
+  // the page gave them none.
+  const artFor = new Map();
+  for (const a of placements) {
+    const mid = a.y + a.h / 2;
+    let best = null;
+    let bestD = Infinity;
+    for (const c of candidates) {
+      const d = Math.abs((c.box.y0 + c.box.y1) / 2 - mid);
+      if (d < bestD) {
+        bestD = d;
+        best = c;
+      }
+    }
+    if (!best) continue;
+    const held = artFor.get(best);
+    if (!held || bestD < held.d) artFor.set(best, { a, d: bestD });
+  }
 
   for (const c of candidates) {
     if (c.suspectLineage || c.mergedBlocks) {
@@ -114,15 +194,27 @@ for (let page = from; page <= to; page++) {
     }
     // The name: what the block called itself, else the nearest display heading
     // above it in the same column.
-    const parsed = parseOseStatline(c.text);
+    const parsed = parseOseStatline(c.text, PROFILE);
     const above = heads
       .filter((h) => h.y < c.box.y0 && Math.abs((h.col ?? 0) - c.col) < 1)
       .sort((a, b) => b.y - a.y)[0];
-    const name = fixSmallCaps((parsed.name || above?.text || "").replace(/\s+/g, " ").trim()).slice(0, 58);
+    // Preference order, cheapest evidence first: what the block called itself,
+    // then the run-in label a keyed adventure sets over it, then the display
+    // heading a bestiary sets over it. The heading is last because it is the
+    // one that can belong to something other than this creature.
+    const runin = runinLabelAbove(pd, c);
+    const name = fixSmallCaps((parsed.name || runin || above?.text || "").replace(/\s+/g, " ").trim()).slice(0, 58);
     if (!name) {
       skipped.push({ page, why: "no name found above or in the block", text: c.text.slice(0, 60) });
       continue;
     }
+    const problem = nameProblem(name);
+    if (problem) {
+      skipped.push({ page, why: `${problem}: "${name.slice(0, 40)}"`, text: c.text.slice(0, 40) });
+      continue;
+    }
+    const art = artFor.get(c)?.a;
+
     let id = `${BOOK}.${slugOf(name)}`;
     let n = 2;
     while (seen.has(id)) id = `${BOOK}.${slugOf(name)}${n++}`;
@@ -137,7 +229,14 @@ for (let page = from; page <= to; page++) {
       // match the extraction byte for byte.
       anchor: { display: (above?.text ?? name).slice(0, 58) },
       pages: [page],
-      assists: { block: { page, box: c.box } },
+      assists: {
+        block: { page, box: c.box },
+        // The nearest surviving illustration, by vertical distance to the
+        // block. Its XObject NAME is the association that matters: a page with
+        // two creatures has two images, and the largest-image rule would give
+        // both of them the same one.
+        ...(art ? { art: { page, name: art.name, box: { x0: art.x, x1: art.x + art.w, y0: art.y, y1: art.y + art.h } } } : {}),
+      },
     });
   }
 }

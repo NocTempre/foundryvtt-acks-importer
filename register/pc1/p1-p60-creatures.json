@@ -1,0 +1,595 @@
+[
+  {
+    "id": "pc1.erntarRoyam",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Erntar Royam",
+    "anchor": {
+      "display": "Erntar Royam"
+    },
+    "pages": [
+      9
+    ],
+    "assists": {
+      "block": {
+        "page": 9,
+        "box": {
+          "x0": 223.7,
+          "x1": 394.36,
+          "y0": 232.20100000000002,
+          "y1": 277.50100000000003
+        }
+      },
+      "art": {
+        "page": 9,
+        "name": "img_p8_2",
+        "box": {
+          "x0": 199.45,
+          "x1": 403.2,
+          "y0": 20.151000000000067,
+          "y1": 144.70100000000002
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.breaker",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Breaker",
+    "anchor": {
+      "display": "Breaker"
+    },
+    "pages": [
+      9
+    ],
+    "assists": {
+      "block": {
+        "page": 9,
+        "box": {
+          "x0": 223.7,
+          "x1": 386.78,
+          "y0": 473.601,
+          "y1": 532.001
+        }
+      },
+      "art": {
+        "page": 9,
+        "name": "img_p8_1",
+        "box": {
+          "x0": 36,
+          "x1": 208.05,
+          "y0": 316.30100000000004,
+          "y1": 554.351
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.palioOneEye",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Palio One Eye(Onauk)",
+    "anchor": {
+      "display": "Palio One Eye(Onauk)"
+    },
+    "pages": [
+      11
+    ],
+    "assists": {
+      "block": {
+        "page": 11,
+        "box": {
+          "x0": 36.9,
+          "x1": 207.29000000000002,
+          "y0": 54.301000000000045,
+          "y1": 99.601
+        }
+      },
+      "art": {
+        "page": 11,
+        "name": "img_p10_1",
+        "box": {
+          "x0": 29.4,
+          "x1": 403.09999999999997,
+          "y0": 56.20100000000002,
+          "y1": 519.9010000000001
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.belsorrisoChild",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Belsorriso Child",
+    "anchor": {
+      "display": "Belsorriso Child"
+    },
+    "pages": [
+      17
+    ],
+    "assists": {
+      "block": {
+        "page": 17,
+        "box": {
+          "x0": 36.9,
+          "x1": 204.6800000000001,
+          "y0": 95.40100000000001,
+          "y1": 147.00100000000003
+        }
+      },
+      "art": {
+        "page": 17,
+        "name": "img_p16_1",
+        "box": {
+          "x0": 222.8,
+          "x1": 395.25,
+          "y0": 29.351,
+          "y1": 279.201
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.tut",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Tut",
+    "anchor": {
+      "display": "Tut"
+    },
+    "pages": [
+      17
+    ],
+    "assists": {
+      "block": {
+        "page": 17,
+        "box": {
+          "x0": 36.9,
+          "x1": 204.19,
+          "y0": 360.00100000000003,
+          "y1": 411.601
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.saturdayMamaStar",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Saturday “Mama” Star",
+    "anchor": {
+      "display": "Saturday “Mama” Star"
+    },
+    "pages": [
+      17
+    ],
+    "assists": {
+      "block": {
+        "page": 17,
+        "box": {
+          "x0": 223.7,
+          "x1": 390.39,
+          "y0": 390.00100000000003,
+          "y1": 430.201
+        }
+      },
+      "art": {
+        "page": 17,
+        "name": "img_p16_2",
+        "box": {
+          "x0": 28.25,
+          "x1": 216.15,
+          "y0": 459.90100000000007,
+          "y1": 565.7510000000001
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.gelatinousLusca",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Gelatinous Lusca",
+    "anchor": {
+      "display": "Gelatinous Lusca"
+    },
+    "pages": [
+      19
+    ],
+    "assists": {
+      "block": {
+        "page": 19,
+        "box": {
+          "x0": 36.9,
+          "x1": 248.33000000000004,
+          "y0": 95.40100000000001,
+          "y1": 147.00100000000003
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.psiombie",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Psiombie",
+    "anchor": {
+      "display": "Psiombie"
+    },
+    "pages": [
+      20
+    ],
+    "assists": {
+      "block": {
+        "page": 20,
+        "box": {
+          "x0": 212.2,
+          "x1": 380.27,
+          "y0": 272.601,
+          "y1": 324.201
+        }
+      },
+      "art": {
+        "page": 20,
+        "name": "img_p19_2",
+        "box": {
+          "x0": 12.8,
+          "x1": 208.65,
+          "y0": 173.651,
+          "y1": 316.951
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.opulentOtis",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Opulent Otis",
+    "anchor": {
+      "display": "Opulent Otis"
+    },
+    "pages": [
+      23
+    ],
+    "assists": {
+      "block": {
+        "page": 23,
+        "box": {
+          "x0": 36.9,
+          "x1": 201.96,
+          "y0": 118.20100000000002,
+          "y1": 158.401
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.pirate",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Pirate",
+    "anchor": {
+      "display": "Pirate"
+    },
+    "pages": [
+      23
+    ],
+    "assists": {
+      "block": {
+        "page": 23,
+        "box": {
+          "x0": 36.9,
+          "x1": 204.44,
+          "y0": 303.00100000000003,
+          "y1": 343.201
+        }
+      },
+      "art": {
+        "page": 23,
+        "name": "img_p22_1",
+        "box": {
+          "x0": 26.25,
+          "x1": 405.7,
+          "y0": 286.50100000000003,
+          "y1": 577.4010000000001
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.suckerfly",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Suckerfly",
+    "anchor": {
+      "display": "Suckerfly"
+    },
+    "pages": [
+      26
+    ],
+    "assists": {
+      "block": {
+        "page": 26,
+        "box": {
+          "x0": 212.2,
+          "x1": 378.93999999999994,
+          "y0": 369.00100000000003,
+          "y1": 420.601
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.thirkell",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Thirkell",
+    "anchor": {
+      "display": "Thirkell"
+    },
+    "pages": [
+      27
+    ],
+    "assists": {
+      "block": {
+        "page": 27,
+        "box": {
+          "x0": 223.7,
+          "x1": 391.13,
+          "y0": 235.601,
+          "y1": 287.201
+        }
+      },
+      "art": {
+        "page": 27,
+        "name": "img_p26_1",
+        "box": {
+          "x0": 199.45,
+          "x1": 394.54999999999995,
+          "y0": 26.951000000000022,
+          "y1": 193.25100000000003
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.raz",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Raz",
+    "anchor": {
+      "display": "Raz"
+    },
+    "pages": [
+      27
+    ],
+    "assists": {
+      "block": {
+        "page": 27,
+        "box": {
+          "x0": 223.7,
+          "x1": 393.22,
+          "y0": 368.40100000000007,
+          "y1": 420.00100000000003
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.nixie",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Nixie",
+    "anchor": {
+      "display": "Nixie"
+    },
+    "pages": [
+      29
+    ],
+    "assists": {
+      "block": {
+        "page": 29,
+        "box": {
+          "x0": 36.9,
+          "x1": 201.27000000000004,
+          "y0": 106.80100000000004,
+          "y1": 158.401
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.giantBass",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Giant Bass",
+    "anchor": {
+      "display": "Giant Bass"
+    },
+    "pages": [
+      29
+    ],
+    "assists": {
+      "block": {
+        "page": 29,
+        "box": {
+          "x0": 36.9,
+          "x1": 201.96,
+          "y0": 478.201,
+          "y1": 518.4010000000001
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.pixie",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Pixie",
+    "anchor": {
+      "display": "Pixie"
+    },
+    "pages": [
+      29
+    ],
+    "assists": {
+      "block": {
+        "page": 29,
+        "box": {
+          "x0": 223.7,
+          "x1": 393.21999999999986,
+          "y0": 84.00100000000003,
+          "y1": 135.601
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.sprite",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Sprite",
+    "anchor": {
+      "display": "Sprite"
+    },
+    "pages": [
+      29
+    ],
+    "assists": {
+      "block": {
+        "page": 29,
+        "box": {
+          "x0": 223.7,
+          "x1": 383.38,
+          "y0": 375.601,
+          "y1": 427.201
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.clockworkGuard",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Clockwork Guard",
+    "anchor": {
+      "display": "Clockwork Guard"
+    },
+    "pages": [
+      30
+    ],
+    "assists": {
+      "block": {
+        "page": 30,
+        "box": {
+          "x0": 25.4,
+          "x1": 192.09,
+          "y0": 352.00100000000003,
+          "y1": 392.201
+        }
+      },
+      "art": {
+        "page": 30,
+        "name": "img_p29_1",
+        "box": {
+          "x0": 15.15,
+          "x1": 295.25,
+          "y0": 455.80100000000004,
+          "y1": 585.4010000000001
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.psiombie2",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Psiombie",
+    "anchor": {
+      "display": "Psiombie"
+    },
+    "pages": [
+      30
+    ],
+    "assists": {
+      "block": {
+        "page": 30,
+        "box": {
+          "x0": 212.2,
+          "x1": 380.27,
+          "y0": 332.201,
+          "y1": 383.80100000000004
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.skullga",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Skullga",
+    "anchor": {
+      "display": "Skullga"
+    },
+    "pages": [
+      31
+    ],
+    "assists": {
+      "block": {
+        "page": 31,
+        "box": {
+          "x0": 36.9,
+          "x1": 204.94,
+          "y0": 407.40100000000007,
+          "y1": 459.00100000000003
+        }
+      },
+      "art": {
+        "page": 31,
+        "name": "img_p30_2",
+        "box": {
+          "x0": 232,
+          "x1": 399.25,
+          "y0": 18.701000000000022,
+          "y1": 137.95100000000002
+        }
+      }
+    }
+  },
+  {
+    "id": "pc1.vendigastTheCelestial",
+    "kind": "kind.oseMonster",
+    "book": "pc1",
+    "name": "Vendigast the Celestial",
+    "anchor": {
+      "display": "Vendigast the Celestial"
+    },
+    "pages": [
+      32
+    ],
+    "assists": {
+      "block": {
+        "page": 32,
+        "box": {
+          "x0": 212.2,
+          "x1": 378.04,
+          "y0": 307.30100000000004,
+          "y1": 358.90100000000007
+        }
+      },
+      "art": {
+        "page": 32,
+        "name": "img_p31_1",
+        "box": {
+          "x0": 61.2,
+          "x1": 358.55,
+          "y0": 462.00100000000003,
+          "y1": 554.9010000000001
+        }
+      }
+    }
+  }
+]
