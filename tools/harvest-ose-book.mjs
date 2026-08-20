@@ -267,20 +267,26 @@ for (let page = from; page <= to; page++) {
   const heads = listHeadings(pd).filter((h) => h.mode === "display");
   const candidates = findStatBlocks(pd, PROFILE);
 
-  // Illustrations on this page, worth associating with a creature. A placement
-  // covering most of the page is a background or a full-bleed spread, and a
-  // small one is a rule, a bullet or a border ornament — neither is a portrait.
+  // Illustrations on this page. A placement covering most of the page is a
+  // background or a full-bleed spread, and a very small one is a rule, a bullet
+  // or a border ornament — neither is a portrait. The lower bound is generous
+  // because containment does the real work: an ornament has to be standing
+  // inside a creature's own entry AND be the largest thing there to be chosen,
+  // and one book prints portraits small enough that a stricter bound threw away
+  // more than half of what it had.
   let placements = [];
   try {
     const pageArea = (pd.width ?? 612) * (pd.height ?? 792);
     placements = (await pageArtPlacements(doc, page)).filter(
-      (a) => a.w >= 80 && a.h >= 80 && a.w * a.h < pageArea * 0.7,
+      (a) => a.w >= 56 && a.h >= 56 && a.w * a.h < pageArea * 0.7,
     );
   } catch {
     placements = [];
   }
 
   const cols = detectColumns(pd.items);
+  /** This page's accepted entries, so art is placed once the set is known. */
+  const onPage = [];
   // Every run-in label on the page, so one creature description stops where the
   // next creature is named even when neither carries a heading.
   const runinYs = [];
@@ -289,40 +295,22 @@ for (let page = from; page <= to; page++) {
     if (r) runinYs.push({ col: cand.col, y: r.y });
   }
 
-  // Each illustration belongs to ONE creature — the block nearest it — rather
-  // than each creature taking the illustration nearest itself. The difference is
-  // not cosmetic: a bestiary page carries four stat blocks and one picture, and
-  // nearest-picture-per-creature hands that picture to all four. Matching the
-  // other way round leaves three creatures with no art, which is right, because
-  // the page gave them none.
-  const artFor = new Map();
-  for (const a of placements) {
-    const mid = a.y + a.h / 2;
-    let best = null;
-    let bestD = Infinity;
-    for (const c of candidates) {
-      const d = Math.abs((c.box.y0 + c.box.y1) / 2 - mid);
-      if (d < bestD) {
-        bestD = d;
-        best = c;
-      }
-    }
-    if (!best) continue;
-    const held = artFor.get(best);
-    if (!held || bestD < held.d) artFor.set(best, { a, d: bestD });
-  }
-
   for (const c of candidates) {
     if (c.suspectLineage || c.mergedBlocks) {
       skipped.push({ page, why: c.suspectLineage ? "another game's block" : "two blocks read as one", text: c.text.slice(0, 60) });
       continue;
     }
-    // The name: what the block called itself, else the nearest display heading
-    // above it in the same column.
     const parsed = parseOseStatline(c.text, PROFILE);
-    const above = heads
+    // A bestiary can set its opening description in a face large enough to read
+    // as a heading, so the NEAREST heading over a block is often the creature's
+    // own flavour text with the real title above it. Walk up to the first that
+    // reads as a name. On the Dolmenwood pages this is the difference between a
+    // fifth of the book and most of it.
+    const headsAbove = heads
       .filter((h) => h.y < c.box.y0 && Math.abs((h.col ?? 0) - c.col) < 1)
-      .sort((a, b) => b.y - a.y)[0];
+      .sort((a, b) => b.y - a.y);
+    const titled = (h) => fixSmallCaps(String(h.text ?? "").replace(/\s+/g, " ").trim()).slice(0, 58);
+    const above = headsAbove.find((h) => !nameProblem(titled(h))) ?? headsAbove[0];
     // Preference order, cheapest evidence first: what the block called itself,
     // then the run-in label a keyed adventure sets over it, then the display
     // heading a bestiary sets over it. The heading is last because it is the
@@ -338,8 +326,6 @@ for (let page = from; page <= to; page++) {
       skipped.push({ page, why: `${problem}: "${name.slice(0, 40)}"`, text: c.text.slice(0, 40) });
       continue;
     }
-    const art = artFor.get(c)?.a;
-
     // The creature's entry: from whatever named it, down to the next thing that
     // starts an entry in the same column — another heading, another run-in
     // label, another block. Nothing is claimed past that, so one creature's
@@ -362,6 +348,7 @@ for (let page = from; page <= to; page++) {
     // needs; it costs a one-column book nothing, because the next column starts
     // with its own creature's heading and so contributes an empty region.
     const prose = [];
+    const regions = [];
     for (let col = c.col; col < cols.length; col++) {
       if (cols[col] === undefined) break;
       const span = columnSpan(cols, col, pd.width);
@@ -369,9 +356,12 @@ for (let page = from; page <= to; page++) {
       const startY = own ? (nameY ?? c.box.y0 - 1) : PAGE_TOP;
       const endY = startsIn(col, own ? c.box.y1 + 2 : startY);
       if (endY <= startY) break;
+      regions.push({ ...span, y0: startY, y1: endY });
       prose.push(...proseBoxesFor(pd, c, { ...span, startY, endY }, isStatText));
-      // The span may already have swallowed the columns after this one.
-      while (col + 1 < cols.length && cols[col + 1] - 8 <= span.x1) col++;
+      // Skip only the columns this span actually SWALLOWED. The span ends
+      // exactly at the next column's edge, so testing inclusively skipped that
+      // column too — which in Dolmenwood is where every illustration lives.
+      while (col + 1 < cols.length && cols[col + 1] - 8 < span.x1) col++;
     }
 
     let id = `${BOOK}.${slugOf(name)}`;
@@ -407,14 +397,53 @@ for (let page = from; page <= to; page++) {
       pages: [page],
       assists: {
         block: { page, box: c.box },
-        // The nearest surviving illustration, by vertical distance to the
-        // block. Its XObject NAME is the association that matters: a page with
-        // two creatures has two images, and the largest-image rule would give
-        // both of them the same one.
         ...(prose.length ? { prose: prose.map((box) => ({ page, box })) } : {}),
-        ...(art ? { art: { page, name: art.name, box: { x0: art.x, x1: art.x + art.w, y0: art.y, y1: art.y + art.h } } } : {}),
       },
     });
+    onPage.push({ row: rows[rows.length - 1], regions, box: c.box });
+  }
+
+  // ART, once the page's entries are all known. A cookbook entry POINTS at its
+  // illustration — page, XObject name and box — so all this has to decide is
+  // which entry each picture belongs to, and it decides it once per page rather
+  // than by a rule applied blindly per creature.
+  //
+  // Containment first: a picture standing inside an entry's own region is that
+  // entry's, and regions do not overlap so nothing can be claimed twice. What
+  // is left over is placed with the nearest entry that still has none — a
+  // bestiary sets a portrait in the margin beside its creature as often as
+  // within it, and leaving those unused was throwing away two thirds of what
+  // the books actually contain.
+  const claimed = new Set();
+  const centre = (a) => ({ x: a.x + a.w / 2, y: a.y + a.h / 2 });
+  const attach = (target, a) => {
+    claimed.add(a);
+    target.row.assists.art = { page, name: a.name, box: { x0: a.x, x1: a.x + a.w, y0: a.y, y1: a.y + a.h } };
+  };
+
+  for (const a of [...placements].sort((x, y) => y.w * y.h - x.w * x.h)) {
+    const p = centre(a);
+    const home = onPage.find(
+      (t) => !t.row.assists.art && t.regions.some((r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1),
+    );
+    if (home) attach(home, a);
+  }
+  for (const a of [...placements].sort((x, y) => y.w * y.h - x.w * x.h)) {
+    if (claimed.has(a)) continue;
+    const p = centre(a);
+    let best = null;
+    let bestD = Infinity;
+    for (const t of onPage) {
+      if (t.row.assists.art) continue;
+      const bx = (t.box.x0 + t.box.x1) / 2;
+      const by = (t.box.y0 + t.box.y1) / 2;
+      const d = Math.hypot(bx - p.x, by - p.y);
+      if (d < bestD) {
+        bestD = d;
+        best = t;
+      }
+    }
+    if (best) attach(best, a);
   }
 }
 
