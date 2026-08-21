@@ -1328,6 +1328,30 @@
       "wax candle": {
         "ref": "def.priced.candle-wax-1-lb",
         "as": "catalogue"
+      },
+      "week’s rations": {
+        "ref": "def.equip.rationsIron",
+        "as": "catalogue"
+      },
+      "heavy black horned helmet": {
+        "ref": "def.armor.helmetHeavy",
+        "as": "catalogue"
+      },
+      "breast band": {
+        "ref": "def.equip.breastwrap",
+        "as": "catalogue"
+      },
+      "hat": {
+        "ref": "def.equip.hat",
+        "as": "catalogue"
+      },
+      "alchemist’s tools": {
+        "ref": "def.priced.craftsman-s-tools-any",
+        "as": "equivalent"
+      },
+      "freeholder’s dress": {
+        "ref": "def.priced.dress-crafter-freeholder",
+        "as": "catalogue"
       }
     },
     "magicProperty": {

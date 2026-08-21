@@ -3243,11 +3243,15 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     const body = String(name).trim().split(/\s+/).map(escapeRe).join("\\s*");
     return body ? new RegExp(`(^|[^a-z0-9])${body}(?:e?s)?([^a-z0-9]|$)`, "i").test(descriptor) : false;
   };
-  const contained = (f, form, descriptor) => {
+  const contained = (f, form, descriptor, floor = WORD_FLOOR) => {
     if (!form?.fold || !f.includes(form.fold)) return false;
     if (form.fold.length >= LOOSE_FLOOR) return true;
-    return form.fold.length >= WORD_FLOOR && wholeWordIn(form.text, descriptor);
+    return form.fold.length >= floor && wholeWordIn(form.text, descriptor);
   };
+  // An AUTHORED key may be shorter than an inferred one — "hat" is a chef's
+  // statement about a printed word, not a catalogue name a rule went looking
+  // for — and the whole-word test still stands between it and "that".
+  const AUTHORED_FLOOR = 3;
   // `forms` before `stripped`, so a name that matches as printed is preferred
   // over one that only matches once its bracketed qualifier is dropped. Both
   // fall back to the bare folds, so a hand-built menu still resolves.
@@ -3257,7 +3261,7 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   const lookup = (descriptor) => {
     const f = fold(descriptor);
     for (const a of aliasForms) {
-      if (contained(f, a, descriptor)) return a.ref;
+      if (contained(f, a, descriptor, AUTHORED_FLOOR)) return a.ref;
     }
     const exact = menu.find((m) => formsOf(m).some((form) => form.fold === f));
     return (
@@ -3310,12 +3314,22 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     // gear always carries a word that is not on this list.
     if (!descriptor || descriptor.split(/\s+/).every((w) => FUNCTION_WORD.has(w.toLowerCase().replace(/[^a-z]/g, "")))) return;
     const qty = parseInt(/^(\d+)\s/.exec(descriptor)?.[1] ?? "1", 10);
+    // WHAT THE PAGE SAYS THIS ONE IS WORTH. A bracketed amount is the cell
+    // pricing the item in front of the reader — "(20gp value)", "(45gp value)",
+    // and the same amount written bare — and it is the only value most of these
+    // goods will ever have: the catalogue has no row for a bladedancer's head
+    // dress, which is exactly why the cell prices it. Read off the reader's own
+    // page like every other imported number, and it OVERRIDES a base's price
+    // when there is a base, because the page is talking about this item.
+    const priced = /\((\d[\d,]*)\s*gp[^)]*\)/i.exec(descriptor);
+    const cost = priced ? parseInt(priced[1].replace(/,/g, ""), 10) : null;
     items.push({
       ref: resolve(descriptor),
       name: descriptor,
       qty: Number.isFinite(qty) && qty > 0 ? qty : 1,
       skinName: "",
       note,
+      ...(Number.isFinite(cost) && cost > 0 ? { cost } : {}),
     });
   };
   // SEMICOLONS SEPARATE TOO. A printed equipment cell punctuates the way its
@@ -3400,6 +3414,18 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     if (container && !resolve(descriptor)) {
       push(container[1]);
       push(`${container[2]} ${container[3]}`, `carried in ${container[1].toLowerCase()}`);
+      continue;
+    }
+    // A CLOSING BRACKET CAN END A DESCRIPTOR. One cell prints its holy book and
+    // the quill after it with no comma between them — "holy book (the book of
+    // the awakening) quill" — and read whole the quill was swallowed by the
+    // book's name. The same guard as the pair rule below: it splits only when
+    // what follows the bracket is itself a known item, so every "(20gp value)"
+    // and "(white bird)" that ends a descriptor is left exactly as printed.
+    const bracketed = /^(.*\))\s+(\S.*)$/.exec(descriptor);
+    if (bracketed && resolve(bracketed[1]) && resolve(bracketed[2])) {
+      push(bracketed[1]);
+      push(bracketed[2]);
       continue;
     }
     // A pair splits only when BOTH halves resolve to known equipment —

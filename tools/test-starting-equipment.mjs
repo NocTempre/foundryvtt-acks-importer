@@ -195,6 +195,29 @@ check("a pick is never minted as a spell", liftBookSpells(choice).map((s) => s.n
 check("but the sentence offering it survives", /one spell of character’s choice/.test(choice[0].note));
 check("a counted load is not a library", liftBookSpells([{ name: "quiver with 20 arrows", note: "" }]).length === 0);
 
+/* --- What the page says this one is worth ---------------------------------- */
+//
+// Most of what carries a bracketed price has no catalogue row at all — the cell
+// prices it precisely because the shop list does not — so this is the only
+// value the item will ever have.
+const worth = parseEquipment("gaudy silver rings (20gp value), gemstone-tipped staff (45gp value)", menu("Staff"));
+check("a bracketed price is read onto the item", worth.items[0].cost === 20);
+check("even when the item also has a base", worth.items[1].cost === 45 && worth.items[1].ref === "def.equip.staff");
+check("and none of it reaches the purse", worth.gp === 0);
+check("an unpriced item carries no cost at all", parseEquipment("a dagger", menu("Dagger")).items[0].cost === undefined);
+
+/* --- A closing bracket can end a descriptor -------------------------------- */
+//
+// One cell prints its book and the quill after it with no comma between them.
+const welded = parseEquipment("holy book (the book of the awakening) quill", menu("Holy Book", "Quill"));
+check("a known item after a bracket is its own item", welded.items.length === 2);
+check("and the bracket stays with the item it qualifies", welded.items[0].name === "holy book (the book of the awakening)");
+// The guard: this must never fire on the brackets every other cell ends with.
+check("a bracket that ends the descriptor is left alone",
+  parseEquipment("holy symbol (white bird)", menu("Holy Symbol")).items.length === 1);
+check("nor does it fire when what follows is not gear",
+  parseEquipment("ornamental crystal ball (20gp value) of dubious provenance", menu("Crystal Ball")).items.length === 1);
+
 /* --- A stray comma inside one printed name -------------------------------- */
 check("an outfit broken by a stray comma is put back",
   parseEquipment("hunter green cloak, tunic, and pants", menu("Cloak", "Tunic and Pants")).items.length === 2);

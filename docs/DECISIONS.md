@@ -7,6 +7,32 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### What the page says a thing is worth is imported with it (2026-08-21)
+
+**Problem.** 50 printed descriptors reach the end of the ladder with no
+catalogue row behind them, and that is correct: the shop list has no entry for a
+bladedancer's head dress or a gaudy silver ring. But 18 of them are PRICED where
+they stand — "(20gp value)", "(45gp value)", the same amount written bare — and
+that bracketed number was read only to be skipped, so the item arrived with the
+one value its page ever gave it thrown away, and the Judge was handed something
+to repair with nothing to repair it from.
+
+**Ruled.** A bracketed amount is read onto the item as its cost, and it
+OVERRIDES a base's price where there is a base: a cell that says a staff is
+worth 45gp is describing the gemstone on that one, not the shop list's plain
+staff. It reaches the character through the template item's own `cost` field
+(acks-extras `class-data.mjs`), and a repair pass carries it across rather than
+letting a replacement built from a base arrive priced as the plain version.
+
+This is the same rule every other imported number follows — it comes off the
+reader's own page at import time and nothing is shipped.
+
+**Left as it is, and named:** the 11 totem animals and familiars printed in
+equipment cells are class features, not gear, and carry no value to read. They
+import as named items with no base, which is visible and deletable; the bundle
+holds items, and minting an actor from an equipment cell would be a second
+pipeline for one line of flavour.
+
 ### The catalogue's conventions are rules; what is left is authored (2026-08-21)
 
 **Problem.** With the menu and the containment floor fixed (below), 545 of a
@@ -74,6 +100,12 @@ skipped an amount only when the word "value" came after it, and the same tables
 also print "(20gp)" bare. The lift eats to the next comma, so a witch's
 "silver earrings (20gp)" arrived named `silver earrings (` with 20gp added to
 her purse. The BRACKET is the test now, not the word after the amount.
+
+**A closing bracket can end a descriptor.** One cell prints its holy book and
+the quill after it with no comma between them, and the quill was swallowed by
+the book's name. It splits under the pair rule's own guard — only when what
+follows the bracket is itself a known item — so every "(20gp value)" and
+"(white bird)" that ENDS a descriptor is left exactly as printed.
 
 **A full stop can be a separator.** One template's list runs "…waterskin. 1
 week's iron rations…" where every other one has a comma; read as one descriptor

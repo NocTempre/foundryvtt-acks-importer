@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.13.3
+
+### Fixed
+- **A price the page prints beside an item is imported with it.** Most of the
+  gear a template names in passing — a bladedancer's head dress, a silver
+  amulet, an ornamental crystal ball — has no row in the shop list at all, which
+  is exactly why the cell prices it where it stands. That number was read only
+  to be skipped, so the item arrived with the one value its page ever gave it
+  thrown away. It now lands as the item's cost, and where the item does have a
+  catalogue base the printed price wins: a staff described as worth 45gp is
+  worth 45gp, not what a plain staff costs.
+- **A book and the thing after it are two items** where the cell prints no comma
+  between them — one holy book was arriving with a quill welded onto its name.
+- **A few more of the book's own words are recognised**: a week's rations
+  without "iron" said, a heavy helmet under its description, a breast band, a
+  hat, an alchemist's tools, a freeholder's dress.
+
 ## 2.13.2
 
 ### Fixed
