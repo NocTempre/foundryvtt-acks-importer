@@ -5,6 +5,64 @@ missing from it.
 
 ---
 
+## Import once: retire the conditional text
+
+**Direction set 2026-08-21; scoped, then deferred so the Books window could
+ship on its own.** The eventual model is that the GM imports content once and
+the world holds the text — players connect no books at all, because there is
+nothing left for a player's seat to resolve.
+
+Today every imported document persists a `@PdfText[id]{cite}` tag, and each
+seat resolves it live against a PDF that seat has connected. That is what makes
+a player's own copy a prerequisite for reading a description, and it is the
+reason the per-seat machinery reaches player seats at all.
+
+What the work is, established while scoping it:
+
+- **The paragraphs are already in hand at import time and are thrown away.**
+  `monsterProseChannels` in `scripts/cookbook.mjs` reads
+  `node.fields.description` and then writes a tag. Retiring the tag is
+  therefore a change to what ~20 write sites EMIT, not new extraction: about a
+  dozen in `cookbook.mjs`, two in `ose-book.mjs`, and one each in
+  `ose-location.mjs`, `armor-tables.mjs`, `weapon-tables.mjs`, `poc.mjs` and
+  `module.mjs`.
+- **One helper replaces `pdfTag`/`tagHtmlFor`:** the executed paragraphs,
+  escaped (extracted text is never parsed as markup) inside a stamped
+  `<div class="acks-importer-book-text" data-acks-entry="<id>">`. A page that
+  could not be read yields the citation alone in the same wrapper —
+  attribution, not reproduction.
+- **`handWrittenProse` gates on that stamp** instead of `PDF_DESCRIPTOR_ONLY`,
+  and should strip BOTH the new wrapper and the legacy tag before asking
+  whether anything is left. That is what lets a re-import overwrite old
+  tag-only descriptions without prompting, while still refusing to clobber a
+  Judge's own text.
+- **Retired with it:** the `CONFIG.TextEditor.enrichers` registration,
+  `enrichPdfText`, `fallbackStub`, `onRevealClick`, `stubFor`, `proseFor`,
+  `rerenderPdfTextApps`, `proseMem`, and in `cookbook.mjs` `cookbookCanReveal`,
+  `cookbookProse`, `cookbookCacheParas`, `cookbookStub` — plus their CSS. The
+  eager per-recipe extraction inside `ingestBook` loses its only consumer, so
+  connecting a book becomes an open and a fingerprint.
+- **The journal creature refs** (`@PdfText[ref]{text}` in the location
+  importer) are cross-references, not prose, and become plain text or real
+  document links — not the same change as the description sites.
+
+**Ruled already, so the next session does not re-litigate it:** worlds holding
+old tags are repaired by **re-import** (*Remove ALL Imports*, then import
+again) — no repair tool, and no citation-only enricher kept as a shim. The
+consequence, accepted: an unrepaired world shows the literal
+`@PdfText[mm.ghoul]{MM p.112}` in its descriptions until it is re-imported. A
+shim remains about ten lines if that proves too sharp in practice.
+
+This is a **major**: it changes what every imported document contains, and it
+reverses "nothing enters world data, and prose remains memory-only everywhere"
+(the 2026-07-29 refresh-bridge entry in DECISIONS.md), which the new entry must
+name when it lands. Imported prose is app-licensed in-app content the GM
+materialized from their own copy — legitimate under
+`.claude/rules/ip-doctrine.md` — but a world backup will carry it where it used
+to carry citations, and that is worth saying out loud in the ruling.
+
+---
+
 ## Cross-book merging beyond the current signals
 
 Families merge today on a shared member id or a shared family suffix. Entries

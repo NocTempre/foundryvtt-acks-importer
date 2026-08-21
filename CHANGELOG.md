@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.13.5
+
+### Added
+- **Put a book on the server and stop reconnecting.** A PDF staged under the
+  Foundry data folder is read automatically at every launch, by every GM seat,
+  on any machine — no file picker, no permission click, nothing remembered per
+  browser. Add one from its row in the Books window, or copy PDFs into
+  `acks-importer-books/` yourself and press **Scan the folder**. Either way the
+  file is opened and checked before it is staged, so a misnamed PDF is refused
+  rather than staged as the wrong book. Removing a book from the server stops
+  the module reading it and tells you where the file still is. (A file under the
+  data folder can be fetched by anyone signed in to your world who knows the
+  path — staging makes a book undiscoverable, not inaccessible.)
+- **Reconnect all.** One button that does everything needing no permission
+  first — the server's books, served paths, and whatever the browser will still
+  open by itself — then spends its single click on the folder you connected
+  from, which re-reads every book inside. Anything a folder cannot answer for is
+  named as still needing its own button, because one click can only ever
+  re-grant one file's access.
+
+### Changed
+- **Four macros and three windows became one window.** "Getting Started",
+  "Connect Your Book", "Book Status & Reconnect" and "Forget Books" all asked
+  overlapping questions in different words, and two of them asked "which book do
+  you mean?" separately. **Your ACKS Books** is now the single surface: the
+  walkthrough, the server's books, the controls that answer for several books at
+  once, and a row per book grouped into waiting / open / not connected. Macros
+  you already imported into a world keep working — they open the same window.
+- **The book list is gone; the row is the chooser.** Picking books out of a
+  six-line scrolling list of twenty was the worst part of connecting, and it
+  existed only so files could be paired to books afterwards. Each book's own row
+  carries its own control instead, so naming a book takes no list at all — and
+  with nothing left to infer, a file the module cannot place is now always named
+  rather than dealt into a slot.
+- **Forgetting is about this computer only.** It says so, and it leaves books
+  staged on the server alone.
+
 ## 2.13.4
 
 ### Fixed

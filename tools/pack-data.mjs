@@ -88,14 +88,20 @@ function buildMacros() {
     folder(FOLDERS.abilities, "3 · Abilities & Equipment", 300),
     folder(FOLDERS.tools, "4 · Tools & Maintenance", 400),
 
-    /* --- 1 · Your Book: what a new seat does first. Status and reconnect are
-       one surface (the Books dialog), so they are one macro; the old separate
-       Reconnect macro was dropped — worlds that imported it keep a working
-       copy, and api.reconnectBooks() remains. --- */
-    apiMacro("ackscMacGetStart", "Getting Started (this seat)", "icons/svg/light.svg", "gettingStarted", 100, FOLDERS.setup, "{ force: true }"),
-    apiMacro("ackscMacConnect0", "Connect Your Book (this seat)", "icons/svg/book.svg", "connectBook", 110, FOLDERS.setup),
-    apiMacro("ackscMacStatus00", "Book Status & Reconnect (this seat)", "icons/svg/padlock.svg", "bookStatus", 120, FOLDERS.setup),
-    apiMacro("ackscMacClear000", "Forget Books (this seat)", "icons/svg/blind.svg", "forgetBooks", 130, FOLDERS.setup),
+    /* --- 1 · Your Book: ONE macro, because there is now one window. Getting
+       Started, Connect, Status & Reconnect and Forget were four buttons onto
+       three overlapping dialogs, and the macro list gave a reader no way to
+       tell which of them would show anything. The walkthrough, the server
+       shelf, the controls that answer for several books, and the per-book rows
+       are bands of a single window; Forget is a confirmed control in its
+       footer.
+
+       The other three are dropped from the pack rather than renamed. A world
+       that imported them keeps its copies and they keep working, because
+       gettingStarted / connectBook / forgetBooks all still resolve. Their ids
+       are NOT reused — an id is identity, and re-issuing one would hand every
+       such world a duplicate. --- */
+    apiMacro("ackscMacStatus00", "Your ACKS Books (this seat)", "icons/svg/book.svg", "bookStatus", 100, FOLDERS.setup),
 
     /* --- 2 · Import Content: cookbook -> world documents, in the same
        dependency order the Getting Started chain runs them. --- */

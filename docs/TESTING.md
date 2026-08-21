@@ -8,47 +8,70 @@ needs, the steps that exercise it, and the observable that proves each one.
 geometry with no Foundry at all. They gate the arithmetic; only a live run
 gates that anything reaches a document.
 
-## Book connectors (the Books dialog + folder connect)
+## The Books window (the shelf, the group controls, the rows)
 
 ### Fixtures
 
 - Two or more ACKS II PDFs **the tester owns**, placed together in one folder
   along with at least one unrelated PDF (the unrelated file is part of the
   check — it must be left alone).
-- A seat whose remembered locations can be emptied: run "Forget Books (this
-  seat)" first so the walk starts from the blank state.
+- A seat whose remembered locations can be emptied: use the window's own
+  "Forget books on this computer…" first, so the walk starts blank.
+- For the shelf: an empty `acks-importer-books/` under the Foundry data
+  directory. Create it, use it, delete it — it is a fixture like any other.
 
 ### Steps
 
-1. "Book Status & Reconnect (this seat)" with nothing connected.
-   *Observable:* a dialog (not a toast) listing EVERY book as "not connected",
-   each with a Connect… button and its would-unlock scope count; the
-   refresh-bridge line renders in the dialog footer and the per-book detail in
-   the console.
-2. "Connect Your Book (this seat)" → "Connect a folder…" → the fixture folder.
-   *Observable:* every ACKS book in the folder connects in one trip (one toast
-   naming them, plus the ignored-count clause); the unrelated PDF is named on
-   the console only, never warned about; sheet prose renders.
-3. Reload the page past the bridge window (or set the bridge to 0), then open
-   Book Status & Reconnect.
-   *Observable:* a "Your folder" row with "Reopen from folder"; ONE click
-   grants directory permission and every book reconnects — rows flip to open
-   one by one and the dialog closes itself when none are left waiting.
-4. Reopen the dialog with everything open.
-   *Observable:* every row shows "Open this session" with its scope; no
-   controls except absent rows' Connect…; closing warns about nothing.
-5. `acksImporter.reconnectBooks()` from the console.
-   *Observable:* the SAME dialog (singleton — a second call fronts it, never
-   stacks a twin).
-6. Non-FSA fallback: repeat step 2 on an insecure origin or Firefox seat.
-   *Observable:* the folder control is a directory input; books connect the
-   same way and are remembered by NAME (next join offers pickers, not
-   unlocks).
+1. Open "Your ACKS Books (this seat)" with nothing connected.
+   *Observable:* ONE window, four bands. The walkthrough band is open (this
+   seat has nothing), the server band says nothing is staged, and every book
+   renders a row under "Not connected" with its would-unlock scope. There is no
+   `<select>` anywhere in it — `root.querySelector("select")` is null. The
+   refresh-bridge line renders in the footer, the per-book detail in the
+   console.
+2. "Connect a folder…" → the fixture folder.
+   *Observable:* every ACKS book in the folder connects in one trip; the
+   unrelated PDF is named on the console only, never warned about; sheet prose
+   renders. Rows move to the "Open this session" group.
+3. **Add to server** on an open book's row.
+   *Observable:* the row says it is uploading, then the book appears in the
+   server band; `Data/acks-importer-books/` holds the PDF; the world setting
+   `game.settings.get("acks-importer","shelf")` names it.
+4. **Shut the world down and relaunch it.** This is the check the whole shelf
+   exists for and a page reload does not substitute for it.
+   *Observable:* the staged book is open at `ready` with NO gesture, no picker
+   and no window prompting for it; its row reads "from the server".
+5. Copy a second PDF into `acks-importer-books/` by hand, then "Scan the
+   folder".
+   *Observable:* it is identified by name, opened to confirm it is that book,
+   and staged. A PDF that is no book this module reads is counted, not staged.
+   Rename a book's file to another book's name and re-scan to prove the
+   verification: it must refuse rather than stage the wrong book.
+6. Reload past the bridge window (or set the bridge to 0), then **Reconnect
+   all**.
+   *Observable:* one permission click on the remembered folder reopens every
+   book in it; anything the folder cannot answer for is NAMED in the status
+   line as still needing its own button. Shelved books never appear in that
+   list at all.
+7. `acksImporter.connectBook()` and `acksImporter.bookStatus()` from the
+   console.
+   *Observable:* both front the SAME window (singleton — a second call fronts
+   it, never stacks a twin). This is what keeps macros already imported into
+   worlds working after four macros became one.
+8. Non-FSA fallback: repeat step 2 on an insecure origin or Firefox seat.
+   *Observable:* the folder control is a directory input, per-book rows are
+   file inputs rather than pick buttons, and books are remembered by NAME.
+9. Join as the **Player** seat.
+   *Observable:* the window does not auto-open; opening it by macro shows the
+   server band read-only, with no Add/Remove/Scan controls.
 
 ### Teardown
 
-"Forget Books (this seat)"; confirm the dialog then shows every book absent
-and no folder row.
+"Forget books on this computer…" and confirm; the rows return to absent. Then
+remove each shelved book from the server band, delete
+`Data/acks-importer-books/` and its contents, and clear the setting —
+`game.settings.set("acks-importer","shelf",{})`. Confirm the window shows
+nothing staged.
 
 ## Remove ALL Imports sweeps materialized rules tables
 

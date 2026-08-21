@@ -14,17 +14,23 @@
  * dialog offers back with a picker beside it. Same enforcement throughout;
  * only the number of clicks changes.
  *
- * PoC api (globalThis.acksImporter / game.modules.get("acks-importer").api):
- *   connectBook()    pick books + local PDFs, or the folder holding them
- *   reconnectBooks() retry the silent reopen, then the Books dialog
- *   bookStatus()     the same Books dialog: every book's state + controls
+ * A book the SERVER holds is the exception, and the reason the shelf exists: a
+ * PDF staged under the Foundry data directory is recorded in world settings
+ * rather than per seat, so every GM seat reads it on join with no gesture and
+ * no picker. The per-seat kinds remain — they are how a book is read the first
+ * time, and how its bytes reach the shelf.
+ *
+ * api (globalThis.acksImporter / game.modules.get("acks-importer").api):
+ *   bookStatus()     the Books window: every book's state, and its control
+ *   connectBook()    the same window (kept: already-imported macros call it)
+ *   reconnectBooks() retry the silent reopen, then the same window
  *   browseAndLoad()  GM: pick a page, choose headings, load actors/items
  *   applyStats()     fill monster actors from the connected book
- *   forgetBooks()    drop remembered locations + this session's prose
+ *   forgetBooks()    drop this computer's remembered locations (not the shelf)
  */
 import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE } from "./constants.mjs";
 import { BOOKS, fingerprintWarning, identifyBook } from "./books.mjs";
-import { matchFilesToBooks, pairPicks } from "./book-match.mjs";
+import { matchFilesToBooks } from "./book-match.mjs";
 import { RECIPES, recipeById } from "./recipes.mjs";
 import { openBook, pageItems, extractRecipe, extractDisplay, extractRunin, extractSpoils, extractPageArt, extractPageArtRegion, listHeadings, setWorker, setWasmUrl } from "./extract.mjs";
 import { extractStatPairs } from "./stats.mjs";
@@ -43,7 +49,7 @@ import {
   importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
   cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
 } from "./cookbook.mjs";
-import { registerGettingStartedSettings, showGettingStarted } from "./getting-started.mjs";
+import { registerGettingStartedSettings, runImportEverything, gettingStartedDismissed, SETTING_DISMISSED } from "./getting-started.mjs";
 import { registerOseSourceSetting } from "./ose-source.mjs";
 import { registerOseSourceDialog, oseBrowseDialog, oseCalibrateDialog, oseConvertAll } from "./ose-app.mjs";
 import { oseManualDialog } from "./ose-manual.mjs";
@@ -206,6 +212,170 @@ const dirPut = (handle) =>
 async function dirGet() {
   const record = await idbOp("readonly", (s) => s.get(DIR_KEY)).catch(() => null);
   return record?.kind === "dir" && record.handle ? record : null;
+}
+
+/* -------------------------------------------- */
+/*  The shelf: books the SERVER holds           */
+/* -------------------------------------------- */
+
+/**
+ * Books staged in the Foundry data directory, recorded in world settings.
+ *
+ * Every other location kind is a property of one seat's browser: a handle that
+ * needs a permission gesture, or a filename that needs the picker again. That
+ * is a fair price for a book only this browser can reach, and no price at all
+ * for a book the SERVER can reach — so a PDF the GM puts under `SHELF_DIR` is
+ * remembered in the world instead of the seat, and every GM seat on any machine
+ * reads it silently on join. This is what ends the reconnect-every-session
+ * treadmill; the per-seat kinds stay, because they are how a book gets read the
+ * first time and how its bytes reach the upload.
+ *
+ * The record is a PATH, never bytes: `connectBookUrl` fetches it like any other
+ * served file. What a shelf entry asserts is only "this path holds this book",
+ * and it is asserted by connecting and fingerprinting the file before the entry
+ * is written — never by its filename.
+ *
+ * Worth stating plainly, because "not a journal" invites the wrong conclusion:
+ * a file under the data directory is fetchable by any signed-in user who learns
+ * its path. The shelf makes a book undiscoverable, not inaccessible.
+ */
+const SETTING_SHELF = "shelf";
+const SHELF_DIR = "acks-importer-books";
+
+const filePicker = () => foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
+
+/** The world's shelf: bookId → { path, name, size }. */
+const shelf = () => game.settings.get(MODULE_ID, SETTING_SHELF) ?? {};
+
+/**
+ * Write one shelf entry, or drop it when `record` is null.
+ *
+ * Re-reads the setting immediately before writing rather than editing a copy
+ * read earlier: two GM seats staging different books is exactly the case where
+ * a stale read silently drops the other's entry.
+ */
+async function shelfPut(bookId, record) {
+  const next = { ...(game.settings.get(MODULE_ID, SETTING_SHELF) ?? {}) };
+  if (record) next[bookId] = record;
+  else delete next[bookId];
+  await game.settings.set(MODULE_ID, SETTING_SHELF, next);
+  return next;
+}
+
+/**
+ * Read a staged path into its book and shelve it once it proves to be that
+ * book. Returns the shelf record, or null when the file was not what the path
+ * claimed — `ingestBook` refuses a file that fingerprints as another book, and
+ * a refusal must not leave an entry behind promising the book is available.
+ */
+async function shelvePath(bookId, path, { name = null, size = 0 } = {}) {
+  try {
+    await connectBookUrl(bookId, path, { remember: false });
+  } catch (err) {
+    console.warn(`${MODULE_ID} | ${path} could not be shelved as ${BOOKS[bookId]?.label ?? bookId}`, err);
+    ui.notifications.warn(
+      err?.wrongBook
+        ? `acks-importer | ${err.message}`
+        : game.i18n.format(`${LANG_PREFIX}.ui.shelfFailed`, { name: name ?? path }),
+    );
+    return null;
+  }
+  const record = { path, name: name ?? path.split("/").pop(), size };
+  await shelfPut(bookId, record);
+  return record;
+}
+
+/**
+ * Every PDF already sitting in the shelf directory, matched to the books it
+ * holds. The GM who copies files onto the server themselves — by drag, by FTP,
+ * by host panel — is done after this.
+ *
+ * `FilePicker.browse` answers with paths and no sizes, so the size pass of
+ * `matchFilesToBooks` never fires here and matching rests on the remembered
+ * name and the book's own title in the filename. That is the right strength
+ * for a directory the GM curated: a stray PDF matches nothing and is left
+ * alone, exactly as it is in a folder connect.
+ *
+ * One pass is added that belongs only to this directory: a file whose stem is
+ * exactly a BOOK ID is that book. This is the convention `shelveUpload` writes
+ * ("jj.pdf"), and without it the scan could not recognise the module's own
+ * uploads — a shelf staged from the rows read as empty the moment it was
+ * scanned, because "jj.pdf" contains neither a remembered name nor the words
+ * "Judges Journal". It runs FIRST, since an exact id is stronger evidence than
+ * a title found inside a longer filename, and it is confined to the shelf,
+ * where the module controls the naming; a folder of the reader's own files is
+ * matched on its own merits.
+ *
+ * A match here still only proposes a book. `shelvePath` opens the file and
+ * lets the fingerprint refuse it, so a PDF named after the wrong book is
+ * rejected rather than staged under a name it does not answer to.
+ */
+async function scanShelf() {
+  const FP = filePicker();
+  let listing;
+  try {
+    listing = await FP.browse("data", SHELF_DIR);
+  } catch {
+    return { matched: new Map(), unmatched: [], missing: true };
+  }
+  const files = (listing?.files ?? [])
+    .filter((path) => /\.pdf$/i.test(path))
+    .map((path) => ({ name: decodeURIComponent(path.split("/").pop()), size: 0, path }));
+  const already = shelf();
+  const candidates = Object.keys(BOOKS).filter((id) => !already[id]);
+  const byId = new Map();
+  const rest = [];
+  for (const file of files) {
+    const stem = file.name.replace(/\.pdf$/i, "").toLowerCase();
+    if (candidates.includes(stem) && !byId.has(stem)) byId.set(stem, file);
+    else rest.push(file);
+  }
+  const { matched, unmatched } = matchFilesToBooks(rest, candidates.filter((id) => !byId.has(id)), await locations());
+  for (const [bookId, file] of byId) matched.set(bookId, file);
+  return { matched, unmatched, missing: false };
+}
+
+/**
+ * Put a book on the shelf from the file this seat already has open.
+ *
+ * The bytes come from the refresh bridge when it still holds them, so shelving
+ * a book connected moments ago costs no second read of the same file; a seat
+ * whose bridge has been swept re-reads from the picked File instead. Upload
+ * goes through the same `FilePicker.upload` call the art importer uses.
+ */
+async function shelveUpload(bookId, file) {
+  const FP = filePicker();
+  await FP.createDirectory("data", SHELF_DIR).catch((err) =>
+    console.debug(`${MODULE_ID} | shelf directory "${SHELF_DIR}" not created (it usually already exists)`, err),
+  );
+  const named = file.name?.toLowerCase().endsWith(".pdf") ? file : new File([file], `${bookId}.pdf`, { type: "application/pdf" });
+  const res = await FP.upload("data", SHELF_DIR, named, {}, { notify: false });
+  if (!res?.path) throw new Error(game.i18n.localize(`${LANG_PREFIX}.ui.shelfUploadFailed`));
+  return shelvePath(bookId, res.path, { name: named.name, size: named.size ?? 0 });
+}
+
+/**
+ * Open every shelved book. Runs on join before the per-seat restore, so a book
+ * the server holds never asks this seat for anything and never appears in the
+ * list of books waiting for a gesture.
+ */
+async function restoreShelf() {
+  const staged = Object.entries(shelf());
+  if (!staged.length) return [];
+  const opened = [];
+  for (const [bookId, record] of staged) {
+    if (!BOOKS[bookId] || sessionDocs.has(bookId)) continue;
+    try {
+      await connectBookUrl(bookId, record.path, { remember: false });
+      opened.push(bookId);
+    } catch (err) {
+      console.warn(`${MODULE_ID} | shelved ${BOOKS[bookId]?.label ?? bookId} could not be read at ${record.path}`, err);
+    }
+  }
+  if (opened.length) {
+    console.log(`${MODULE_ID} | opened ${opened.length} book(s) from the shelf: ${opened.map((id) => BOOKS[id].label).join(", ")}`);
+  }
+  return opened;
 }
 
 /* -------------------------------------------- */
@@ -477,9 +647,21 @@ function rerenderPdfTextApps() {
  * a one-off read that should leave nothing behind.
  */
 async function connectBookUrl(bookId, url, { remember = true } = {}) {
-  if (!BOOKS[bookId]) return ui.notifications.warn(`acks-importer | unknown book id "${bookId}".`);
+  // Throws rather than warning-and-returning: the shelf decides whether to
+  // record a path from whether this resolved, and a soft return told it the
+  // read had succeeded. Callers that only want the message still get it — the
+  // notification is raised here and the error carries the same text.
+  if (!BOOKS[bookId]) {
+    const message = `acks-importer | unknown book id "${bookId}".`;
+    ui.notifications.warn(message);
+    throw new Error(message);
+  }
   const resp = await fetch(url);
-  if (!resp.ok) return ui.notifications.warn(`acks-importer | could not read ${url} (${resp.status}).`);
+  if (!resp.ok) {
+    const message = `acks-importer | could not read ${url} (${resp.status}).`;
+    ui.notifications.warn(message);
+    throw new Error(message);
+  }
   // Blob first, buffer from it: pdf.js detaches the array it is handed, and a
   // re-download of a whole book is exactly what the refresh bridge saves.
   const blob = await resp.blob();
@@ -659,8 +841,8 @@ const fsaAvailable = () => typeof window.showOpenFilePicker === "function";
  * current markup happens to survive cleaning — otherwise the next attribute
  * added to a dialog decides for itself whether the dialog still works.
  *
- * Declared as a function rather than a const so getting-started.mjs can import
- * it across the module cycle without meeting it in its temporal dead zone.
+ * Declared as a function rather than a const so a sibling module can import it
+ * across the module cycle without meeting it in its temporal dead zone.
  */
 export function dialogContent(html) {
   const div = document.createElement("div");
@@ -689,137 +871,50 @@ const openDialogs = new Map();
  * because the build is async (it reads remembered locations first) and two
  * fast clicks would otherwise both get past that await before either had
  * claimed the slot.
+ *
+ * Three states, not two, and conflating the last two throws. The entry is
+ * dropped when its promise settles, but that is a microtask: something that
+ * closes the window and asks for it again in the same turn finds an entry
+ * whose app is closed, and `bringToFront` on a closed application reaches for
+ * the style of an element that is no longer there. So:
+ *
+ *   • no entry            — build one;
+ *   • entry, app not yet captured — the build is still in flight; wait on it
+ *     rather than starting a second (this is the case the key exists for);
+ *   • entry, app closed   — its promise is already settling; forget it now and
+ *     open afresh, or the reader's click does nothing at all.
  */
 function singleton(key, open) {
   const existing = openDialogs.get(key);
-  if (existing) {
-    existing.app?.bringToFront?.();
+  if (existing && (!existing.app || existing.app.rendered)) {
+    if (existing.app?.rendered) existing.app.bringToFront?.();
     return existing.promise;
   }
+  if (existing) openDialogs.delete(key);
   const entry = { app: null };
-  entry.promise = Promise.resolve(open((app) => (entry.app = app))).finally(() => openDialogs.delete(key));
+  entry.promise = Promise.resolve(open((app) => (entry.app = app))).finally(() => {
+    // Only clear the slot if it is still OURS: a re-entry that replaced a
+    // closed dialog must not have its own entry deleted by the old one.
+    if (openDialogs.get(key) === entry) openDialogs.delete(key);
+  });
   openDialogs.set(key, entry);
   return entry.promise;
 }
 
-const connectBook = () => singleton("connect", connectBookDialog);
-
-async function connectBookDialog(capture) {
-  // Say which books this seat already has, and which it merely remembers the
-  // location of. Without this the list is identical before and after connecting
-  // and the only way to find out is to connect again and see what happens.
-  const remembered = await locations();
-  const mark = (id) =>
-    sessionDocs.has(id)
-      ? ` — ${game.i18n.localize(`${LANG_PREFIX}.ui.connectOpen`)}`
-      : remembered.has(id)
-        ? ` — ${game.i18n.format(`${LANG_PREFIX}.ui.connectRemembered`, { where: describeLocation(remembered.get(id)) })}`
-        : "";
-  const options = Object.entries(BOOKS)
-    .map(([id, b]) => `<option value="${id}">${b.label}${mark(id)}</option>`)
-    .join("");
-  const fsa = fsaAvailable();
-  // The folder route needs no book selection at all: the folder is a group,
-  // and the group self-identifies (see connectFolderPicks). It is offered on
-  // every seat — as a picker button where the File System Access API exists
-  // (which also remembers the folder for one-gesture reconnects), as a
-  // directory input everywhere else.
-  const folderRow = `
-    <hr>
-    <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFolderLabel`)}</label>
-      ${
-        fsa
-          ? `<button type="button" data-connect-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFolderGo`)}</button>`
-          : `<input type="file" name="pdfdir" webkitdirectory>`
-      }</div>
-    <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.${fsa ? "connectFolderNote" : "connectFolderNoteFile"}`)}</p>`;
-  const fileRow = fsa
-    ? `<p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectNoteFsa`)}</p>`
-    : `<div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectFile`)}</label>
-         <input type="file" name="pdf" accept="application/pdf" multiple></div>
-       <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectNote`)}</p>`;
-  // The list is multi-select because one trip through the dialog can connect
-  // several books, and the reader naming them is the only pairing that cannot
-  // be wrong. `size` alone does not make it a list: core CSS pins every select
-  // to one input-height row and stretches its line-height to match, so the
-  // height and line-height are released here too — inline, because a squashed
-  // list reads as the single-choice dropdown it used to be and the control has
-  // to work whatever the stylesheet says.
-  const content = `
-    <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.connectBook`)}</label>
-      <select class="acks-importer-book-select" name="book" multiple size="${Math.min(Object.keys(BOOKS).length, 6)}">${options}</select></div>
-    <p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.connectBulkNote`)}</p>
-    ${fileRow}
-    ${folderRow}`;
-  return foundry.applications.api.DialogV2.prompt({
-    // Resizable because the book list grows with the shipped book count: the
-    // dialog class gives the content a scroll region, and the handle is how a
-    // short screen gets more of it into view.
-    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.connectTitle`), resizable: true },
-    classes: ["acks-ui", "acks-importer-dialog"],
-    content: dialogContent(content),
-    render: (event, dialog) => {
-      capture(dialog);
-      const root = dialog.element ?? dialog;
-      // Folder connect acts the moment it is answered, then gets the dialog
-      // out of the way — the group needs no book selection, so leaving the
-      // form up would only invite a second, conflicting gesture.
-      root.querySelector("[data-connect-folder]")?.addEventListener("click", async () => {
-        let dir;
-        try {
-          // First await after the click: the picker spends the gesture.
-          dir = await window.showDirectoryPicker();
-        } catch (err) {
-          if (err?.name !== "AbortError") throw err;
-          return; // dismissing the OS picker is an answer, not a failure
-        }
-        dialog.close();
-        const handles = await pdfHandlesIn(dir);
-        if (!handles.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.folderNoPdfs`));
-        const picks = [];
-        for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
-        return connectFolderPicks(picks, { remember: dir });
-      });
-      root.querySelector("input[name=pdfdir]")?.addEventListener("change", async (ev) => {
-        const files = [...(ev.currentTarget.files ?? [])].filter((f) => /\.pdf$/i.test(f.name));
-        if (!files.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.folderNoPdfs`));
-        dialog.close();
-        return connectFolderPicks(files.map((file) => ({ file })));
-      });
-    },
-    ok: {
-      label: game.i18n.localize(`${LANG_PREFIX}.ui.connectGo`),
-      callback: async (event, button) => {
-        const form = button.form;
-        // Reading the form and guarding it stays synchronous, and the picker is
-        // the first thing awaited: the click's transient user activation is
-        // spent by any await before it, and a picker asked for afterwards never
-        // opens and never says why.
-        const bookIds = [...form.elements.book.selectedOptions].map((option) => option.value);
-        if (!bookIds.length) return ui.notifications.warn(game.i18n.localize(`${LANG_PREFIX}.ui.connectNoBook`));
-        if (fsa) {
-          let handles;
-          try {
-            handles = await window.showOpenFilePicker({
-              multiple: true,
-              types: [{ description: "PDF", accept: { "application/pdf": [".pdf"] } }],
-            });
-          } catch (err) {
-            // Dismissing the OS picker is an answer, not a failure.
-            if (err?.name !== "AbortError") throw err;
-            return;
-          }
-          const picks = [];
-          for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
-          return connectPicks(bookIds, picks);
-        }
-        const files = [...(form.elements.pdf.files ?? [])];
-        if (!files.length) return ui.notifications.warn("acks-importer | no file chosen — nothing read.");
-        return connectPicks(bookIds, files.map((file) => ({ file })));
-      },
-    },
-  });
-}
+/**
+ * "Connect a book" and "your books" were two windows asking the same question.
+ *
+ * The connect dialog named books in a `<select multiple>` and then asked for
+ * files; the Books dialog already drew a row per book with its own control, and
+ * a row names a book far better than a six-line list of twenty does. So the
+ * select is gone and the row IS the naming — which also retires the positional
+ * fallback that existed only because a multi-select cannot say which file is
+ * which (`pairPicks`). Evidence places a file or nothing does.
+ *
+ * The name survives as an alias because macros already imported into worlds
+ * call it, and a compendium macro outlives the build that shipped it.
+ */
+const connectBook = () => openBooksDialog();
 
 /**
  * Read each paired file into its book and remember where it came from.
@@ -878,40 +973,6 @@ async function ingestPairs(matched, byFile, { announce = true } = {}) {
     }
   }
   return done;
-}
-
-/**
- * Read the picked files into the books the reader named.
- *
- * Which books is the reader's to say; WHICH FILE IS WHICH is not something the
- * dialog can ask them (see `pairPicks`), so it is worked out from the files
- * themselves. Surplus files — more PDFs than books named — go to
- * `connectSeveral`, which may only compete for the books that were NOT named;
- * a hand-named book is never re-read from a file the matcher preferred.
- *
- * @param {string[]} bookIds  the book ids the reader selected
- * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  the files they picked
- */
-async function connectPicks(bookIds, picks) {
-  const byFile = new Map(picks.map((pick) => [pick.file, pick]));
-  const { matched, unfilled, surplus } = pairPicks(bookIds, [...byFile.keys()], await locations());
-  await ingestPairs(matched, byFile);
-  // Fewer files than books named: say which books are still closed, or the
-  // reader is left to notice for themselves that two of the three they asked
-  // for never opened.
-  if (unfilled.length) {
-    ui.notifications.warn(
-      game.i18n.format(`${LANG_PREFIX}.ui.connectUnfilled`, {
-        books: unfilled.map((id) => BOOKS[id]?.label ?? id).join(", "),
-      }),
-    );
-  }
-  if (!surplus.length) return;
-  const named = new Set(bookIds);
-  return connectSeveral(
-    surplus.map((file) => byFile.get(file)),
-    Object.keys(BOOKS).filter((id) => !named.has(id)),
-  );
 }
 
 /**
@@ -1000,36 +1061,6 @@ async function restoreBooks() {
 }
 
 /**
- * First-time linking by filename, for the files left over after the books the
- * reader named have been paired off (see `connectPicks`).
- *
- * `candidates` is what those files may still be claimed by — every book this
- * build reads, less anything already spoken for. First-time linking is the
- * whole point, so there may be no remembered record to lean on and the
- * title-in-filename pass does most of the work. Anything unmatched is named,
- * never guessed: the remedy is the same dialog again, with those books selected
- * in the list so no guessing is needed.
- *
- * @param {{file: File, handle?: FileSystemFileHandle}[]} picks  files, each with its handle where there is one
- * @param {string[]} [candidates]  book ids these files may fill
- */
-async function connectSeveral(picks, candidates = Object.keys(BOOKS)) {
-  const byFile = new Map(picks.map((pick) => [pick.file, pick]));
-  const { matched, unmatched } = matchFilesToBooks([...byFile.keys()], candidates, await locations());
-  // One summary rather than a message per book: this path can be handed the
-  // whole shelf at once, and the summary already names every book it opened.
-  const done = await ingestPairs(matched, byFile, { announce: false });
-  if (done.length) {
-    ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.connectBulkDone`, { count: done.length, books: done.join(", ") }));
-  }
-  if (unmatched.length) {
-    ui.notifications.warn(
-      game.i18n.format(`${LANG_PREFIX}.ui.connectBulkUnmatched`, { files: unmatched.map((f) => f.name).join(", ") }),
-    );
-  }
-}
-
-/**
  * Every PDF file handle under a directory handle, one level of subfolders deep
  * — enough for a shelf sorted into "Core"/"Adventures", shallow enough that
  * pointing at a whole drive does not become a filesystem crawl. Capped for the
@@ -1090,37 +1121,56 @@ async function connectFolderPicks(picks, { remember = null } = {}) {
 }
 
 /**
- * The one "Your Books" surface: every book this build reads, its state on this
- * seat, and the control that changes that state. Status, the join-time
- * reconnect offer, and the on-demand reconnect all open THIS dialog — they
- * used to be three surfaces (a row dialog, a toast, and a console dump), and a
- * reader could not tell from the macro list which one would show them anything.
+ * "Your ACKS Books" — the one window the book lives in.
  *
- * One control PER BOOK, not one button for the lot, because re-granting file
- * permission consumes the user gesture that authorized it — a single click can
- * only ever unlock the first book, which is exactly how a three-book seat used
- * to end up with one book open and no explanation. A row therefore carries its
- * own Unlock (handle), Retry (path) or file picker, acts the moment it is
- * used, and says what happened; the dialog closes itself once no remembered
- * book is left waiting.
+ * There used to be three, and they overlapped: a Getting Started walkthrough
+ * with its own "Connect a book…" button, a Connect dialog whose `<select
+ * multiple>` listed every book six rows at a time, and this one, which already
+ * drew a row per book with its own control. A reader could not tell from the
+ * macro list which of them would show them anything, and two of the three
+ * asked "which book do you mean?" in different words.
  *
- * Two controls CAN answer for several books at once. A plain file picker
- * grants no persistent permission and so consumes nothing: any seat with two
- * or more books waiting gets a "choose them all" row above the per-book ones —
- * handle seats included, whose remembered handles are kept so next session
- * still offers the one-click Unlock. And a remembered parent FOLDER re-grants
- * as a directory in one gesture, after which every book inside re-reads from
- * it with no further asking — the group case the per-file rules cannot reach.
+ * A ROW is the answer to that question. It names one book, carries one control,
+ * acts the moment it is used and says what happened — so the select is gone,
+ * and with it the positional pairing that only ever existed because a
+ * multi-select cannot say which file is which.
+ *
+ * Four bands, in the order a seat needs them:
+ *
+ *   1. the first-run walkthrough, open on a seat with nothing connected and
+ *      collapsed once there is (it carries the GM's one-click import chain);
+ *   2. the shelf — books the SERVER holds, which need no gesture from anyone;
+ *   3. this computer — the controls that answer for SEVERAL books at once;
+ *   4. the books themselves, grouped by what each one needs.
+ *
+ * The one-gesture rule shapes band 3 and 4 between them. Re-granting file
+ * permission consumes the user activation that authorized it, so one click can
+ * only ever unlock one handle — which is why each waiting book keeps its own
+ * Unlock and why "Reconnect all" spends its single gesture on the remembered
+ * FOLDER when there is one (a directory re-grants once and every book inside
+ * re-reads from it) and reports honestly about the rest when there is not. A
+ * plain file picker grants no persistent permission and so consumes nothing,
+ * which is why "Pick PDFs…" can answer for the whole shelf at once.
  */
-const openBooksDialog = () => singleton("books", (capture) => booksDialog(capture));
+const openBooksDialog = (opts) => singleton("books", (capture) => booksDialog(capture, opts));
 
-async function booksDialog(capture) {
+async function booksDialog(capture, { firstRun = false, autoClose = false } = {}) {
   const records = await locations();
+  const staged = shelf();
   const dir = fsaAvailable() ? await dirGet() : null;
-  const pending = Object.keys(BOOKS).filter((id) => records.has(id) && !sessionDocs.has(id));
+  const isGM = game.user.isGM;
+  const fsa = fsaAvailable();
   const esc = foundry.utils.escapeHTML ?? ((s) => s);
+  const L = (key, data) =>
+    data ? game.i18n.format(`${LANG_PREFIX}.ui.${key}`, data) : game.i18n.localize(`${LANG_PREFIX}.ui.${key}`);
+  const G = (key, data) =>
+    data ? game.i18n.format(`${LANG_PREFIX}.gs.${key}`, data) : game.i18n.localize(`${LANG_PREFIX}.gs.${key}`);
+
+  const pending = Object.keys(BOOKS).filter((id) => records.has(id) && !sessionDocs.has(id));
+  const closed = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
+
   // What a connection unlocks — the scope figures Book Status used to print to
-  // the console, now on the row they describe.
+  // the console, on the row they describe.
   const scopeOf = (id) => {
     const entries = cookbookCount(id);
     const recipes = allRecipes().filter((r) => r.book === id).length;
@@ -1128,87 +1178,148 @@ async function booksDialog(capture) {
       .filter(Boolean)
       .join(" + ");
   };
+
+  /* ---- band 1: the first-run walkthrough ---------------------------- */
+
+  // Open when this seat has nothing at all and has not asked otherwise; a seat
+  // with books already reading gets it collapsed, because by then it is
+  // reference material rather than instructions.
+  const nothingYet = !sessionDocs.size && !records.size && !Object.keys(staged).length;
+  const startOpen = (firstRun || nothingYet) && !gettingStartedDismissed();
+  const gmBand = isGM
+    ? `<h4>${G("gmHead")}</h4>
+       <p>${G("gmBody")}</p>
+       <div class="acks-importer-gs-action">
+         <button type="button" data-gs-import><i class="fa-solid fa-download"></i> ${G("gmGo")}</button>
+         <span class="notes" data-gs-import-status></span>
+       </div>`
+    : "";
+  const intro = `<details class="acks-importer-gs"${startOpen ? " open" : ""}>
+    <summary>${G("title")}</summary>
+    <p>${G("intro")}</p>
+    ${gmBand}
+    <label class="acks-importer-gs-dismiss">
+      <input type="checkbox" name="dismiss"${gettingStartedDismissed() ? " checked" : ""}> ${G("dismiss")}
+    </label>
+  </details>`;
+
+  /* ---- band 2: the shelf -------------------------------------------- */
+
+  // GM-only: staging a book writes world settings and uploads to the data
+  // directory, neither of which a player may do. A player still SEES the shelf
+  // rows, because a book the server holds is why their seat needs nothing.
+  const shelfRows = Object.entries(staged)
+    .filter(([id]) => BOOKS[id])
+    .map(
+      ([id, record]) => `<div class="acks-importer-reconnect-row acks-importer-shelf-row" data-shelf-row="${esc(id)}">
+        <div class="acks-importer-reconnect-head">
+          <strong>${esc(BOOKS[id].label)}</strong>
+          ${isGM ? `<button type="button" data-unshelve="${esc(id)}">${L("shelfRemove")}</button>` : ""}
+        </div>
+        <p class="notes" data-shelf-status="${esc(id)}">${L("shelfHeld", { name: esc(record.name ?? record.path) })}</p>
+      </div>`,
+    )
+    .join("");
+  const shelfControls = isGM
+    ? `<div class="acks-importer-reconnect-head acks-importer-band-actions">
+         <button type="button" data-shelf-scan>${L("shelfScanGo")}</button>
+         <span class="notes" data-shelf-scan-status></span>
+       </div>
+       <p class="notes">${L("shelfScanNote", { dir: esc(SHELF_DIR) })}</p>`
+    : "";
+  const shelfBand = `<section class="acks-importer-band">
+    <h4>${L("shelfHead")}</h4>
+    ${shelfRows || `<p class="notes">${L(isGM ? "shelfEmpty" : "shelfEmptyPlayer")}</p>`}
+    ${shelfControls}
+  </section>`;
+
+  /* ---- band 3: controls that answer for several books --------------- */
+
+  // The folder button is ONE control doing both jobs: re-granting the folder
+  // this seat already remembers, or choosing one for the first time. They were
+  // two buttons in two dialogs, and the difference between them was never the
+  // reader's to care about.
+  const folderControl = dir
+    ? `<button type="button" data-folder="reopen">${L("reconnectFolderGo")}</button>`
+    : fsa
+      ? `<button type="button" data-folder="pick">${L("connectFolderGo")}</button>`
+      : `<input type="file" name="pdfdir" webkitdirectory>`;
+  const localBand = closed.length
+    ? `<section class="acks-importer-band">
+        <h4>${L("localHead")}</h4>
+        <div class="acks-importer-reconnect-head acks-importer-band-actions">
+          <button type="button" data-reconnect-all>${L("reconnectAllGo")}</button>
+          <input type="file" name="pdf-all" data-bulk accept="application/pdf" multiple>
+          ${folderControl}
+        </div>
+        <p class="notes" data-status-bulk>${L(dir ? "localNoteFolder" : "localNote", { name: esc(dir?.name ?? "") })}</p>
+      </section>`
+    : "";
+
+  /* ---- band 4: one row per book ------------------------------------- */
+
   const control = (id, record) => {
-    if (record?.kind === "file") {
+    if (staged[id]) return ""; // the server answers for it; nothing to ask this seat
+    if (!record) {
+      // Never connected here. The row names the book, so a picker on it needs
+      // no guessing at all — this is what the select used to be for.
+      return fsa
+        ? `<button type="button" data-pick="${esc(id)}">${L("booksConnectGo")}</button>`
+        : `<input type="file" name="pdf-${esc(id)}" data-book="${esc(id)}" accept="application/pdf">`;
+    }
+    if (record.kind === "file") {
       return `<input type="file" name="pdf-${esc(id)}" data-book="${esc(id)}" accept="application/pdf">`;
     }
-    const key = record?.kind === "url" ? "reconnectRetry" : "reconnectGo";
-    return `<button type="button" data-book="${esc(id)}">${game.i18n.localize(`${LANG_PREFIX}.ui.${key}`)}</button>`;
+    return `<button type="button" data-book="${esc(id)}">${L(record.kind === "url" ? "reconnectRetry" : "reconnectGo")}</button>`;
   };
   const why = (record) => {
-    if (record?.kind === "file") return game.i18n.format(`${LANG_PREFIX}.ui.reconnectFile`, { name: esc(record.name ?? "") });
-    if (record?.kind === "url") return game.i18n.format(`${LANG_PREFIX}.ui.reconnectUrlFailed`, { where: esc(record.url) });
-    return game.i18n.format(`${LANG_PREFIX}.ui.reconnectHandle`, { where: esc(describeLocation(record)) });
+    if (record?.kind === "file") return L("reconnectFile", { name: esc(record.name ?? "") });
+    if (record?.kind === "url") return L("reconnectUrlFailed", { where: esc(record.url) });
+    return L("reconnectHandle", { where: esc(describeLocation(record)) });
   };
-  const rows = Object.entries(BOOKS)
-    .map(([id, book]) => {
-      const record = records.get(id);
-      const scope = scopeOf(id);
-      if (sessionDocs.has(id)) {
-        return `<div class="acks-importer-reconnect-row acks-importer-reconnect-done" data-row="${esc(id)}">
-          <div class="acks-importer-reconnect-head"><strong>${esc(book.label)}</strong></div>
-          <p class="notes" data-status="${esc(id)}">${game.i18n.format(`${LANG_PREFIX}.ui.booksOpen`, {
-            scope: scope || game.i18n.localize(`${LANG_PREFIX}.ui.booksNoScope`),
-          })}${record ? ` [${esc(describeLocation(record))}]` : ""}</p>
-        </div>`;
-      }
-      if (record) {
-        return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
-          <div class="acks-importer-reconnect-head">
-            <strong>${esc(book.label)}</strong>
-            ${control(id, record)}
-          </div>
-          <p class="notes" data-status="${esc(id)}">${why(record)}</p>
-        </div>`;
-      }
-      // Never connected on this seat: the row says what connecting would
-      // unlock and hands over to the Connect dialog, where books are named.
-      return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
-        <div class="acks-importer-reconnect-head">
-          <strong>${esc(book.label)}</strong>
-          <button type="button" data-open-connect>${game.i18n.localize(`${LANG_PREFIX}.ui.booksConnectGo`)}</button>
-        </div>
-        <p class="notes" data-status="${esc(id)}">${game.i18n.format(`${LANG_PREFIX}.ui.booksAbsent`, {
-          scope: scope || game.i18n.localize(`${LANG_PREFIX}.ui.booksNoScope`),
-        })}</p>
+  const row = (id, book) => {
+    const record = records.get(id);
+    const scope = scopeOf(id) || L("booksNoScope");
+    if (sessionDocs.has(id)) {
+      const where = staged[id] ? L("shelfSource") : record ? ` [${esc(describeLocation(record))}]` : "";
+      // Shelving is offered on a book that is OPEN, because the file has to
+      // have been read before anything can vouch for what it is.
+      const stage =
+        isGM && !staged[id] ? `<button type="button" data-shelve="${esc(id)}">${L("shelfAdd")}</button>` : "";
+      return `<div class="acks-importer-reconnect-row acks-importer-reconnect-done" data-row="${esc(id)}">
+        <div class="acks-importer-reconnect-head"><strong>${esc(book.label)}</strong>${stage}</div>
+        <p class="notes" data-status="${esc(id)}">${L("booksOpen", { scope })}${where}</p>
       </div>`;
-    })
+    }
+    return `<div class="acks-importer-reconnect-row" data-row="${esc(id)}">
+      <div class="acks-importer-reconnect-head">
+        <strong>${esc(book.label)}</strong>
+        ${control(id, record)}
+      </div>
+      <p class="notes" data-status="${esc(id)}">${record ? why(record) : L("booksAbsent", { scope })}</p>
+    </div>`;
+  };
+
+  const groups = [
+    ["booksWaiting", Object.entries(BOOKS).filter(([id]) => pending.includes(id)), true],
+    ["booksOpenHead", Object.entries(BOOKS).filter(([id]) => sessionDocs.has(id)), false],
+    ["booksAbsentHead", Object.entries(BOOKS).filter(([id]) => !sessionDocs.has(id) && !records.has(id)), false],
+  ];
+  // Waiting books stay expanded — they are the reason the window opened. The
+  // other two collapse behind their count, which is what keeps a twenty-book
+  // shelf from being a scroll to the bottom for one Unlock button.
+  const bookBands = groups
+    .filter(([, list]) => list.length)
+    .map(
+      ([key, list, open]) => `<details class="acks-importer-book-group"${open ? " open" : ""}>
+        <summary>${L(key, { count: list.length })}</summary>
+        ${list.map(([id, book]) => row(id, book)).join("")}
+      </details>`,
+    )
     .join("");
 
-  // Only worth showing when it actually saves a trip: two or more books a
-  // picker can answer — every kind but `url`, whose Retry needs no picker.
-  // Handle seats qualify too: a plain multi-file input grants no persistent
-  // permission and so consumes no gesture, so the one-gesture-per-book rule
-  // that forces their per-row Unlock buttons does not bind it. Their handle
-  // records are kept (see the ingest loop) — bulk is a faster way in, not a
-  // downgrade of what the seat remembers.
-  const pickable = pending.filter((id) => records.get(id)?.kind !== "url");
-  const bulk =
-    pickable.length > 1
-      ? `<div class="acks-importer-reconnect-row acks-importer-reconnect-bulk">
-           <div class="acks-importer-reconnect-head">
-             <strong>${game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllHead`, { count: pickable.length })}</strong>
-             <input type="file" name="pdf-all" data-bulk accept="application/pdf" multiple>
-           </div>
-           <p class="notes" data-status-bulk>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectAllNote`)}</p>
-         </div>`
-      : "";
-  // The remembered folder beats every per-file control when it exists: one
-  // permission gesture on the directory, and everything inside re-reads.
-  const folderUnlock =
-    dir && pending.length
-      ? `<div class="acks-importer-reconnect-row acks-importer-reconnect-bulk">
-           <div class="acks-importer-reconnect-head">
-             <strong>${game.i18n.format(`${LANG_PREFIX}.ui.reconnectFolderHead`, { name: esc(dir.name ?? "") })}</strong>
-             <button type="button" data-unlock-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderGo`)}</button>
-           </div>
-           <p class="notes" data-status-folder>${game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderNote`)}</p>
-         </div>`
-      : "";
+  /* ---- the bridge line, and the console's fuller copy ---------------- */
 
-  // The refresh bridge is invisible when it works, which makes "why did that
-  // reload cost me a picker?" unanswerable without saying its state out loud.
-  // The dialog carries the short form; the console keeps the full detail.
   const windowMs = cacheWindowMs();
   const stamp = stampGet();
   const cached = await idbOp("readonly", (s) => s.getAllKeys(), IDB_BYTES).catch(() => []);
@@ -1218,7 +1329,13 @@ async function booksDialog(capture) {
       (stamp ? `, stamped ${Math.round((Date.now() - stamp) / 1000)}s ago` : ", not stamped yet") +
       `; this page was away ${((performance.timeOrigin - stamp) / 1000).toFixed(1)}s before starting`;
   const stateOf = (id) =>
-    sessionDocs.has(id) ? "OPEN this session" : records.has(id) ? `remembered [${describeLocation(records.get(id))}]` : "not connected";
+    sessionDocs.has(id)
+      ? `OPEN this session${staged[id] ? " (from the shelf)" : ""}`
+      : staged[id]
+        ? `shelved [${staged[id].path}]`
+        : records.has(id)
+          ? `remembered [${describeLocation(records.get(id))}]`
+          : "not connected";
   console.log(
     `${MODULE_ID} | book status (this seat):\n${Object.entries(BOOKS)
       .map(([id, b]) => `${b.label}: ${stateOf(id)}${scopeOf(id) ? ` — ${scopeOf(id)}` : ""}`)
@@ -1226,14 +1343,19 @@ async function booksDialog(capture) {
   );
 
   return foundry.applications.api.DialogV2.prompt({
-    // One row per book, so the height is the reader's library, not a
-    // constant: scroll region from the dialog class, handle from `resizable`.
-    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.booksTitle`), resizable: true },
-    classes: ["acks-ui", "acks-importer-dialog"],
-    position: { width: 480 },
+    // One row per book, so the height is the reader's library, not a constant:
+    // scroll region from the dialog class, handle from `resizable`.
+    window: { title: L("booksTitle"), resizable: true },
+    classes: ["acks-ui", "acks-importer-dialog", "acks-importer-books"],
+    position: { width: 520 },
     content: dialogContent(
-      `<p>${game.i18n.localize(`${LANG_PREFIX}.ui.booksBody`)}</p>${folderUnlock}${bulk}${rows}
-       <p class="notes">${esc(bridge)} · ${game.i18n.localize(`${LANG_PREFIX}.ui.statusNote`)}</p>`,
+      `${intro}${shelfBand}${localBand}
+       <section class="acks-importer-band">${bookBands}</section>
+       <p class="notes acks-importer-bridge">${esc(bridge)} · ${L("statusNote")}</p>
+       <div class="acks-importer-reconnect-head acks-importer-band-actions">
+         <button type="button" data-forget class="acks-importer-danger">${L("forgetGo")}</button>
+         <span class="notes" data-forget-status></span>
+       </div>`,
     ),
     // Dismissing this is a legitimate answer ("not tonight"), not an error to
     // throw out of the ready hook.
@@ -1248,47 +1370,146 @@ async function booksDialog(capture) {
         if (!ok) return;
         left.delete(bookId);
         root.querySelector(`[data-row="${bookId}"]`)?.classList.add("acks-importer-reconnect-done");
-        // Nothing left to ask for: get out of the way rather than making the
-        // reader dismiss a dialog that has finished its job.
-        if (!left.size) dialog.close();
+        // Only the join-time offer gets out of the way by itself. Opened by
+        // hand, this window is also the shelf and the import chain, and
+        // closing it under the reader mid-task is not tidiness.
+        if (autoClose && !left.size) dialog.close();
+      };
+      const say = (selector, text) => {
+        const el = root.querySelector(selector);
+        if (el) el.textContent = text;
       };
 
-      for (const button of root.querySelectorAll("button[data-book]")) {
+      /* -- band 1 ---------------------------------------------------- */
+
+      root.querySelector("[data-gs-import]")?.addEventListener("click", () => runImportEverything(root));
+      // Persists the moment it is toggled: a dialog closed via Escape or the
+      // X never reads its form, and "don't show this again" must stick however
+      // the reader leaves.
+      root.querySelector("input[name=dismiss]")?.addEventListener("change", (ev) => {
+        game.settings.set(MODULE_ID, SETTING_DISMISSED, ev.currentTarget.checked);
+      });
+
+      /* -- band 2: the shelf ----------------------------------------- */
+
+      for (const button of root.querySelectorAll("button[data-shelve]")) {
         button.addEventListener("click", async () => {
-          const bookId = button.dataset.book;
+          const bookId = button.dataset.shelve;
           button.disabled = true;
-          // This click is the fresh gesture the browser was holding out for.
-          const ok = await openRemembered(bookId, records.get(bookId), { interactive: true }).catch((err) => {
-            console.error(`${MODULE_ID} | reconnect ${bookId}`, err);
-            return false;
-          });
-          button.disabled = ok;
-          settle(
-            bookId,
-            ok,
-            ok
-              ? game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`)
-              : game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`),
-          );
+          say(`[data-status="${bookId}"]`, L("shelfUploading"));
+          try {
+            // The bridge usually still holds the bytes of a book opened this
+            // session, which saves reading the same file twice; a swept bridge
+            // means the reader picks it once more, and the row says so.
+            const blob = await bytesGet(bookId).catch(() => null);
+            if (!blob) throw new Error(L("shelfNoBytes"));
+            const record = await shelveUpload(bookId, new File([blob], `${bookId}.pdf`, { type: "application/pdf" }));
+            if (!record) throw new Error(L("shelfUploadFailed"));
+            say(`[data-status="${bookId}"]`, L("shelfHeld", { name: record.name }));
+            button.remove();
+          } catch (err) {
+            console.error(`${MODULE_ID} | shelve ${bookId}`, err);
+            say(`[data-status="${bookId}"]`, err.message);
+            button.disabled = false;
+          }
         });
       }
+
+      for (const button of root.querySelectorAll("button[data-unshelve]")) {
+        button.addEventListener("click", async () => {
+          const bookId = button.dataset.unshelve;
+          button.disabled = true;
+          const record = shelf()[bookId];
+          await shelfPut(bookId, null);
+          // The FILE stays where it was put — Foundry offers no delete, and a
+          // GM who wants the disk space back needs to be told where to look
+          // rather than left assuming the removal took it with it.
+          say(`[data-shelf-status="${bookId}"]`, L("shelfRemoved", { path: record?.path ?? SHELF_DIR }));
+        });
+      }
+
+      const scanBtn = root.querySelector("[data-shelf-scan]");
+      scanBtn?.addEventListener("click", async () => {
+        scanBtn.disabled = true;
+        say("[data-shelf-scan-status]", L("shelfScanning"));
+        try {
+          const { matched, unmatched, missing } = await scanShelf();
+          if (missing) {
+            say("[data-shelf-scan-status]", L("shelfNoDir", { dir: SHELF_DIR }));
+            return;
+          }
+          let added = 0;
+          // Sequentially: several ACKS PDFs parsed at once is hundreds of
+          // megabytes in flight, and the shelf is read through the same
+          // pdf.js path a local connect uses.
+          for (const [bookId, file] of matched) {
+            if (await shelvePath(bookId, file.path, { name: file.name })) added++;
+          }
+          say(
+            "[data-shelf-scan-status]",
+            added
+              ? L("shelfScanDone", { count: added })
+              : L("shelfScanNone", { skipped: unmatched.length }),
+          );
+        } catch (err) {
+          console.error(`${MODULE_ID} | shelf scan`, err);
+          say("[data-shelf-scan-status]", err.message);
+        } finally {
+          scanBtn.disabled = false;
+        }
+      });
+
+      /* -- band 3: several books at once ----------------------------- */
+
+      const reconnectBtn = root.querySelector("[data-reconnect-all]");
+      reconnectBtn?.addEventListener("click", async () => {
+        reconnectBtn.disabled = true;
+        // The gesture goes FIRST. Transient activation lasts seconds, and
+        // reading a book takes longer than that, so a permission asked for
+        // after the silent pass is a permission asked for too late.
+        let folderOpened = [];
+        if (dir && left.size) {
+          try {
+            let perm = await dir.handle.queryPermission({ mode: "read" });
+            if (perm === "prompt") perm = await dir.handle.requestPermission({ mode: "read" });
+            if (perm === "granted") folderOpened = await reopenFromFolder(dir, records, settle);
+          } catch (err) {
+            console.warn(`${MODULE_ID} | reconnect all: folder`, err);
+          }
+        }
+        // Then everything that needs no gesture at all: the shelf, served
+        // paths, bridged bytes, and any handle whose permission still stands.
+        await restoreShelf();
+        const stillWaiting = await restoreBooks();
+        for (const id of Object.keys(BOOKS)) {
+          if (sessionDocs.has(id) && left.has(id)) settle(id, true, L("reconnectOpened"));
+        }
+        const blocked = stillWaiting.filter((id) => !sessionDocs.has(id));
+        const opened = folderOpened.length + (pending.length - blocked.length);
+        // "opened 0" reads as a failure on the seat where nothing was waiting,
+        // which is the ordinary state of a seat whose books are on the server.
+        say(
+          "[data-status-bulk]",
+          blocked.length
+            ? L("reconnectAllPartial", { books: blocked.map((id) => BOOKS[id]?.label ?? id).join(", ") })
+            : opened
+              ? L("reconnectAllDone", { count: opened })
+              : L("reconnectAllNothing"),
+        );
+        reconnectBtn.disabled = false;
+      });
 
       const bulkInput = root.querySelector("input[type=file][data-bulk]");
       bulkInput?.addEventListener("change", async () => {
         const files = [...(bulkInput.files ?? [])];
         if (!files.length) return;
-        const status = root.querySelector("[data-status-bulk]");
-        const say = (text) => {
-          if (status) status.textContent = text;
-        };
         bulkInput.disabled = true;
-        // Match against what is STILL waiting: a book opened from its own row
-        // while this dialog was up must not be re-read from a picked file.
-        const { matched, unmatched } = matchFilesToBooks(files, [...left], records);
+        // Match against every book NOT open, not merely the remembered ones:
+        // this is now the way a seat connects for the first time as well as
+        // the way it reconnects.
+        const candidates = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
+        const { matched, unmatched } = matchFilesToBooks(files, candidates, records);
         let opened = 0;
-        // Sequentially: three ACKS PDFs read at once is hundreds of megabytes
-        // of parsed page content in flight, on the seat least likely to have
-        // the headroom for it.
         for (const [bookId, file] of matched) {
           try {
             await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
@@ -1305,22 +1526,111 @@ async function booksDialog(capture) {
               await rememberFile(bookId, file);
             }
             opened++;
-            settle(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
+            settle(bookId, true, L("reconnectOpened"));
           } catch (err) {
-            console.error(`${MODULE_ID} | reconnect ${bookId} from ${file.name}`, err);
-            settle(bookId, false, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
+            console.error(`${MODULE_ID} | connect ${bookId} from ${file.name}`, err);
+            settle(bookId, false, err.wrongBook ? err.message : L("reconnectFailed"));
           }
         }
         bulkInput.disabled = false;
         bulkInput.value = "";
         // Naming what went unused is the difference between "it half worked"
         // and knowing the seat picked the wrong file, or one book too few.
-        if (unmatched.length) {
-          say(game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllUnmatched`, { files: unmatched.map((f) => f.name).join(", ") }));
-        } else {
-          say(game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllDone`, { count: opened }));
+        say(
+          "[data-status-bulk]",
+          unmatched.length
+            ? L("reconnectAllUnmatched", { files: unmatched.map((f) => f.name).join(", ") })
+            : L("reconnectAllDone", { count: opened }),
+        );
+      });
+
+      const folderBtn = root.querySelector("button[data-folder]");
+      folderBtn?.addEventListener("click", async () => {
+        folderBtn.disabled = true;
+        try {
+          if (folderBtn.dataset.folder === "reopen") {
+            let perm = await dir.handle.queryPermission({ mode: "read" });
+            if (perm === "prompt") perm = await dir.handle.requestPermission({ mode: "read" });
+            if (perm !== "granted") {
+              say("[data-status-bulk]", L("reconnectFolderDenied"));
+              return;
+            }
+            const opened = await reopenFromFolder(dir, records, settle);
+            say("[data-status-bulk]", L("reconnectAllDone", { count: opened.length }));
+            return;
+          }
+          // First await after the click: the picker spends the gesture.
+          const picked = await window.showDirectoryPicker();
+          const handles = await pdfHandlesIn(picked);
+          if (!handles.length) {
+            say("[data-status-bulk]", L("folderNoPdfs"));
+            return;
+          }
+          const picks = [];
+          for (const handle of handles) picks.push({ handle, file: await handle.getFile() });
+          const done = await connectFolderPicks(picks, { remember: picked });
+          say("[data-status-bulk]", L("reconnectAllDone", { count: done?.length ?? 0 }));
+          for (const id of Object.keys(BOOKS)) {
+            if (sessionDocs.has(id) && left.has(id)) settle(id, true, L("reconnectOpened"));
+          }
+        } catch (err) {
+          if (err?.name === "AbortError") return; // dismissing the OS picker is an answer
+          console.error(`${MODULE_ID} | folder connect`, err);
+          say("[data-status-bulk]", L("reconnectFailed"));
+        } finally {
+          folderBtn.disabled = false;
         }
       });
+
+      root.querySelector("input[name=pdfdir]")?.addEventListener("change", async (ev) => {
+        const files = [...(ev.currentTarget.files ?? [])].filter((f) => /\.pdf$/i.test(f.name));
+        if (!files.length) return void say("[data-status-bulk]", L("folderNoPdfs"));
+        const done = await connectFolderPicks(files.map((file) => ({ file })));
+        say("[data-status-bulk]", L("reconnectAllDone", { count: done?.length ?? 0 }));
+      });
+
+      /* -- band 4: one book at a time -------------------------------- */
+
+      for (const button of root.querySelectorAll("button[data-book]")) {
+        button.addEventListener("click", async () => {
+          const bookId = button.dataset.book;
+          button.disabled = true;
+          // This click is the fresh gesture the browser was holding out for.
+          const ok = await openRemembered(bookId, records.get(bookId), { interactive: true }).catch((err) => {
+            console.error(`${MODULE_ID} | reconnect ${bookId}`, err);
+            return false;
+          });
+          button.disabled = ok;
+          settle(bookId, ok, ok ? L("reconnectOpened") : L("reconnectFailed"));
+        });
+      }
+
+      // A book this seat has never opened, on a browser that can remember a
+      // handle: pick its file through the picker so the location persists,
+      // rather than through an input that can only ever remember a name.
+      for (const button of root.querySelectorAll("button[data-pick]")) {
+        button.addEventListener("click", async () => {
+          const bookId = button.dataset.pick;
+          button.disabled = true;
+          try {
+            const handles = await window.showOpenFilePicker({
+              multiple: false,
+              types: [{ description: "PDF", accept: { "application/pdf": [".pdf"] } }],
+            });
+            const handle = handles[0];
+            const file = await handle.getFile();
+            const done = await ingestPairs(new Map([[bookId, file]]), new Map([[file, { file, handle }]]));
+            settle(bookId, !!done.length, done.length ? L("reconnectOpened") : L("reconnectFailed"));
+          } catch (err) {
+            if (err?.name !== "AbortError") {
+              console.error(`${MODULE_ID} | connect ${bookId}`, err);
+              settle(bookId, false, L("reconnectFailed"));
+            }
+          } finally {
+            button.disabled = sessionDocs.has(bookId);
+          }
+        });
+      }
 
       for (const input of root.querySelectorAll("input[type=file][data-book]")) {
         input.addEventListener("change", async () => {
@@ -1335,90 +1645,36 @@ async function booksDialog(capture) {
             // again on the very next reload.
             await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
             await rememberFile(bookId, file); // may be a different copy than last time
-            settle(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
+            settle(bookId, true, L("reconnectOpened"));
           } catch (err) {
-            console.error(`${MODULE_ID} | reconnect ${bookId}`, err);
+            console.error(`${MODULE_ID} | connect ${bookId}`, err);
             input.disabled = false;
-            settle(bookId, false, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
+            settle(bookId, false, err.wrongBook ? err.message : L("reconnectFailed"));
           }
         });
       }
 
-      // Never-connected rows hand over to the Connect dialog, where books are
-      // named; this dialog closes first, because its rows are a snapshot that
-      // a connection would immediately date.
-      for (const button of root.querySelectorAll("button[data-open-connect]")) {
-        button.addEventListener("click", () => {
-          dialog.close();
-          connectBook();
-        });
-      }
+      /* -- the footer ------------------------------------------------ */
 
-      // The folder route: one permission gesture on the remembered directory,
-      // then every book found inside re-reads with no further asking. Matches
-      // run against every book not open — a folder can reconnect what was
-      // waiting AND connect a book this seat never named.
-      const folderBtn = root.querySelector("[data-unlock-folder]");
-      folderBtn?.addEventListener("click", async () => {
-        const status = root.querySelector("[data-status-folder]");
-        const say = (text) => {
-          if (status) status.textContent = text;
-        };
-        folderBtn.disabled = true;
-        try {
-          let perm = await dir.handle.queryPermission({ mode: "read" });
-          if (perm === "prompt") perm = await dir.handle.requestPermission({ mode: "read" });
-          if (perm !== "granted") {
-            say(game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFolderDenied`));
-            folderBtn.disabled = false;
-            return;
-          }
-          const handles = await pdfHandlesIn(dir.handle);
-          const byFile = new Map();
-          for (const handle of handles) byFile.set(await handle.getFile(), handle);
-          const candidates = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
-          const { matched } = matchFilesToBooks([...byFile.keys()], candidates, records);
-          if (!matched.size) {
-            say(game.i18n.localize(`${LANG_PREFIX}.ui.folderNone`));
-            folderBtn.disabled = false;
-            return;
-          }
-          let opened = 0;
-          // Sequentially — several ACKS PDFs parsed at once is hundreds of
-          // megabytes in flight.
-          for (const [bookId, file] of matched) {
-            try {
-              await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
-              const handle = byFile.get(file);
-              // The per-file handle is remembered too, so the per-row Unlock
-              // still works next session even if the folder record is lost.
-              await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size }).catch((err) =>
-                console.warn(`${MODULE_ID} | could not remember ${bookId} from the folder`, err),
-              );
-              opened++;
-              settle(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
-            } catch (err) {
-              console.error(`${MODULE_ID} | folder reconnect ${bookId} from ${file.name}`, err);
-              settle(bookId, false, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
-            }
-          }
-          say(game.i18n.format(`${LANG_PREFIX}.ui.reconnectAllDone`, { count: opened }));
-        } catch (err) {
-          console.error(`${MODULE_ID} | folder reconnect`, err);
-          say(game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
-        }
-        folderBtn.disabled = false;
+      const forgetBtn = root.querySelector("[data-forget]");
+      forgetBtn?.addEventListener("click", async () => {
+        const confirmed = await foundry.applications.api.DialogV2.confirm({
+          window: { title: L("forgetGo") },
+          content: dialogContent(`<p>${L("forgetConfirm")}</p>`),
+          rejectClose: false,
+        });
+        if (!confirmed) return;
+        await forgetBooks();
+        say("[data-forget-status]", L("forgetDone"));
       });
     },
     ok: {
-      label: game.i18n.localize(`${LANG_PREFIX}.ui.reconnectDone`),
+      label: L("reconnectDone"),
       callback: () => {
         const still = pending.filter((id) => !sessionDocs.has(id));
         if (still.length) {
           ui.notifications.warn(
-            game.i18n.format(`${LANG_PREFIX}.ui.reconnectIncomplete`, {
-              books: still.map((id) => BOOKS[id]?.label ?? id).join(", "),
-            }),
+            L("reconnectIncomplete", { books: still.map((id) => BOOKS[id]?.label ?? id).join(", ") }),
           );
         }
       },
@@ -1427,24 +1683,58 @@ async function booksDialog(capture) {
 }
 
 /**
+ * Re-read every book a granted directory holds, settling each row as it lands.
+ *
+ * Shared by the folder button and by Reconnect all, which reaches for the
+ * folder first precisely because it answers for the whole shelf on one
+ * permission. Matches run against every book not open — a folder can reconnect
+ * what was waiting AND connect a book this seat never named.
+ */
+async function reopenFromFolder(dir, records, settle) {
+  const handles = await pdfHandlesIn(dir.handle);
+  const byFile = new Map();
+  for (const handle of handles) byFile.set(await handle.getFile(), handle);
+  const candidates = Object.keys(BOOKS).filter((id) => !sessionDocs.has(id));
+  const { matched } = matchFilesToBooks([...byFile.keys()], candidates, records);
+  const opened = [];
+  // Sequentially — several ACKS PDFs parsed at once is hundreds of megabytes
+  // in flight.
+  for (const [bookId, file] of matched) {
+    try {
+      await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
+      const handle = byFile.get(file);
+      // The per-file handle is remembered too, so the per-row Unlock still
+      // works next session even if the folder record is lost.
+      await locationPut(bookId, { kind: "handle", handle, name: handle.name ?? null, size: file.size }).catch((err) =>
+        console.warn(`${MODULE_ID} | could not remember ${bookId} from the folder`, err),
+      );
+      opened.push(bookId);
+      settle?.(bookId, true, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectOpened`));
+    } catch (err) {
+      console.error(`${MODULE_ID} | folder reconnect ${bookId} from ${file.name}`, err);
+      settle?.(bookId, false, game.i18n.localize(`${LANG_PREFIX}.ui.reconnectFailed`));
+    }
+  }
+  return opened;
+}
+
+/**
  * Reconnect on demand — retry the silent pass that runs on join (a plugged-in
- * drive or restored network may answer it now), then open the Books dialog,
- * whatever the outcome: a dialog that shows every book open IS the "all open"
- * report, where the old toast left nothing on screen to check it against.
+ * drive, a restored network, or a book newly put on the shelf may answer it
+ * now), then open the Books window whatever the outcome: a window showing
+ * every book open IS the "all open" report, where the old toast left nothing
+ * on screen to check it against.
+ *
+ * Three api names reach this one window, and they stay because macros already
+ * imported into worlds call them: connectBook, reconnectBooks, bookStatus.
  */
 async function reconnectBooks() {
+  await restoreShelf();
   await restoreBooks();
   return openBooksDialog();
 }
 
-/**
- * Which books this seat can read, and how much of each — the same Books
- * dialog reconnect opens, because state and the control that changes it
- * belong on one surface. The console keeps the per-book detail line and the
- * refresh-bridge state (see booksDialog); the scope figures count SHIPPED
- * cookbook entries, not extracted prose — prose is lazy and a count of it
- * measures nothing a reader asked about.
- */
+/** Which books this seat can read, and how much of each — the same window. */
 async function bookStatus() {
   return openBooksDialog();
 }
@@ -1468,9 +1758,12 @@ async function forgetBooks() {
   await attempt("bridged book bytes", bytesClear);
   await stampClear();
   proseMem.clear();
+  // The SHELF is world data and is deliberately untouched: forgetting is a
+  // statement about this browser, and a GM clearing their own seat must not
+  // silently unstage the books every other seat reads.
   sessionDocs.clear();
   if (allCleared) {
-    ui.notifications.info("acks-importer | remembered book locations dropped; in-memory prose cleared. Sheets show stubs until books reconnect.");
+    ui.notifications.info("acks-importer | remembered book locations on this computer dropped; in-memory prose cleared. Books on the shelf are unaffected.");
   } else {
     ui.notifications.warn("acks-importer | some remembered book data could not be cleared — see the console. In-memory prose was cleared.");
   }
@@ -1962,6 +2255,10 @@ Hooks.once("init", () => {
       }
     },
   });
+  // The shelf: books the SERVER holds, recorded in the world so every GM seat
+  // on any machine reads them with no gesture. World-scoped because that is
+  // exactly what makes it different from every per-seat location kind.
+  game.settings.register(MODULE_ID, SETTING_SHELF, { scope: "world", config: false, type: Object, default: {} });
   registerGettingStartedSettings();
   setWorker(`modules/${MODULE_ID}/vendor/pdf.worker.mjs`);
   setWasmUrl(`modules/${MODULE_ID}/vendor/wasm/`);
@@ -1994,7 +2291,7 @@ Hooks.once("ready", async () => {
     importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
     importWeapons, importArmor,
     importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
-    gettingStarted: showGettingStarted,
+    gettingStarted: () => openBooksDialog({ firstRun: true }),
     // Importing another game's books (docs/OSE.md). Separate entry points
     // because a third-party source is registered by the Judge rather than
     // shipped, so it never appears in the book list the rest of these use.
@@ -2019,7 +2316,7 @@ Hooks.once("ready", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module) module.api = api;
   console.log(
-    `${MODULE_ID} | ready. Macros in the "ACKS Importer — Macros" compendium (folders "1 · Your Book" through "4 · Tools & Maintenance"), or: acksImporter.connectBook() · acksImporter.cookbookImport() · acksImporter.cookbookImportAbilitiesDialog() · acksImporter.cookbookUpdateAbilities() · acksImporter.importClasses() · acksImporter.cookbookUpdateClasses() · acksImporter.browseAndLoad().`,
+    `${MODULE_ID} | ready. Macros in the "ACKS Importer — Macros" compendium (folders "1 · Your Book" through "4 · Tools & Maintenance"), or: acksImporter.bookStatus() · acksImporter.cookbookImport() · acksImporter.cookbookImportAbilitiesDialog() · acksImporter.cookbookUpdateAbilities() · acksImporter.importClasses() · acksImporter.cookbookUpdateClasses() · acksImporter.browseAndLoad().`,
   );
 
   // Before anything reads bytes: decide whether this page load is a reload
@@ -2028,10 +2325,16 @@ Hooks.once("ready", async () => {
   await sweepCache();
   startCacheHeartbeat();
 
-  // Reopen remembered books; offer the reconnect gesture for the rest. A seat
-  // with nothing remembered at all is (probably) brand new — that seat gets
-  // the Getting Started walkthrough instead, never both dialogs.
+  // The shelf first: a book the server holds needs nothing from this seat, and
+  // opening it before the per-seat restore keeps it out of the list of books
+  // waiting for a gesture. Then reopen what this browser remembers, and offer
+  // the window for whatever is left. A seat with nothing anywhere is
+  // (probably) brand new and gets the same window with its walkthrough open —
+  // one surface either way, never two stacked dialogs.
+  await restoreShelf();
   const pending = await restoreBooks();
-  if (pending.length) await openBooksDialog();
-  else if (!sessionDocs.size && !(await locations()).size) await showGettingStarted();
+  if (pending.length) await openBooksDialog({ autoClose: true });
+  else if (!sessionDocs.size && !(await locations()).size && !gettingStartedDismissed()) {
+    await openBooksDialog({ firstRun: true });
+  }
 });

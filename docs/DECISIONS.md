@@ -7,6 +7,109 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Four macros, three dialogs, one question (2026-08-21)
+
+**Ruled: the book surfaces collapse into ONE window, and a book's own ROW is
+how a book gets named.**
+
+"1 · Your Book" shipped four macros onto three dialogs. Getting Started carried
+a *Connect a book…* button; the Connect dialog carried a `<select multiple
+size=6>` over twenty books, a file picker and a folder picker; the Books dialog
+carried a SECOND folder picker, a bulk picker and the per-book rows. Two of the
+three asked "which book do you mean?" in different words, and the answer the
+reader liked — a row with a button on it — was the one buried behind the other
+two. The reported symptom was the list: twenty books, six visible rows.
+
+The window is four bands: the walkthrough (open on a seat with nothing, folded
+once there is something), the server shelf, the controls that answer for
+several books at once, and the books themselves grouped Waiting / Open / Not
+connected, the last two collapsed behind their counts. `connectBook`,
+`bookStatus`, `reconnectBooks` and `gettingStarted` all resolve to it, because
+a compendium macro outlives the build that shipped it and three of the four
+macros are dropped from the pack rather than renamed. Their ids are not reused.
+
+**What the select was hiding.** `pairPicks` existed only because a
+`<select multiple>` cannot say which file is which: it paired by evidence and
+then fell back to POSITION for whatever was left. With the naming on the row
+there is nothing left to guess, so the fallback and its function are deleted
+and `matchFilesToBooks` — evidence, or a named refusal — is the whole matcher.
+This makes the 2026-08-11 "position is not evidence" ruling total rather than
+last-resort, and the offline test now asserts the refusal where it used to
+assert the guess.
+
+**Reconnect all**, asked for and missing, is shaped by the gesture rule rather
+than pretending it away: it does everything needing no permission first (the
+shelf, served paths, bridged bytes, handles still granted), then spends its one
+transient activation on the remembered FOLDER, which re-grants a whole shelf at
+once. Whatever a folder cannot answer for is NAMED as still needing its own
+click. The permission request goes first in the handler, before any await that
+could outlive the activation window — a permission asked for after a 100 MB
+read is a permission asked for too late.
+
+**Cost.** `booksDialog` is meaningfully bigger and now renders conditional
+bands. The join-time auto-close is kept but narrowed to the join-time offer:
+opened by hand the window is also the shelf and the import chain, and closing
+it under the reader mid-task is not tidiness.
+
+---
+
+### A book the server holds asks nobody for anything (2026-08-21)
+
+**Ruled: a PDF staged under the Foundry data directory is recorded in WORLD
+settings, and every GM seat reads it on join with no gesture.**
+
+Every location kind before this was a property of one browser: a handle needing
+a permission click, or a filename needing the picker again. That is a fair
+price for a book only that browser can reach, and no price at all for a book
+the server can reach. The `url` kind and `connectBookUrl` already existed and
+were reachable only from the api — this makes them a surface, and moves the
+memory from the seat to the world so it holds for every GM seat on any machine.
+
+Two routes in, because GMs keep their books differently: **Add to server** on
+an open book's row uploads it through the same `FilePicker.upload` the art
+importer uses, and **Scan the folder** reads `acks-importer-books/` for a GM
+who copied files there by hand. `FilePicker.browse` answers with paths and no
+sizes, so a scan matches on remembered name and title-in-filename and the size
+pass never fires — the right strength for a directory the GM curated.
+
+**A shelf entry is never written on a filename.** Both routes connect and
+fingerprint the file first, and `ingestBook`'s wrong-book refusal is what
+decides; a refusal must not leave an entry behind promising a book is
+available. `connectBookUrl` therefore THROWS where it used to warn and return,
+because a soft return told the shelf that a failed read had succeeded.
+
+**Stated rather than discovered:** a file under the data directory is fetchable
+by any signed-in user who learns its path. Staging makes a book undiscoverable,
+not inaccessible, and the guide says so in those words. A table that needs more
+than that keeps its books on its own disks.
+
+**Rejected — clearing the shelf from "Forget books".** Forgetting is a
+statement about this browser. A GM tidying their own seat must not silently
+unstage the books every other seat reads, so `forgetBooks` leaves world data
+alone and says which it touched.
+
+**Found by the live gate: the scan could not read the module's own handwriting.**
+`shelveUpload` writes `<bookId>.pdf`, and the evidence rules — remembered name,
+size, the book's title in the filename — match none of that: "jj.pdf" contains
+neither a name this seat remembers nor the words "Judges Journal". A shelf
+staged from the rows therefore read as EMPTY the moment it was scanned. The
+scan gains one pass of its own, ahead of the others, matching a filename stem
+that is exactly a book id. It is confined to the shelf directory, where the
+module controls the naming; a folder of the reader's own files is still matched
+on its own merits only. The pass still only PROPOSES a book — the same live run
+staged a Monstrous Manual named `rr.pdf` and watched the fingerprint refuse it.
+
+**Also found live: `singleton` had two states where it needed three.** The
+entry is dropped when its promise settles, which is a microtask, so anything
+that closed the window and reopened it in the same turn met an entry whose app
+was already closed — and `bringToFront` on a closed application reads the style
+of an element that is gone. "Still building" (no app captured yet) and "closed
+under us" are now distinguished: the first is waited on, the second is dropped
+and reopened. Its `finally` also checks the slot is still its own before
+clearing it, so a replacement is not deleted by the dialog it replaced.
+
+---
+
 ### A totem animal is a creature, and the template is which one (2026-08-21)
 
 **Problem.** "Rat totem animal", "Black cat familiar" — printed in a Starting

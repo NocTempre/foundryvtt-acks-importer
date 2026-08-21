@@ -1,6 +1,6 @@
-/** Pairing picked files to books, and telling a book by its fingerprint. No PDFs, no Foundry. */
+/** Matching picked files to books, and telling a book by its fingerprint. No PDFs, no Foundry. */
 import assert from "node:assert";
-import { pairPicks, matchFilesToBooks } from "../scripts/book-match.mjs";
+import { matchFilesToBooks } from "../scripts/book-match.mjs";
 import { BOOKS, identifyBook } from "../scripts/books.mjs";
 
 let pass = 0;
@@ -8,63 +8,74 @@ const check = (label, cond) => { assert.ok(cond, label); pass++; };
 
 const file = (name, size = 0) => ({ name, size });
 const NONE = new Map();
-const pairedNames = ({ matched }) => Object.fromEntries([...matched].map(([id, f]) => [id, f.name]));
+const named = ({ matched }) => Object.fromEntries([...matched].map(([id, f]) => [id, f.name]));
 
-/* The reported failure: four books selected, four stock DTRPG downloads picked.
- * A <select multiple> reports document order however it was clicked, and the OS
- * picker returns files alphabetically, so position paired every book with
- * somebody else's PDF — each one warning that it was a "different printing" of
- * the book it was not. */
+/* The reported failure that shaped this matcher: four stock DTRPG downloads
+ * picked in one go. The OS picker returns files in its own order, so anything
+ * pairing on POSITION gave each book somebody else's PDF — each one warning it
+ * was a "different printing" of the book it was not. Position is not evidence,
+ * and since the Books window puts a control on every book's own row, nothing
+ * asks this matcher to guess any more: it places a file or it names it. */
 const stock = [
   file("ACKS II Judges Journal.pdf"),
   file("ACKS II Monstrous Manual.pdf"),
   file("ACKS II Revised Rulebook.pdf"),
   file("By This Axe The Cyclopedia of Dwarven Civilization.pdf"),
 ];
-const rotated = pairPicks(["rr", "jj", "bta", "mm"], stock, NONE);
-assert.deepEqual(pairedNames(rotated), {
+const all = matchFilesToBooks(stock, ["rr", "jj", "bta", "mm"], NONE);
+assert.deepEqual(named(all), {
   rr: "ACKS II Revised Rulebook.pdf",
   jj: "ACKS II Judges Journal.pdf",
   bta: "By This Axe The Cyclopedia of Dwarven Civilization.pdf",
   mm: "ACKS II Monstrous Manual.pdf",
 });
 pass++;
-check("every file placed, none left over", !rotated.unfilled.length && !rotated.surplus.length);
+check("every file placed, none left over", !all.unmatched.length);
 
 // Separators a real download uses, and the reverse pick order, change nothing.
-const renamed = pairPicks(
-  ["rr", "jj"],
+const renamed = matchFilesToBooks(
   [file("acks_ii_judges_journal.pdf"), file("ACKS-II-Revised-Rulebook.pdf")],
+  ["rr", "jj"],
   NONE,
 );
-check("underscores/hyphens still name the book", pairedNames(renamed).rr === "ACKS-II-Revised-Rulebook.pdf");
-check("pick order is not pairing order", pairedNames(renamed).jj === "acks_ii_judges_journal.pdf");
+check("underscores/hyphens still name the book", named(renamed).rr === "ACKS-II-Revised-Rulebook.pdf");
+check("pick order is not pairing order", named(renamed).jj === "acks_ii_judges_journal.pdf");
 
 // What this seat called the file last time outranks what the filename says.
 const remembered = new Map([["jj", { name: "book2.pdf" }], ["rr", { size: 4242 }]]);
-const byRecord = pairPicks(["rr", "jj"], [file("book2.pdf"), file("book1.pdf", 4242)], remembered);
-check("remembered name claims its file", pairedNames(byRecord).jj === "book2.pdf");
-check("remembered size claims its file", pairedNames(byRecord).rr === "book1.pdf");
+const byRecord = matchFilesToBooks([file("book2.pdf"), file("book1.pdf", 4242)], ["rr", "jj"], remembered);
+check("remembered name claims its file", named(byRecord).jj === "book2.pdf");
+check("remembered size claims its file", named(byRecord).rr === "book1.pdf");
 
-// Nothing to go on: position is the last resort, not the first.
-const blind = pairPicks(["rr", "jj"], [file("book-a.pdf"), file("book-b.pdf")], NONE);
-check("unnameable files still fill the named books", blind.matched.size === 2);
-check("positional fallback keeps selection order", pairedNames(blind).rr === "book-a.pdf");
-check("positional fallback places every spare", pairedNames(blind).jj === "book-b.pdf");
+/* Nothing to go on: NAMED, never guessed. A book filled from the wrong PDF is
+ * far worse than a book left closed, and the remedy is that book's own row —
+ * whose picker names the book, so no guessing is left to do. */
+const blind = matchFilesToBooks([file("book-a.pdf"), file("book-b.pdf")], ["rr", "jj"], NONE);
+check("an unnameable file claims no book", blind.matched.size === 0);
+check("every unnameable file is reported back", blind.unmatched.length === 2);
 
-// Fewer files than books, and more files than books, are both reported.
-const short = pairPicks(["rr", "jj"], [file("ACKS II Judges Journal.pdf")], NONE);
-check("a book with no file is unfilled", short.unfilled.length === 1 && short.unfilled[0] === "rr");
-check("unfilled never means mispaired", pairedNames(short).jj === "ACKS II Judges Journal.pdf");
-const over = pairPicks(["rr"], [file("ACKS II Revised Rulebook.pdf"), file("ACKS II Judges Journal.pdf")], NONE);
-check("the extra file is surplus, not a second read of the named book", over.surplus.length === 1);
-check("surplus is the file no named book claimed", over.surplus[0].name === "ACKS II Judges Journal.pdf");
-check("unfilled and surplus are never both set", !(short.surplus.length && short.unfilled.length));
+// Fewer files than books, and more files than books, are both handled.
+const short = matchFilesToBooks([file("ACKS II Judges Journal.pdf")], ["rr", "jj"], NONE);
+check("a book with no file is simply absent", !short.matched.has("rr"));
+check("short never means mispaired", named(short).jj === "ACKS II Judges Journal.pdf");
+const over = matchFilesToBooks(
+  [file("ACKS II Revised Rulebook.pdf"), file("ACKS II Judges Journal.pdf")],
+  ["rr"],
+  NONE,
+);
+check("a file no candidate book claims is unmatched", over.unmatched.length === 1);
+check("the unmatched file is the one with no candidate", over.unmatched[0].name === "ACKS II Judges Journal.pdf");
+check("the candidate book still got its own file", named(over).rr === "ACKS II Revised Rulebook.pdf");
 
-// Surplus goes on to the un-named books through the same matcher.
-const spill = matchFilesToBooks([file("ACKS II Judges Journal.pdf")], ["jj", "mm"], NONE);
-check("a surplus file finds its own book", spill.matched.get("jj")?.name === "ACKS II Judges Journal.pdf");
-check("a book with no candidate file stays closed", !spill.matched.has("mm"));
+// The shelf scan runs the same matcher with sizes it cannot know (browse gives
+// paths, not sizes), so the name and title passes have to carry it alone.
+const shelf = matchFilesToBooks(
+  [file("ACKS II Monstrous Manual.pdf"), file("holiday-photos.pdf")],
+  ["mm", "tt"],
+  NONE,
+);
+check("a shelved file is matched with no size to go on", named(shelf).mm === "ACKS II Monstrous Manual.pdf");
+check("a stray PDF on the shelf claims nothing", shelf.unmatched.length === 1 && !shelf.matched.has("tt"));
 
 /* Fingerprints: a title, where the printing carries one, must agree. */
 check("page count + title names the book", identifyBook(BOOKS.jj.pages, "ACKS II Judges Journal") === "jj");

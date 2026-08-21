@@ -89,6 +89,7 @@
     .acks-importer-reconnect-head,
     .acks-importer-browse-row,
     .acks-importer-gs-action,
+    .acks-importer-band-actions,
     .acks-importer-abil-filters,
     .acks-importer-abil-actions
   ) {
@@ -302,10 +303,11 @@
   opacity: 0.6;
 }
 
-/* Getting Started dialog: generous but bounded, actions on their own row. */
-.acks-importer-gs h3 {
+/* The walkthrough band: its own headings, actions on their own row. */
+.acks-importer-gs h4 {
   margin: 0.6em 0 0.2em;
   border-bottom: var(--acks-border-soft);
+  font-size: var(--acks-fs-label);
 }
 
 .acks-importer-gs-action {
@@ -342,15 +344,70 @@
   overflow-wrap: anywhere;
 }
 
-/* Core pins every `select` to one input-height row, which collapses a multiple
-   select to a single visible option however many rows its `size` asks for. The
-   book list states its own height, so the chooser reads as a list to pick
-   several from rather than a dropdown that happens to allow it. */
-.acks-importer-dialog .acks-importer-book-select {
-  height: auto;
-  min-height: 6rem;
-  line-height: normal;
-  overflow-y: auto;
+/* The Books window is four bands (walkthrough, server, this computer, the
+   books). A band is a titled group with a rule above it; the heading sits
+   tight to its content so the rule reads as a divider between bands rather
+   than a box around each. */
+.acks-importer-books .acks-importer-band {
+  margin-top: var(--acks-sp-2);
+  padding-top: var(--acks-sp-2);
+  border-top: var(--acks-border-soft);
+}
+
+.acks-importer-books .acks-importer-band > h4 {
+  margin: 0 0 var(--acks-sp-1);
+  font-size: var(--acks-fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--acks-ink-soft);
+}
+
+/* A row of controls that answer for several books at once. Wraps like every
+   other flex row here, and its file input grows into the line it wraps onto. */
+.acks-importer-band-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  align-items: center;
+  margin-bottom: var(--acks-sp-1);
+}
+
+.acks-importer-band-actions button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.acks-importer-band-actions input[type="file"] {
+  flex: 1 1 15em;
+  min-width: 0;
+}
+
+/* Book groups collapse behind their count. This is what a twenty-book shelf
+   needed and a six-row `<select>` could never give: the books WAITING stay
+   open, and the ones with nothing to ask for fold away. A summary is a list
+   item by default in some engines, so the marker is restated here rather than
+   inherited. */
+.acks-importer-books .acks-importer-book-group > summary,
+.acks-importer-books .acks-importer-gs > summary {
+  cursor: pointer;
+  padding: var(--acks-sp-1) 0;
+  font-weight: 600;
+}
+
+.acks-importer-books .acks-importer-book-group[open] > summary {
+  border-bottom: var(--acks-border-soft);
+}
+
+/* A shelved book is stated, not actioned: the server answers for it, so the
+   row carries no picker and reads as settled. */
+.acks-importer-shelf-row strong {
+  font-weight: 600;
+}
+
+/* Forgetting is destructive and confirmed, so it is coloured as the exception
+   among a window full of ordinary controls. */
+.acks-importer-dialog button.acks-importer-danger {
+  color: var(--acks-ink-warn, inherit);
 }
 
 /* One row per ability whose description would be replaced: its name and choice

@@ -73,38 +73,3 @@ export function matchFilesToBooks(files, pendingIds, records) {
   }
   return { matched, unmatched: files.filter((_, i) => !used.has(i)) };
 }
-
-/**
- * Pair the books a reader NAMED with the files they picked.
- *
- * Naming the books is not naming the pairing, and the dialog cannot ask for
- * one: a `<select multiple>` reports its selection in document order however it
- * was clicked, and the OS file picker returns its files in its own order —
- * usually alphabetical. Position therefore carries no information about which
- * file is which, and pairing on it hands each book whichever PDF happened to
- * sort into its slot. Evidence decides first, for exactly the books the reader
- * named; position is the last resort, for the ones no evidence could place.
- *
- * A file left over after every named book is filled is `surplus` — the caller
- * offers it to the books that were NOT named. A named book left without a file
- * is `unfilled`; the two cannot both be non-empty, since spare files fill
- * unfilled books until one of the two runs out.
- *
- * @param {string[]} bookIds  the book ids the reader selected
- * @param {{name: string, size: number}[]} files  the files they picked
- * @param {Map<string, {name?: string, size?: number}>} records  remembered locations, bookId → record
- * @returns {{matched: Map<string, object>, unfilled: string[], surplus: object[]}}
- */
-export function pairPicks(bookIds, files, records) {
-  const { matched, unmatched } = matchFilesToBooks(files, bookIds, records);
-  const spare = [...unmatched];
-  for (const bookId of bookIds) {
-    if (matched.has(bookId) || !spare.length) continue;
-    matched.set(bookId, spare.shift());
-  }
-  return {
-    matched,
-    unfilled: bookIds.filter((id) => !matched.has(id)),
-    surplus: spare,
-  };
-}
