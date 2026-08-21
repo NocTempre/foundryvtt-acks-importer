@@ -3168,17 +3168,20 @@ const FUNCTION_WORD = new Set([
 
 /**
  * Parse a template's Starting Equipment cell into item descriptors, coin and
- * the encumbrance note. Every descriptor resolves against the equipment
- * cookbook — exact name, contained name, or an authored Notes-equivalence
- * alias ("long bearded axe" is a great axe) — and keeps its printed wording
- * as the skin; what resolves to nothing imports as a bare named item.
+ * the encumbrance note. Every descriptor resolves against the menu — the
+ * equipment cookbook plus the grids a reader has materialized beside it — in
+ * each of the forms that catalogue prints its names in (`nameForms`), or
+ * through an authored equivalence ("long bearded axe" is a great axe). Each
+ * keeps its printed wording as the skin, and its printed price where the cell
+ * states one; what resolves to nothing imports as a bare named item, which for
+ * the goods these cells price in place is the whole of what the page said.
  *
- * A descriptor naming something that is not gear at all — a spell recorded in
- * the spellbook it came packed with — still imports as an item, because the
- * cell states it and nothing here can tell a spell from a trinket by reading
- * it. Splitting the cell correctly is this function's job; deciding what the
- * pieces ARE is not, and guessing would drop real gear on a bad guess. See
- * ROADMAP.md § Starting equipment.
+ * SPLITTING THE CELL IS THIS FUNCTION'S JOB. Deciding what a piece IS is not,
+ * and two kinds of piece are not gear at all: a spell recorded in the book it
+ * came packed with, and a creature an ability confers. Both are lifted off the
+ * item list afterwards, by `liftBookSpells` and `liftCompanions`, which have
+ * the ability and spell models to hand where this function has only wording.
+ * What survives all three is gear. See ROADMAP.md § Starting equipment.
  */
 export function parseEquipment(cellText, menu, aliases = {}) {
   let text = String(cellText ?? "").replace(/\s+/g, " ").trim();

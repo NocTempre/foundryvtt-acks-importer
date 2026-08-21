@@ -331,31 +331,60 @@ extras refuses a variation that would double-count with it.
 
 ---
 
-## Starting equipment: telling gear from what it is packed with
+## Starting equipment: what a descriptor still cannot say
 
-`parseEquipment` splits a template's printed Starting Equipment cell into items.
-Splitting it correctly is a solved problem — commas and semicolons separate,
-brackets hold, a counted container yields device plus load, and a pair of known
-items yields two. What the splitter cannot do is decide what the pieces ARE.
+`parseEquipment` splits a template's printed Starting Equipment cell into items,
+and most of what this section used to describe as unreachable has since been
+built (2026-08-21, DECISIONS): a book's spell list is lifted onto the book and
+into the template's spells, a creature named in the cell becomes the selection
+on the ability whose companion slot it fills, and a descriptor is matched
+against the catalogue in the forms that catalogue prints its names in. Of 719
+printed descriptors that resolved to nothing, 30 remain.
 
-A cell that reads "enameled spellbook with discern magic and one spell of
-character's choice" names one piece of gear, one SPELL recorded in it, and a
-choice the player has not made yet. All three arrive as items, because nothing
-in the wording distinguishes them: "discern magic" is shaped exactly like the
-name of a trinket, and a rule that guessed would drop real gear whenever it
-guessed wrong.
+Those 30 are not a gap. They are goods the books price where they name them —
+a bladedancer's head dress, a lute, an ornamental crystal ball — precisely
+because the shop list has no row for them. They import as named items carrying
+the price the page printed, which is everything the page said.
 
-Closing it needs a source of truth the splitter does not have — the spell list,
-so a descriptor naming a known spell becomes a spell reference on the book that
-carries it rather than an item; and some way to represent "one spell of the
-character's choice" as a decision the sheet asks for rather than a line of
-inventory. Both are the abilities/magic model's to own, not the splitter's.
+What is still genuinely open:
 
-Until then the pieces are all items, correctly separated, and a Judge deletes
-the two that are not gear. That is a tidier failure than the alternative and it
-loses nothing — and since template packages (2026-08-19, DECISIONS), the
-deletion has a concrete surface: remove the row from the template's bundle,
-once, and every character generated afterwards is clean.
+**A choice the cell offers is recorded, not asked.** "and one spell of
+character's choice" survives on the book's note, and is deliberately not minted
+as a spell — but nothing yet turns it into a decision the sheet puts to the
+player. A template's `items` carry a `choice` field and its `spells` do not;
+closing this means the spell list learning the same ChoiceSpec shape the
+ability entries already use, which is the magic model's to own rather than the
+splitter's.
+
+## A companion's creature, linked to the actor it names
+
+Since 2.13.4 a template names WHICH creature fills an ability's companion slot —
+"Rat totem animal" becomes `Totem Animal (rat)`, the selection on the ability —
+and that is what the page says. What it is not yet is a link: the ability's
+`actorUuid` stays empty, so a Judge still drops the rat in by hand.
+
+The pieces are all present and pointing at each other. `resolveCompanion` fills
+a slot from a cookbook `ref`, and leaves it alone when there is none — which is
+every one of these, because the creature is chosen rather than named by the
+ability. The selection is a NAME, and the monsters are imported as actors from
+the same book. Matching the one against the other would fill the slot on import.
+
+Two things to settle before it is built, and they are why it was not done in a
+hotfix:
+
+- **A name is not a ref.** "black cat" has to find the creature among the
+  imported monsters, and a miss must stay a miss: filling the slot with the
+  wrong animal is worse than leaving it open, because an empty slot reads as a
+  question and a filled one reads as an answer.
+- **Whose pass fills it.** `cookbookFillCompanions` already walks every ability
+  and fills what it can, and is re-runnable — the natural owner. But the
+  selection is written by the CLASS import, which runs before monsters, so the
+  link can only ever be made on a later pass. That is the same shape the
+  companion slot already has, so it is a matter of reading the selection where
+  it reads the ref, not new machinery.
+
+Until then the selection is the record, and it is a complete one: it says which
+creature the template gives, which is all the page ever said.
 
 ## The system compendiums this importer does NOT yet replace
 
