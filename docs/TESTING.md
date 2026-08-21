@@ -8,7 +8,7 @@ needs, the steps that exercise it, and the observable that proves each one.
 geometry with no Foundry at all. They gate the arithmetic; only a live run
 gates that anything reaches a document.
 
-## The Books window (the shelf, the group controls, the rows)
+## The Books window
 
 ### Fixtures
 

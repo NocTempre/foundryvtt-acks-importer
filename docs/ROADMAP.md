@@ -5,7 +5,7 @@ missing from it.
 
 ---
 
-## Import once: retire the conditional text
+## Retiring the conditional text
 
 **Direction set 2026-08-21; scoped, then deferred so the Books window could
 ship on its own.** The eventual model is that the GM imports content once and

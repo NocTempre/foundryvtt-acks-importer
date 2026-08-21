@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.13.5
+## 2.14.0
 
 ### Added
 - **Put a book on the server and stop reconnecting.** A PDF staged under the

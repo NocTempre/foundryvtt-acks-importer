@@ -33,7 +33,7 @@ filled from the wrong PDF is far worse than a book left closed. Connect those
 from their own row, where the book is already named and nothing has to be
 inferred.
 
-## Or the whole shelf: connect a folder
+## Connect a folder
 
 Point **Connect a folder…** at the folder holding your PDFs (one level of
 subfolders is scanned too). Every book recognised inside connects itself, by
@@ -45,7 +45,7 @@ next session, **one** permission click on the folder reopens everything in it,
 where per-file permissions cost one click per book. Elsewhere the folder scan
 still works; the books fall back to being remembered by name.
 
-## Put a book on the server, and stop reconnecting
+## Books on the server
 
 Browsers will not hand a file back after a reload without a fresh click, which
 is why a book connected from your own disk asks for a gesture every session.
