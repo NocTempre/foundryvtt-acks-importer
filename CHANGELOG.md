@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.13.4
+
+### Fixed
+- **A totem animal is a creature, not a trinket.** The shaman's templates each
+  name one in their equipment cell, and each arrived on the character's
+  equipment list as an item with no mechanics and no creature behind it. The
+  ability that confers the companion — Totem Animal, Familiar, Animal Companion
+  — has always carried an empty slot for it, because which creature it is was
+  never a property of the ability; the template is the thing that says which,
+  and the phrase now becomes that ability's selection. A witch whose proficiency
+  column already printed "Familiar" got the ability AND an item named for her
+  cat: she now gets one `Familiar (black cat)`. The class's own grant of the
+  same ability no longer hands over a second, unselected copy.
+- **A head dress is a hat.** The bladedancer's, the priestess's and the gossamer
+  one resolve to the shop list's hat and keep the price the page prints beside
+  them; they were arriving as nothing at all.
+
 ## 2.13.3
 
 ### Fixed

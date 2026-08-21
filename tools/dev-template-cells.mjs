@@ -23,7 +23,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openBook, pageItems } from "../scripts/extract.mjs";
 import { executeEntry } from "../scripts/executor.mjs";
-import { parseEquipment, nameForms } from "../scripts/cookbook.mjs";
+import { parseEquipment, nameForms, liftBookSpells, liftCompanions } from "../scripts/cookbook.mjs";
 import { extractWeaponsFromDoc } from "../scripts/weapon-tables.mjs";
 import { extractArmorFromDoc } from "../scripts/armor-tables.mjs";
 import { extractPriceRowsFromDoc, priceKey } from "../scripts/gear-prices.mjs";
@@ -125,6 +125,7 @@ let cells = 0;
 let unresolved = 0;
 const misses = new Map();
 const pairs = new Map();
+const lifts = [];
 for (const [cb, id, entry] of classEntries) {
   const key = entry.meta?.key ?? fold(entry.name);
   if (wanted.size && !wanted.has(key)) continue;
@@ -139,6 +140,12 @@ for (const [cb, id, entry] of classEntries) {
     const cell = String(row.cells.equipment ?? "");
     cells++;
     const parsed = parseEquipment(cell, menu, { ...(registers.tables?.equipmentPhrase ?? {}), ...(entry.equipAliases ?? {}) });
+    // Mirror what `bindClass` does after the split, or the audit reports as
+    // unresolved the very descriptors that are lifted off the item list.
+    liftBookSpells(parsed.items);
+    const companions = [];
+    liftCompanions(parsed.items, companions, registers.tables?.companionPhrase);
+    for (const c of companions) lifts.push(`${c.selection} → ${c.ref}`);
     const miss = parsed.items.filter((i) => !i.ref);
     unresolved += miss.length;
     for (const m of miss) misses.set(m.name.toLowerCase(), (misses.get(m.name.toLowerCase()) ?? 0) + 1);
@@ -151,6 +158,7 @@ for (const [cb, id, entry] of classEntries) {
 }
 
 console.log(`\n--- ${cells} equipment cell(s), ${unresolved} descriptor(s) with no ref ---`);
+if (lifts.length) console.log(`(${lifts.length} creature(s) lifted onto a companion slot: ${[...new Set(lifts)].join(", ")})`);
 for (const [name, n] of [...misses.entries()].sort((a, b) => b[1] - a[1])) console.log(`${String(n).padStart(3)}  ${name}`);
 
 // `--pairs` is the review surface: every DISTINCT descriptor beside the row it

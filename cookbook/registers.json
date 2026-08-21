@@ -51,6 +51,17 @@
         "key": "any"
       }
     },
+    "companionPhrase": {
+      "totem animal": {
+        "ref": "def.power.totemanimal"
+      },
+      "familiar": {
+        "ref": "def.prof.familiar"
+      },
+      "animal companion": {
+        "ref": "def.power.animalCompanion"
+      }
+    },
     "conversion": {
       "intelligence": {
         "category": "attribute",
@@ -1351,6 +1362,14 @@
       },
       "freeholder’s dress": {
         "ref": "def.priced.dress-crafter-freeholder",
+        "as": "catalogue"
+      },
+      "head dress": {
+        "ref": "def.equip.hat",
+        "as": "catalogue"
+      },
+      "headdress": {
+        "ref": "def.equip.hat",
         "as": "catalogue"
       }
     },

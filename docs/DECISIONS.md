@@ -7,6 +7,45 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A totem animal is a creature, and the template is which one (2026-08-21)
+
+**Problem.** "Rat totem animal", "Black cat familiar" — printed in a Starting
+Equipment cell, and read as gear because that is the cell they are in. Eleven of
+them became items with no base, no mechanics and no creature behind them: a rat
+on the character's equipment list. One was worse than mistyped. The witch's band
+carried BOTH the `Familiar` ability (from her proficiency column) and an item
+named for her cat, which is the same fact imported twice.
+
+The model for this already existed and was pointing the other way.
+`resolveCompanion` leaves an ability's companion slot EMPTY when the creature is
+built or chosen rather than named — "there is no single entry to point at" —
+because which creature it is was never a property of the ability. It is a
+property of the TEMPLATE, and the template was the one place saying it.
+
+**Ruled.** A phrase in `register/_refs/companionPhrase.json` names the ability
+whose slot it fills; the descriptor is lifted off the item list and becomes that
+ability's SELECTION. It fills the row's existing entry where the proficiency
+column already granted the ability — the witch gets `Familiar (black cat)`, one
+document, not two — and never overwrites a selection the column already made
+(`Familiar (eagle)` stands). Where the row has no entry, one is added carrying
+the ref, and the specialized copy's `grantedFrom` stamp is what stops the
+class's own award of the same ability from granting it a second time; verified
+live, `ownsRef` answers true and re-applying the class adds nothing.
+
+**Not done, and named:** the creature is a NAME, not a ref, so the ability's
+`actorUuid` is still empty — the Judge drops the actor in, exactly as before.
+Matching a selection against the imported monsters would fill it, and that is
+worth doing; it is a different subsystem (effects) and did not belong in a
+hotfix.
+
+### A head dress is a hat (2026-08-21)
+
+Ruled: a bladedancer's, a priestess's and a gossamer head dress resolve to the
+shop list's **Hat**, not to Helmet (Light). They are worn, not armour — nothing
+about them protects — and what makes one cost 20gp is the ornament, which the
+cell prices in place and the skin now carries. One register row either way if
+this is ever ruled the other.
+
 ### What the page says a thing is worth is imported with it (2026-08-21)
 
 **Problem.** 50 printed descriptors reach the end of the ladder with no

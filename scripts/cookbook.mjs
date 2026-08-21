@@ -3488,6 +3488,66 @@ export function liftBookSpells(items) {
   return spells;
 }
 
+/**
+ * A TOTEM ANIMAL IS A CREATURE, NOT A TRINKET.
+ *
+ * "Rat totem animal", "Black cat familiar" — printed in the Starting Equipment
+ * cell, but naming neither gear nor anything the character carries. The ability
+ * that confers the creature is granted elsewhere (a class award, or the
+ * proficiency column beside this very cell) and it carries an EMPTY companion
+ * slot on purpose: WHICH creature it is was never a property of the ability,
+ * and `resolveCompanion` leaves the slot open for exactly this reason. The
+ * template is the thing that answers the question, so the phrase becomes that
+ * ability's SELECTION.
+ *
+ * Read as gear it was minted as an item with no base, no mechanics and no
+ * creature behind it — a rat on the character's equipment list — and, worse,
+ * a DUPLICATE: a witch whose proficiency column already printed "Familiar" got
+ * the ability and an item named for its cat.
+ *
+ * The selection lands on the row's existing entry for that ability when it has
+ * one and has not already been given a selection by the proficiency column;
+ * otherwise the entry is added, carrying the ref. Either way the specialized
+ * copy is stamped `grantedFrom` that ref, which is what stops the class's own
+ * award of the same ability from granting it a second time.
+ *
+ * Mutates `items` (the phrase is removed) and `abilities`. Returns how many
+ * were lifted.
+ */
+export function liftCompanions(items, abilities, table) {
+  const rows = Object.entries(table ?? {})
+    .map(([phrase, v]) => {
+      // Seams inside the phrase are `\s*`, for the same reason every other
+      // printed phrase's are: real extraction welds words together.
+      const body = String(phrase).trim().split(/\s+/).map(escapeRe).join("\\s*");
+      return {
+        ref: typeof v === "string" ? v : (v?.ref ?? ""),
+        re: body ? new RegExp("^(.+?)\\s+" + body + "$", "i") : null,
+        length: String(phrase).length,
+      };
+    })
+    .filter((r) => r.ref && r.re)
+    .sort((a, b) => b.length - a.length);
+  if (!rows.length) return 0;
+  let lifted = 0;
+  for (let i = (items ?? []).length - 1; i >= 0; i--) {
+    const name = String(items[i].name ?? "");
+    const hit = rows.map((r) => ({ r, m: r.re.exec(name) })).find((x) => x.m);
+    if (!hit) continue;
+    const creature = hit.m[1].replace(/\s+/g, " ").trim().toLowerCase();
+    if (!creature) continue;
+    items.splice(i, 1);
+    lifted++;
+    const owner = (abilities ?? []).find((a) => a.ref === hit.r.ref);
+    if (owner) {
+      if (!owner.selection) owner.selection = creature;
+    } else {
+      abilities.push({ ref: hit.r.ref, name: "", rank: 1, selection: creature });
+    }
+  }
+  return lifted;
+}
+
 /** The Proficiencies Gained per Level row for one class, from the executed
  *  classMeta grid: `{l1: "c+ G", …}` keyed by the class's printed name. */
 export function classGainsFor(gainsNode, className) {
@@ -3803,13 +3863,17 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
       ...(entry.equipAliases ?? {}),
     });
     const spells = liftBookSpells(eq.items);
+    // A creature the cell names belongs to the ability whose companion slot it
+    // fills, not to the character's pack.
+    const abilities = tokenizeProfs(row.cells.proficiencies, tplMenu);
+    liftCompanions(eq.items, abilities, data.registers?.tables?.companionPhrase);
     return {
       rollMin: band.min ?? 3,
       rollMax: band.max ?? band.min ?? 3,
       name: ann ? ann[1] : rawName,
       annotation: ann ? ann[2] : "",
       caste: String(row.cells.caste ?? "").trim(),
-      abilities: tokenizeProfs(row.cells.proficiencies, tplMenu),
+      abilities,
       items: eq.items,
       spells,
       gp: eq.gp,

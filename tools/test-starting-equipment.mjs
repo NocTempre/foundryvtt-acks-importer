@@ -11,7 +11,7 @@
  * same punctuation, invented gear.
  */
 import assert from "node:assert";
-import { parseEquipment, nameForms, liftBookSpells } from "../scripts/cookbook.mjs";
+import { parseEquipment, nameForms, liftBookSpells, liftCompanions } from "../scripts/cookbook.mjs";
 
 let pass = 0;
 const check = (label, cond) => { assert.ok(cond, label); pass++; };
@@ -232,5 +232,35 @@ const bare = parseEquipment("silver earrings (20gp), backpack", menu("Backpack")
 check("a bracketed price adds nothing to the purse", bare.gp === 0);
 check("and the item keeps its name", bare.items[0].name === "silver earrings (20gp)");
 check("coin outside brackets is still read", parseEquipment("a dagger, 12gp", menu("Dagger")).gp === 12);
+
+/* --- A creature named in an equipment cell is not equipment ---------------- */
+//
+// "Rat totem animal" is the template answering a question the ABILITY leaves
+// open: the companion slot is empty on purpose, because which creature it is
+// was never a property of the ability. Read as gear it became an item with no
+// base, no mechanics and no creature behind it.
+const COMPANIONS = { "totem animal": { ref: "def.power.totemanimal" }, familiar: { ref: "def.prof.familiar" } };
+const kit = [{ name: "Rat totem animal", ref: "" }, { name: "club", ref: "def.equip.club" }];
+const profs = [];
+check("a creature is lifted off the item list", liftCompanions(kit, profs, COMPANIONS) === 1 && kit.length === 1);
+check("and the gear beside it is untouched", kit[0].name === "club");
+check("it becomes the selection on the ability that confers it",
+  profs.length === 1 && profs[0].ref === "def.power.totemanimal" && profs[0].selection === "rat");
+
+// The witch's proficiency column already prints "Familiar", so the cell naming
+// her cat must fill THAT entry — not add a second one the class would grant
+// again.
+const witchKit = [{ name: "Black cat familiar", ref: "" }];
+const witchProfs = [{ ref: "def.prof.familiar", name: "Familiar", rank: 1, selection: "" }];
+liftCompanions(witchKit, witchProfs, COMPANIONS);
+check("an ability the row already carries is filled, not duplicated",
+  witchProfs.length === 1 && witchProfs[0].selection === "black cat");
+// A selection the proficiency column already made is never overwritten.
+const chosen = [{ ref: "def.prof.familiar", name: "Familiar", rank: 1, selection: "eagle" }];
+liftCompanions([{ name: "Eagle familiar", ref: "" }], chosen, COMPANIONS);
+check("a selection the column already made stands", chosen[0].selection === "eagle");
+// Gear that merely mentions an animal is still gear.
+const dog = [{ name: "trained hunting dog", ref: "def.equip.dogHunting" }];
+check("gear is not lifted by an animal's name", liftCompanions(dog, [], COMPANIONS) === 0);
 
 console.log(`test-starting-equipment: all ${pass} checks passed`);
