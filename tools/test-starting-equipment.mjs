@@ -11,16 +11,24 @@
  * same punctuation, invented gear.
  */
 import assert from "node:assert";
-import { parseEquipment } from "../scripts/cookbook.mjs";
+import { parseEquipment, nameForms, liftBookSpells } from "../scripts/cookbook.mjs";
 
 let pass = 0;
 const check = (label, cond) => { assert.ok(cond, label); pass++; };
 
 const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+const formsOf = (n) => nameForms(n).map((text) => ({ text, fold: fold(text) })).filter((f) => f.fold);
 /** An equipment menu in the shape the real one is built in. */
 const menu = (...names) =>
   names
-    .map((name) => ({ name, ref: `def.equip.${fold(name)}`, fold: fold(name), foldStripped: fold(name.replace(/\([^)]*\)/g, " ")) }))
+    .map((name) => ({
+      name,
+      ref: `def.equip.${fold(name)}`,
+      fold: fold(name),
+      foldStripped: fold(name.replace(/\([^)]*\)/g, " ")),
+      forms: formsOf(name),
+      stripped: formsOf(name.replace(/\([^)]*\)/g, " ")),
+    }))
     .sort((a, b) => b.name.length - a.name.length);
 
 const names = (cell, m = menu()) => parseEquipment(cell, m).items.map((i) => i.name);
@@ -133,5 +141,73 @@ check("while the coin is still read", further.gp === 20);
 // reach a descriptor that carries a noun — however short or common the noun.
 check("a real item made of short words is kept", names("a war dog").length === 1);
 check("an item whose name is mostly function words is kept", names("suit of plate").length === 1);
+
+/* --- The catalogue's own naming conventions -------------------------------- */
+//
+// The price list writes a name head-first with its qualifier after a comma;
+// a template's cell writes the same thing as English. Read only as printed,
+// the two halves of one book could never meet — 250-odd descriptors matched
+// nothing for this reason alone.
+check("a comma-inverted name is found the way a cell writes it",
+  parseEquipment("1 week’s iron rations", menu("Rations, Iron")).items[0].ref === "def.equip.rationsiron");
+// The printed order stays a form of the name (a cell can never test it: the
+// comma inside it is the splitter's own separator).
+check("and the name as printed is still one of its forms",
+  nameForms("Rations, Iron")[0] === "Rations, Iron" && nameForms("Rations, Iron").includes("Iron Rations"));
+check("a three-segment name inverts whole",
+  parseEquipment("riding saddle and tack", menu("Saddle and tack, Riding")).items[0].ref === "def.equip.saddleandtackriding");
+check("a slash names one row by either word",
+  parseEquipment("waterskin", menu("Waterskin/Wineskin")).items[0].ref === "def.equip.waterskinwineskin" &&
+  parseEquipment("wineskin", menu("Waterskin/Wineskin")).items[0].ref === "def.equip.waterskinwineskin");
+check("a slash and a comma compose",
+  nameForms("Belt/Sash, Leather").includes("Leather Sash"));
+// The HEAD alone must not answer: the bare word is another row's own name.
+check("the head of a qualified name is not a form of it",
+  !nameForms("Sandals/Shoes, Leather, High").includes("Sandals"));
+
+/* --- A set the catalogue sells whole is not torn in half ------------------- */
+//
+// "Quiver, 20 Arrows" is one priced row; the cell writes it "quiver with 20
+// arrows". Split, the character got two things the price list has never heard
+// of, and the encumbrance was counted twice.
+const set = parseEquipment("quiver with 20 arrows", menu("Quiver, 20 Arrows"));
+check("a catalogue set stays one item", set.items.length === 1);
+check("and it points at the row that sells it", set.items[0].ref === "def.equip.quiver20arrows");
+check("a container the catalogue does NOT sell loaded still splits",
+  parseEquipment("sack with 12 iron spikes", menu("Sack, Small")).items.length === 2);
+
+/* --- A book's contents are an English list, written across the commas ------ */
+const book = parseEquipment("Bark-bound prayer book with remove fear, angelic choir, and counterspell, holy symbol", menu("Prayer Book", "Holy Symbol"));
+check("a book's spell list is not split into gear", book.items.length === 2);
+check("the book keeps its whole printed clause", /remove fear, angelic choir, and counterspell/.test(book.items[0].name));
+check("and the gear after the list is still its own item", book.items[1].name === "holy symbol");
+// The list has to actually close with an "and", or nothing is absorbed.
+check("a book followed by an ordinary list is left alone",
+  parseEquipment("spellbook with sharpness, short bow, short sword", menu("Spell Book", "Short Bow", "Short Sword")).items.length === 3);
+
+const lifted = [{ name: "Ancient prayer book with counterspell, predict weather, and cure light injury", note: "" }];
+const spells = liftBookSpells(lifted);
+check("the spells come out of the book's name", spells.map((s) => s.name).join("|") === "Counterspell|Predict weather|Cure light injury");
+check("and the book is left named as a book", lifted[0].name === "Ancient prayer book");
+check("with the printed sentence kept on its note", /holds counterspell, predict weather, and cure light injury/.test(lifted[0].note));
+const choice = [{ name: "Enameled spellbook with discern magic and one spell of character’s choice", note: "" }];
+check("a pick is never minted as a spell", liftBookSpells(choice).map((s) => s.name).join("|") === "Discern magic");
+check("but the sentence offering it survives", /one spell of character’s choice/.test(choice[0].note));
+check("a counted load is not a library", liftBookSpells([{ name: "quiver with 20 arrows", note: "" }]).length === 0);
+
+/* --- A stray comma inside one printed name -------------------------------- */
+check("an outfit broken by a stray comma is put back",
+  parseEquipment("hunter green cloak, tunic, and pants", menu("Cloak", "Tunic and Pants")).items.length === 2);
+check("while an ordinary list keeps its last item",
+  parseEquipment("a spear, a shield, and a helmet", menu("Spear", "Shield", "Helmet")).items.length === 3);
+
+/* --- A price in brackets is never coin ------------------------------------- */
+//
+// The lift eats to the next comma, so a bracketed amount taken as money cut the
+// item's name off at the bracket AND inflated the purse.
+const bare = parseEquipment("silver earrings (20gp), backpack", menu("Backpack"));
+check("a bracketed price adds nothing to the purse", bare.gp === 0);
+check("and the item keeps its name", bare.items[0].name === "silver earrings (20gp)");
+check("coin outside brackets is still read", parseEquipment("a dagger, 12gp", menu("Dagger")).gp === 12);
 
 console.log(`test-starting-equipment: all ${pass} checks passed`);

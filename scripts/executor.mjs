@@ -1383,11 +1383,18 @@ async function execInstruction(instr, ctx) {
               const k = Math.round(it.y / 3);
               (lines.get(k) ?? lines.set(k, []).get(k)).push(it);
             }
+            // A HYPHEN AT THE END OF A LINE IS INSIDE A WORD, not before a
+            // space. These cells wrap where the compound breaks — "well-",
+            // "blood-", "leather-" — and joining the lines with a space put
+            // "Well- made wool dress" on the character sheet. The hyphen is
+            // kept rather than swallowed: it is a real one in every compound
+            // these tables print, and keeping it can only ever misspell
+            // visibly, where dropping it would silently invent a word.
+            const joinedLines = [...lines.entries()]
+              .sort((a, b) => a[0] - b[0])
+              .map(([, l]) => joinCellRuns(l.sort((p, q) => p.x - q.x), instr.gapMin ?? null));
             return clean(
-              [...lines.entries()]
-                .sort((a, b) => a[0] - b[0])
-                .map(([, l]) => joinCellRuns(l.sort((p, q) => p.x - q.x), instr.gapMin ?? null))
-                .join(" "),
+              joinedLines.reduce((acc, line, i) => (i === 0 ? line : acc + (/-$/.test(acc) && /^[a-z]/.test(line) ? "" : " ") + line), ""),
             );
           }
         : (items, x0, x1) => clean(joinCellRuns(spanItems(items, x0, x1), instr.gapMin ?? null));

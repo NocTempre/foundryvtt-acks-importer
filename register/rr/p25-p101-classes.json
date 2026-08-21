@@ -93,11 +93,6 @@
         "label": "Fighter Proficiency List:",
         "page": 27
       },
-      "equipAliases": {
-        "scimitar": "name:Short Sword",
-        "francisca": "name:Hand Axe",
-        "long bearded axe": "name:Great Axe"
-      },
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
       },

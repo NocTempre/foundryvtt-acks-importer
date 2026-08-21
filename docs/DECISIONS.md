@@ -7,6 +7,86 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### The catalogue's conventions are rules; what is left is authored (2026-08-21)
+
+**Problem.** With the menu and the containment floor fixed (below), 545 of a
+printed 168 cells' descriptors still pointed at nothing. Reading them showed the
+misses were not random: the price list writes a name HEAD FIRST with its
+qualifier after a comma — "Rations, Iron", "Rope, 50’", "Sack, Small", "Horse,
+Medium riding" — and a template's cell writes the same thing as English. A slash
+names one row by either word ("Waterskin/Wineskin", "Sandals/Shoes"). The two
+halves of one book could never meet: "1 week's iron rations" alone accounted for
+142 of the misses.
+
+**Ruled.** A convention the catalogue uses throughout is a RULE, not an
+exception. `nameForms` gives every menu row the forms its own list prints it in
+— comma rotated back, slash alternatives expanded — and the HEAD alone is
+deliberately not among them, or "Sandals/Shoes, Leather, High" would answer for
+a bare "sandals" that is another row's own name. 545 misses fell to 265.
+
+**Ruled.** Three more printed constructions are read across the separators,
+because the cell writes them across the separators:
+
+- **A catalogue SET.** "Quiver, 20 Arrows" and "Case, 20 Bolts" are single
+  priced rows; the cell writes them "quiver with 20 arrows". The container split
+  tore them into two things the price list has never heard of and counted the
+  encumbrance twice, so it now stands down when the set resolves whole.
+- **A book's CONTENTS.** "Bark-bound prayer book with remove fear, angelic
+  choir, and counterspell" is one book, and an English list is commas until the
+  "and". Split, its spells went on the character as inventory. The clause is
+  rejoined up to the chunk that opens with "and" — and only if the list actually
+  closes that way within a few chunks.
+- **"UNDER" IS A PAIR.** "leather armor under blue mage's cassock" dresses a
+  character in both; read whole, nine characters lost a garment they are printed
+  as wearing.
+
+**Ruled.** What survives all of that is authored, once, in
+`register/_refs/equipmentPhrase.json` — 37 rows across three kinds: the same
+object under other words ("hide armor" for Hide and Fur Armor), a row the list
+files under a category prefix ("1 lb garlic" for "Herb, Garlic"), and a
+real-world weapon name used as flavour ("scimitar", "francisca", "glaive"). It
+is BOOK-level because the evidence is: "scimitar" appears in eight classes, and
+the three aliases that already existed were authored on the Fighter's entry
+alone and so answered for the Fighter alone. Per-class `equipAliases` remain and
+win over it. An authored key matches on exactly the terms a menu name does, so a
+four-letter key like "pole" can no more fire from inside "polearm" than a
+catalogue name can.
+
+**Rejected: authoring the whole list.** Every one of these would have worked as
+a phrase row, and 280 of them would have been wrong to write down — a convention
+recorded as three hundred exceptions is a convention nobody can see, and the next
+book's list would need all three hundred again.
+
+**Cost.** 719 unresolved descriptors became 57, and the 57 that remain are
+honest: goods the book prices in place because the catalogue has no row for them
+("bladedancer's head dress (20gp value)"), and totem animals and familiars,
+which are class features printed in the equipment cell and are not gear at all.
+They import as named items with no base — visible and repairable, which is what
+the package shape is for.
+
+### Two things read off a cell that were never in it (2026-08-21)
+
+Found by auditing all 623 distinct descriptors against the row each was matched
+to, rather than only the ones that matched nothing.
+
+**A bracketed amount prices the item, whatever follows it.** The coin lift
+skipped an amount only when the word "value" came after it, and the same tables
+also print "(20gp)" bare. The lift eats to the next comma, so a witch's
+"silver earrings (20gp)" arrived named `silver earrings (` with 20gp added to
+her purse. The BRACKET is the test now, not the word after the amount.
+
+**A full stop can be a separator.** One template's list runs "…waterskin. 1
+week's iron rations…" where every other one has a comma; read as one descriptor
+the rations vanished into the waterskin's name. A stop followed by the start of
+another descriptor separates — never one inside brackets, which is where the
+abbreviations live.
+
+**A hyphen at the end of a line is inside a word.** These cells wrap where a
+compound breaks, and the grid joined the lines with a space: "Well- made wool
+dress", "Blood- stained club" — fifteen of them. The hyphen is KEPT rather than
+swallowed: it is a real one in every compound these tables print, so keeping it
+can only ever misspell visibly, where dropping it would silently invent a word.
+
 ### A template's equipment menu is BOTH pipelines, and a short name is a whole word (2026-08-21)
 
 **Problem.** A class's starting gear resolved against `equipmentMenu()`, built

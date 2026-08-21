@@ -1,5 +1,48 @@
 # Changelog
 
+## 2.13.2
+
+### Fixed
+- **A starting equipment cell is read in the words the cell uses.** The price
+  list writes a name head-first with its qualifier after a comma — "Rations,
+  Iron", "Rope, 50'", "Sack, Small", "Horse, Medium riding" — while a template
+  writes the same thing as English, and a slash names one row by either word
+  ("Waterskin/Wineskin", "Sandals/Shoes"). The two halves of one book could not
+  meet: a week's iron rations alone went unrecognised in 142 places. Both
+  spellings are now read as the conventions they are, and what no convention can
+  reach — "1 lb garlic" for the list's "Herb, Garlic", a scimitar for the short
+  sword it stands in for — is written down once for the whole book instead of
+  per class. Of 719 printed descriptors that pointed at nothing, 662 now find
+  what your book calls them.
+- **Things printed across a comma are put back together.** A book's contents are
+  an English list — "prayer book with remove fear, angelic choir, and
+  counterspell" — and split at the commas its spells went onto the character as
+  inventory. They now stay with the book and land in the template's spell list,
+  a prayer book's as well as a spellbook's, while a spell the cell leaves to the
+  player ("and one spell of character's choice") is no longer created as a spell
+  named after the offer. A quiver of twenty arrows is one row in the price list
+  and is no longer torn into two things the list has never heard of. Armour worn
+  "under" a cassock is two garments, and the cassock is no longer lost inside the
+  armour's name.
+- **A price in brackets is not money.** An amount was skipped only when the word
+  "value" followed it, and the same tables also print "(20gp)" bare — so a witch
+  began play with an item named "silver earrings (" and 20 gold she was never
+  given. The bracket is the test now, not the word after the amount.
+- **Words are no longer broken where the line broke.** A cell that wraps in the
+  middle of a hyphenated word gave "Well- made wool dress" and "Blood- stained
+  club"; the compound is kept whole.
+- **Some gear was quietly filed under the wrong row.** Found by checking every
+  descriptor against what it matched rather than only the ones that matched
+  nothing: a purple wax candle was imported as a tallow one, a two-handed iron
+  sword as an ordinary sword, and a silver sacrificial dagger as plain steel.
+
+Re-run **Import Everything**, or *Import Character Classes* followed by *Build
+Class Template Packages*, to bring an existing world's templates onto the
+corrected gear. Documents you have repaired by hand are left alone. Gear that
+came through welded together by an older import — one item named for two weapons
+— is not repaired by that pass: detach that class's packages from its Templates
+tab, delete the welded documents, and build again.
+
 ## 2.13.1
 
 ### Fixed

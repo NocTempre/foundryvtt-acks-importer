@@ -4628,11 +4628,6 @@
       "training": {
         "runin": "Combat Proficiencies:"
       },
-      "equipAliases": {
-        "scimitar": "name:Short Sword",
-        "francisca": "name:Hand Axe",
-        "long bearded axe": "name:Great Axe"
-      },
       "fields": {
         "name": {
           "op": "expect",

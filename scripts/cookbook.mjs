@@ -3029,9 +3029,68 @@ function tokenizeProfs(cellText, menu) {
 /** One menu row: the printed name, the id it points at, and both folds. Each
  *  row also folds its PAREN-STRIPPED name — "Spell Book (Blank)" is the base an
  *  "iron-shod spellbook" is an instance of, and only the stripped fold sees it. */
+/**
+ * Every way this catalogue prints ONE name.
+ *
+ * Two conventions, and they are conventions rather than exceptions — the price
+ * list uses them throughout, so they are read by rule and not authored per
+ * entry.
+ *
+ * **Head first, qualifier after the comma.** The list writes "Rations, Iron",
+ * "Rope, 50’", "Sack, Small", "Horse, Medium riding", "Saddle and tack,
+ * Riding"; a template's cell writes the same things as English — "1 week’s
+ * iron rations", "50’ rope", "small sack". Rotating the commas back gives the
+ * form the cell actually contains. Without it the two halves of the catalogue
+ * could never meet, and they did not: 250-odd printed descriptors matched
+ * nothing because of this alone.
+ *
+ * **A slash names one thing twice.** "Sandals/Shoes", "Waterskin/Wineskin",
+ * "Pouch/purse", "Belt/Sash, Leather" — one printed row, either word, and a
+ * cell picks whichever it likes.
+ *
+ * The HEAD alone is deliberately not a form: "Sandals/Shoes, Leather, High"
+ * must not answer for a bare "sandals", which is the described entry's own
+ * name and already in the menu.
+ */
+export function nameForms(name) {
+  const raw = String(name ?? "").trim();
+  if (!raw) return [];
+  const out = [];
+  const add = (text) => {
+    const t = String(text).replace(/\s+/g, " ").trim();
+    if (t && !out.includes(t)) out.push(t);
+  };
+  const segments = raw.split(",").map((x) => x.trim()).filter(Boolean);
+  const ordered = [raw];
+  if (segments.length > 1) ordered.push([...segments].reverse().join(" "));
+  for (const form of ordered) {
+    const slashed = form.split(/\s+/).map((w) => w.split("/"));
+    // One name per slash choice; a form with no slash yields exactly itself.
+    let combos = [[]];
+    for (const options of slashed) {
+      combos = combos.flatMap((prefix) => options.map((o) => [...prefix, o]));
+      if (combos.length > 8) break; // no catalogue name is this ambiguous
+    }
+    for (const c of combos) add(c.join(" "));
+  }
+  return out;
+}
+
+/** One menu row: the printed name, the id it points at, and the folded forms
+ *  the descriptor may contain — `forms` from the name as printed, `stripped`
+ *  from its paren-free version (an embellished instance contains "spellbook",
+ *  never "(blank)"). */
 function menuRow(name, ref) {
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
-  return { name, ref, fold: fold(name), foldStripped: fold(String(name).replace(/\([^)]*\)/g, " ")) };
+  const formsOf = (n) => nameForms(n).map((text) => ({ text, fold: fold(text) })).filter((f) => f.fold);
+  return {
+    name,
+    ref,
+    fold: fold(name),
+    foldStripped: fold(String(name).replace(/\([^)]*\)/g, " ")),
+    forms: formsOf(name),
+    stripped: formsOf(String(name).replace(/\([^)]*\)/g, " ")),
+  };
 }
 
 /**
@@ -3136,17 +3195,34 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   // for the item splitter is equipment and nothing else.
   let gp = 0;
   let sp = 0;
-  // "(45gp value)" prices an ITEM — a gemstone-tipped staff — and is not money
-  // the character carries. Taking it both inflated the purse and cut the item's
-  // name off at the bracket.
-  text = text.replace(/(\d[\d,]*)\s*(gp|sp)\b(?!\s*value)[^,]*/gi, (m, n, unit) => {
+  // AN AMOUNT INSIDE BRACKETS PRICES THE ITEM IT FOLLOWS. "(45gp value)" is
+  // what a gemstone-tipped staff is worth, not money the character carries;
+  // taking it inflated the purse AND cut the item's name off at the bracket,
+  // because the lift eats to the next comma. The BRACKET is the test, not the
+  // word "value" after the amount — the same tables print "(20gp)" bare, and
+  // that spelling was still read as coin: a witch's silver earrings arrived
+  // named "silver earrings (" with 20gp added to her purse.
+  const bracketed = new Set();
+  for (const b of text.matchAll(/\([^)]*\)/g)) {
+    for (let i = b.index; i < b.index + b[0].length; i++) bracketed.add(i);
+  }
+  text = text.replace(/(\d[\d,]*)\s*(gp|sp)\b[^,]*/gi, (m, n, unit, offset) => {
+    if (bracketed.has(offset)) return m;
     const amount = parseInt(n.replace(/,/g, ""), 10) || 0;
     if (unit.toLowerCase() === "sp") sp += amount;
     else gp += amount;
     return "";
   });
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
-  const aliasFold = new Map(Object.entries(aliases).map(([k, v]) => [fold(k), v]));
+  // An authored equivalence is a menu row with one form: it matches on exactly
+  // the terms a printed name does, so a four-letter key like "pole" can no more
+  // fire from inside "polearm" than the catalogue's own short names can.
+  // Longest first, so "long bearded axe" is not answered by "bearded axe".
+  // Each value is a ref, or `{ref}` where the register also records WHY.
+  const aliasForms = Object.entries(aliases)
+    .map(([k, v]) => ({ text: k, fold: fold(k), ref: typeof v === "string" ? v : (v?.ref ?? "") }))
+    .filter((a) => a.fold && a.ref)
+    .sort((a, b) => b.fold.length - a.fold.length);
   // WHICH known item does this descriptor point at? Deliberately generous: the
   // printed wording is a description ("smooth-worn staff"), not a catalogue
   // name, so a contained name is the usual way a real cell resolves. Six
@@ -3167,23 +3243,38 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     const body = String(name).trim().split(/\s+/).map(escapeRe).join("\\s*");
     return body ? new RegExp(`(^|[^a-z0-9])${body}(?:e?s)?([^a-z0-9]|$)`, "i").test(descriptor) : false;
   };
-  const contained = (f, nf, name, descriptor) => {
-    if (!nf || !f.includes(nf)) return false;
-    if (nf.length >= LOOSE_FLOOR) return true;
-    return nf.length >= WORD_FLOOR && wholeWordIn(name, descriptor);
+  const contained = (f, form, descriptor) => {
+    if (!form?.fold || !f.includes(form.fold)) return false;
+    if (form.fold.length >= LOOSE_FLOOR) return true;
+    return form.fold.length >= WORD_FLOOR && wholeWordIn(form.text, descriptor);
   };
-  const resolve = (descriptor) => {
+  // `forms` before `stripped`, so a name that matches as printed is preferred
+  // over one that only matches once its bracketed qualifier is dropped. Both
+  // fall back to the bare folds, so a hand-built menu still resolves.
+  const formsOf = (m) => m.forms ?? [{ text: m.name, fold: m.fold }];
+  const strippedOf = (m) => m.stripped ?? [{ text: String(m.name).replace(/\([^)]*\)/g, " "), fold: m.foldStripped }];
+  const holds = (forms, f, descriptor) => forms.some((form) => contained(f, form, descriptor));
+  const lookup = (descriptor) => {
     const f = fold(descriptor);
-    for (const [ak, av] of aliasFold) {
-      if (f.includes(ak)) return av;
+    for (const a of aliasForms) {
+      if (contained(f, a, descriptor)) return a.ref;
     }
-    const exact = menu.find((m) => m.fold === f);
+    const exact = menu.find((m) => formsOf(m).some((form) => form.fold === f));
     return (
       exact?.ref ??
-      menu.find((m) => contained(f, m.fold, m.name, descriptor))?.ref ??
-      menu.find((m) => contained(f, m.foldStripped, m.name.replace(/\([^)]*\)/g, " "), descriptor))?.ref ??
+      menu.find((m) => holds(formsOf(m), f, descriptor))?.ref ??
+      menu.find((m) => holds(strippedOf(m), f, descriptor))?.ref ??
       ""
     );
+  };
+  // The catalogue joins a SET's parts with a comma — "Quiver, 20 Arrows",
+  // "Case, 20 Bolts" — and a template's cell joins the same parts with "with".
+  // Asked a second time without it, the two spellings meet.
+  const resolve = (descriptor) => {
+    const direct = lookup(descriptor);
+    if (direct) return direct;
+    const joined = String(descriptor).replace(/\s+with\s+/i, " ");
+    return joined === descriptor ? "" : lookup(joined);
   };
 
   /**
@@ -3205,7 +3296,8 @@ export function parseEquipment(cellText, menu, aliases = {}) {
    */
   const resolveWhole = (descriptor) => {
     const f = fold(descriptor);
-    return aliasFold.get(f) ?? menu.find((m) => m.fold === f || m.foldStripped === f)?.ref ?? "";
+    const isWhole = (m) => [...formsOf(m), ...strippedOf(m)].some((form) => form.fold === f);
+    return aliasForms.find((a) => a.fold === f)?.ref ?? menu.find(isWhole)?.ref ?? "";
   };
   const items = [];
   const push = (descriptor, note = "") => {
@@ -3233,20 +3325,79 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   // on the comma alone fused whatever followed a semicolon onto the item before
   // it, and the character started play holding a staff welded to a spell.
   // A semicolon inside brackets is left alone for the same reason a comma is.
-  for (const raw of text.split(/[,;](?![^(]*\))/)) {
+  /* --- chunking, and the two clauses that span chunks --------------------- */
+  //
+  // The separators split a cell into chunks, but two printed constructions are
+  // written ACROSS them and have to be put back before anything is read.
+  // A FULL STOP CAN BE A SEPARATOR TOO, because a printed cell can carry a
+  // typo: one template's list runs "…waterskin. 1 week's iron rations…" where
+  // every other one has a comma there, and read as a single descriptor the
+  // rations vanished into the waterskin's name. Only a stop followed by the
+  // start of another descriptor counts, and never one inside brackets — which
+  // is where the abbreviations live ("(enc. 6 2/6 st)").
+  const chunks = text
+    .split(/[,;](?![^(]*\))|\.(?![^(]*\))(?=\s+[a-z0-9])/i)
     // TRIM FIRST. Every chunk after the first begins with the space that
     // followed its separator, so a leading-"and" strip applied before trimming
     // can only ever match the first chunk — which is the one that never starts
     // with "and". That put "and one spell of character's choice" on the sheet
     // as the name of an item.
-    const descriptor = raw.replace(/\s+/g, " ").trim().replace(/^and\s+/i, "").replace(/[.]$/, "").trim();
+    .map((raw) => raw.replace(/\s+/g, " ").trim().replace(/[.]$/, "").trim())
+    .filter(Boolean);
+
+  // A BOOK'S CONTENTS ARE AN ENGLISH LIST, and an English list is commas until
+  // the last item, which carries the "and". "Bark-bound prayer book with remove
+  // fear, angelic choir, and counterspell" is ONE book; split on the comma it
+  // became a book and two pieces of gear named for spells, which then went on
+  // the character's sheet as inventory. The clause is rejoined from the "…book
+  // with" chunk up to and including the chunk that opens with "and" — the list
+  // has to actually close that way within a few chunks, or nothing is absorbed
+  // and a cell that merely mentions a book is left alone.
+  const BOOK_WITH = /\b(?:spell\s*book|spellbook|prayer\s*book|book)\s+with\b/i;
+  const LIST_TAIL = /^and\s+/i;
+  const LIST_REACH = 4;
+  const joined = [];
+  for (let i = 0; i < chunks.length; i++) {
+    if (BOOK_WITH.test(chunks[i]) && !LIST_TAIL.test(chunks[i])) {
+      let end = -1;
+      for (let j = i + 1; j <= Math.min(i + LIST_REACH, chunks.length - 1); j++) {
+        if (LIST_TAIL.test(chunks[j])) { end = j; break; }
+        // A chunk the menu already knows is gear, not another spell title —
+        // the list ended at the comma before it and never carried an "and".
+        if (resolve(chunks[j])) break;
+      }
+      if (end > i) {
+        joined.push(chunks.slice(i, end + 1).join(", "));
+        i = end;
+        continue;
+      }
+    }
+    // A STRAY COMMA INSIDE ONE PRINTED NAME. "hunter green cloak, tunic, and
+    // pants" is a cloak and an outfit, not a cloak, a tunic and some pants:
+    // rejoining is allowed only when the menu knows the two chunks together as
+    // one item, so an ordinary list is never welded.
+    const prev = joined[joined.length - 1];
+    if (prev && LIST_TAIL.test(chunks[i]) && resolveWhole(`${prev} ${chunks[i]}`)) {
+      joined[joined.length - 1] = `${prev} ${chunks[i]}`;
+      continue;
+    }
+    joined.push(chunks[i]);
+  }
+
+  for (const chunk of joined) {
+    const descriptor = chunk.replace(/^and\s+/i, "").trim();
     if (!descriptor) continue;
-    // A counted container splits into itself and its contents — "quiver with
-    // 20 arrows" is a quiver plus twenty arrows, and the count belongs on the
-    // arrows where the sheet can spend it. Only a DIGIT after "with" splits;
+    // A counted container splits into itself and its contents — "sack with 12
+    // iron spikes" is a sack plus twelve spikes, and the count belongs on the
+    // spikes where the sheet can spend it. Only a DIGIT after "with" splits;
     // "pouch with herbs" stays one item.
+    //
+    // UNLESS THE CATALOGUE SELLS THE SET. "Quiver, 20 Arrows" and "Case, 20
+    // Bolts" are single priced rows, and the cell writes them "quiver with 20
+    // arrows": split, the character got two things the price list has never
+    // heard of and the encumbrance was counted twice.
     const container = /^(.+?)\s+with\s+(\d+)\s+(.+)$/i.exec(descriptor);
-    if (container) {
+    if (container && !resolve(descriptor)) {
       push(container[1]);
       push(`${container[2]} ${container[3]}`, `carried in ${container[1].toLowerCase()}`);
       continue;
@@ -3255,7 +3406,13 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     // "spear and short sword" is two weapons, while "tunic and pants" (one
     // outfit, one printed price) is a known item WHOLE and stays whole. The
     // whole-descriptor test is `resolveWhole`, never `resolve`: see there.
-    const pair = /^(.+?)\s+and\s+(.+)$/i.exec(descriptor);
+    //
+    // "UNDER" PAIRS THE SAME WAY. The templates dress a character in both at
+    // once — "leather armor under blue mage's cassock", "leather armor under
+    // white druid's robes" — and read as one descriptor the cassock was lost
+    // inside the armour's name: nine characters started play with a garment
+    // they are printed as wearing and did not have.
+    const pair = /^(.+?)\s+(?:and|under)\s+(.+)$/i.exec(descriptor);
     if (pair && !resolveWhole(descriptor) && resolve(pair[1]) && resolve(pair[2])) {
       push(pair[1]);
       push(pair[2]);
@@ -3264,6 +3421,45 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     push(descriptor);
   }
   return { items, gp, sp, enc };
+}
+
+/**
+ * Move a book's printed contents out of its NAME and into the template's spell
+ * list. Mutates the matched item (its name is cut back to the book, and the
+ * printed sentence is preserved on its note) and returns the spells.
+ *
+ * A BOOK PRINTS ITS CONTENTS INLINE — "musty old spellbook with beguile
+ * humanoid and auditory illusion", "Ancient prayer book with counterspell,
+ * predict weather, and cure light injury". The book stays the ITEM, with its
+ * embellished name intact; the spells move to where the binder's schema has
+ * carried them all along. A divine caster's book is a PRAYER book and prints
+ * its spells the same way, so both spellings are read — and only after
+ * `parseEquipment` has put the clause back together across the commas of its
+ * own list, which is where a prayer book's spells used to be torn off and land
+ * on the character as inventory.
+ *
+ * A CHOICE IS NOT A SPELL. "and one spell of character's choice" names a pick
+ * the player has still to make; minted as a spell it became a document called
+ * "One spell of character's choice". It stays in the note — the printed
+ * sentence is preserved there whole — and the list carries only what was named.
+ *
+ * A DIGIT after "with" is a load, not a library: "quiver with 20 arrows".
+ */
+export function liftBookSpells(items) {
+  const BOOK_CONTENTS = /^(.*?(?:spell\s*book|spellbook|prayer\s*book))\s+with\s+(.+)$/i;
+  const CHOICE_PHRASE = /\b(choice|choosing|chooses|any)\b/i;
+  const spells = [];
+  for (const it of items ?? []) {
+    const m = BOOK_CONTENTS.exec(it.name ?? "");
+    if (!m || /\d/.test(m[2].split(/\s+/)[0] ?? "")) continue;
+    it.name = m[1];
+    it.note = it.note ? `${it.note}; holds ${m[2]}` : `holds ${m[2]}`;
+    for (const s of m[2].split(/\s*(?:,|\band\b)\s*/i)) {
+      const name = capFirst(s.trim());
+      if (name && !CHOICE_PHRASE.test(name)) spells.push({ uuid: "", name });
+    }
+  }
+  return spells;
 }
 
 /** The Proficiencies Gained per Level row for one class, from the executed
@@ -3573,22 +3769,14 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
     const band = row.cells.band ?? {};
     const rawName = capFirst(String(row.cells.template ?? "").replace(/\s+/g, " ").trim());
     const ann = /^(.*?)\s*\(([^)]+)\)$/.exec(rawName);
-    const eq = parseEquipment(row.cells.equipment, eqMenu, entry.equipAliases ?? {});
-    // A spellbook prints its contents inline — "musty old spellbook with
-    // beguile humanoid and auditory illusion". The book stays the ITEM (its
-    // embellished name intact); the named spells move to the template's
-    // spell list, where the binder's schema has carried them all along.
-    const spells = [];
-    for (const it of eq.items) {
-      const m = /^(.*?spell\s*book)\s+with\s+(.+)$/i.exec(it.name);
-      if (!m || /\d/.test(m[2].split(/\s+/)[0] ?? "")) continue;
-      it.name = m[1];
-      it.note = it.note ? `${it.note}; holds ${m[2]}` : `holds ${m[2]}`;
-      for (const s of m[2].split(/\s*(?:,|\band\b)\s*/i)) {
-        const name = capFirst(s.trim());
-        if (name) spells.push({ uuid: "", name });
-      }
-    }
+    // Book-wide equivalences first, this class's own wording over the top: an
+    // exception authored for one spread must be able to override the general
+    // one, and most of them recur across every class in the book.
+    const eq = parseEquipment(row.cells.equipment, eqMenu, {
+      ...(data.registers?.tables?.equipmentPhrase ?? {}),
+      ...(entry.equipAliases ?? {}),
+    });
+    const spells = liftBookSpells(eq.items);
     return {
       rollMin: band.min ?? 3,
       rollMax: band.max ?? band.min ?? 3,

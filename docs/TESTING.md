@@ -73,6 +73,35 @@ connected; bundles and gear land under `ACKS Cookbook / Classes / Templates /
 Judge-edited document shows up in the skipped count rather than being
 rewritten.
 
+### Auditing what a cell actually became
+
+`tools/dev-template-cells.mjs` reads every class's Starting Equipment cell
+through the SHIPPING executor and runs the shipping splitter over it, against a
+menu built the way a real import builds one — the equipment cookbook plus the
+weapon, armour and priced grids materialized from the same book. It needs the
+local reference library and never runs in CI.
+
+```
+node tools/dev-template-cells.mjs               # every cell, item by item
+node tools/dev-template-cells.mjs --unresolved  # only cells with a descriptor that matched nothing
+node tools/dev-template-cells.mjs --pairs       # every distinct descriptor, grouped by what it matched
+node tools/dev-template-cells.mjs --menu sack   # what does the book actually CALL this?
+```
+
+**`--pairs` is the one that finds real bugs, and the unresolved list is not.**
+A descriptor that matches nothing is visible on the character sheet as an item
+with no mechanics; a descriptor that matches the WRONG row looks perfectly
+fine and is what ships a carpentry hammer as a warhammer. Read the groups: a
+mismatch shows up as one catalogue row quietly collecting descriptors that have
+nothing to do with it. Auditing 623 of them by eye is how the wax candle filed
+under tallow, the two-handed sword filed as a sword, and the silver dagger filed
+as a dagger were each found.
+
+Before ruling anything unresolvable, ask `--menu` what the book calls it: most
+of what looks unmatchable is a name the price list writes head-first
+("Rations, Iron"), and that is a rule, not an exception. What genuinely cannot
+be reached by rule goes in `register/_refs/equipmentPhrase.json`.
+
 ## OSE import
 
 ### Fixtures
