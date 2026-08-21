@@ -89,6 +89,29 @@ check("a pair the menu knows nothing about stays whole", names("odds and ends").
 check("one known half is not enough to split", names("spear and whatnot", menu("Spear")).length === 1);
 check("splitting is not attempted on a phrase with no 'and'", names("short sword", menu("Short Sword")).length === 1);
 
+// A DESCRIBED half is still a known half. Both of these read as pairs of bare
+// catalogue names until the cell dresses one of them, and a printed cell always
+// does: "polished sword and dagger" came out as ONE weapon carrying the
+// dagger's damage, because the containment floor could not see a base name of
+// five letters and so declared the left half unknown.
+check("an embellished half still splits the pair",
+  names("polished sword and dagger", menu("Sword", "Dagger")).length === 2);
+check("both descriptions survive the split",
+  names("military-issue spear and sword", menu("Spear", "Sword")).join("|") === "military-issue spear|sword");
+
+/* --- A short base name is findable, but only as a whole word --------------- */
+//
+// Six characters is where bare containment stops being a coincidence, and most
+// of the printed weapons fold shorter than that. Left at six, "polished sword"
+// pointed at nothing at all and was imported as a nameless trinket.
+check("a five-letter base is found inside its description", names("polished sword", menu("Sword"))[0] === "polished sword");
+check("and it is the SWORD that was found", parseEquipment("polished sword", menu("Sword")).items[0].ref === "def.equip.sword");
+check("a plural cell names the singular item", parseEquipment("torches", menu("Torch")).items[0].ref === "def.equip.torch");
+check("an -es plural too", parseEquipment("2 torches in a sack", menu("Torch")).items[0].ref === "def.equip.torch");
+// What the whole-word rule is FOR: a short name buried mid-word is not a hit.
+check("a short name inside a longer word is not a match", parseEquipment("grimace mask", menu("Mace")).items[0].ref === "");
+check("nor is a three-letter name a match at all", parseEquipment("oiled leather satchel", menu("Oil")).items[0].ref === "");
+
 /* --- Coin and encumbrance still come off cleanly --------------------------- */
 const paid = parseEquipment("a dagger, 12gp, 8sp (Enc. 3 stones).", menu("Dagger"));
 check("gold and silver are read out of the cell", paid.gp === 12 && paid.sp === 8);

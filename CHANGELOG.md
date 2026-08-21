@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.13.1
+
+### Fixed
+- **A class's starting equipment is matched against every piece of gear your
+  book supplies, weapons and armour included.** The list a printed cell was
+  checked against was built from the shop list alone — the weapon and armour
+  grids come in by a different route, and nothing joined the two up. Three
+  things followed from that. A sword named nothing the importer knew and
+  arrived as an unnamed trinket. A war hammer bound to the carpentry hammer
+  the shop list does carry, so a dwarf started play holding a tool. And a cell
+  printing two weapons — "polished sword and dagger" — was never recognised as
+  two, so the character got a single item named for both, carrying the
+  dagger's damage, with the sword quietly gone. All three now resolve against
+  the gear your import has actually created.
+- **A description finds its item by the words it uses, not by their length.**
+  Matching a printed description to a catalogue name needed six letters to
+  fire, and most of the printed weapons are shorter — sword, staff, spear,
+  club, mace, torch, dart. A shorter name now matches when it is a whole word
+  of the description, a printed plural counts as that word ("torches" is the
+  Torch), and a name buried inside a longer word still matches nothing.
+- **A template's skinned gear is no longer mistaken for the gear it was
+  skinned from.** Each is a copy, and a copy carried the original's import
+  identity — so one class's "aged and dusty staff" could become the name every
+  other class's staff was matched against.
+
+Re-run **Import Everything**, or *Import Character Classes* followed by
+*Build Class Template Packages*, to bring an existing world's templates onto
+the corrected gear. Documents you have repaired by hand are left alone.
+
 ## 2.13.0
 
 ### Added

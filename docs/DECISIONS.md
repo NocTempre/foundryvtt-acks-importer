@@ -7,6 +7,66 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A template's equipment menu is BOTH pipelines, and a short name is a whole word (2026-08-21)
+
+**Problem.** A class's starting gear resolved against `equipmentMenu()`, built
+from the cookbook's `kind.equipment` entries alone. But weapons, armour and
+priced rows do not come from the cookbook — they are materialized from the
+reader's own GRIDS and mint their own ids (`def.weapon.sword`,
+`def.armor.plate`, `def.priced.silk-1-lb`). The menu therefore contained no
+weapon and no armour at all, and three separate symptoms followed from that one
+fact. A sword pointed at nothing and imported as a nameless trinket. "War
+hammer" bound to the carpentry **Hammer (small)** the shop list *does* carry, so
+every dwarven template handed over a tool where its weapon should be. And a
+printed pair — "polished sword and dagger" — never split, because the pair rule
+only fires when BOTH halves are known items: the character got one weapon
+carrying the dagger's damage and the sword silently gone.
+
+A second, independent floor hid the short names even once the menu held them.
+Containment required a folded length of six, and most printed weapons are
+shorter: sword, staff, spear, club, mace, torch, dart.
+
+**Ruled.** The menu is built from both pipelines: the cookbook first, then the
+gear this world has already materialized, read from the imported index (so a
+compendium-mode world resolves too). Equipment lands before classes in the
+Getting Started order, so a class binds after its weapons exist. A cookbook
+entry wins on a shared id.
+
+**Ruled.** Containment keeps its floor of six for a BARE substring, and a name
+of four or five characters matches only as a whole WORD of the descriptor —
+"sword" in "polished sword", never "mace" in "grimace" — with a trailing plural
+counted part of the word, because a cell printing "torches" names the Torch.
+Below four characters nothing matches this way at all: "oil", "net", "sap".
+ACKS Extras applies the same rule to world documents (`bestBaseMatch`), and the
+two are pinned to each other by comment in both files — a descriptor that
+resolved to one base here and skinned itself over another one there is the
+failure this shape prevents.
+
+**Rejected: reading the rule out of ACKS Extras at runtime.** It is on its
+public API and the dependency runs the right way, but `parseEquipment` is a pure
+parser with an offline test suite, and coupling it to a live global would make
+what a cell splits into depend on module load order.
+
+**Cost.** The menu now carries a few hundred more rows, and a descriptor
+mentioning an incidental short noun can bind to it ("wineskins with honey-mead"
+finds Honey). That was already true of the extras side, so the two now agree
+about it; the wrong base is a document the Judge can retype, which is what
+packages are for.
+
+### A template part is not an import (2026-08-21)
+
+**Problem.** Extras skins a template's gear by COPYING the base document, and a
+copy carries the original's flags — the importer's `cookbook.id` included. A
+world therefore held a dozen documents stamped `def.weapon.staff`, only one of
+which was the Staff. The gear menu above would have taken whichever came first
+and made one template's "aged and dusty staff" the catalogue name every other
+template matched against.
+
+**Ruled.** Extras strips the importer's claim from a skin (its own `skin` flag
+records what the copy is), and the menu skips any document carrying the
+`templatePart` flag extras publishes — belt and braces, because a world imported
+before the fix still holds the mis-stamped copies.
+
 ### Template packages: extras owns the shape, this side owns the folders (2026-08-19)
 
 **Problem.** A class's starting templates imported as data rows on the class

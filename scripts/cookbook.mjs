@@ -2969,9 +2969,12 @@ function abilityNameMenu() {
   return menu.sort((a, b) => b.name.length - a.name.length);
 }
 
+/** One printed name as a regex literal. */
+const escapeRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 /** A lenient matcher for one printed name: letters with elastic spacing. */
 const lenientRe = (name) =>
-  new RegExp("^" + String(name).trim().split(/\s+/).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s*"), "i");
+  new RegExp("^" + String(name).trim().split(/\s+/).map(escapeRe).join("\\s*"), "i");
 
 /**
  * Tokenize a template's Proficiencies cell: greedy longest-known-name match,
@@ -3023,24 +3026,75 @@ function tokenizeProfs(cellText, menu) {
   return out.map(({ tail, ...e }) => e);
 }
 
-/** Equipment name menu, longest first. Each entry also folds its
- *  PAREN-STRIPPED name — "Spell Book (Blank)" is the base an "iron-shod
- *  spellbook" is an instance of, and only the stripped fold can see that. */
-function equipmentMenu() {
+/** One menu row: the printed name, the id it points at, and both folds. Each
+ *  row also folds its PAREN-STRIPPED name — "Spell Book (Blank)" is the base an
+ *  "iron-shod spellbook" is an instance of, and only the stripped fold sees it. */
+function menuRow(name, ref) {
   const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  return { name, ref, fold: fold(name), foldStripped: fold(String(name).replace(/\([^)]*\)/g, " ")) };
+}
+
+/**
+ * The gear a template's Starting Equipment cell can name, longest first.
+ *
+ * TWO SOURCES, because a reader's gear arrives down two pipelines. The run-in
+ * cookbook describes the shop list (`kind.equipment`); weapons, armour and
+ * priced rows are materialized from the reader's own GRIDS and mint their own
+ * ids (`def.weapon.sword`, `def.armor.plate`, `def.priced.silk-1-lb`), which
+ * are not cookbook entries and never will be. A menu built from the cookbook
+ * alone therefore cannot see a single weapon: a template naming a sword pointed
+ * at nothing, "war hammer" bound to the carpentry Hammer the shop list does
+ * carry, and a printed pair of weapons never split because neither half was a
+ * known item.
+ *
+ * `extra` is that second source, read from what this import has already
+ * created. Equipment lands before classes (the Getting Started step order), so
+ * a class binds after its weapons exist. A cookbook entry wins on a shared id;
+ * the grids only fill what the cookbook is silent about.
+ */
+function equipmentMenu(extra = []) {
   const menu = [];
+  const seen = new Set();
   for (const cb of data.content.values()) {
     for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (e.kind !== "kind.equipment") continue;
-      menu.push({
-        name: e.name,
-        ref: defId,
-        fold: fold(e.name),
-        foldStripped: fold(e.name.replace(/\([^)]*\)/g, " ")),
-      });
+      if (e.kind !== "kind.equipment" || seen.has(defId)) continue;
+      seen.add(defId);
+      menu.push(menuRow(e.name, defId));
     }
   }
+  for (const row of extra) {
+    if (!row?.ref || seen.has(row.ref)) continue;
+    seen.add(row.ref);
+    menu.push(row);
+  }
   return menu.sort((a, b) => b.name.length - a.name.length);
+}
+
+/** The document types a piece of starting gear can be. */
+const GEAR_DOC_TYPES = new Set(["weapon", "armor", "item"]);
+
+/**
+ * Menu rows for the gear this world has already materialized. Read from the
+ * imported index rather than `game.items`, so a compendium-mode world resolves
+ * its templates against the same gear a world-mode one does.
+ *
+ * A TEMPLATE PART IS NOT AN IMPORT. Extras skins a template's gear by copying
+ * the base document, and a copy carries the original's flags — so a world holds
+ * a dozen documents stamped `def.weapon.staff`, only one of which is the Staff.
+ * Offering "Aged and dusty staff" as the menu's name for that id would make one
+ * template's description the catalogue name every other template matches
+ * against. Extras publishes the flag naming what a document is part of; a
+ * document carrying it is skipped.
+ */
+async function materializedGearMenu() {
+  const partFlag = globalThis.acksExtras?.classes?.templates?.TEMPLATE_PART ?? "templatePart";
+  const rows = [];
+  for (const [id, doc] of await importedIndex()) {
+    if (!GEAR_DOC_TYPES.has(doc?.type) || !doc?.name) continue;
+    if (doc.flags?.["acks-extras"]?.[partFlag]) continue;
+    rows.push(menuRow(doc.name, id));
+  }
+  return rows;
 }
 
 /**
@@ -3096,7 +3150,28 @@ export function parseEquipment(cellText, menu, aliases = {}) {
   // WHICH known item does this descriptor point at? Deliberately generous: the
   // printed wording is a description ("smooth-worn staff"), not a catalogue
   // name, so a contained name is the usual way a real cell resolves. Six
-  // characters is the floor at which containment stops being a coincidence.
+  // characters is the floor at which bare containment stops being a
+  // coincidence. A SHORTER name is still findable, but only as a whole word of
+  // the descriptor — "sword" in "polished sword", never "mace" in "grimace" —
+  // and a trailing plural is part of that word, because a cell that prints
+  // "torches" names the Torch the menu holds. Below four characters nothing is
+  // safe enough to match this way at all ("oil", "net", "sap", "hat").
+  //
+  // ACKS Extras applies the same rule to WORLD documents (`bestBaseMatch` in
+  // classes/template-packages.mjs); the two must agree, or a descriptor
+  // resolves to one base here and skins itself over another one there.
+  const LOOSE_FLOOR = 6;
+  const WORD_FLOOR = 4;
+  // Seams are `\s*`, never `\s+`: real extraction welds words together.
+  const wholeWordIn = (name, descriptor) => {
+    const body = String(name).trim().split(/\s+/).map(escapeRe).join("\\s*");
+    return body ? new RegExp(`(^|[^a-z0-9])${body}(?:e?s)?([^a-z0-9]|$)`, "i").test(descriptor) : false;
+  };
+  const contained = (f, nf, name, descriptor) => {
+    if (!nf || !f.includes(nf)) return false;
+    if (nf.length >= LOOSE_FLOOR) return true;
+    return nf.length >= WORD_FLOOR && wholeWordIn(name, descriptor);
+  };
   const resolve = (descriptor) => {
     const f = fold(descriptor);
     for (const [ak, av] of aliasFold) {
@@ -3105,8 +3180,8 @@ export function parseEquipment(cellText, menu, aliases = {}) {
     const exact = menu.find((m) => m.fold === f);
     return (
       exact?.ref ??
-      menu.find((m) => m.fold.length >= 6 && f.includes(m.fold))?.ref ??
-      menu.find((m) => m.foldStripped.length >= 6 && f.includes(m.foldStripped))?.ref ??
+      menu.find((m) => contained(f, m.fold, m.name, descriptor))?.ref ??
+      menu.find((m) => contained(f, m.foldStripped, m.name.replace(/\([^)]*\)/g, " "), descriptor))?.ref ??
       ""
     );
   };
@@ -3236,8 +3311,11 @@ export function proseGainSchedule(body) {
  * the item still imports as a stub the constructor sheet explains.
  * `opts.gains` is this class's Proficiencies-Gained-per-Level row — each C
  * becomes a class-proficiency ChoiceSpec award, each G a general one.
+ * `opts.gear` is the grid-materialized half of the equipment menu (see
+ * `equipmentMenu`); omitted, a template's cell can name no weapon and no
+ * armour, so the caller supplies it.
  */
-export function bindClass(entry, node, id, { gains = null, commonName = null } = {}) {
+export function bindClass(entry, node, id, { gains = null, commonName = null, gear = [] } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
   // Body fields arrive one per page (`body61`) or one per page-column
@@ -3490,7 +3568,7 @@ export function bindClass(entry, node, id, { gains = null, commonName = null } =
   // The eight printed starting templates: proficiency cells tokenized against
   // every known ability name, equipment cells split into skinned descriptors.
   const tplMenu = abilityNameMenu();
-  const eqMenu = equipmentMenu();
+  const eqMenu = equipmentMenu(gear);
   const templates = (f.templates?.rows ?? []).map((row) => {
     const band = row.cells.band ?? {};
     const rawName = capFirst(String(row.cells.template ?? "").replace(/\s+/g, " ").trim());
@@ -4043,6 +4121,7 @@ export async function importClasses() {
   let skipped = 0;
   const gainsNode = await executeProfGains();
   const commonName = await executeCommonTongue();
+  const gear = await materializedGearMenu();
   for (const [id, entry] of classEntries()) {
     if (await importedItem(id)) {
       skipped++;
@@ -4059,7 +4138,7 @@ export async function importClasses() {
         else node = null;
       }
       const folder = (await ensureItemFolder(id))?.id ?? null;
-      const built = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName });
+      const built = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName, gear });
       return createDoc(Item, { ...built, folder });
     });
     if (doc) made.push(doc);
@@ -4582,6 +4661,7 @@ export async function cookbookUpdateClasses() {
   let updated = 0;
   const gainsNode = await executeProfGains();
   const commonName = await executeCommonTongue();
+  const gear = await materializedGearMenu();
   for (const item of targets) {
     const id = item.flags[MODULE_ID].cookbook.id;
     const entry = byId.get(id);
@@ -4594,7 +4674,7 @@ export async function cookbookUpdateClasses() {
       if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
       else node = null;
     }
-    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName });
+    const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName, gear });
     const tongues = doc.flags?.[MODULE_ID]?.tongues;
     await item.update({
       name: doc.name,
