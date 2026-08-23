@@ -3923,6 +3923,10 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
       awards,
       languages,
       templates,
+      // The class's mutually exclusive options: its printed variant table where
+      // the spread prints one, and its starting templates, which are a group of
+      // the same kind rather than a parallel mechanism.
+      paths: buildPaths(f.training?.rows, entry.class?.tables?.training?.labelHeader ?? "", templates.length > 0),
     },
     ...(training ? { effects: [trainingEffect(entry, training)] } : {}),
     flags: {
@@ -4299,6 +4303,83 @@ const TRAINING_GROUPS = [
   [/\b(?:swords|daggers)\b/i, "swordDagger"],
   [/\b(?:spears|pole\s*arms|polearms)\b/i, "spearPolearm"],
 ];
+
+/**
+ * One row of a class's combat-proficiencies TABLE, as a path option's training.
+ *
+ * A spread whose training differs per region prints it as a grid rather than a
+ * sentence, so there is no paragraph to read: the Barbarian states a weapon
+ * list, an armour column and a style column per region, and the class itself
+ * states none of the three. Each row becomes one option of a path group.
+ *
+ * The armour column names every rung it permits ("Medium Light Very Light"), so
+ * the answer is the HEAVIEST — the same rule the prose reader follows, for the
+ * same reason. Weapons and styles are read exactly as the prose reader reads
+ * them, so both routes land on one grant vocabulary.
+ *
+ * PER-OPTION DATA STAYS ON THE OPTION even where every row agrees — all three
+ * regions permit armour up to medium, and hoisting that to the class would
+ * bake in a coincidence of this printing and leave nowhere for a custom path,
+ * or a later one that differs, to say otherwise.
+ */
+export function readTrainingCells(cells = {}) {
+  const weapons = [];
+  for (const raw of String(cells.weapons ?? "").split(/,| and | or /i)) {
+    const name = singularWeapon(raw);
+    if (name) weapons.push(name);
+  }
+  const aSeg = String(cells.armour ?? "");
+  const bare = aSeg.replace(/very\s*light/gi, " ");
+  const armour =
+    (/all\s*(?:armor|armour)/i.test(aSeg) ? "heavy" : "") ||
+    (/\bheavy\b/i.test(bare) ? "heavy" : "") ||
+    (/\bmedium\b/i.test(bare) ? "medium" : "") ||
+    (/\blight\b/i.test(bare) ? "light" : "") ||
+    (/very\s*light/i.test(aSeg) ? "veryLight" : "") ||
+    (/\bnone\b|\bno\b/i.test(aSeg) ? "unarmored" : "");
+  const sSeg = String(cells.styles ?? "");
+  const styles = [];
+  if (/dual\s*weapon/i.test(sSeg)) styles.push("dual");
+  if (/two\s*-?\s*handed\s*weapon/i.test(sSeg)) styles.push("twohanded");
+  if (/weapon\s*and\s*shield/i.test(sSeg)) styles.push("weaponshield");
+  return { weapons: [...new Set(weapons)], armour, styles: [...new Set(styles)] };
+}
+
+/**
+ * The PATH GROUPS a class offers: its printed variant table where it has one,
+ * and its starting templates, which are a group like any other.
+ *
+ * ACKS Extras owns the shape (`system.paths`, DECISIONS 2026-08-22); this side
+ * fills it from the reader's own page. A templates group carries NO options —
+ * its `source` points at `system.templates`, which stays exactly where it is.
+ */
+export function buildPaths(trainingRows, labelHeader, hasTemplates) {
+  const key0 = (x) => String(x ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const paths = [];
+  const rows = (trainingRows ?? []).filter((r) => {
+    // The grid's own header line arrives as a row; it names the columns rather
+    // than a variant, and every cell it holds is a column title.
+    const key = key0(r.label);
+    return key && key !== key0(labelHeader || "") && !/proficiencies/i.test(String(r.cells?.weapons ?? "").slice(0, 24));
+  });
+  if (rows.length) {
+    paths.push({
+      key: key0(labelHeader) || "variant",
+      label: labelHeader || "Variant",
+      source: "",
+      options: rows.map((r) => ({
+        key: r.key || key0(r.label),
+        label: r.label,
+        note: "",
+        training: readTrainingCells(r.cells),
+      })),
+    });
+  }
+  if (hasTemplates) {
+    paths.push({ key: "template", label: "Starting Template", source: "templates", note: "", options: [] });
+  }
+  return paths;
+}
 
 /**
  * One weapon name from a list item: the article and any aside dropped, the

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.16.0
+
+### Added
+- **An imported class knows the choices its book offers.** With ACKS Extras
+  4.17.0, every class you import arrives with its starting templates as a
+  selectable group, and a class whose book prints a variant table arrives with
+  that too: the Barbarian's three regions, each carrying the weapons, armour and
+  fighting styles its own region grants. Pick one when the class is applied, or
+  let a starting template pick it for you. Until now the Barbarian imported with
+  no combat training at all, because its training is a table and the importer
+  only knew how to read a sentence.
+  *Every region permits armour up to medium, and the value is still written on
+  each region rather than once on the class — so a path you write yourself, or a
+  printing that differs, has somewhere to say so.*
+
+### Fixed
+- **A table mentioned before it is printed no longer anchors on the mention.**
+  "as shown on the Barbarian Combat Proficiencies table below" is not the table;
+  reading it as one put the whole grid's geometry in the wrong column.
+
+## 2.15.0
 ## 2.15.0
 
 ### Fixed

@@ -11,7 +11,7 @@
  * same punctuation, invented gear.
  */
 import assert from "node:assert";
-import { parseEquipment, nameForms, liftBookSpells, liftCompanions } from "../scripts/cookbook.mjs";
+import { parseEquipment, nameForms, liftBookSpells, liftCompanions, buildPaths, readTrainingCells } from "../scripts/cookbook.mjs";
 
 let pass = 0;
 const check = (label, cond) => { assert.ok(cond, label); pass++; };
@@ -262,5 +262,39 @@ check("a selection the column already made stands", chosen[0].selection === "eag
 // Gear that merely mentions an animal is still gear.
 const dog = [{ name: "trained hunting dog", ref: "def.equip.dogHunting" }];
 check("gear is not lifted by an animal's name", liftCompanions(dog, [], COMPANIONS) === 0);
+
+/* --- A class's PATH GROUPS --------------------------------------------------- */
+//
+// A spread whose training differs per variant prints a grid, not a sentence, so
+// there is no paragraph to read. Each row becomes one option of a group, and a
+// class's starting templates are a group of the same kind.
+const GRID = [
+  { label: "Region", key: "region", cells: { armour: "Armor Proficiencies", weapons: "Weapon Proficiencies", styles: "Fighting Style Proficiencies" } },
+  { label: "Northland", key: "northland", cells: { armour: "Medium Light Very Light", weapons: "Battle axe, dagger, spear", styles: "Weapon and shield two-handed weapon" } },
+  { label: "Sea Kingdoms", key: "seaKingdoms", cells: { armour: "Light Very Light", weapons: "sling, short sword", styles: "dual weapon" } },
+];
+const groups = buildPaths(GRID, "Region", true);
+check("the grid's own header line is not an option", groups[0].options.length === 2);
+check("a variant group is built from the rows", groups[0].key === "region" && groups[0].options[0].label === "Northland");
+check("a class's starting templates are a group too", groups[1].source === "templates" && groups[1].options.length === 0);
+check("a class with no templates gets no templates group", buildPaths(GRID, "Region", false).length === 1);
+check("a class with neither gets no groups at all", buildPaths([], "", false).length === 0);
+
+// The armour column names every rung it permits, so the answer is the heaviest.
+const north = readTrainingCells(GRID[1].cells);
+check("the heaviest rung named is the answer", north.armour === "medium");
+check("a lighter row is not dragged up by its neighbour", readTrainingCells(GRID[2].cells).armour === "light");
+check("styles are read as the grant vocabulary", north.styles.join(",") === "twohanded,weaponshield");
+check("weapons come through as names", north.weapons.includes("battle axe") && north.weapons.includes("spear"));
+// PER-OPTION DATA STAYS ON THE OPTION. Every region here permits medium; the
+// value is still written on each, so a custom path — or a printing that
+// differs — has somewhere to say otherwise.
+const same = buildPaths(
+  [GRID[0], GRID[1], { ...GRID[1], label: "Elsewhere", key: "elsewhere" }],
+  "Region",
+  false,
+);
+check("a value every option shares is still written on each",
+  same[0].options.every((o) => o.training.armour === "medium"));
 
 console.log(`test-starting-equipment: all ${pass} checks passed`);

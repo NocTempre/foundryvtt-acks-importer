@@ -110,6 +110,44 @@ clearing it, so a replacement is not deleted by the dialog it replaced.
 
 ---
 
+### A class's variants are PATHS, and the grid that prints them is read by geometry (2026-08-23)
+
+**Problem.** The Barbarian's combat training does not exist as a sentence. Its
+spread prints a table — Region | Armor | Weapon Proficiencies | Fighting Style
+Proficiencies, a row per region — so the prose reader could never find it, and
+the class imported with no training of any kind. The Zaharan's dark paths and
+the dwarven castes have the same shape.
+
+**Ruled.** ACKS Extras owns the shape (`system.paths`, its DECISIONS
+2026-08-22); this side fills it from the reader's page. `buildPaths` emits the
+printed variant table as a group of options, each carrying its own training, and
+adds a `templates` group for any class that has starting templates — so EVERY
+imported class gets at least one path group and the feature is not reserved for
+the one class that motivated it.
+
+**Ruled: per-option data stays on the option** (user), even where every row
+agrees. All three Barbarian regions permit armour up to medium; hoisting that to
+the class would bake in a coincidence of this printing and leave nowhere for a
+custom path, or a later one that differs, to say otherwise.
+
+**Three things the page defeated, and what was authored instead of guessed:**
+
+- **The table is mentioned before it is printed** ("as shown on the Barbarian
+  Combat Proficiencies table below"), and the title search found the prose
+  first, anchoring the whole table's geometry on the wrong column. `titleLast`
+  says the heading is the later occurrence.
+- **Rows are anchored on the label column, read off the page.** The print lines
+  stand four to nine points apart, so the line assembler folds a region's name
+  in with the armour rung above it; the first cell of that merged row is
+  whatever sorts leftmost, and the whole table read as one band. The label
+  column is a geometric fact and is taken as one. A label that WRAPS — "Ivory"
+  over "Kingdoms" — is one label, recognised as a gap much smaller than the gap
+  between real rows.
+- **The column x's are authored.** The heading lines fold into the first data
+  row too, so the header search cannot find "Weapon Proficiencies" as a cell of
+  its own. Where the page defeats the search the recipe gives the geometry
+  rather than a better guess.
+
 ### A totem animal is a creature, and the template is which one (2026-08-21)
 
 **Problem.** "Rat totem animal", "Black cat familiar" — printed in a Starting

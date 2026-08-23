@@ -2428,7 +2428,11 @@ async function compileClass(doc, entry, kindRow) {
   const located = [];
   for (const [tname, t] of Object.entries(spec.tables ?? {})) {
     const tpd = await pageOf(t.page);
-    const titleRun = findLabelRun(tpd.items, t.title);
+    // A spread that MENTIONS its table before printing it ("as shown on the
+    // Barbarian Combat Proficiencies table below") has the phrase twice, and the
+    // first is prose in the far column — which anchors the whole table's
+    // geometry on the wrong x. `titleLast` says the heading is the later one.
+    const titleRun = findLabelRun(tpd.items, t.title, { last: !!t.titleLast });
     if (!titleRun) {
       warn(`${entry.id}: table title "${t.title}" not found on p.${t.page}`);
       continue;
@@ -2453,17 +2457,57 @@ async function compileClass(doc, entry, kindRow) {
     let rows = rowsAt(clipX1);
     let titleIdx = rows.findIndex((r) => fold(joinRow(r)).includes(fold(t.title)));
 
-    /* --- template tables: 3d6-band-anchored logical rows (v3 rowBands) --- */
-    if (t.kind === "templates") {
+    /* --- banded tables: logical rows anchored on their own label column ------
+     *
+     * Two shapes, one mechanism. A TEMPLATES table anchors its rows on the 3d6
+     * band printed in the first column; a TRAINING table (the Barbarian's
+     * regions, a Zaharan's dark paths) anchors on the region NAME. Both have
+     * cells that wrap over several printed lines, which is why neither can be
+     * read by clustering on y alone — a five-line equipment cell or a
+     * twelve-weapon list would come back as five rows of fragments.
+     *
+     * A LABEL THAT WRAPS IS STILL ONE LABEL. "Ivory" and "Kingdoms" print on
+     * consecutive lines nine points apart, while one region and the next stand
+     * thirty apart; a wrap is therefore a label line closer to its predecessor
+     * than the gap between real rows, and it joins rather than opening a band.
+     */
+    if (t.kind === "templates" || t.kind === "training") {
       const flat = rows.slice(titleIdx + 1).flat();
       const bandRe = /^\d{1,2}\s*[–-]\s*\d{1,2}$/;
+      const isBandLabel = (str) => (t.kind === "templates" ? bandRe.test(str) : /^[A-Za-z][A-Za-z' -]{1,28}$/.test(str));
       const bandLabels = [];
-      for (const r of rows.slice(titleIdx + 1)) {
-        const first = rebuildCells(r, cellGap)[0];
-        if (first && bandRe.test(first.str.trim())) bandLabels.push({ y: r[0].y, x: first.x });
+      if (t.kind === "training") {
+        // READ THE LABEL COLUMN OFF THE PAGE, not off the assembled rows. This
+        // table's print lines stand four to nine points apart, so `lineRows`
+        // folds a region's name in with the armour rung above it and the weapon
+        // list beside it, and the first cell of that merged row is whatever
+        // sorted leftmost — one band for the whole table. The label column is a
+        // geometric fact; take it as one.
+        const labelX1 = titleX0 + 45;
+        const titleY = rows[titleIdx]?.[0]?.y ?? 0;
+        for (const it of tpd.items) {
+          if (it.x < titleX0 - 12 || it.x > labelX1 || it.y <= titleY + 8) continue;
+          if (!(it.h >= 7) || !isBandLabel(it.str.trim())) continue;
+          bandLabels.push({ y: it.y, x: it.x, str: it.str.trim() });
+        }
+        bandLabels.sort((a, b) => a.y - b.y);
+      } else {
+        for (const r of rows.slice(titleIdx + 1)) {
+          const first = rebuildCells(r, cellGap)[0];
+          if (!first || !isBandLabel(first.str.trim())) continue;
+          bandLabels.push({ y: r[0].y, x: first.x, str: first.str.trim() });
+        }
       }
-      if (bandLabels.length < 6) {
-        warn(`${entry.id}: table "${t.title}" found only ${bandLabels.length} 3d6 band row(s)`);
+      if (t.kind === "training" && bandLabels.length > 2) {
+        const gaps = bandLabels.slice(1).map((b, i) => b.y - bandLabels[i].y).sort((a, b) => a - b);
+        const typical = gaps[Math.floor(gaps.length / 2)];
+        for (let i = bandLabels.length - 1; i > 0; i--) {
+          if (bandLabels[i].y - bandLabels[i - 1].y < typical * 0.6) bandLabels.splice(i, 1);
+        }
+      }
+      const minBands = t.kind === "templates" ? 6 : 2;
+      if (bandLabels.length < minBands) {
+        warn(`${entry.id}: table "${t.title}" found only ${bandLabels.length} band row(s), wanted ${minBands}`);
         continue;
       }
       // The table ends at its Notes line — or at a bare footnote asterisk:
@@ -2494,11 +2538,28 @@ async function compileClass(doc, entry, kindRow) {
           headerPool.find((c) => fold(c.str).length >= 3 && fold(name).startsWith(fold(c.str)));
         return cell?.x ?? null;
       };
-      const colDefs = (t.cols ?? [
-        { key: "template", header: "Template" },
-        { key: "proficiencies", header: "Proficiencies" },
-        { key: "equipment", header: "Starting Equipment" },
-      ]).map((c) => ({ ...c, hx: headerX(c.header) }));
+      const DEFAULT_COLS = {
+        templates: [
+          { key: "template", header: "Template" },
+          { key: "proficiencies", header: "Proficiencies" },
+          { key: "equipment", header: "Starting Equipment" },
+        ],
+        training: [
+          { key: "armour", header: "Armor" },
+          { key: "weapons", header: "Weapon Proficiencies" },
+          { key: "styles", header: "Fighting Style Proficiencies" },
+        ],
+      };
+      // A column may state its own x. The header search reads the lines between
+      // the title and the first band, and on a table whose rows print four
+      // points apart those lines fold together — the Barbarian's "Weapon
+      // Proficiencies" heading arrives welded to the first weapon list under
+      // it. Where the page defeats the search, the recipe gives the geometry
+      // instead of a better guess.
+      const colDefs = (t.cols ?? DEFAULT_COLS[t.kind]).map((c) => ({
+        ...c,
+        hx: typeof c.x === "number" ? c.x : headerX(c.header),
+      }));
       if (colDefs.some((c) => c.hx == null)) {
         warn(`${entry.id}: table "${t.title}" missing template header(s): ${colDefs.filter((c) => c.hx == null).map((c) => c.header).join(", ")}`);
         continue;

@@ -1457,6 +1457,31 @@
           "title": "Barbarian Templates",
           "page": 52,
           "kind": "templates"
+        },
+        "training": {
+          "title": "Barbarian Combat Proficiencies",
+          "page": 50,
+          "kind": "training",
+          "titleLast": true,
+          "labelHeader": "Region",
+          "note": "Column x read off the page: the heading lines fold into the first data row, so the header search cannot find them.",
+          "cols": [
+            {
+              "key": "armour",
+              "header": "Armor",
+              "x": 104
+            },
+            {
+              "key": "weapons",
+              "header": "Weapon Proficiencies",
+              "x": 168
+            },
+            {
+              "key": "styles",
+              "header": "Fighting Style Proficiencies",
+              "x": 419
+            }
+          ]
         }
       },
       "profList": {
