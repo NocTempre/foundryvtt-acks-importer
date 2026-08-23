@@ -3067,7 +3067,7 @@ const joinBody = (items) =>
  * Descriptor prose materializes per seat (lazy @PdfText); structured effects are
  * per-entry assists (emitted later — descriptor first).
  */
-async function compileDefinition(doc, entry, kindRow) {
+async function compileDefinition(doc, entry, kindRow, siblings = []) {
   DEF_BODY_MAX_H = DEF_BODY_MAX_H_BY_BOOK[entry.book] ?? 10;
   const assists = entry.assists ?? {};
   const page = entry.pages[0];
@@ -3079,6 +3079,19 @@ async function compileDefinition(doc, entry, kindRow) {
   // recipe knows the page; this lets it say so, without changing detection for
   // every other entry printed on the same page.
   const cols = assists.columns ?? defColumns(pd);
+  // The run-ins of the OTHER entries printed on this page: where each of them
+  // starts is where this one's block has to stop, whatever the page's indenting
+  // does. Folded, because extraction welds the label to what follows it.
+  const foldRunin = (t) => String(t ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const siblingRunins = (siblings ?? [])
+    .filter((s2) => s2 && s2.id !== entry.id && (s2.pages ?? []).includes(page) && s2.anchor?.runin)
+    .map((s2) => foldRunin(s2.anchor.runin))
+    .filter((r) => r.length >= 4);
+  const startsSibling = (lineText) => {
+    if (!siblingRunins.length) return false;
+    const line = foldRunin(lineText);
+    return !!line && siblingRunins.some((r) => line.startsWith(r));
+  };
   const tabs = marginTabs(pd); // dropped from every paragraph (see marginTabs)
   // An entry's declared anchor style beats the kind's default: the same kind
   // can print as display headings in one book and body-size run-ins in
@@ -3360,7 +3373,16 @@ async function compileDefinition(doc, entry, kindRow) {
           (it.alias === anchor.alias || (bodyAlias && it.alias !== bodyAlias)) &&
           colOf(it.x, cols) === col &&
           it.y > anchor.y + 2 &&
-          Math.abs(it.x - colX) < 15 &&
+          // A heading sits at the column's left edge — UNLESS the register
+          // already knows an entry starts there. A spread that INDENTS its
+          // run-ins (RR p29 indents the Explorer's by 21.5pt) hid every
+          // sibling from this test, so the block ran to the foot of the column
+          // and the flow carried it into the next entry's prose, then into the
+          // templates table, then onto the following page: Pathfinding
+          // reproduced Natural Stealth and a starting-equipment grid. The x
+          // test is a guess about what a heading looks like; a sibling's own
+          // declared run-in is not a guess, so it needs no tolerance.
+          (Math.abs(it.x - colX) < 15 || startsSibling(lineFrom(it))) &&
           /^[A-Z][^:]{0,44}:/.test(lineFrom(it)),
       )
       .sort((a, b) => a.y - b.y)[0];
@@ -3962,7 +3984,7 @@ async function main() {
           continue;
         }
         try {
-          const compiled = await compileDefinition(doc, entry, kindRow);
+          const compiled = await compileDefinition(doc, entry, kindRow, list);
           (contentOut[content] ??= { schema: "acks-cookbook/2", content, entries: {} }).entries[entry.id] = compiled;
           console.error(`OK   ${entry.id}: ${compiled.fields.description.paras.length} para(s) [${content}]`);
         } catch (err) {
