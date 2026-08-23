@@ -3605,10 +3605,10 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
   const f = node?.fields ?? {};
   // Body fields arrive one per page (`body61`) or one per page-column
   // (`body61c0`, `body61c1`) — emission order is reading order either way.
-  const body = Object.entries(f)
+  const bodyParts = Object.entries(f)
     .filter(([k, v]) => /^body\d+(?:c\d+)?$/.test(k) && typeof v === "string")
-    .map(([, v]) => v)
-    .join(" ");
+    .map(([, v]) => v);
+  const body = bodyParts.join(" ");
 
   /* Fixed column vocabulary; anything else a progression table carries is a
    * named LADDER (AC bonus, backstab dice, the assassin/bard skill columns). */
@@ -3848,7 +3848,7 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
   // What the class is trained to fight with, carried as an effect the actor
   // reads through the class item it holds. The run-in label is declared per
   // class because the spreads do not all print it under the same one.
-  const training = body && entry.training?.runin ? parseCombatTraining(body, entry.training.runin) : null;
+  const training = entry.training?.runin ? readTraining(bodyParts, entry.training.runin) : null;
 
   // The eight printed starting templates: proficiency cells tokenized against
   // every known ability name, equipment cells split into skinned descriptors.
@@ -4018,6 +4018,33 @@ async function executeCommonTongue() {
 }
 
 /**
+ * Read the training paragraph from the COLUMN it is printed in, not from the
+ * page's reading order.
+ *
+ * A spread whose level table sits beside the prose extracts with the table's
+ * cells folded through the sentence — "Battle axeMediumdagger5,000" — and
+ * `parseCombatTraining` refuses any paragraph carrying a digit, because none of
+ * these sentences prints a number and one that does is interleaved. Refusing is
+ * right; refusing was also the END of it, so twelve classes imported with no
+ * weapon, armour or fighting-style training at all, silently, and a class that
+ * grants no armour proficiency looked exactly like one that has none.
+ *
+ * The fields already arrive one per page-COLUMN where the extraction could tell
+ * them apart (`body61c0`, `body61c1`), and a column carries its own prose
+ * without the table beside it. So each is offered on its own first, and the
+ * joined page only afterwards — which is what a paragraph that genuinely runs
+ * across a column break needs.
+ */
+export function readTraining(bodyParts, runin) {
+  for (const part of bodyParts ?? []) {
+    const t = part ? parseCombatTraining(part, runin) : null;
+    if (t) return t;
+  }
+  const joined = (bodyParts ?? []).join(" ");
+  return joined ? parseCombatTraining(joined, runin) : null;
+}
+
+/**
  * What a class is TRAINED to fight with, read off its own spread.
  *
  * Every class spread carries one paragraph stating all three trainings in a
@@ -4094,7 +4121,7 @@ export function parseCombatTraining(body, runin) {
     .map(([key, re]) => ({ key, at: re.exec(para)?.index ?? -1 }))
     .filter((m) => m.at >= 0)
     .sort((a, b) => a.at - b.at);
-  if (!marks.length) return null;
+  if (!marks.length) return parseTrainingProse(para);
   const seg = {};
   marks.forEach((m, i) => {
     // A segment ends at its own sentence, not at the next phrase: the shortest
@@ -4179,6 +4206,99 @@ export function parseCombatTraining(body, runin) {
   if (!weapons.length && !armour && !styles.length) return null;
   return { weapons: [...new Set(weapons)], armour, styles: [...new Set(styles)] };
 }
+
+/**
+ * The SECOND grammar: a spread that states its training in sentences rather
+ * than in the RR formula.
+ *
+ * By This Axe writes the same three facts with none of the three phrases the
+ * segmenter above keys on — "Delvers can fight with all axes, hammers, flails,
+ * and maces… They can wear leather armor or lighter. They can wield a weapon
+ * two-handed or wield a weapon in each hand but cannot wield a shield." No
+ * marker, so every one of its ten classes read as having no training at all,
+ * and a class that grants no armour proficiency looked exactly like one that
+ * has none.
+ *
+ * The SHAPES are the rule and ship here; every weapon named, and which armour
+ * rung, is read off the reader's own page. Both books' readers converge on the
+ * one grant vocabulary the consumer already publishes (`classifyGrantToken`):
+ * `all`, `missile:all`, `melee:<size>`, a weapon-category, or a weapon name.
+ *
+ * EXCLUSIONS ARE DROPPED, NEVER INVERTED — the same rule the formula reader
+ * follows. "all missile weapons except longbows" grants no missile clause at
+ * all rather than granting the longbow the class is denied; the named groups
+ * beside it still stand, so the class is under-granted and never over-granted.
+ */
+export function parseTrainingProse(para) {
+  const text = String(para ?? "");
+  if (!text || /\d/.test(text)) return null;
+
+  /** A clause's own sentence, cut before whatever it goes on to forbid. */
+  const positive = (clause) => String(clause ?? "").split(/\bbut\s+(?:they\s+)?(?:cannot|can\s*not|typically)\b/i)[0];
+
+  /* --- weapons: "can fight with …" ------------------------------------- */
+  const weapons = [];
+  // "can only fight with" is the same sentence; and extraction welds, so the
+  // seams are `\s*` and the word boundary before a welded noun ("weararmor")
+  // cannot be required of any of them.
+  const wRaw = /can\s*(?:only\s*)?fight\s*with([^.]*)/i.exec(text)?.[1] ?? "";
+  const wSeg = positive(wRaw);
+  if (wSeg) {
+    // A "broad selection … including X, Y" names the group and then enumerates
+    // it; the ENUMERATION is what is read, exactly as the formula reader does.
+    const list = /\bincluding\b([^.]*)/i.exec(wSeg)?.[1] ?? wSeg;
+    for (const raw of list.split(/,| and | or /i)) {
+      const part = raw.trim();
+      if (!part || /\bexcept\b/i.test(part)) continue;
+      // "all missile weapons", "all axes" — an unqualified group.
+      if (/all\s*missile\s*weapons/i.test(part)) { weapons.push("missile:all"); continue; }
+      const group = TRAINING_GROUPS.find(([re]) => re.test(part));
+      if (group) { weapons.push(group[1]); continue; }
+      const name = singularWeapon(part.replace(/^all\s+/i, ""));
+      if (name) weapons.push(name);
+    }
+  }
+
+  /* --- armour ----------------------------------------------------------- */
+  // Written as a ceiling ("leather armor or lighter", "no armor heavier than
+  // leather") or as a grant of everything, or as a refusal of the whole idea.
+  let armour = "";
+  const aSeg = /((?:can|cannot|can\s*not)[^.]*(?:armor|armour)[^.]*)/i.exec(text)?.[1] ?? "";
+  const eschew = /eschew[^.]*(?:armor|armour)|(?:armor|armour)[^.]*\bentirely\b/i.test(text);
+  if (eschew) armour = "unarmored";
+  else if (/any\s*(?:type\s*of\s*)?(?:armor|armour)|all\s*(?:armor|armour)/i.test(aSeg)) armour = "heavy";
+  else if (aSeg) {
+    const bare = aSeg.replace(/very\s*light/gi, " ");
+    armour =
+      (/very\s*light/i.test(aSeg) && !/\b(leather|light|medium|heavy)\b/i.test(bare) ? "veryLight" : "") ||
+      (/\bheavy\b/i.test(bare) && !/heavier\s*than/i.test(bare) ? "heavy" : "") ||
+      (/\bmedium\b/i.test(bare) ? "medium" : "") ||
+      // "leather" IS the light rung, and the sentence names it rather than the
+      // rung: "leather armor or lighter", "no armor heavier than leather".
+      (/\bleather\b|\blight\b/i.test(bare) ? "light" : "");
+  }
+
+  /* --- styles: "can wield …" -------------------------------------------- */
+  const sSeg = positive(/can\s*wield([^.]*)/i.exec(text)?.[1] ?? "");
+  const styles = [];
+  if (/two\s*-?\s*hand/i.test(sSeg)) styles.push("twohanded");
+  if (/in\s*each\s*hand|dual\s*wield|dual\s*weapon/i.test(sSeg)) styles.push("dual");
+  if (/(?:weapon\s*and\s*shield|and\s*shield|shield\s*and)/i.test(sSeg)) styles.push("weaponshield");
+
+  if (!weapons.length && !armour && !styles.length) return null;
+  return { weapons: [...new Set(weapons)], armour, styles: [...new Set(styles)] };
+}
+
+/** Plural group names a sentence uses, and the category token each names. The
+ *  groups are the consumer's vocabulary (`classifyGrantToken`), not this book's. */
+const TRAINING_GROUPS = [
+  [/\baxes\b/i, "axe"],
+  [/\bcrossbows\b/i, "crossbow"],
+  [/\bbows\b/i, "bow"],
+  [/\b(?:hammers|maces|flails)\b/i, "flailHammerMace"],
+  [/\b(?:swords|daggers)\b/i, "swordDagger"],
+  [/\b(?:spears|pole\s*arms|polearms)\b/i, "spearPolearm"],
+];
 
 /**
  * One weapon name from a list item: the article and any aside dropped, the

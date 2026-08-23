@@ -92,6 +92,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
+      },
       "skills": [
         {
           "ref": "def.skill.hiding",
@@ -596,6 +599,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
+      },
       "casting": [
         {
           "key": "gnosis",
@@ -1062,6 +1068,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
+      },
       "skills": [
         {
           "ref": "def.power.pyroclastics",
@@ -1500,6 +1509,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
+      },
       "casting": [
         {
           "key": "gnosis",
@@ -1907,6 +1919,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
       },
       "fields": {
         "name": {
@@ -2323,6 +2338,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
       },
       "skills": [
         {
@@ -2783,6 +2801,9 @@
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
       },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
+      },
       "fields": {
         "name": {
           "op": "expect",
@@ -3226,6 +3247,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
       },
       "fields": {
         "name": {
@@ -3695,6 +3719,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
       },
       "fields": {
         "name": {
@@ -4188,6 +4215,9 @@
       ],
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(?:every\\s*)?(class\\s*level|two\\s*class\\s*levels)"
+      },
+      "training": {
+        "runin": "Armor and Weapon Proficiencies:"
       },
       "fields": {
         "name": {
