@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.15.0
+
+### Fixed
+- **A class's combat training is read in the words its own book uses.** Thirteen
+  of the thirty-one classes imported with no weapon, armour or fighting-style
+  training at all, and silently — a class granting no armour proficiency looks
+  exactly like a class that has none. The ten By This Axe dwarven classes state
+  all three facts in sentences ("Delvers can fight with all axes, hammers,
+  flails, and maces… They can wear leather armor or lighter. They can wield a
+  weapon two-handed…") in none of the phrasings the Revised Rulebook uses, so
+  nothing was ever found; four more read as armourless because real extraction
+  welds words together and "They cannot weararmor heavier than leather" defeated
+  a space nobody could see was missing. Twenty-eight of thirty-one now import
+  all three. What a class is denied is still never granted: a training stated as
+  a subtraction leaves that class unstated rather than inverted.
+- **A run-in entry stops where the next entry starts.** A power's full text ran
+  on into the next power's prose, then into the class's starting-equipment
+  table, then onto the following page — the Explorer's Pathfinding came through
+  as five paragraphs of somebody else's text. Blocks ended at the next heading
+  by looking for it at the column's left edge, and this spread indents its
+  headings, so every one of them was invisible. The entries a page holds are now
+  known to each other, and a heading stops the block whatever the indenting.
+
+### Added
+- **Two dev audits** (`tools/dev-training-scan.mjs`, `tools/dev-runon-scan.mjs`)
+  that report which classes import which training and why the rest do not, and
+  which entries reproduce a neighbour's text. Neither ships.
+
+## 2.14.0
 ## 2.14.0
 
 ### Added
