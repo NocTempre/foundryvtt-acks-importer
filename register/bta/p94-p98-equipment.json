@@ -12,7 +12,8 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -28,7 +29,8 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -44,7 +46,8 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -60,7 +63,8 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -75,11 +79,15 @@
    95
   ],
   "assists": {
-   "columns": [36, 306]
+   "columns": [
+    36,
+    306
+   ]
   },
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -94,11 +102,15 @@
    95
   ],
   "assists": {
-   "columns": [36, 306]
+   "columns": [
+    36,
+    306
+   ]
   },
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -114,11 +126,15 @@
   ],
   "assists": {
    "descStopY": 290,
-   "columns": [36, 306]
+   "columns": [
+    36,
+    306
+   ]
   },
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "clothing",
+   "subtype": "clothing"
   }
  },
  {
@@ -582,7 +598,7 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "animal"
   }
  },
  {
@@ -598,7 +614,7 @@
   ],
   "meta": {
    "category": "equipment",
-   "group": "gear"
+   "group": "animal"
   }
  }
 ]

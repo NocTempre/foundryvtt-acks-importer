@@ -13,7 +13,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -64,7 +65,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -115,7 +117,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -165,7 +168,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -259,7 +263,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -310,7 +315,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -367,7 +373,8 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "clothing",
+        "subtype": "clothing"
       },
       "fields": {
         "name": {
@@ -2165,7 +2172,7 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "animal"
       },
       "fields": {
         "name": {
@@ -2225,7 +2232,7 @@
       ],
       "meta": {
         "category": "equipment",
-        "group": "gear"
+        "group": "animal"
       },
       "fields": {
         "name": {

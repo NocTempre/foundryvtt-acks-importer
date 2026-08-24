@@ -42,8 +42,6 @@ function folder(id, name, sort) {
 const FOLDERS = {
   setup: "ackscFldSetup000",
   import: "ackscFldImport00",
-  abilities: "ackscFldAbils000",
-  tools: "ackscFldTools000",
 };
 
 function macro(id, name, img, command, sort = 0, folderId = null) {
@@ -80,80 +78,41 @@ const apiMacro = (id, name, img, fn, sort, folderId, args = "") => macro(id, nam
 
 function buildMacros() {
   return [
-    /* Folders group the macros into the order a GM actually uses them. Folder
-       ids are identity too — renaming a folder is free, re-issuing its id is
-       not (every world that imported the pack would gain a second one). */
-    folder(FOLDERS.setup, "1 · Your Book", 100),
-    folder(FOLDERS.import, "2 · Import Content", 200),
-    folder(FOLDERS.abilities, "3 · Abilities & Equipment", 300),
-    folder(FOLDERS.tools, "4 · Tools & Maintenance", 400),
+    /* FOUR CONTROLS, and one of them is not a control.
+       The pack shipped twenty-one macros. Nearly all were a single step of one
+       larger job, on the shelf because it happened to be a function: import
+       traps, import variations, import vehicles, import rules tables, build
+       template packages, fill companion slots. A Judge does not choose those
+       individually — they are what "import everything" is made of, they have a
+       dependency order, and a list of them invites running them in the wrong
+       one.
+       What is left is what a Judge actually reaches for:
+         - connect your books (the prerequisite, not a control)
+         - import everything
+         - delete everything
+         - rebuild ONE shelf
+       Everything dropped is still on the api and every world that imported the
+       old pack keeps its copies working, because the functions all still
+       resolve. Their ids are NOT reused: an id is identity, and re-issuing one
+       would hand such a world a duplicate. Folder ids likewise. */
+    folder(FOLDERS.setup, "1 · Your Books", 100),
+    folder(FOLDERS.import, "2 · Import", 200),
 
-    /* --- 1 · Your Book: ONE macro, because there is now one window. Getting
-       Started, Connect, Status & Reconnect and Forget were four buttons onto
-       three overlapping dialogs, and the macro list gave a reader no way to
-       tell which of them would show anything. The walkthrough, the server
-       shelf, the controls that answer for several books, and the per-book rows
-       are bands of a single window; Forget is a confirmed control in its
-       footer.
-
-       The other three are dropped from the pack rather than renamed. A world
-       that imported them keeps its copies and they keep working, because
-       gettingStarted / connectBook / forgetBooks all still resolve. Their ids
-       are NOT reused — an id is identity, and re-issuing one would hand every
-       such world a duplicate. --- */
     apiMacro("ackscMacStatus00", "Your ACKS Books (this seat)", "icons/svg/book.svg", "bookStatus", 100, FOLDERS.setup),
 
-    /* --- 2 · Import Content: cookbook -> world documents, in the same
-       dependency order the Getting Started chain runs them. --- */
-    apiMacro("ackscMacCookbook", "Import Monsters & NPCs — choose from a list (GM)", "icons/svg/mystery-man.svg", "cookbookImport", 200, FOLDERS.import),
-    apiMacro("ackscMacMonsAll0", "Import ALL Monsters & NPCs (GM)", "icons/svg/aura.svg", "cookbookImportMonsters", 210, FOLDERS.import),
-    apiMacro("ackscMacClassAll", "Import Character Classes (GM)", "icons/svg/cowled.svg", "importClasses", 220, FOLDERS.import),
-    // Traps, variations and vehicles each need ACKS Extras for the document
-    // type they materialize into; each api says which one is missing rather
-    // than failing at Item.create with a validation error.
-    apiMacro("ackscMacTraps000", "Import Traps (GM)", "icons/svg/trap.svg", "importTraps", 230, FOLDERS.import),
-    apiMacro("ackscMacVariat00", "Import Item Variations (GM)", "icons/svg/upgrade.svg", "importVariations", 240, FOLDERS.import),
-    apiMacro("ackscMacVehicl00", "Import Vehicles (GM)", "icons/svg/stone-path.svg", "importVehicles", 250, FOLDERS.import),
-    apiMacro("ackscMacAdvJourn", "Import Location Journals (GM)", "icons/svg/village.svg", "cookbookImportJournals", 260, FOLDERS.import),
-    apiMacro("ackscMacAdvTable", "Import Adventure Roll Tables (GM)", "icons/svg/d20-grey.svg", "cookbookImportRollTables", 270, FOLDERS.import),
-    apiMacro("ackscMacTables00", "Import Rules Tables (GM)", "icons/svg/coins.svg", "cookbookImportTables", 280, FOLDERS.import),
     macro(
-      "ackscMacTblDocs0",
-      "Create Foundry Tables from Rules Import (GM)",
-      "icons/svg/d6-grey.svg",
-      `const svc = globalThis.acksExtras?.lib?.services?.get?.("ruledata-import");
-if (!svc?.materializeDocs) return ui.notifications.warn("acks-importer | the ruledata provider does not offer materializeDocs — update ACKS Extras.");
-const r = await svc.materializeDocs();
-ui.notifications.info(\`acks-importer | \${r.exported} table(s) written as Foundry documents, \${r.placeholders} placeholder(s) for expected-but-missing tables.\`);`,
-      290,
-      FOLDERS.import,
-    ),
-    apiMacro("ackscMacRemoveAl", "Remove ALL Imports (GM)", "icons/svg/cancel.svg", "cookbookRemoveImports", 299, FOLDERS.import),
-
-    /* --- 3 · Abilities & Equipment: the shared item library. --- */
-    apiMacro("ackscMacAbilBrw0", "Browse & Import Abilities (GM)", "icons/svg/book.svg", "cookbookImportAbilitiesDialog", 300, FOLDERS.abilities),
-    apiMacro("ackscMacAbilAll0", "Import ALL Abilities (GM)", "icons/svg/upgrade.svg", "cookbookImportAbilities", 310, FOLDERS.abilities),
-    macro(
-      "ackscMacEquipAll",
-      "Import ALL Equipment (GM)",
-      "icons/svg/item-bag.svg",
+      "ackscMacImportAl",
+      "Import Everything (GM)",
+      "icons/svg/upgrade.svg",
       `const api = globalThis.acksImporter;
 if (!api) return ui.notifications.warn("acks-importer | module not ready (is it enabled?).");
-if (typeof api.importAllEquipment !== "function") return ui.notifications.warn("acks-importer | Import ALL Equipment needs a newer build of this module.");
-const r = await api.importAllEquipment();
-ui.notifications.info(\`acks-importer | equipment: \${r.created} created, \${r.total} in the cookbook.\`);`,
-      320,
-      FOLDERS.abilities,
+if (typeof api.importEverything !== "function") return ui.notifications.warn("acks-importer | Import Everything needs a newer build of this module.");
+await api.importEverything();`,
+      200,
+      FOLDERS.import,
     ),
-    apiMacro("ackscMacAbilUpd0", "Update Abilities in World (GM)", "icons/svg/regen.svg", "cookbookUpdateAbilities", 330, FOLDERS.abilities),
-    apiMacro("ackscMacClassUpd", "Update Classes in World (GM)", "icons/svg/regen.svg", "cookbookUpdateClasses", 340, FOLDERS.abilities),
-    apiMacro("ackscMacClassTpl", "Build Class Template Packages (GM)", "icons/svg/chest.svg", "importTemplatePackages", 350, FOLDERS.abilities),
-    apiMacro("ackscMacAbilCmp0", "Fill Companion Slots (GM)", "icons/svg/pawprint.svg", "cookbookFillCompanions", 360, FOLDERS.abilities),
-
-    /* --- 4 · Tools & Maintenance. --- */
-    apiMacro("ackscMacBrowse00", "Browse & Load a Page (GM)", "icons/svg/hanging-sign.svg", "browseAndLoad", 410, FOLDERS.tools),
-    apiMacro("ackscMacStats000", "Apply Stats from Book (GM)", "icons/svg/combat.svg", "applyStats", 420, FOLDERS.tools),
-    apiMacro("ackscMacCkDebug0", "Debug Raw Extraction (GM)", "icons/svg/eye.svg", "cookbookDebug", 430, FOLDERS.tools),
+    apiMacro("ackscMacReimport", "Reimport One Shelf (GM)", "icons/svg/regen.svg", "cookbookReimportShelf", 210, FOLDERS.import),
+    apiMacro("ackscMacRemoveAl", "Delete Everything Imported (GM)", "icons/svg/cancel.svg", "cookbookRemoveImports", 220, FOLDERS.import),
   ];
 }
 

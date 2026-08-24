@@ -297,5 +297,11 @@
   "ACKS-IMPORTER.ui.connectBook": "Book",
   "ACKS-IMPORTER.ui.reconnectAllNothing": "nothing was waiting — every book this seat knows about is already open.",
   "ACKS-IMPORTER.ui.packFailed": "Could not open the {type} compendium — those documents were created in the sidebar instead. See the console.",
-  "ACKS-IMPORTER.ui.progressAudit": "Auditing recipes against your books…"
+  "ACKS-IMPORTER.ui.progressAudit": "Auditing recipes against your books…",
+  "ACKS-IMPORTER.ui.reimportTitle": "Reimport a shelf",
+  "ACKS-IMPORTER.ui.reimportHint": "Empties one shelf and imports it again from your connected books. Everything else is left alone.",
+  "ACKS-IMPORTER.ui.reimportPick": "Shelf",
+  "ACKS-IMPORTER.ui.reimportGo": "Reimport",
+  "ACKS-IMPORTER.ui.reimportConfirm": "Delete the {n} document(s) on the “{shelf}” shelf and import them again? Documents a class template made are left alone.",
+  "ACKS-IMPORTER.ui.reimportDone": "Rebuilt the “{shelf}” shelf ({n} removed, then re-imported)."
 }

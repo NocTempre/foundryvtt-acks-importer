@@ -198,6 +198,38 @@ The dedup rules, each with a case that used to break it.
   products — "Candle (tallow, 1 lb)" and "Candle (wax, 1 lb)" are two things and
   must both survive.
 
+## Three controls, and one shelf at a time
+
+*Observable:* the "ACKS Importer — Macros" compendium holds FOUR macros in two
+folders — your books, import everything, reimport one shelf, delete everything.
+A fifth is a regression.
+
+Reimport one shelf, e.g. Weapons:
+*Observable:* the confirm names the count; afterwards the shelf holds exactly
+what it held before and the pack's total is unchanged (38 removed, 38 written,
+1,008 either side). Nothing on another shelf is touched, and a class template's
+documents are never among the deleted — they carry acks-extras' stamp.
+
+## Two books, one item
+
+With BOTH the Revised Rulebook and By This Axe connected, import equipment.
+
+*Observable:* ONE "Boots", one "Cloak", one "Journal", one "Manacles", one
+"Whistle", one "Laborer's Tools" — the Rulebook's copy, carrying the By This Axe
+id in `flags["acks-importer"].cookbook.merged`. A regional version with the same
+stats is a variant, not a second base item.
+
+Where two entries genuinely differ, both are kept and BOTH are tagged —
+`Boots (RR)` / `Boots (BTA)` — each keeping its printed name in
+`cookbook.printed`. That last part is what makes it stable: tagging rewrites the
+name, and a rewritten name would never collide again, so a pair tagged by an
+older build could never be reconsidered.
+
+*Observable, and the reason the register was fixed:* dwarven belts, boots, caps,
+cloaks, coats, turbans and tunics file under `Equipment / Clothing`, not
+Adventuring Gear, and the war and guard bears are `acks-extras.animal` ACTORS.
+They were all authored `group: "gear"`, which is what stopped Boots merging.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras

@@ -1,5 +1,36 @@
 # Changelog
 
+## 3.2.0
+
+**Three controls, and two books stop giving you two of everything.**
+
+### Changed
+- **The macro pack is four entries instead of twenty-one**: connect your books,
+  import everything, reimport one shelf, delete everything imported. Nearly all
+  the others were one step of a larger job — import traps, import rules tables,
+  build template packages — on the shelf because they happened to be functions.
+  They are what "import everything" is made of, they have an order, and listing
+  them invited running them in the wrong one. Every dropped macro's function is
+  still on the api, and macros you already imported keep working.
+- **Reimport one shelf** is the genuinely new control. Empty a single top-level
+  folder — Weapons, Proficiencies, Equipment — and import it again, for a book
+  reconnected at a different printing or a shelf edited past recognition.
+  Everything else is left alone.
+
+### Fixed
+- **Two books printing the same item give you one document.** The Revised
+  Rulebook and By This Axe both describe Boots, a Cloak, a Journal, Manacles, a
+  Whistle, Laborer's Tools. Where the stats match, they are now one item and the
+  Rulebook's copy is the one kept; where they genuinely differ, you get both,
+  each tagged with its book so you can tell them apart instead of finding two
+  rows called "Boots".
+- **Dwarven clothing is clothing.** Every By This Axe equipment entry was filed
+  as adventuring gear, so dwarven belts, boots, caps, cloaks, coats, turbans and
+  tunics shelved next to the rope and carried the wrong item subtype — which is
+  also what stopped them merging with their Rulebook counterparts.
+- **The dwarven war and guard bears import as animals**, not as inventory items.
+  Same cause.
+
 ## 3.1.0
 
 **Importing is minutes faster, and stops making documents you already have.**

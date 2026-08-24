@@ -7,6 +7,81 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Same name, two books: merge unless they differ beyond their source (2026-08-24)
+
+**Ruled.** Two imports that share a printed name are ONE document unless they
+differ in more than where they came from. Identical-but-for-provenance merges,
+and the higher-precedence book's copy is what the library keeps. Genuinely
+different keeps both, TAGGED with each book's short name, so a reader can tell
+`Boots (RR)` from `Boots (BTA)` instead of finding two rows called "Boots".
+
+**Precedence is the order `BOOKS` declares** — Revised Rulebook, Judges Journal,
+By This Axe, Monstrous Manual — read at run time rather than restated, so a new
+book takes its rank from where it is added.
+
+**The comparison is DIRECTIONAL, and getting that wrong is why this took two
+attempts.** A live document's `system` is a data model carrying every field the
+schema declares, defaults included; creation data carries only what the binding
+set. Comparing them whole never matches, so the first build declared two
+identical printings of Laborer's Tools different and tagged them. `sameMaterial`
+asks only whether the existing document already says everything the incoming
+would.
+
+**A merged id is recorded, not discarded.** The absorbed entry's id goes into
+`cookbook.merged` and `importedIndex` answers for it, or the loser's id resolves
+to nothing and the next run imports the twin again. **A tagged document keeps
+its printed name** in `cookbook.printed`, and collisions are judged on that —
+tagging rewrites the name, and a rewritten name would never collide again, so a
+pair tagged by an older build could never later be reconsidered.
+
+**A regional or racial version with the same stats is a VARIANT, not another
+base item** — so it merges. All five Rulebook/By This Axe pairs do: Boots,
+Cloak, Journal, Manacles, Whistle, plus Laborer's Tools and Special Components.
+Running the imports twice more in reverse order changed nothing — 1,006
+documents before and after.
+
+Getting there needed a register fix, and the failure to merge is what found it:
+Boots and Cloak differed only in `subtype`, because EVERY By This Axe equipment
+entry was authored `group: "gear"` with no `subtype` at all. Dwarven belts,
+boots, caps, cloaks, coats, turbans and tunics were therefore shelved with the
+rope and carried the wrong item subtype, and the war and guard bears imported as
+inventory rather than as animals. The comparison was doing its job; the data was
+wrong. (What this does NOT do is build a variant DOCUMENT linking to the base —
+the merge only guarantees one base item, which is what the rule asks for.)
+
+**Cost:** the check runs per document, so it reads a name index built once
+(`libraryNameIndex`) rather than the library. Loading every pack document per
+item made the equipment import quadratic again inside the check meant to keep it
+clean — measured at seven minutes before the index, and the index is dropped by
+the same `forgetImportedIndex` that drops the id index.
+
+### Three controls, not twenty-one (2026-08-24)
+
+**Ruled: the macro pack ships four entries** — connect your books, import
+everything, reimport one shelf, delete everything imported.
+
+It shipped twenty-one. Nearly all were one step of a larger job, on the shelf
+because it happened to be a function: import traps, import variations, import
+vehicles, import rules tables, build template packages, fill companion slots. A
+Judge does not choose those individually — they are what "import everything" is
+made of, they have a dependency order, and offering them as a list invites
+running them in the wrong one.
+
+`cookbookReimportShelf(shelf)` is the one genuinely new control: empty one
+top-level shelf and import it again, for a book reconnected at a different
+printing or a shelf edited past recognition. Deleting first is the point —
+import is idempotent and passes over what it already has, so importing "again"
+over a populated shelf changes nothing.
+
+**Which shelves exist is NOT restated.** `ITEM_SHELF` already says which id
+namespaces land where; `SHELF_REFILL` names only what `ITEM_SHELF` cannot, which
+run rebuilds a shelf. A shelf with no refill cannot be rebuilt alone and says so.
+
+**Nothing is lost.** Every dropped macro's function is still on the api, and a
+world that imported the old pack keeps its copies working. Their ids are not
+reused: an id is identity, and re-issuing one would hand such a world a
+duplicate.
+
 ### Writes are batched, because a write costs what the shelf already holds (2026-08-24)
 
 **Ruled: every bulk importer BUILDS all its documents, then writes them in
@@ -75,11 +150,14 @@ is "the same thing printed differently", and acks-extras already had those rules
 — in a second copy, with a docstring asserting the two must agree. They now live
 once, in `lib/vocab.mjs`.
 
-**Known, not fixed:** the shipped cookbook itself holds two duplicate equipment
-entries — `def.equip.laborersTools` / `def.equip.laborerSTools` (a curly
-apostrophe broke the slug) and `def.equip.specialComponents` /
-`def.equip.specialComponentsMiscellaneous`. Those are authored data, not a
-runtime rule, and are listed in ROADMAP.
+**Known, not fixed — and not what it first looked like.** Two pairs of equipment
+entries share a printed name across books: `def.equip.laborersTools` (By This
+Axe) / `def.equip.laborerSTools` (Revised Rulebook), and
+`def.equip.specialComponents` / `def.equip.specialComponentsMiscellaneous`.
+These are NOT duplicate rows in one corpus — each book needs its own entry
+because a recipe is page coordinates. Whether each pair is one item printed
+twice or two things sharing a name is a question about what those pages say,
+and it decides the fix; ROADMAP carries it.
 
 ### The audit: a recipe answers for itself, without importing (2026-08-24)
 

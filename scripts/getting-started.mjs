@@ -79,19 +79,25 @@ const GM_STEPS = [
 ];
 
 /**
- * Run every importer in order, narrating the step into the caller's status
- * element. `root` is the element holding `[data-gs-import]` (the button to
- * disable while the chain runs) and `[data-gs-import-status]`.
+ * Run every importer in order, narrating the step as it goes.
+ *
+ * `root` is the element holding `[data-gs-import]` (the button to disable while
+ * the chain runs) and `[data-gs-import-status]` — the Getting Started band
+ * passes it. It is OPTIONAL because this is also the whole of the "Import
+ * Everything" macro, which has no window to narrate into: without a root the
+ * steps are announced as notifications instead, so a Judge who ran it from the
+ * hotbar still sees where it has got to.
  */
-export async function runImportEverything(root) {
+export async function runImportEverything(root = null) {
   const api = game.modules.get(MODULE_ID)?.api;
   if (!api) return ui.notifications.warn("acks-importer | module not ready.");
-  const status = root.querySelector("[data-gs-import-status]");
-  const button = root.querySelector("[data-gs-import]");
+  const status = root?.querySelector("[data-gs-import-status]") ?? null;
+  const button = root?.querySelector("[data-gs-import]") ?? null;
   if (button) button.disabled = true;
   try {
     for (const [key, run] of GM_STEPS) {
       if (status) status.textContent = t(key);
+      else ui.notifications.info(`acks-importer | ${t(key)}`);
       // One failed step must not silence the rest — each importer covers a
       // different document type and they share no state beyond the world.
       try {
@@ -102,6 +108,7 @@ export async function runImportEverything(root) {
       }
     }
     if (status) status.textContent = t("importDone");
+    else ui.notifications.info(`acks-importer | ${t("importDone")}`);
   } finally {
     if (button) button.disabled = false;
   }

@@ -777,9 +777,10 @@ export const createDoc = async (cls, data, opts = {}) =>
  * so no creator can forget. Items only: the index is an Item index.
  */
 function remembered(doc) {
-  const id = doc?.documentName === "Item" ? doc.getFlag(MODULE_ID, "cookbook")?.id : null;
+  if (doc?.documentName !== "Item") return doc;
+  const id = doc.getFlag(MODULE_ID, "cookbook")?.id;
   if (id) rememberImported(id, doc);
-  return doc;
+  return rememberName(doc);
 }
 
 /**
@@ -856,8 +857,11 @@ async function importedIndex() {
     : [...game.items].filter((i) => !i.flags?.["acks-extras"]?.templatePart);
   const byId = new Map();
   for (const doc of docs) {
-    const id = doc.getFlag(MODULE_ID, "cookbook")?.id;
-    if (id && !byId.has(id)) byId.set(id, doc);
+    const flag = doc.getFlag(MODULE_ID, "cookbook");
+    // Every id the document answers for: its own, and any it absorbed when two
+    // books turned out to print the same thing. Without the merged ids the
+    // loser's id resolves to nothing and the next run imports the twin again.
+    for (const key of [flag?.id, ...(flag?.merged ?? [])]) if (key && !byId.has(key)) byId.set(key, doc);
   }
   importedCache = byId;
   return byId;
@@ -932,6 +936,7 @@ async function claimed(id, present, remember, build) {
 /** Drop the cache — after a bulk delete, or when the target may have changed. */
 export function forgetImportedIndex() {
   importedCache = null;
+  nameIndexCache = null;
   inflightImports.clear();
 }
 
@@ -1348,6 +1353,108 @@ function familyMemberIds() {
 
 const sysObject = (doc) =>
   typeof doc?.system?.toObject === "function" ? doc.system.toObject() : foundry.utils.deepClone(doc?.system ?? {});
+
+/* -------------------------------------------- */
+/*  Reimport one shelf                          */
+/* -------------------------------------------- */
+
+/**
+ * Which importer refills each top-level shelf.
+ *
+ * The shelves themselves are NOT listed here — `ITEM_SHELF` already says which
+ * id namespaces land on which shelf, and restating that would let the two
+ * drift. This names only the thing `ITEM_SHELF` cannot: which run rebuilds a
+ * shelf once it is empty. A shelf missing from this map cannot be reimported on
+ * its own and says so.
+ *
+ * Every importer here is dedup-driven, so running one after emptying a single
+ * shelf re-creates exactly that shelf and passes over everything else.
+ */
+const SHELF_REFILL = {
+  Proficiencies: "cookbookImportAbilities",
+  "Class Powers": "cookbookImportAbilities",
+  Drawbacks: "cookbookImportAbilities",
+  Skills: "cookbookImportAbilities",
+  Languages: "cookbookImportTables",
+  Races: "cookbookImportTables",
+  Classes: "importClasses",
+  Equipment: "importAllEquipment",
+  Weapons: "importWeapons",
+  Armor: "importArmor",
+  Traps: "importTraps",
+  Variations: "importVariations",
+};
+
+/** id namespaces that file onto a shelf, read off the shelf table itself. */
+const shelfPrefixes = (shelf) =>
+  Object.entries(ITEM_SHELF)
+    .filter(([, name]) => name === shelf)
+    .map(([prefix]) => prefix);
+
+/** Every shelf that can be rebuilt on its own, in shelf order. */
+export const reimportableShelves = () =>
+  [...new Set(Object.values(ITEM_SHELF))].filter((shelf) => SHELF_REFILL[shelf] && shelfPrefixes(shelf).length).sort();
+
+/**
+ * GM: empty ONE top-level shelf and import it again.
+ *
+ * The third of the three controls a Judge actually needs — import everything,
+ * delete everything, and rebuild one shelf — for the case where a shelf is
+ * wrong and a whole re-import is too big a hammer: a book reconnected at a
+ * different printing, an extraction fixed, a shelf edited past recognition.
+ *
+ * Deleting first is the point. Import is idempotent and passes over what it
+ * already has, so importing "again" over a populated shelf changes nothing;
+ * only an empty shelf gets rebuilt.
+ *
+ * Documents a class template made are never touched: they carry acks-extras'
+ * own stamp, they are the Judge's repairable copies, and they are not this
+ * shelf's to delete.
+ *
+ * @param {string} [shelf] a name from `reimportableShelves()`; omitted, asks.
+ */
+export async function cookbookReimportShelf(shelf = null) {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only (deletes and re-creates documents).");
+  const shelves = reimportableShelves();
+  if (!shelf) {
+    const esc = foundry.utils.escapeHTML ?? ((x) => x);
+    const options = shelves.map((n) => `<option value="${esc(n)}">${esc(n)}</option>`).join("");
+    return foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reimportTitle`) },
+      classes: ["acks-ui", "acks-importer-dialog"],
+      content: `<p class="notes">${game.i18n.localize(`${LANG_PREFIX}.ui.reimportHint`)}</p>
+        <div class="form-group"><label>${game.i18n.localize(`${LANG_PREFIX}.ui.reimportPick`)}</label>
+        <select name="shelf">${options}</select></div>`,
+      ok: {
+        label: game.i18n.localize(`${LANG_PREFIX}.ui.reimportGo`),
+        callback: (event, button) => cookbookReimportShelf(button.form.elements.shelf.value),
+      },
+    });
+  }
+  if (!SHELF_REFILL[shelf]) return ui.notifications.warn(`acks-importer | "${shelf}" is not a shelf that can be rebuilt on its own.`);
+
+  const prefixes = shelfPrefixes(shelf);
+  const mine = (d) =>
+    !d.flags?.["acks-extras"]?.templatePart &&
+    prefixes.some((p) => String(d.getFlag(MODULE_ID, "cookbook")?.id ?? "").startsWith(`${p}.`));
+  const doomed = (await importedDocs("Item")).filter(mine);
+
+  const ok = await foundry.applications.api.DialogV2.confirm({
+    window: { title: game.i18n.localize(`${LANG_PREFIX}.ui.reimportTitle`) },
+    classes: ["acks-ui", "acks-importer-dialog"],
+    content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.reimportConfirm`, { n: doomed.length, shelf })}</p>`,
+  });
+  if (!ok) return null;
+
+  await deleteImported("Item", doomed);
+  forgetImportedIndex(); // the shelf it remembers is the one just deleted
+  const made = await api()[SHELF_REFILL[shelf]]();
+  ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.reimportDone`, { n: doomed.length, shelf }));
+  return { shelf, removed: doomed.length, refill: made ?? null };
+}
+
+/** The module's own api, for `SHELF_REFILL` to name a run without importing it. */
+const api = () => globalThis.acksImporter ?? {};
 
 /**
  * GM: delete EVERY document this module imported — the packs it created, the
@@ -3131,6 +3238,167 @@ export async function cookbookAudit({ ids = null, books = null, kinds = null, ar
       `${summary.noBook ? `, ${summary.noBook} unreadable (book not connected)` : ""}. Details in console.`,
   );
   return { rows, summary };
+}
+
+/* -------------------------------------------- */
+/*  Same name, two books                        */
+/* -------------------------------------------- */
+
+/**
+ * Library documents keyed by every printed form of their name.
+ *
+ * Cached for the session beside `importedIndex`, and dropped by the same
+ * `forgetImportedIndex`, because it answers the same kind of question about the
+ * same shelf. Rebuilt lazily; `rememberName` keeps it true as documents arrive
+ * so a run that imports two books never has to rebuild it mid-way.
+ */
+let nameIndexCache = null;
+async function libraryNameIndex() {
+  if (nameIndexCache) return nameIndexCache;
+  const nameKeys = globalThis.acksExtras?.lib?.vocab?.nameKeys;
+  const map = new Map();
+  if (nameKeys) {
+    for (const doc of await importedDocs("Item")) {
+      if (doc.flags?.["acks-extras"]?.templatePart) continue; // a class's copy, not a definition
+      for (const k of nameKeys(printedName(doc))) {
+        if (!map.has(k)) map.set(k, []);
+        map.get(k).push(doc);
+      }
+    }
+  }
+  nameIndexCache = map;
+  return map;
+}
+
+/** Teach the name index about a document, so the next import sees it. */
+function rememberName(doc) {
+  const nameKeys = globalThis.acksExtras?.lib?.vocab?.nameKeys;
+  if (!nameIndexCache || !nameKeys || !doc?.name) return doc;
+  if (doc.flags?.["acks-extras"]?.templatePart) return doc;
+  for (const k of nameKeys(printedName(doc))) {
+    if (!nameIndexCache.has(k)) nameIndexCache.set(k, []);
+    if (!nameIndexCache.get(k).includes(doc)) nameIndexCache.get(k).push(doc);
+  }
+  return doc;
+}
+
+/**
+ * Book precedence — the order `BOOKS` declares, core first.
+ *
+ * When two books print the same thing, the earlier-declared one is the copy the
+ * library keeps. That order is authored (Revised Rulebook, Judges Journal, By
+ * This Axe, Monstrous Manual, …) and is read here rather than restated, so a
+ * new book takes its precedence from where it is added.
+ */
+const bookRank = (bookId) => {
+  const i = Object.keys(BOOKS).indexOf(bookId);
+  return i < 0 ? Number.MAX_SAFE_INTEGER : i;
+};
+
+/**
+ * Does the document the library holds already say everything this import would?
+ *
+ * Two entries printed in two books are the same item when nothing but their
+ * source differs. Provenance has to come out of the comparison or nothing ever
+ * matches — the description is a lazy `@PdfText[<id>]` tag naming the entry.
+ *
+ * DIRECTIONAL, and that is the whole trick. A live document's `system` is a
+ * data model carrying every field the schema declares, defaults included, while
+ * creation data carries only what the binding set. Comparing the two whole
+ * never matches, which is how two identical printings of Laborer's Tools were
+ * declared different and tagged instead of merged. So only the keys the INCOMING
+ * sets are checked, against what the existing document holds for them.
+ */
+function sameMaterial(existing, data) {
+  if ((existing?.type ?? null) !== (data?.type ?? null)) return false;
+  for (const [key, value] of Object.entries(data?.system ?? {})) {
+    if (key === "description") continue;
+    const held = foundry.utils.getProperty(existing.system ?? {}, key);
+    if (JSON.stringify(held ?? null) !== JSON.stringify(value ?? null)) return false;
+  }
+  return true;
+}
+
+/**
+ * The name a document was PRINTED under, before any book tag was added.
+ *
+ * Tagging rewrites the name ("Boots" becomes "Boots (RR)"), and a rewritten
+ * name no longer collides with the other book's — so a second run would find no
+ * collision, reconsider nothing, and a pair tagged by an older build could never
+ * later be merged. The printed name is kept on the flag and is what collisions
+ * are judged on, so the answer does not depend on how many times this has run.
+ */
+const printedName = (doc) => doc.getFlag(MODULE_ID, "cookbook")?.printed ?? doc.name;
+
+/**
+ * Reconcile a document about to be imported against one the library already
+ * holds under the same printed name.
+ *
+ * THE RULE: two imports sharing a name are one document unless they differ
+ * beyond their source. Identical-but-for-provenance means merge — the
+ * higher-precedence book's copy is the one kept, and the loser's id is recorded
+ * on it so every later lookup, in any order, lands on the same document.
+ * Genuinely different means keep both, TAGGED, so a reader can tell which book
+ * each came from instead of finding two rows called "Boots".
+ *
+ * Merging by recording the id (rather than silently not importing) is what
+ * makes this idempotent: a merged-away id still resolves, so a second run finds
+ * the document rather than minting the twin again.
+ *
+ * @returns {Promise<{skip: true, doc: object} | {skip: false, name?: string}>}
+ *   `skip` when the library already answers for this entry; otherwise the name
+ *   to create it under, which is the printed one unless a tag was needed.
+ */
+async function reconcileByName(data, id, bookId) {
+  const nameKeys = globalThis.acksExtras?.lib?.vocab?.nameKeys;
+  if (!nameKeys || !data?.name) return { skip: false };
+  const keys = nameKeys(data.name);
+  if (!keys.size) return { skip: false };
+
+  // Asked once per document being imported, so it reads an INDEX rather than
+  // the library: loading every pack document per item made the equipment import
+  // quadratic all over again, in the check meant to keep it clean.
+  const index = await libraryNameIndex();
+  const candidates = new Set();
+  for (const k of keys) for (const doc of index.get(k) ?? []) candidates.add(doc);
+
+  for (const other of candidates) {
+    const otherId = other.getFlag(MODULE_ID, "cookbook")?.id;
+    if (!otherId || otherId === id) continue;
+
+    const otherBook = other.getFlag(MODULE_ID, "cookbook")?.book ?? bookOf(cookbookEntry(otherId));
+    if (sameMaterial(other, data)) {
+      // The same item, printed twice. Keep the higher-precedence copy and teach
+      // it this id; if THIS book outranks the one already imported, the kept
+      // document takes this entry's name and content instead.
+      const incomingWins = bookRank(bookId) < bookRank(otherBook);
+      const merged = new Set([...(other.getFlag(MODULE_ID, "cookbook")?.merged ?? []), incomingWins ? otherId : id]);
+      await other.update({
+        ...(incomingWins ? { name: data.name, system: data.system } : {}),
+        [`flags.${MODULE_ID}.cookbook.merged`]: [...merged],
+        ...(incomingWins ? { [`flags.${MODULE_ID}.cookbook.id`]: id, [`flags.${MODULE_ID}.cookbook.book`]: bookId } : {}),
+      });
+      rememberImported(id, other);
+      return { skip: true, doc: other };
+    }
+
+    // Different things that share a name. Both are kept and both are tagged,
+    // because tagging only the newcomer leaves the reader guessing which book
+    // the untagged one came from.
+    const tag = (b) => BOOKS[b]?.short ?? b;
+    if (otherBook && bookId && otherBook !== bookId) {
+      const otherPrinted = printedName(other);
+      if (!other.name.endsWith(`(${tag(otherBook)})`)) {
+        await other.update({
+          name: `${otherPrinted} (${tag(otherBook)})`,
+          [`flags.${MODULE_ID}.cookbook.printed`]: otherPrinted,
+        });
+      }
+      return { skip: false, name: `${data.name} (${tag(bookId)})`, printed: data.name };
+    }
+    return { skip: false }; // same book, same name: distinct entries the book itself separates
+  }
+  return { skip: false };
 }
 
 /**
@@ -5784,7 +6052,20 @@ async function importEquipmentItem(found, id, folderId, node) {
       if (m) doc.system.damage = m[1].replace(/\s+/g, "");
     }
   }
-  const item = await createDoc(Item, { ...doc, folder });
+  // Two books printing one thing is ONE document (see reconcileByName): merge
+  // when nothing but the source differs, tag both when something does.
+  const verdict = await reconcileByName(doc, id, bookOf(found));
+  if (verdict.skip) return verdict.doc;
+  const item = await createDoc(Item, {
+    ...doc,
+    folder,
+    ...(verdict.name
+      ? {
+          name: verdict.name,
+          flags: foundry.utils.mergeObject(doc.flags ?? {}, { [MODULE_ID]: { cookbook: { printed: verdict.printed } } }, { inplace: false }),
+        }
+      : {}),
+  });
   // acks-equipment owns the RAW annotation layer (container capacities, the
   // harness, the bowquiver). Its profiles key off the printed name, so a
   // generated item annotates exactly like a core one. Reuse, never restate.
