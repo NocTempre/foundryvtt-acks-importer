@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.1
+
+### Fixed
+- **The manifest now requires ACKS Extras 4.19.1, not 4.19.0.** Class-template
+  packages need the 4.19.1 fix: before it, the materializer refused any class
+  document held in a compendium, which since 3.0.0 is all of them. A world on
+  4.19.0 would have had "Build Class Template Packages" report zero created and
+  explain nothing.
+
 ## 3.0.0
 
 **Everything you import now lands in a compendium, and the shelves are two deep.**
