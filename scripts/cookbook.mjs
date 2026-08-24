@@ -761,7 +761,72 @@ const packOpts = async (type) => {
  * creator calling `Actor.create` directly puts half the library in the sidebar,
  * where the presence checks do not look and the pack's ownership does not reach.
  */
-export const createDoc = async (cls, data, opts = {}) => cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) });
+export const createDoc = async (cls, data, opts = {}) =>
+  remembered(await cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) }));
+
+/**
+ * Teach the dedup index about a document the moment it exists.
+ *
+ * The index is built once per session, and only `claimImport` used to update
+ * it — so anything created through `createDoc` alone was invisible to the next
+ * presence check IN THE SAME SESSION, and running that importer twice made a
+ * twin. Race items did exactly that: two `def.race.dwarf`, two `def.race.elf`,
+ * every time the class-builder tables were imported a second time.
+ *
+ * Keyed off the document's own cookbook flag rather than a caller-supplied id,
+ * so no creator can forget. Items only: the index is an Item index.
+ */
+function remembered(doc) {
+  const id = doc?.documentName === "Item" ? doc.getFlag(MODULE_ID, "cookbook")?.id : null;
+  if (id) rememberImported(id, doc);
+  return doc;
+}
+
+/**
+ * Create MANY documents in one write, and the reason every bulk import must.
+ *
+ * A write costs one round trip whose price is set by HOW MANY DOCUMENTS THE
+ * TARGET ALREADY HOLDS, not by the payload — each call re-indexes the
+ * collection. Measured against this world: a create into a 19-document pack
+ * takes ~35ms; the same create into a 1,039-document pack takes ~950ms. So a
+ * loop that writes one document at a time is quadratic in the size of what it
+ * is building, and visibly slows as it goes.
+ *
+ * Batching collapses N re-indexes into one. Measured at 1,039 documents:
+ * 25 individual creates 23,866ms, the same 25 in one call 1,107ms — 21.6x, and
+ * the gap widens as the library grows. That is the difference between an
+ * ability import that takes minutes and one that takes seconds.
+ *
+ * Chunked rather than one giant call because a rejected batch fails whole: a
+ * chunk bounds what one bad document can take down with it, lets a progress bar
+ * move, and keeps the retry below cheap.
+ */
+export const WRITE_CHUNK = 50;
+export async function createDocs(cls, dataList, opts = {}) {
+  if (!dataList.length) return [];
+  const packOptions = await packOpts(cls.documentName);
+  const out = [];
+  for (let i = 0; i < dataList.length; i += WRITE_CHUNK) {
+    const chunk = dataList.slice(i, i + WRITE_CHUNK);
+    const made = await cls.createDocuments(chunk, { ...opts, ...packOptions }).catch((err) => {
+      // One bad chunk must not lose the rest of the run. Fall back to one write
+      // per document so the offender is isolated and named, and its neighbours
+      // still land.
+      console.warn(`${MODULE_ID} | batched create of ${chunk.length} ${cls.documentName}(s) failed — retrying singly`, err);
+      return null;
+    });
+    if (made) out.push(...made.map(remembered));
+    else {
+      for (const data of chunk) {
+        const one = await cls
+          .create(data, { ...opts, ...packOptions })
+          .catch((e) => (console.error(`${MODULE_ID} | create "${data?.name}"`, e), null));
+        if (one) out.push(remembered(one));
+      }
+    }
+  }
+  return out;
+}
 
 /**
  * Every Item this module has imported, indexed by cookbook id — the PACK only,
@@ -1387,7 +1452,13 @@ async function importOne(bookId, id, folderId) {
   if (kind === "kind.monsterFamily") return importFamily(bookId, id, folderId);
   if (kind && kind !== "kind.monster") return null;
   const session = ctx.sessionDocs.get(bookId);
-  const node = await executeEntry(session.doc, found.cb, data.registers, id);
+  // The `art` op walks the page's operator list to CHOOSE which placed image to
+  // extract, and costs seconds where the rest of the recipe costs milliseconds.
+  // When the chosen image is already a verified file on disk there is nothing
+  // left to choose, so the op is skipped outright — the cache saved the upload
+  // long before this, but never the walk.
+  const artOnDisk = await ctx.cachedArt?.(id).catch(() => null);
+  const node = await executeEntry(session.doc, found.cb, data.registers, id, artOnDisk ? { skipOps: ["art"] } : {});
   if (!node.ok) {
     ui.notifications.warn(`acks-importer | ${found.entry.name}: page did not match the cookbook (different printing?) — skipped.`);
     return null;
@@ -1450,13 +1521,16 @@ async function importOne(bookId, id, folderId) {
     ui.notifications.warn(`acks-importer | ${found.entry.name}: the system rejected the extracted stats — skipped (see console).`);
     return null;
   }
-  if (node.fields.art && ctx.importArtForPage) {
-    const artInstr = found.entry.fields?.art ?? {};
+  // Gated on the RECIPE asking for art, not on the op having run: the op is
+  // skipped when the file is already on disk, and gating on its result would
+  // mean a cached illustration never reached the actor.
+  const artInstr = found.entry.fields?.art ?? null;
+  if ((artInstr || node.fields.art) && ctx.importArtForPage) {
     await ctx.importArtForPage(actor, session.doc, {
       id,
-      page: artInstr.page ?? found.entry.pages[0],
-      name: artInstr.name ?? node.fields.art.name ?? null,
-      box: artInstr.box ?? null,
+      page: artInstr?.page ?? found.entry.pages[0],
+      name: artInstr?.name ?? node.fields.art?.name ?? null,
+      box: artInstr?.box ?? null,
     });
   }
   return actor;
@@ -2907,12 +2981,193 @@ async function prepareItemShelves() {
 }
 
 /**
+ * PARSE every recipe against the connected books and report which ones fail.
+ *
+ * Writes nothing. A recipe is a set of page coordinates and probes, and the only
+ * thing that decides whether it still matches is the printing in front of it —
+ * so the question "does this recipe work?" has to be answerable WITHOUT the
+ * import that would act on the answer. Before this, a broken recipe surfaced as
+ * one warning in a run of hundreds, or as a document that quietly imported with
+ * an empty description.
+ *
+ * Each entry is executed independently: one failure never stops the pass, and
+ * every entry gets a row. `ok: false` is the recipe's own name-anchor check
+ * failing — the printing moved, or the coordinates were never right for this
+ * edition — and `misses` names the fields that threw underneath.
+ *
+ * The pass shares ONE page cache per book across every entry, which is what
+ * makes a whole-corpus audit affordable: the shipped abilities average 5.5
+ * entries per page.
+ *
+ * @param {object} [options]
+ * @param {string[]} [options.ids] audit only these entry ids
+ * @param {string[]} [options.books] audit only entries from these book ids
+ * @param {string[]} [options.kinds] audit only these entry kinds
+ * @param {boolean} [options.art] decode page artwork too (default false).
+ *   An audit asks whether a recipe still matches the PRINTING, which is a text
+ *   question; the `art` op decodes a page's placed images and costs SECONDS
+ *   where the rest of a recipe costs milliseconds — measured on the Monstrous
+ *   Manual at 1.8s for one creature and 15s for another, against 7ms for a
+ *   proficiency. Leave it off unless the artwork itself is what is in doubt.
+ * @returns {Promise<{rows: object[], summary: object}>} every row, and the tally
+ */
+let lastAuditRows = [];
+
+/** Rows the running (or last finished) audit has produced so far. */
+export const lastAudit = () => {
+  const tally = (k) => lastAuditRows.filter((r) => r.status === k).length;
+  return {
+    done: lastAuditRows.length,
+    ok: tally("ok"),
+    noMatch: tally("no-match"),
+    threw: tally("threw"),
+    noBook: tally("no-book"),
+    okButEmpty: lastAuditRows.filter((r) => r.empty).length,
+    failing: lastAuditRows
+      .filter((r) => r.status === "no-match" || r.status === "threw" || r.empty)
+      .map((r) => ({ id: r.id, name: r.name, book: r.book, page: r.page, status: r.status, empty: r.empty, reason: r.reason })),
+    slowest: [...lastAuditRows].sort((a, b) => b.ms - a.ms).slice(0, 10).map((r) => ({ id: r.id, kind: r.kind, ms: r.ms })),
+  };
+};
+
+export async function cookbookAudit({ ids = null, books = null, kinds = null, art = false } = {}) {
+  if (!game.user.isGM) return ui.notifications.warn("acks-importer | GM only.");
+  const wanted = ids ? new Set(ids) : null;
+  const entries = [];
+  for (const source of [data.books, data.content]) {
+    for (const cb of source.values()) {
+      for (const [id, entry] of Object.entries(cb.entries ?? {})) {
+        if (wanted && !wanted.has(id)) continue;
+        if (kinds && !kinds.includes(entry.kind)) continue;
+        const book = entry.book ?? cb.book?.id ?? (typeof cb.book === "string" ? cb.book : null);
+        if (books && !books.includes(book)) continue;
+        entries.push({ id, entry, cb, book });
+      }
+    }
+  }
+  if (!entries.length) {
+    ui.notifications?.warn(`${MODULE_ID} | audit: nothing matched.`);
+    return { rows: [], summary: { total: 0 } };
+  }
+
+  const pageCache = runPageCache();
+  const artCache = runPageCache();
+  const rows = [];
+  // Published as it goes, not at the end. A whole-corpus pass takes tens of
+  // minutes — monster recipes carry art extraction and cost orders more than a
+  // proficiency — and a pass that reveals nothing until it returns cannot be
+  // watched, cut short, or reported on. `acksImporter.lastAudit()` reads it live.
+  lastAuditRows = rows;
+  const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressAudit`), entries.length);
+  try {
+    for (const { id, entry, cb, book } of entries) {
+      const session = ctx.sessionDocs.get(book);
+      const base = { id, name: entry.name, kind: entry.kind, book, page: entry.pages?.[0] ?? null, cite: entry.cite };
+      if (!session) {
+        rows.push({ ...base, status: "no-book", ms: 0 });
+        bar.step(entry.name ?? id);
+        continue;
+      }
+      const t0 = performance.now();
+      let node = null;
+      let threw = null;
+      try {
+        node = await executeEntry(session.doc, cb, data.registers, id, {
+          pageCache: pageCache(book),
+          artCache: artCache(book),
+          ...(art ? {} : { skipOps: ["art"] }),
+        });
+      } catch (err) {
+        threw = String(err?.message ?? err);
+      }
+      rows.push({
+        ...base,
+        status: threw ? "threw" : node?.ok ? "ok" : "no-match",
+        ms: Math.round(performance.now() - t0),
+        reason: threw ?? node?.reason ?? null,
+        // Two shapes reach `misses`: a FIELD that threw or matched nothing, and
+        // a register TOKEN the lookup tables do not know. The second carries no
+        // field and is the more actionable of the two — it names a printed word
+        // the register has no row for, which is register data to add rather
+        // than page geometry to re-measure.
+        misses: (node?.misses ?? []).map((m) =>
+          m.table ? `register ${m.table}: unknown token "${m.token}"` : `${m.field}: ${m.error ?? "no result"}`,
+        ),
+        // A recipe can pass its name anchor and still bring back nothing to
+        // say — but only counts as empty if it ASKED for prose. A classMeta
+        // passage read for one name, or a table read for its grid, declares no
+        // description field and is not a defect for lacking one.
+        empty:
+          !threw &&
+          !!node?.ok &&
+          !!entry.fields?.description &&
+          !(node.fields?.description?.length > 0),
+      });
+      bar.step(entry.name ?? id);
+    }
+  } finally {
+    bar.finish();
+  }
+
+  const tally = (k) => rows.filter((r) => r.status === k).length;
+  const summary = {
+    total: rows.length,
+    ok: tally("ok"),
+    noMatch: tally("no-match"),
+    threw: tally("threw"),
+    noBook: tally("no-book"),
+    okButEmpty: rows.filter((r) => r.empty).length,
+    withMisses: rows.filter((r) => r.misses?.length).length,
+    totalMs: rows.reduce((n, r) => n + r.ms, 0),
+  };
+  const failing = rows.filter((r) => r.status === "no-match" || r.status === "threw" || r.empty);
+  console.log(`${MODULE_ID} | recipe audit`, summary);
+  if (failing.length) console.table(failing.map((r) => ({ id: r.id, name: r.name, book: r.book, page: r.page, status: r.status, empty: r.empty, reason: r.reason })));
+  ui.notifications.info(
+    `${MODULE_ID} | audit: ${summary.ok}/${summary.total} parsed` +
+      `${summary.noMatch ? `, ${summary.noMatch} did not match` : ""}` +
+      `${summary.threw ? `, ${summary.threw} threw` : ""}` +
+      `${summary.okButEmpty ? `, ${summary.okButEmpty} matched but read nothing` : ""}` +
+      `${summary.noBook ? `, ${summary.noBook} unreadable (book not connected)` : ""}. Details in console.`,
+  );
+  return { rows, summary };
+}
+
+/**
+ * One page cache per BOOK, living exactly as long as one bulk run.
+ *
+ * `executeEntry` caches pages for the duration of a single call, which is the
+ * right lifetime for a single entry and the wrong one for a corpus: the shipped
+ * abilities put a mean of 5.5 entries on each page and as many as 19 on one, so
+ * a per-entry cache re-extracts the same page for every entry printed on it.
+ * Measured on the Judges Journal's p.322 dictionary spread: 19 entries, 15.8s,
+ * a flat ~833ms each — the cost of `getTextContent()`, paid nineteen times for
+ * one page. Across the ability corpus that is 579 page reads for 105 distinct
+ * pages, 82% of them redundant.
+ *
+ * Keyed by book because a page number means nothing without one, and handed out
+ * as a function so a caller threads ONE object through a whole run and drops it
+ * at the end. Nothing here outlives the run: a session-long cache would hold
+ * every page of every opened book for as long as the world is up, which is the
+ * memory the per-call cache was avoiding.
+ *
+ * @returns a `(bookId) => Map` to pass as `executeEntry`'s `opts.pageCache`
+ */
+function runPageCache() {
+  const perBook = new Map();
+  return (bookId) => {
+    if (!perBook.has(bookId)) perBook.set(bookId, new Map());
+    return perBook.get(bookId);
+  };
+}
+
+/**
  * Build — or REUSE — the shared ability item for a definition id. Deduped by
  * cookbook id, so every monster/NPC referencing a proficiency links to the SAME
  * item instead of minting a per-actor copy. Works bookless: without the citing
  * book the item still imports with its structure and lazy descriptor.
  */
-export async function importAbility(id, folderId) {
+export async function importAbility(id, folderId, { pageCache = null } = {}) {
   const found = cookbookEntry(id);
   if (!found) return null;
   // NOTE an alias gets its OWN item. The books list a name whose rules text is
@@ -2921,20 +3176,39 @@ export async function importAbility(id, folderId) {
   // pointer to where that text lives, so it extracts and classifies normally —
   // it just does not stack with the entry it points at.
   return claimImport(id, async () => {
-    const bookId = bookOf(found);
-    const session = ctx.sessionDocs.get(bookId);
-    let node = null;
-    if (session) {
-      node = await executeEntry(session.doc, found.cb, data.registers, id);
-      if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-      else node = null;
-    }
-    const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
-    const doc = bindAbility(found.entry, node, id);
-    const extras = doc.flags["acks-extras"].extras;
-    extras.effects = await resolveCompanions(extras.effects);
-    return createDoc(Item, { ...doc, folder });
+    const built = await abilityData(id, { folderId, pageCache });
+    return built ? createDoc(Item, built) : null;
   });
+}
+
+/**
+ * Everything an ability import does EXCEPT the write.
+ *
+ * Split out because the write is the expensive half and only batching makes it
+ * cheap (see `createDocs`): a bulk run builds every document first and then
+ * writes them a chunk at a time, which it cannot do while building and writing
+ * are one call. Building is pure-ish and fast — a definition parses in about
+ * 7ms — so a whole corpus can be built before anything is written.
+ *
+ * Returns creation data with its folder already resolved, or null when the
+ * entry is unknown.
+ */
+async function abilityData(id, { folderId = null, pageCache = null } = {}) {
+  const found = cookbookEntry(id);
+  if (!found) return null;
+  const bookId = bookOf(found);
+  const session = ctx.sessionDocs.get(bookId);
+  let node = null;
+  if (session) {
+    node = await executeEntry(session.doc, found.cb, data.registers, id, pageCache ? { pageCache: pageCache(bookId) } : {});
+    if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
+    else node = null;
+  }
+  const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
+  const doc = bindAbility(found.entry, node, id);
+  const extras = doc.flags["acks-extras"].extras;
+  extras.effects = await resolveCompanions(extras.effects);
+  return { ...doc, folder };
 }
 
 /**
@@ -5727,6 +6001,33 @@ export async function importPricedGear(folderId) {
     }
   }
 
+  // And whatever the LIBRARY already holds, under either spelling. The loop
+  // above only knows the equipment chapter's declared entries; the weapon and
+  // armour tables mint their items from a grid at run time, so nothing declares
+  // "Military Oil" — and the catalogue prints it as "Oil, Military (1 pint)",
+  // which is a different key again. The result was two documents for one flask.
+  //
+  // This is why the price list runs LAST (see importAllEquipment): it can only
+  // ask what the shelves already hold once they hold it.
+  const nameKeys = globalThis.acksExtras?.lib?.vocab?.nameKeys;
+  if (nameKeys) {
+    const libraryKeys = new Set();
+    for (const doc of await importedDocs("Item")) for (const k of nameKeys(doc.name)) libraryKeys.add(k);
+    rows.forEach((row, i) => {
+      for (const k of nameKeys(row.name)) {
+        if (libraryKeys.has(k)) {
+          claimed.add(rowKeys[i]);
+          break;
+        }
+      }
+    });
+  } else {
+    // The shared vocabulary is where the name-form rules live, and without it
+    // this claim cannot be made correctly. Say so rather than quietly minting
+    // a second document for everything the shelves already hold.
+    console.warn(`${MODULE_ID} | acks-extras vocabulary unavailable — price rows cannot be matched against the library.`);
+  }
+
   // Their own shelf under Equipment, beside the group shelves the described
   // entries file into. Dropped on the Equipment folder itself they sit loose
   // among those folders — a hundred-odd items with nothing holding them — and
@@ -6180,13 +6481,36 @@ export async function cookbookImportAbilities() {
   let reused = 0;
   try {
     await prepareItemShelves();
-    const folder = null; // per-id shelf
+    const pageCache = runPageCache();
+    // BUILD every document first, WRITE them a chunk at a time. Building one
+    // ability costs about 7ms; writing one costs a ~700ms server transaction
+    // whatever its size, so a build-then-write loop turns what was 573 round
+    // trips into a dozen. `createDocs` owns the chunking.
+    let batch = [];
+    const flush = async () => {
+      if (!batch.length) return;
+      const written = await createDocs(Item, batch.map((b) => b.data));
+      // The dedup index has to learn about each one, exactly as a single
+      // create would have taught it — `createDocs` cannot, it is type-generic.
+      written.forEach((doc, i) => rememberImported(batch[i]?.id, doc));
+      made += written.length;
+      batch = [];
+    };
     for (const id of ids) {
-      if (await importedItem(id)) reused++;
-      else made++;
-      await importAbility(id, folder).catch((err) => console.error(`${MODULE_ID} | import ${id}`, err));
       bar.step(cookbookEntry(id)?.entry?.name ?? id);
+      if (await importedItem(id)) {
+        reused++;
+        continue;
+      }
+      const data = await abilityData(id, { pageCache }).catch((err) => {
+        console.error(`${MODULE_ID} | build ${id}`, err);
+        return null;
+      });
+      if (!data) continue;
+      batch.push({ id, data });
+      if (batch.length >= WRITE_CHUNK) await flush();
     }
+    await flush();
   } finally {
     bar.finish();
   }

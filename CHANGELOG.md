@@ -1,5 +1,42 @@
 # Changelog
 
+## 3.1.0
+
+**Importing is minutes faster, and stops making documents you already have.**
+
+### Fixed
+- **The ability import finishes.** It used to run past forty minutes without
+  completing; it now takes about nine seconds. Every bulk importer builds its
+  documents first and writes them in batches, because a write costs what the
+  shelf ALREADY HOLDS rather than what you are adding — 35ms into an empty pack,
+  950ms into a pack of a thousand. Writing one at a time made the import slower
+  the longer it ran.
+- **A creature whose picture is already on disk imports in a fraction of a
+  second.** The art cache always saved re-extracting the image; it never saved
+  CHOOSING it, and choosing means walking the page — 1.8 seconds for one
+  Monstrous Manual creature and 15 for another. That walk is skipped when the
+  picture is already there. Three cached creatures now import in 321ms, 101ms
+  and 121ms, art and all.
+- **One flask of military oil is one document.** The price catalogue writes
+  "Oil, Military (1 pint)"; the weapon table writes "Military Oil". Both were
+  imported. The price list now recognises every printed form of a name —
+  head-first with a comma, a parenthetical unit, a slash offering either word —
+  and skips a row the shelves already hold. "Oil, Olive" is still imported,
+  because nothing else in your library is olive oil.
+- **Importing the class-builder tables twice no longer makes two of each race.**
+  Anything created now teaches the duplicate check about itself immediately,
+  rather than only the paths that went through the claim.
+
+### Added
+- **Audit recipes without importing.** `acksImporter.cookbookAudit()` reads every
+  recipe against your connected books and reports which ones still match, writing
+  nothing. All 1,011 shipped recipes across the Revised Rulebook, Judges Journal
+  and Monstrous Manual currently parse, in about fourteen seconds. Use
+  `{books: ["mm"]}` or `{ids: [...]}` to narrow it, and `lastAudit()` to watch a
+  long pass as it goes.
+  *It also names register tokens a recipe read but could not place — 36 of them
+  across 29 monsters today, mostly magical properties with no register row.*
+
 ## 3.0.1
 
 ### Fixed

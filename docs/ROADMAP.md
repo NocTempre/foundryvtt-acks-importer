@@ -157,6 +157,39 @@ The barbarian is a different absence: its training is a table of peoples, one
 row per region, and which row applies is the reader's choice. That is a
 variant to be registered, not a value to be read.
 
+## Two shipped entries for one item
+
+The register carries two entries apiece for two pieces of equipment, and both
+import as separate documents because their ids differ:
+
+- `def.equip.laborersTools` / `def.equip.laborerSTools` — one printed name with a
+  straight apostrophe and one with a curly one. The curly form broke the slug,
+  which is what `laborerSTools` records.
+- `def.equip.specialComponents` / `def.equip.specialComponentsMiscellaneous` —
+  the same printed name, "Special Components, Miscellaneous", twice.
+
+Found by folding every shipped entry name within its id namespace and looking
+for collisions. Nine other collisions in that scan are legitimate — nine class
+"Renown" powers, four "Lay on Hands", the Dwarven/generic Boots, Cloak, Journal,
+Manacles and Whistle pairs — so a build gate over this needs a curated list of
+what is allowed to share a name, not a bare assertion.
+
+The fix is authored data (`register/`, recompiled into `cookbook/`), not a
+runtime rule, which is why the runtime dedup does not paper over it.
+
+## Simpler controls: import all, delete all, reimport one shelf
+
+The module ships twenty-two macros. The controls actually wanted are three:
+**import everything**, **delete everything**, and **reimport this top-level
+folder** — the last offered per shelf (Weapons, Proficiencies, Classes,
+Equipment, …) so a Judge can rebuild one shelf without touching the rest.
+Everything else is a step of one of those three, exposed because it happened to
+be a function.
+
+Per-shelf reimport needs a delete scoped to one shelf's ids, which the id
+namespaces already give (`itemShelfFor`), plus the ordering the shelves depend
+on — equipment before the price list, definitions before class templates.
+
 ## Two books that name their gear identically
 
 The dwarven equipment entries display the same names as their rulebook

@@ -135,6 +135,69 @@ AND the class-template documents; afterwards `game.packs` holds no
 "ACKS Cookbook — …" pack, and no orphan is left in the sidebar —
 `game.items.filter(i => i.flags?.["acks-extras"]?.templatePart).length` is 0.
 
+## Recipes, audited without importing
+
+`acksImporter.cookbookAudit()` answers "does this recipe still match the
+printing?" with no documents written, so it is the cheapest check in the repo
+and the first one to run when an import looks wrong.
+
+*Observable:* with the core books connected,
+`cookbookAudit({ books: ["rr","jj"] })` returns `ok: 720, noMatch: 0, threw: 0`
+in about five seconds, and `{ books: ["mm"] }` returns `ok: 291` in about ten.
+A `noMatch` names a recipe whose page moved; `misses` names a register token a
+recipe read but could not place. Art is skipped unless you pass `{art: true}` —
+with it, a single Monstrous Manual creature can take fifteen seconds.
+
+`acksImporter.lastAudit()` reads a running pass, which is how a long one is
+watched rather than waited on blindly.
+
+## Import cost, and the shapes that used to be slow
+
+Worth re-measuring whenever the import feels slow again, because every one of
+these was misdiagnosed once.
+
+1. Time a bulk step on a cold library: `cookbookImportAbilities()`.
+   *Observable:* seconds, not minutes. It writes in batches; a regression to
+   one-write-per-document shows up as a step that gets slower the longer it runs.
+2. Compare a create into a small pack against a large one.
+   *Observable:* a write costs what the target ALREADY HOLDS — ~35ms into a
+   19-document pack, ~950ms into a 1,039-document one — and twenty-five in one
+   `createDocuments` call cost about what one costs. That is the whole reason
+   for batching, and it is why a slow import gets slower.
+3. Import a creature whose art is already in `acks-importer-art/`.
+   *Observable:* a few hundred milliseconds, WITH its illustration applied. The
+   page walk that chooses an image is skipped when the image already exists;
+   if the art stops appearing, the gate moved back onto the op's result instead
+   of the recipe's own art field.
+
+## Nothing is imported twice
+
+The dedup rules, each with a case that used to break it.
+
+- **Repeat any step.** Run `cookbookImportAbilities()` twice.
+  *Observable:* the second run reports everything already present and takes
+  a fraction of the first — ~190ms against ~9s — and the pack's document count
+  is unchanged.
+- **Out of order, and repeated.** Run templates before abilities, then abilities,
+  then templates again.
+  *Observable:* the end state matches the canonical order. Fingerprint the pack
+  (document count, unique cookbook ids, duplicate count) before and after; the
+  duplicate count is 0 either way. This is the check that caught two
+  `def.race.dwarf` and two `def.race.elf`.
+- **One thing printed two ways.** After a full equipment import, search the
+  library for "oil".
+  *Observable:* `Military Oil` (Weapons) and `Common Oil` (Adventuring Gear)
+  exist; `Oil, Military (1 pint)` and `Oil, Common (1 pint)` do NOT — the price
+  list recognised them. `Oil, Olive (1 pint)` DOES, because nothing else in the
+  library is olive oil. Both halves matter: the check must dedup what is
+  duplicated and keep what is not.
+- **Completeness.** Fold every library document's name through
+  `acksExtras.lib.vocab.nameKeys` and look for two documents sharing a key.
+  *Observable:* the only collisions are entries the shipped cookbook itself
+  duplicates (see ROADMAP) and paren-variants that are genuinely different
+  products — "Candle (tallow, 1 lb)" and "Candle (wax, 1 lb)" are two things and
+  must both survive.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras

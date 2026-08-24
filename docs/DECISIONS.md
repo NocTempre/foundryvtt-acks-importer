@@ -7,6 +7,112 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Writes are batched, because a write costs what the shelf already holds (2026-08-24)
+
+**Ruled: every bulk importer BUILDS all its documents, then writes them in
+chunks** (`createDocs`, `WRITE_CHUNK` 50).
+
+**The measurement that settled it.** A write costs one round trip whose price is
+set by how many documents the target already holds — each call re-indexes the
+collection — not by the payload. Against a live world: a create into a
+19-document pack, ~35ms; the same create into a 1,039-document pack, ~950ms.
+Twenty-five individual creates at that size, 23,866ms; the same twenty-five in
+one call, 1,107ms. So a one-at-a-time loop is quadratic in the library it is
+building and visibly slows as it goes — which is exactly what a whole-corpus
+import did.
+
+The ability import went from **not finishing in forty minutes** to **9.1
+seconds**.
+
+**Rejected: a time-window write queue** that coalesces concurrent creates
+transparently. Sequential `await`s never overlap, so such a queue accumulates
+one document and batches nothing; the callers have to stop awaiting each write,
+which is a structural change, not a wrapper.
+
+**Rejected first, and wrong: blaming page extraction.** `executeEntry` built a
+fresh page cache per call and 82% of the ability corpus's page reads were
+redundant, which looked like the answer. Threading a shared cache through
+changed nothing measurable — a definition parses in about 7ms. The cache is
+still right and is kept; it was never the cost. Measure before believing.
+
+**Cost:** `importAbility` is split into `abilityData` (build) and the write, and
+the bulk path no longer goes through `claimImport` — so `createDoc` and
+`createDocs` now teach the dedup index themselves (see below).
+
+### Every create teaches the dedup index (2026-08-24)
+
+**Ruled: `createDoc`/`createDocs` remember any Item carrying a cookbook id.**
+
+Only `claimImport` updated the index, so a document created through `createDoc`
+alone was invisible to the next presence check IN THE SAME SESSION. Running the
+class-builder table import twice produced two `def.race.dwarf` and two
+`def.race.elf`, every time. Keyed off the document's own flag rather than a
+caller-supplied id, so no creator can forget.
+
+**Found by asserting idempotency, not by reading code:** a full import was run,
+then every step re-run out of order and repeated, and the two end states
+compared by fingerprint. They differed by exactly two documents.
+
+### One name has many printed forms, and the rule lives in lib (2026-08-24)
+
+**Ruled: the price-list claim asks `acksExtras.lib.vocab.nameKeys`.**
+
+The catalogue writes a thing head-first with its qualifier after a comma — "Oil,
+Military (1 pint)" — while the weapon table writes "Military Oil". Two ids, two
+shelves, one flask, two documents. The claim also only consulted the equipment
+chapter's *declared* entries, so it could never see a weapon minted at run time
+from a grid.
+
+The claim now folds every printed form (comma-flip, parenthetical, slash
+alternatives) and matches against the whole LIBRARY, which is why the price list
+runs last. `Oil, Military` and `Oil, Common` are claimed; **`Oil, Olive` is
+kept**, because nothing else in the library is olive oil — the check dedups what
+is duplicated and preserves what is not.
+
+**Rejected: a comma-flip helper here.** It fixes the reported case and leaves
+the slash and parenthetical forms to be rediscovered one at a time. The pattern
+is "the same thing printed differently", and acks-extras already had those rules
+— in a second copy, with a docstring asserting the two must agree. They now live
+once, in `lib/vocab.mjs`.
+
+**Known, not fixed:** the shipped cookbook itself holds two duplicate equipment
+entries — `def.equip.laborersTools` / `def.equip.laborerSTools` (a curly
+apostrophe broke the slug) and `def.equip.specialComponents` /
+`def.equip.specialComponentsMiscellaneous`. Those are authored data, not a
+runtime rule, and are listed in ROADMAP.
+
+### The audit: a recipe answers for itself, without importing (2026-08-24)
+
+**Ruled: `cookbookAudit()` parses every recipe and reports per-recipe, writing
+nothing.** A recipe is page coordinates and probes, and only the printing in
+front of it decides whether it still matches — so "does this recipe work?" must
+be answerable without the import that would act on the answer.
+
+**What it found:** nothing. 720 recipes across the Revised Rulebook and Judges
+Journal, and 291 in the Monstrous Manual — **1,011 parsed, zero failures**, in
+about fourteen seconds. The suspicion that failing recipes were behind the slow
+import was wrong. It did surface 36 register-token misses across 29 monsters
+(mostly `magicProperty` names the register has no row for), which is register
+data to add, not geometry to re-measure.
+
+**Art is skipped by default**, because an audit asks a text question: the `art`
+op walks a page's operator list to choose an image and costs 1.8s for one
+Monstrous Manual creature and 15s for another, against 7ms for a proficiency.
+
+### The art op is skipped when the picture is already on disk (2026-08-24)
+
+**Ruled: `importOne` skips the `art` op when `cachedArt(id)` answers.**
+
+The upload cache has always short-circuited the decode-and-upload half. It never
+saved the WALK — and the walk is what costs the seconds. So a world whose art
+was entirely cached still paid 1.8–15s per creature to choose an image it was
+never going to extract. Measured after: three monsters with cached art imported
+in 321ms, 101ms and 121ms, each with its illustration correctly applied.
+
+The art gate moved from `node.fields.art` (the op's result) to the RECIPE's own
+art field, or a cached illustration would never reach the actor once the op was
+skipped.
+
 ### The pack is the container: compendium-only, two levels deep (2026-08-24)
 
 **Ruled: every import is written to a world compendium, and no folder tree

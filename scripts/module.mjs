@@ -47,7 +47,7 @@ import {
   importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
   importWeapons, importArmor,
   importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
-  cookbookImportJournals, cookbookImportRollTables,
+  cookbookImportJournals, cookbookImportRollTables, cookbookAudit, lastAudit,
 } from "./cookbook.mjs";
 import { registerGettingStartedSettings, runImportEverything, gettingStartedDismissed, SETTING_DISMISSED } from "./getting-started.mjs";
 import { registerOseSourceSetting } from "./ose-source.mjs";
@@ -1940,23 +1940,44 @@ function artIndex(FP) {
   return artListing;
 }
 
+/**
+ * The usable art file already on disk for a recipe id, or null.
+ *
+ * Shared with the importers so a re-import can skip the `art` OP entirely, not
+ * merely the upload. That op walks the page's operator list to CHOOSE which
+ * placed image to extract — measured at 1.8s for one Monstrous Manual creature
+ * and 15s for another — and when the chosen image is already a file on disk
+ * there is nothing left to choose. The upload cache alone never saved that
+ * walk, so a world whose art was entirely cached still paid it per creature.
+ *
+ * A tiny file is a corrupt/aborted upload, and an unanswerable one is a file
+ * deleted since the listing was taken — both are treated as absent rather than
+ * handed to an actor as an image path that renders nothing. That check is why
+ * skipping the op afterwards is safe: the caller is told "cached" only about a
+ * file that really is there and really is usable.
+ */
+async function cachedArt(id) {
+  const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
+  const filename = `${String(id).replaceAll(".", "-")}.png`;
+  const index = await artIndex(FP);
+  const existing = index.get(filename);
+  if (!existing) return null;
+  const head = await fetch(existing, { method: "HEAD" }).catch(() => null);
+  const size = parseInt(head?.headers?.get("content-length") ?? "0", 10);
+  if (head?.ok && size >= 1024) return existing;
+  index.delete(filename);
+  return null;
+}
+
 async function uploadPageArt(doc, recipe) {
   const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
   const dir = ART_DIR;
   const filename = `${recipe.id.replaceAll(".", "-")}.png`;
   // Already imported? Reuse it — decode + upload is the expensive half of a
-  // re-import. A tiny file is a corrupt/aborted upload and is redone.
+  // re-import.
+  const existing = await cachedArt(recipe.id);
+  if (existing) return { path: existing, width: 0, height: 0, cached: true };
   const index = await artIndex(FP);
-  const existing = index.get(filename);
-  if (existing) {
-    // A tiny file is a corrupt/aborted upload, and an unanswerable one is a
-    // file deleted since the listing was taken — both are re-extracted rather
-    // than handed to an actor as an image path that renders nothing.
-    const head = await fetch(existing, { method: "HEAD" }).catch(() => null);
-    const size = parseInt(head?.headers?.get("content-length") ?? "0", 10);
-    if (head?.ok && size >= 1024) return { path: existing, width: 0, height: 0, cached: true };
-    index.delete(filename);
-  }
   const art =
     (await extractPageArt(doc, recipe.page, recipe.name ?? null)) ??
     (recipe.box ? await extractPageArtRegion(doc, recipe.page, recipe.box) : null);
@@ -2264,7 +2285,7 @@ Hooks.once("ready", async () => {
   }
 
   document.body.addEventListener("click", onRevealClick);
-  initCookbook({ sessionDocs, proseMem, importArtForPage: importArt, uploadPageArt });
+  initCookbook({ sessionDocs, proseMem, importArtForPage: importArt, uploadPageArt, cachedArt });
   registerAbilityDirectoryButtons();
   await loadCookbook();
   const api = {
@@ -2272,7 +2293,7 @@ Hooks.once("ready", async () => {
     proseFor, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities, cookbookFillCompanions, cookbookPruneAbilities,
     importAbility, cookbookDebug, cookbookProse, cookbookCount,
     cookbookImportTables,
-    cookbookImportJournals, cookbookImportRollTables,
+    cookbookImportJournals, cookbookImportRollTables, cookbookAudit, lastAudit,
     importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
     importWeapons, importArmor,
     importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,

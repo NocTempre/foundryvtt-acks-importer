@@ -296,5 +296,6 @@
   "ACKS-IMPORTER.ui.forgetDone": "this computer's remembered locations were dropped.",
   "ACKS-IMPORTER.ui.connectBook": "Book",
   "ACKS-IMPORTER.ui.reconnectAllNothing": "nothing was waiting — every book this seat knows about is already open.",
-  "ACKS-IMPORTER.ui.packFailed": "Could not open the {type} compendium — those documents were created in the sidebar instead. See the console."
+  "ACKS-IMPORTER.ui.packFailed": "Could not open the {type} compendium — those documents were created in the sidebar instead. See the console.",
+  "ACKS-IMPORTER.ui.progressAudit": "Auditing recipes against your books…"
 }

@@ -1462,7 +1462,7 @@ async function execInstruction(instr, ctx) {
       return { rows };
     }
     case "art": {
-      const infos = await pageArtInfo(doc, instr.page).catch(() => []);
+      const infos = await ctx.getArt(instr.page);
       const chosen = selectArt(infos, instr.select, instr.name);
       return chosen ? { name: chosen.name, width: chosen.width, height: chosen.height, kind: chosen.kind } : null;
     }
@@ -1492,6 +1492,15 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
     if (!pageCache.has(n)) pageCache.set(n, await pageItems(doc, n));
     return pageCache.get(n);
   };
+  // Art is cached on the same terms as text and for a stronger reason: reading
+  // a page's placed images decodes them, which costs seconds where reading its
+  // text costs milliseconds. The Monstrous Manual prints several creatures to a
+  // spread, so an uncached `art` op pays that once per creature.
+  const artCache = opts.artCache ?? new Map();
+  const getArt = async (n) => {
+    if (!artCache.has(n)) artCache.set(n, await pageArtInfo(doc, n).catch(() => []));
+    return artCache.get(n);
+  };
   const claims = opts.trackClaims ? new Map() : null;
   const misses = [];
   const fields = {};
@@ -1501,7 +1510,7 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
     if (opts.skipOps?.includes(instr.op)) continue; // caller choice (e.g. verify without art)
     // assist specs applied below, once the description they read exists
     if (field === "effects" || field === "rolls" || field === "variation") continue;
-    const ctx = { doc, registers, getPage, claims, misses, field };
+    const ctx = { doc, registers, getPage, getArt, claims, misses, field };
     let result = null;
     try {
       result = await execInstruction(instr, ctx);
