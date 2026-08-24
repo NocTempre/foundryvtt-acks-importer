@@ -10,13 +10,15 @@
  * and keep the two in step by hand.
  *
  * So the room arrives as the thing a room is, and its TEXT arrives the way all
- * imported text does: a lazy tag resolved against the reader's own copy. The
- * words are never stored here, only the pointer and the name.
+ * imported text does: read once from the Judge's own copy at import and written
+ * into the room, page reference last.
  *
  * The adventure itself becomes a place too, and the rooms nest inside it. That
  * is what makes a keyed dungeon navigable as a dungeon rather than as
  * seventeen unrelated actors sharing a numbering convention.
  */
+
+import { bookText } from "./prose.mjs";
 
 /** The Actor sub-type acks-extras registers for places. */
 export const LOCATION_TYPE = "acks-extras.location";
@@ -24,13 +26,15 @@ export const LOCATION_TYPE = "acks-extras.location";
 /**
  * Actor data for one keyed area. Pure — no Foundry calls.
  *
- * @param opts.entryId    cookbook id, for the lazy prose tag
+ * @param opts.entryId    cookbook id, stamped on the text this import writes
+ * @param opts.paragraphs the room's printed text, one string per paragraph
  * @param opts.parentUuid the adventure's own location actor, when it exists
  * @returns Actor creation data of type `acks-extras.location`
  */
 export function oseLocationData({
   name,
   entryId,
+  paragraphs = [],
   cite = "",
   page = null,
   book = null,
@@ -45,8 +49,7 @@ export function oseLocationData({
     folder: folderId,
     system: {
       region: bookLabel,
-      // The room's text, read from the reader's copy when the sheet asks.
-      notes: `<p>@PdfText[${entryId}]{${cite || `${book ?? ""} p.${page ?? "?"}`.trim()}}</p>`,
+      notes: bookText(paragraphs, cite || `${book ?? ""} p.${page ?? "?"}`.trim(), { id: entryId }),
       parentUuid,
     },
     flags: {

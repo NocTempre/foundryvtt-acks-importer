@@ -28,6 +28,7 @@ import {
   cookbookArtImporter,
 } from "./cookbook.mjs";
 import { BOOKS } from "./books.mjs";
+import { entryText, nodeParagraphs } from "./prose.mjs";
 import { progressBar } from "./progress.mjs";
 
 const loc = (k, data) => (data ? game.i18n.format(`${LANG_PREFIX}.${k}`, data) : game.i18n.localize(`${LANG_PREFIX}.${k}`));
@@ -85,7 +86,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
   let templates = 0;
   /** Entries that are steps of one creature, gathered by their group key. */
   const groups = {};
-  // Where the entry says it came from, for the lazy prose tag.
+  // Where the entry says it came from, for the line that closes its text.
   const citeOf = (e) => e.cite || `${BOOKS[bookId]?.short ?? bookId} p.${e.pages?.[0] ?? "?"}`;
   for (const id of ids) {
     const entry = cb.entries[id];
@@ -135,7 +136,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
         folderId,
         cite: entry.cite ?? "",
       });
-      tpl.system.details = { biography: `<p>@PdfText[${id}]{${citeOf(entry)}}</p>` };
+      tpl.system.details = { biography: entryText(res, id, citeOf(entry)) };
       const generator = await createDoc(Actor, tpl);
       if (generator) {
         templates++;
@@ -165,11 +166,11 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
       moraleBounds: bounds,
       folderId,
     });
-    // The description is a lazy tag, exactly as the ACKS books do it — the
-    // prose is read from the reader's own copy when the sheet asks for it.
+    // The description is written at import, exactly as the ACKS books do it —
+    // read once from the Judge's own copy, page reference last.
     data.system.details = {
       ...(data.system.details ?? {}),
-      biography: `<p>@PdfText[${id}]{${citeOf(entry)}}</p>`,
+      biography: entryText(res, id, citeOf(entry)),
     };
 
     const actor = await createDoc(Actor, data);
@@ -221,9 +222,9 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
  *
  * The adventure becomes a location of its own and the rooms nest inside it, so
  * a keyed dungeon arrives as a dungeon rather than as seventeen unrelated
- * actors sharing a numbering convention. Each room's text is a lazy tag, read
- * from the reader's copy when the sheet asks — the same contract the creatures
- * and the ACKS books use.
+ * actors sharing a numbering convention. Each room's text is read from the
+ * Judge's own copy at import and written into the room — the same contract the
+ * creatures and the ACKS books use.
  *
  * @param bookId  an authored book id whose PDF this seat has connected
  * @param opts.folderId  where the places land
@@ -272,6 +273,7 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
       oseLocationData({
         name: entry.name,
         entryId: id,
+        paragraphs: nodeParagraphs(res),
         cite: entry.cite || `${short} p.${entry.pages?.[0] ?? "?"}`,
         page: entry.pages?.[0] ?? null,
         book: bookId,

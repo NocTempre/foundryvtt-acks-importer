@@ -8,8 +8,9 @@
  *                    self-calibrates the bold font from the matched heading,
  *                    so no font names are hardcoded.
  *
- * The i18n stub for recipe `id` lives at "ACKS-IMPORTER.pdftext.<id>" and is
- * what any seat without the connected book sees (sparse text + citation).
+ * A recipe is read at the moment its document is created, and what it read is
+ * written into that document with its citation — the recipe is the route to the
+ * text, never a copy of it.
  */
 
 export const RECIPES = [
@@ -44,5 +45,3 @@ export const RECIPES = [
   { id: "item.holyBook", book: "rr", page: 145, mode: "runin", heading: "Holy Book:", cite: "RR PDF p. 145", kind: "item", name: "Holy Book" },
 ];
 
-export const recipesForBook = (bookId) => RECIPES.filter((r) => r.book === bookId);
-export const recipeById = (id) => RECIPES.find((r) => r.id === id);

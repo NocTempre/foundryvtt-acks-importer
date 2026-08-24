@@ -111,26 +111,13 @@
   color: var(--acks-ink-soft);
 }
 
-.acks-importer-stub {
-  font-style: italic;
-  opacity: 0.85;
-}
-
-.acks-importer-reveal {
-  margin-left: 0.35em;
-  cursor: pointer;
-  text-decoration: underline dotted;
-  white-space: nowrap;
-}
-
-/* Revealed book text: the books' own callout idiom — a tinted panel held by a
+/* Imported book text: the books' own callout idiom — a tinted panel held by a
    spot-colour rule down its leading edge, so an extract reads as quoted matter
    and not as the module's own prose. The stroke is the HEAVY rule, which is the
-   weight every tinted callout in the family carries; a reveal opens in the chat
-   log beside those cards, and two weights of one idiom side by side read as two
-   different kinds of block. The tint is a fill, not a translucency, so it stays
-   legible whatever ground the reveal is opened over. */
-.acks-importer-prose {
+   weight every tinted callout in the family carries. The tint is a fill, not a
+   translucency, so it stays legible whatever ground a description field gives
+   it. */
+.acks-importer-book-text {
   display: block;
   margin: 0.35em 0 0.15em;
   padding: 0.4em 0.6em;
@@ -139,13 +126,15 @@
   /* The fill brings its own ink. A panel that states an OPAQUE ground and
      borrows its text colour from whatever it was dropped into is legible only
      by luck: tint and ink inverting together is what makes the pair readable,
-     and a reveal opens in the chat log, whose card is coloured by core and can
+     and these blocks land in sheets and chat cards coloured by core, which can
      be carrying the opposite end of the scale. Never state one without the
      other. */
   color: var(--acks-ink);
   font-style: normal;
 }
 
+/* The closing line of an imported block, and the same figure wherever a dialog
+   row cites a page. */
 .acks-importer-cite {
   font-size: 0.85em;
   opacity: 0.8;

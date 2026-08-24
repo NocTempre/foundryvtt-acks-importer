@@ -9,13 +9,14 @@ raw PNG path, so those links survive the next refresh.
 
 | Workflow | What it shows | Guide | Shot |
 |---|---|---|---|
-| The imported library | Where everything now lands: one compendium per document type, its shelves two levels deep, the priced rows filed under Equipment / Price List | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/library-compendium.png) |
-| Connect a book | The book loader: the Getting Started band, and each book read from the server on every launch | [guide](guides/connect-a-book.md) | [v3.0.0](releases/v3.0.0/book-loader.png) |
+| Imported text | What an import now leaves behind: the entry's own words in the document, closing on the book and page it was read from | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/imported-text.png) |
+| The imported library | Where everything lands: one compendium per document type, its shelves two levels deep, the priced rows filed under Equipment / Price List | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/library-compendium.png) |
+| Connect a book | The book loader: the Getting Started band, and each book read from the server on every launch | [guide](guides/connect-a-book.md) | [v4.0.0](releases/v4.0.0/book-loader.png) |
 | Forget books | The forget confirmation, reported only when the clear really happened | [guide](guides/connect-a-book.md) | [v2.6.0](releases/v2.6.0/forget-books-toast.png) |
-| Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/book-loader.png) |
+| Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/book-loader.png) |
 | Import classes | A class doc's Templates pane: each printed template materialized as a bundle of world documents a Judge can repair | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/classes-template-spells.png) |
 | Import the class builder | A race document materialized from the Judges Journal — the ladder, costs, and every power resolved to the definition its rung names | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/classes-builder-import.png) |
-| Browse and audit | The entry picker — the abilities with their book and page citation | [guide](guides/browse-and-audit.md) | [v2.0.0](releases/v2.0.0/cookbook-import.png) |
+| Browse and audit | The entry picker — every entry with its book and page citation, and what an import will read from your copy | [guide](guides/browse-and-audit.md) | [v4.0.0](releases/v4.0.0/cookbook-import.png) |
 | Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/equipment-prose-price.png) |
 | Import languages | The Appendix A taxonomy read from the connected book, filed on its own shelf in the library — none shipped | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/languages-import.png) |
 | Register an OSE adventure | Naming a third-party book yourself, because a PDF's own title is often the file it was exported from | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-register.png) |
@@ -28,7 +29,22 @@ Snapshots are captured during a live-verification session against the release
 (`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged from data that was
 not really imported.
 
-**3.0.0 is a major and did not refresh every row.** Seven rows were re-shot
+**4.0.0 is a major and did not refresh every row either.** Four subjects were
+re-shot and one — *Imported text* — is new, because it is what the release is:
+a document holding the words the GM imported, with the page reference closing
+them. The rows that were not re-shot are the ones whose subject is a document
+imported by an EARLIER version. Re-shooting those honestly means deleting the
+test world's existing imports and importing them again — documents this session
+did not create and does not own — so they keep their older links until a session
+that owns them refreshes them. The five OSE rows are unchanged surfaces, as
+before.
+
+The room in *Imported text* is from a third-party quick delve the tester owns,
+and its two paragraphs are in frame because they are the feature. It is the same
+case the OSE rows make below: text materialized from the reader's own copy, which
+ip-doctrine names as legitimate rather than a leak.
+
+**3.0.0 was a major and did not refresh every row.** Seven rows were re-shot
 against the new compendium library, and one — *The imported library* — is new.
 *Browse and audit* and the five OSE rows were not: their dialogs are untouched
 by this release, and re-shooting the OSE ones means registering and converting a

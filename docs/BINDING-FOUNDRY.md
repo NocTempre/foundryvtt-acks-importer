@@ -15,13 +15,13 @@ other VTTs) while cookbooks stay valid.
   `kind.npc` → Actor from the parsed statline (values persist in world fields,
   ability scores/gear notes in `flags["acks-importer"].npc`, proficiencies
   through the ability-provider tiers); `kind.location` → JournalEntry page
-  (one JournalEntry per `meta.group`, body = lazy `@PdfText` tag + creature
-  links from the seat-extracted creature lookups — pin the page to a scene to
+  (one JournalEntry per `meta.group`, body = the room's own text + the creature
+  names from the seat-extracted creature lookups — pin the page to a scene to
   attach it to the map); `kind.rolltable` → RollTable (ranges from shipped
   section structure, row text materialized at import into the GM's world — the
   hand-typed-table equivalence — formula from the page's dice locator, else
   derived mechanically from ranges starting at 1); notes → JournalEntry (the
-  "memorial wall"); definitions → tooltip/`@PdfText` targets. Unrouted kinds
+  "memorial wall"). Unrouted kinds
   default to JournalEntry — routing coverage may lag capture without losing
   anything.
 - **Field mapping:** executor output → `system.*` paths (the successor of
@@ -29,12 +29,13 @@ other VTTs) while cookbooks stay valid.
   save class+level → the saves LUT, attacks → weapon Items with
   `flags.acks-extras.*` (damageType/naturalWeapon/extraordinary from the
   executor's `{key, ref}` triples and glyphColor result).
-- **UI:** the `@PdfText` enricher, lazy tooltip resolution through the node
-  graph (citing book for values, defining book for descriptor prose, stubs
-  otherwise), concept→examples surfacing, the audit dialog.
-- **Possession model:** per-seat book connection, fingerprint gate,
-  session-memory prose, world persistence of GM-imported values (allowed there
-  — the hand-typed equivalence; never in the cookbook).
+- **UI:** the materialized-text shape (`scripts/prose.mjs` — the entry's
+  paragraphs, page reference last, stamped so a re-import can tell its own
+  writing from a Judge's), concept→examples surfacing, the audit dialog.
+- **Possession model:** per-seat book connection, fingerprint gate, and world
+  persistence of everything a GM imported — values and prose alike (the
+  hand-typed equivalence; never in the cookbook). Reading an imported document
+  needs no book on any seat.
 - **Destination:** one WORLD COMPENDIUM per document type ("ACKS Cookbook —
   Actor", "… — Item", …), created on first use; folders inside it are at most
   two deep. Decided at creation time by ONE rule per document type
@@ -45,7 +46,7 @@ other VTTs) while cookbooks stay valid.
 
 The binding embeds the dumb executor (`scripts/executor.mjs`) and calls it per
 node id; it receives extract JSON and builds documents from it. The binding
-must treat executor stubs/misses as renderable states (stub + citation), never
+must treat executor stubs/misses as renderable states (citation alone), never
 errors. No binding code may re-derive content the executor didn't produce.
 
 *(To be expanded when the module runtime is rewired from the PoC recipes to the

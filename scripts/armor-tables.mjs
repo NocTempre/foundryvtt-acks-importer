@@ -8,6 +8,7 @@
 import { rowsByY, joinRuns } from "./table-extract.mjs";
 import { stripNoise, bindRowCells } from "./weapon-tables.mjs";
 import { MODULE_ID } from "./constants.mjs";
+import { bookText } from "./prose.mjs";
 
 export const ARMOR_TABLE = Object.freeze({
   book: "rr",
@@ -179,7 +180,7 @@ export function bindArmorRow(row, id, cite) {
   const isBarding = /barding/i.test(row.name);
   const isSpiked = /spiked/i.test(row.name);
   const system = {
-    description: `<p>@PdfText[${id}]{${cite}}</p>`,
+    description: bookText([], cite, { id }),
     aac: { value: acValue(c.ac) },
     type,
     equipped: false,

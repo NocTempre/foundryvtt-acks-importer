@@ -6,13 +6,15 @@
  * the seat's own connected book, and binds executor output to acks documents:
  *   - GM import dialog: pick monsters -> Actors (stats, weapons with
  *     damage type + extraordinary-from-printed-color, abilities, spoils, art);
- *   - lazy prose: imported actors carry only @PdfText[id] tags; the entry's
- *     description is executed on demand per seat and kept in session memory.
+ *   - prose: the entry's own paragraphs are written into the document at
+ *     import, page reference last (scripts/prose.mjs), and the world holds
+ *     them from then on.
  *
  * The cookbook is read-only data; all judgment happened in the offline
  * pipeline. This file only maps executor output onto acks system fields.
  */
 import { MODULE_ID, LANG_PREFIX, ITEM_TYPE } from "./constants.mjs";
+import { bookText, entryText, escapeText, nodeParagraphs, stripBookText } from "./prose.mjs";
 import { BOOKS } from "./books.mjs";
 import { executeEntry, materializeEffects, attackModel, convertName } from "./executor.mjs";
 import { slugLabel } from "./table-extract.mjs";
@@ -144,59 +146,6 @@ export const cookbookCount = (bookId) => {
   }
   return n;
 };
-
-/* -------------------------------------------- */
-/*  Lazy prose (session memory, per seat)       */
-/* -------------------------------------------- */
-
-/** Stub line for a cookbook id: name + citation (no book needed). */
-export function cookbookStub(fullId) {
-  const found = cookbookEntry(fullId);
-  if (!found) return null;
-  return game.i18n.format(`${LANG_PREFIX}.ui.cookbookStub`, { name: found.entry.name, cite: found.entry.cite });
-}
-
-/** Whether this seat could reveal prose for the id right now. */
-export function cookbookCanReveal(fullId) {
-  const found = cookbookEntry(fullId);
-  if (!found) return false;
-  // A recipe with no `description` instruction has no prose to reveal: a
-  // language is one cell of a printed taxonomy, a name and a page and nothing
-  // else, so the reveal link would open on an empty string. A synthesized
-  // family entry carries no `fields` at all and keeps its own path.
-  if (found.entry.fields && !found.entry.fields.description) return false;
-  return ctx.sessionDocs.has(bookOf(found));
-}
-
-/** Cache an entry's description paragraphs (session memory only). */
-export function cookbookCacheParas(bookId, id, paras) {
-  if (!paras?.length) return;
-  const mem = ctx.proseMem.get(bookId) ?? {};
-  mem[id] = paras;
-  ctx.proseMem.set(bookId, mem);
-}
-
-/**
- * Execute the entry's description on demand; cache paragraphs in session
- * memory only. A "#section" suffix filters to that section's paragraphs.
- */
-export async function cookbookProse(fullId) {
-  const found = cookbookEntry(fullId);
-  if (!found) return null;
-  const { section } = splitId(fullId);
-  const bookId = bookOf(found);
-  let paras = (ctx.proseMem.get(bookId) ?? {})[found.id];
-  if (!paras) {
-    const session = ctx.sessionDocs.get(bookId);
-    if (!session) return null;
-    const res = await executeEntry(session.doc, found.cb, data.registers, found.id);
-    paras = res.fields.description ?? [];
-    cookbookCacheParas(bookId, found.id, paras);
-  }
-  const picked = section ? paras.filter((p) => (p.section ?? "appearance") === section) : paras;
-  const prose = picked.map((p) => p.text).join("\n\n");
-  return prose || null;
-}
 
 /* -------------------------------------------- */
 /*  Binding: executor output -> acks Actor      */
@@ -592,7 +541,7 @@ export function bindMonster(node) {
     }
 
     // 2. COULD BE LOADED — the cookbook carries the definition, so embed THAT
-    //    ability (lazy descriptor, classification, shared cookbook id) rather
+    //    ability (descriptor, classification, shared cookbook id) rather
     //    than a bare namesake.
     const shared = id ? cookbookEntry(id) : null;
     if (shared) {
@@ -1254,28 +1203,35 @@ async function prepareFolders(type, ids) {
  * busy without oversubscribing any.
  */
 /**
- * The two prose channels every imported monster gets: the lazy `@PdfText` tag
- * builder, and the Full Monster Sheet extras (description sections routed
- * onto its fields + the classification/senses/defenses block). Shared by
+ * The two prose channels every imported monster gets: the whole passage for a
+ * core `biography`, and the Full Monster Sheet extras (description sections
+ * routed onto its fields + the classification/senses/defenses block). Shared by
  * importOne and the family importer so a family variant is byte-for-byte the
  * same creature a direct import produces.
+ *
+ * The Description tab stacks its fields in FIELD_ORDER, so the page reference
+ * closes the last field that received text and the creature carries it once.
  */
 function monsterProseChannels(node, id, cite) {
   const paras = node.fields.description ?? [];
-  const tag = (section) => `<p>@PdfText[${id}${section ? `#${section}` : ""}]{${cite}}</p>`;
   const ROUTE = {
     appearance: "appearance", combat: "combat", ecology: "ecology",
     encounter: "encounterText", lair: "encounterText",
     lore: "lore", specialRules: "notes", behavior: "notes",
   };
-  const description = {};
+  const FIELD_ORDER = ["appearance", "combat", "ecology", "encounterText", "lore", "notes"];
+  const texts = new Map();
   for (const sec of [...new Set(paras.map((p) => p.section ?? "appearance"))]) {
     const field = ROUTE[sec] ?? "notes";
-    description[field] = (description[field] ?? "") + tag(sec);
+    texts.set(field, [...(texts.get(field) ?? []), ...nodeParagraphs(node, sec)]);
   }
-  if (!Object.keys(description).length) description.appearance = tag(null);
+  const last = FIELD_ORDER.filter((f) => texts.get(f)?.length).pop() ?? "appearance";
+  const description = {};
+  for (const [field, lines] of texts) description[field] = bookText(lines, field === last ? cite : "", { id });
+  // A page that matched but yielded no prose still says where it was read from.
+  if (!description[last]) description[last] = bookText([], cite, { id });
   const fmsFlags = { "acks-extras": { extras: { ...buildExtras(node), description } } };
-  return { tag, fmsFlags };
+  return { biography: bookText(nodeParagraphs(node), cite, { id }), fmsFlags };
 }
 
 const IMPORT_CONCURRENCY = 4;
@@ -1572,10 +1528,6 @@ async function importOne(bookId, id, folderId) {
   }
   const { system, items, flags, prototypeToken } = bindMonster(node);
 
-  // Prose stays lazy: the actor carries only tags; description reproduces per
-  // seat. Cache this GM's extraction in session memory for instant reveal.
-  const paras = node.fields.description ?? [];
-  cookbookCacheParas(bookId, id, paras);
   // The Full Monster Sheet is no longer an optional sibling module — it is a
   // feature of acks-extras, which this module hard-requires. The old branch
   // wrote the prose to system.details.biography when it was absent; that can no
@@ -1602,7 +1554,7 @@ async function importOne(bookId, id, folderId) {
     system,
     ...(prototypeToken ? { prototypeToken } : {}),
     // Merge, don't replace: an embedded shared ability keeps its cookbook id
-    // (that id is what resolves its lazy prose and marks it as the shared one).
+    // (that id is what marks it as the shared one).
     items: items.map((i) => ({
       ...i,
       flags: { ...(i.flags ?? {}), [MODULE_ID]: { ...(i.flags?.[MODULE_ID] ?? {}), generated: true } },
@@ -1751,7 +1703,7 @@ const fmtCell = (v) =>
   Array.isArray(v) ? v.map((x) => x?.key ?? x?.text ?? String(x)).join(", ") : String(v);
 
 /** Build one axis option (engine-ready patches) from a merged grid row. */
-function templateOption(ax, row, cells, { id, cite, sections }) {
+function templateOption(ax, row, cells, { id, cite, sectionText }) {
   const hitDice = cells.hitDice ?? (ax.keyIsHd && /^\d+$/.test(row.key) ? row.key : undefined);
   const { system } = bindStatsScalars({
     armorClass: cells.armorClass,
@@ -1782,13 +1734,13 @@ function templateOption(ax, row, cells, { id, cite, sections }) {
   }
 
   const label = capitalize(String(row.label ?? row.key));
-  const secKey = sections.has(row.key) ? row.key : sections.has(`${row.key}s`) ? `${row.key}s` : null;
+  const secKey = sectionText.has(row.key) ? row.key : sectionText.has(`${row.key}s`) ? `${row.key}s` : null;
   const notes = OPTION_NOTE_KEYS.filter((k) => cells[k] != null && cells[k] !== "").map(
     (k) => `${k}: ${fmtCell(cells[k])}`
   );
   const html =
     `<p><strong>${label}.</strong>` +
-    `${secKey ? ` @PdfText[${id}#${secKey}]{${cite}}` : ""}` +
+    `${secKey ? ` ${escapeText(sectionText.get(secKey))}` : ""}` +
     `${notes.length ? ` <em>${notes.join("; ")}</em>` : ""}</p>`;
 
   // Presentation channels the page itself prints: an age row's SIZE category
@@ -1942,7 +1894,7 @@ async function importFamily(bookId, famId, folderId) {
     if (!entry) continue;
     // CROSS-BOOK: a member reprinted in another open book binds the NEWER
     // printing (the per-entry defer rule, applied per variant) — the option
-    // keeps this family's variant label, its stats and lazy tag come from
+    // keeps this family's variant label, its stats and its text come from
     // the revising book, and its cookbook id becomes the revising id so
     // merge/dedup sees the same creature.
     let bindId = member.id;
@@ -1969,18 +1921,17 @@ async function importFamily(bookId, famId, folderId) {
     // carry biography only — the same split the direct importers use.
     const legacy = entry.kind === "kind.monsterLegacy";
     const { system, items, flags, prototypeToken } = legacy ? bindLegacyMonster(node) : bindMonster(node);
-    cookbookCacheParas(bindId.split(".")[0], bindId, node.fields.description ?? []);
     memberText.set(slugLabel(member.variant), (node.fields.description ?? []).map((p) => p.text).join(" "));
     let fmsFlags = {};
     if (legacy) {
-      system.details = { ...(system.details ?? {}), biography: pdfTag(bindId, entry.cite) };
+      system.details = { ...(system.details ?? {}), biography: entryText(node, bindId, entry.cite) };
     } else {
       const channels = monsterProseChannels(node, bindId, entry.cite);
       fmsFlags = channels.fmsFlags;
       // Both prose channels ship on the option: biography for the core sheet,
       // extras flags for the Full Monster Sheet — whichever is active at
       // GENERATE time uses its own; the other is inert.
-      system.details = { ...(system.details ?? {}), biography: channels.tag(null) };
+      system.details = { ...(system.details ?? {}), biography: channels.biography };
     }
 
     let art = "";
@@ -2168,7 +2119,7 @@ function subRollFromProse(text) {
  * the same attackModel, and the template actor stores only engine-ready
  * patches. the extras lib's roll/resolve then never interprets book content — which
  * is what keeps one owner per mapping. Values persist in world data (the
- * hand-typed-table equivalence), prose stays lazy tags.
+ * hand-typed-table equivalence), and so does the prose beside them.
  */
 async function importTemplate(bookId, id, folderId) {
   const TEMPLATE_TYPE = globalThis.acksExtras?.lib?.TEMPLATE_TYPE;
@@ -2188,8 +2139,14 @@ async function importTemplate(bookId, id, folderId) {
   const gridRows = (name) => node.fields.grids?.[name]?.rows ?? [];
 
   const paras = node.fields.description ?? [];
-  cookbookCacheParas(bookId, id, paras);
-  const sections = new Set(paras.map((p) => p.section).filter(Boolean));
+  // Section-joined prose: what an option row prints under its own heading, and
+  // what the sub-roll enumerations are read out of ("roll 1d8 for the type of
+  // aura: …"). Built before the axes because the options materialize from it.
+  const sectionText = new Map();
+  for (const p of paras) {
+    if (!p.section) continue;
+    sectionText.set(p.section, `${sectionText.get(p.section) ?? ""} ${p.text}`.trim());
+  }
 
   const axes = [];
   for (const ax of spec.axes ?? []) {
@@ -2199,7 +2156,7 @@ async function importTemplate(bookId, id, folderId) {
     const options = rows.map((row) => {
       const cells = { ...row.cells };
       for (const m of restByKey) Object.assign(cells, m.get(row.key) ?? {});
-      return templateOption(ax, row, cells, { id, cite, sections });
+      return templateOption(ax, row, cells, { id, cite, sectionText });
     });
     if (!options.length) console.warn(`${MODULE_ID} | ${id}: axis "${ax.key}" materialized no options.`);
     // AUTHORED per-option art (the body-form portraits on the dragon's own
@@ -2251,13 +2208,6 @@ async function importTemplate(bookId, id, folderId) {
     }
   }
 
-  // Section-joined prose, for the sub-roll enumerations each ability may
-  // carry ("roll 1d8 for the type of aura: …" — materialized per seat).
-  const sectionText = new Map();
-  for (const p of paras) {
-    if (!p.section) continue;
-    sectionText.set(p.section, `${sectionText.get(p.section) ?? ""} ${p.text}`.trim());
-  }
   const menu = {
     die: spec.menu?.die ?? "",
     budgetAxis: spec.menu?.budgetAxis ?? "",
@@ -2269,9 +2219,9 @@ async function importTemplate(bookId, id, folderId) {
         label: r.label ?? "",
         cost: r.cost ?? null,
         html:
-          r.section && sections.has(r.section)
-            ? `<p><strong>${r.label}.</strong> @PdfText[${id}#${r.section}]{${cite}}</p>`
-            : `<p><strong>${r.label}</strong> (${cite})</p>`,
+          r.section && sectionText.has(r.section)
+            ? `<p><strong>${r.label}.</strong> ${escapeText(sectionText.get(r.section))}</p><p class="acks-importer-cite">${escapeText(cite)}</p>`
+            : `<p><strong>${r.label}</strong> (${escapeText(cite)})</p>`,
         ...(sub ? { sub } : {}),
       };
     }),
@@ -2294,7 +2244,7 @@ async function importTemplate(bookId, id, folderId) {
       axes,
       cells,
       menu,
-      details: { biography: pdfTag(id, cite) },
+      details: { biography: entryText(node, id, cite) },
     },
     flags: { [MODULE_ID]: { cookbook: { id, cite } } },
   });
@@ -2373,7 +2323,6 @@ export async function refillMonster(actor) {
     if (field) foundry.utils.setProperty(system, path, field.getInitialValue());
   }
   await actor.update({ system, ...(prototypeToken ? { prototypeToken } : {}) });
-  cookbookCacheParas(bookId, found.id, node.fields.description ?? []);
   return { ok: true, book: bookId, name: found.entry.name };
 }
 
@@ -2383,9 +2332,9 @@ export async function refillMonster(actor) {
 
 /**
  * Map a definition entry (+ its executed node, when the seat owns the book)
- * onto a core `ability` item. The FULL literal text stays a lazy @PdfText
+ * onto a core `ability` item. The FULL literal text is written into the
  * descriptor; classification and any materialized mechanics persist in
- * flags["acks-extras"].extras, so the ability stays usable without the book.
+ * flags["acks-extras"].extras alongside it.
  */
 /* -------------------------------------------- */
 /*  Adventure binding (AX line)                 */
@@ -2397,9 +2346,6 @@ const ACTOR_KINDS = new Set(["kind.monster", "kind.monsterLegacy", "kind.npc", "
 /** kinds an actor-import flow may enumerate (unknown/absent kind = MM-era monster). */
 const actorKindOf = (e) => !e.kind || ACTOR_KINDS.has(e.kind);
 const ALIGN_WORD = { L: "Lawful", N: "Neutral", C: "Chaotic" };
-
-/** The lazy-prose tag persisted on world documents (never the prose itself). */
-const pdfTag = (id, label) => `<p>@PdfText[${id}]{${label}}</p>`;
 
 /**
  * Defer-to-newest: an adventure entry reprinted in a book this seat has OPEN
@@ -2448,7 +2394,7 @@ function bindLegacyMonster(node) {
  * A parsed quick-stat block (the `statline` pattern) onto a monster-type
  * actor. Values persist in world fields (the GM's hand-typed equivalence);
  * ability scores and gear notes go to flags — the monster schema has no score
- * fields — and prose stays a lazy tag.
+ * fields — and the entry's own text is written into the biography.
  */
 function bindNpc(node) {
   const sl = node.fields.statline ?? {};
@@ -2516,14 +2462,12 @@ async function importAdventureActor(bookId, id, folderId) {
   }
   const kind = found.entry.kind;
   const bound = kind === "kind.npc" ? bindNpc(node) : bindLegacyMonster(node);
-  const paras = node.fields.description ?? [];
-  cookbookCacheParas(bookId, id, paras);
   const artInstr = found.entry.fields?.art ?? null;
   const sl = bound.statline;
   const classLine = sl?.class ? `<p><em>${sl.class.name} ${sl.class.level}${sl.class.note ? ` (${sl.class.note})` : ""}</em></p>` : "";
   bound.system.details = {
     ...(bound.system.details ?? {}),
-    biography: classLine + pdfTag(id, found.entry.cite),
+    biography: classLine + entryText(node, id, found.entry.cite),
   };
   // Proficiency tokens resolve through the shared ability-provider tiers.
   if (sl?.proficiencies?.length) {
@@ -2573,7 +2517,7 @@ async function importAdventureActor(bookId, id, folderId) {
 
 /**
  * Location journals: one JournalEntry per meta.group, one page per keyed
- * entry, page body = lazy tag + creature links (the seat-extracted creature
+ * entry, page body = the room's own text + creature names (the seat-extracted creature
  * lookups, deferring to the ACKS II entry when the register maps one). Pages
  * update in place on re-import, so coverage grows without duplicating.
  */
@@ -2629,14 +2573,14 @@ export async function cookbookImportJournals() {
         for (const [id, e] of list) {
           sort += 100;
           const node = await executeEntry(session.doc, cb, data.registers, id).catch(() => null);
-          if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
           const creatures = Object.values(node?.fields?.creatures ?? {}).filter((c) => c && (c.ref || c.text));
+          // The creature line is a cross-reference, not prose: it names what
+          // the room holds, and each name is the reader's route to the imported
+          // creature in the compendium.
           const creatureHtml = creatures.length
-            ? `<p><strong>Creatures:</strong> ${creatures
-                .map((c) => (c.ref ? `@PdfText[${c.ref}]{${c.text}}` : c.text))
-                .join(" · ")}</p>`
+            ? `<p><strong>Creatures:</strong> ${creatures.map((c) => escapeText(c.text)).join(" · ")}</p>`
             : "";
-          const content = pdfTag(id, e.cite) + creatureHtml;
+          const content = entryText(node, id, e.cite) + creatureHtml;
           const existing = journal.pages.find((p) => p.getFlag(MODULE_ID, "cookbook")?.id === id);
           if (existing) {
             await existing.update({ "text.content": content, sort });
@@ -2735,7 +2679,7 @@ export async function cookbookImportRollTables() {
           name: e.name,
           folder: folder?.id ?? null,
           formula,
-          description: pdfTag(id, e.cite),
+          description: entryText(node, id, e.cite),
           results,
           flags: { [MODULE_ID]: { cookbook: { id, book: bookId } } },
         });
@@ -2864,7 +2808,7 @@ export function bindAbility(entry, node, id, opts = {}) {
     ...(opts.conversionFrom ? { conversionFrom: opts.conversionFrom } : {}),
     // Structured effects are CLASSIFIED from the seat's own prose (type, target
     // and value all materialize; the cookbook pre-declares none of them). An
-    // ability the scan can't classify is still valid — name + type + lazy prose.
+    // ability the scan can't classify is still valid — name + type + prose.
     // An alias reads the TARGET's prose through its pre-baked pointer, so it
     // materializes the same mechanics without the cookbook restating any.
     //
@@ -2915,7 +2859,7 @@ export function bindAbility(entry, node, id, opts = {}) {
     type: "ability",
     img: abilityIcon(entry),
     system: {
-      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      description: entryText(node, id, cite),
       proficiencytype: meta.general ? "general" : "class",
       // `requirements` is plain descriptive text with no second store behind
       // it, so it still lands on the core field the sheet already shows.
@@ -3300,7 +3244,7 @@ const bookRank = (bookId) => {
  *
  * Two entries printed in two books are the same item when nothing but their
  * source differs. Provenance has to come out of the comparison or nothing ever
- * matches — the description is a lazy `@PdfText[<id>]` tag naming the entry.
+ * matches — the description is the entry's own text, closing on its citation.
  *
  * DIRECTIONAL, and that is the whole trick. A live document's `system` is a
  * data model carrying every field the schema declares, defaults included, while
@@ -3433,7 +3377,7 @@ function runPageCache() {
  * Build — or REUSE — the shared ability item for a definition id. Deduped by
  * cookbook id, so every monster/NPC referencing a proficiency links to the SAME
  * item instead of minting a per-actor copy. Works bookless: without the citing
- * book the item still imports with its structure and lazy descriptor.
+ * book the item still imports with its structure and its citation.
  */
 export async function importAbility(id, folderId, { pageCache = null } = {}) {
   const found = cookbookEntry(id);
@@ -3469,8 +3413,7 @@ async function abilityData(id, { folderId = null, pageCache = null } = {}) {
   let node = null;
   if (session) {
     node = await executeEntry(session.doc, found.cb, data.registers, id, pageCache ? { pageCache: pageCache(bookId) } : {});
-    if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-    else node = null;
+    if (!node.ok) node = null;
   }
   const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
   const doc = bindAbility(found.entry, node, id);
@@ -4496,7 +4439,7 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
     system: {
       key: entry.meta?.key ?? fold(entry.name),
       source: { book: entry.book ?? "rr", cite, ref: id },
-      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      description: entryText(node, id, cite),
       requirements,
       keyAttributes,
       ...(typeof f.maximumLevel === "number" ? { maximumLevel: f.maximumLevel } : {}),
@@ -5220,8 +5163,7 @@ export async function importClasses() {
       let node = null;
       if (session) {
         node = await executeEntry(session.doc, found.cb, data.registers, id);
-        if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-        else node = null;
+        if (!node?.ok) node = null;
       }
       const folder = (await ensureItemFolder(id))?.id ?? null;
       const built = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName, gear });
@@ -5374,7 +5316,7 @@ export function bindVehicleRow(row, entry, id) {
     system: {
       kind: "land",
       source: { book: entry.book ?? "rr", cite: entry.cite ?? "", ref: id },
-      description: `<p>@PdfText[${id}]{${entry.cite ?? ""}}</p>`,
+      description: bookText([], entry.cite ?? "", { id }),
       ...(cargo.length ? { cargo: { capacityStone: cargo[0], ...(passengers ? { passengers } : {}) } } : {}),
       ...(roles.length ? { crew: { roles } } : {}),
       ...(tiers.length && !trades ? { speeds: { tiers } } : {}),
@@ -5536,7 +5478,7 @@ export function bindVariation(entry, node, id) {
       ...(Object.keys(data).length ? { data } : {}),
       ...(meta.dataFields ? { dataFields: meta.dataFields } : {}),
       source: { book: entry.book ?? "rr", cite, ref: id },
-      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      description: entryText(node, id, cite),
     },
   };
 }
@@ -5577,8 +5519,7 @@ export async function importVariations() {
       let node = null;
       if (session) {
         node = await executeEntry(session.doc, found.cb, data.registers, id);
-        if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-        else node = null;
+        if (!node?.ok) node = null;
       }
       const folder = (await ensureItemFolder(id))?.id ?? null;
       return createDoc(Item, { ...bindVariation(entry, node, id), folder });
@@ -5666,10 +5607,9 @@ export function bindTrap(entry, node, id) {
     flags: { [MODULE_ID]: { cookbook: { id, cite } } },
     system: {
       source: { book: entry.book ?? "jj", cite, ref: id },
-      // The passage renders from the seat's own book through the same lazy tag
-      // every other imported description uses; the plain split above is what
-      // fills the rows.
-      description: description ? `<p>@PdfText[${id}]{${cite}}</p>` : "",
+      // The passage that precedes the first tier is the trap's description;
+      // the plain split above is what fills the rows.
+      description: bookText([description], cite, { id }),
       level: 1,
       levels: levels.map((row) => ({ text: row.text, damageFormula: row.damageFormula })),
     },
@@ -5712,8 +5652,7 @@ export async function importTraps() {
       let node = null;
       if (session) {
         node = await executeEntry(session.doc, found.cb, data.registers, id);
-        if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-        else node = null;
+        if (!node?.ok) node = null;
       }
       const folder = (await ensureItemFolder(id))?.id ?? null;
       return createDoc(Item, { ...bindTrap(entry, node, id), folder });
@@ -5760,8 +5699,7 @@ export async function cookbookUpdateClasses() {
     let node = null;
     if (session) {
       node = await executeEntry(session.doc, found.cb, data.registers, id);
-      if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-      else node = null;
+      if (!node?.ok) node = null;
     }
     const doc = bindClass(entry, node, id, { gains: classGainsFor(gainsNode, entry.name), commonName, gear });
     const tongues = doc.flags?.[MODULE_ID]?.tongues;
@@ -5823,7 +5761,7 @@ export const equipmentTypeOf = (entry) => EQUIPMENT_TYPE[entry?.meta?.group] ?? 
 /**
  * Bind an equipment entry to the core item it should become. Mirrors
  * bindAbility's posture: the cookbook pre-declares NOTHING the page says —
- * name + citation always; the descriptor text stays lazy behind @PdfText;
+ * name + citation always; the descriptor text is whatever the page yielded;
  * cost and weight materialize only when a chef-authored locator lands on the
  * register row (none ship yet, so they default to core's 0 and the printed
  * table governs — the entry says so via its unaudited marker).
@@ -5884,7 +5822,7 @@ export function bindEquipment(entry, node, id) {
     type,
     img: abilityIcon(entry),
     system: {
-      description: `<p>@PdfText[${id}]{${cite}}</p>`,
+      description: entryText(node, id, cite),
       ...typed,
       // Page values — present only when a locator materialized them from the
       // seat's own book. Absent locators leave core's defaults.
@@ -5934,7 +5872,7 @@ export function bindAnimal(entry, node, id) {
       // ONE details object. Spreading a second `details` later would replace
       // this one wholesale and silently drop the citation.
       details: {
-        biography: `<p>@PdfText[${id}]{${cite}}</p>`,
+        biography: entryText(node, id, cite),
         ...(Number.isFinite(f.morale) ? { morale: f.morale } : {}),
       },
       animal: {
@@ -5998,8 +5936,7 @@ export async function importEquipment(id, folderId) {
     let node = null;
     if (session) {
       node = await executeEntry(session.doc, found.cb, data.registers, id);
-      if (node?.ok) cookbookCacheParas(bookId, id, node.fields.description ?? []);
-      else node = null;
+      if (!node?.ok) node = null;
     }
     return node;
   };
@@ -6196,7 +6133,7 @@ const weaponId = (name) => `def.weapon.${slugLabel(name).replace(/-([a-z0-9])/g,
 /**
  * Materialize the RR weapons TABLE into `weapon` items from the reader's own
  * book — the clean-break pipeline (see weapon-tables.mjs). Unlike the run-in
- * gear cookbook, a grid has no lazy prose to reveal, so a bookless seat gets
+ * gear cookbook, a grid has no prose of its own, so a bookless seat gets
  * nothing here. Deduped by cookbook id; each item carries its full set of
  * attack/damage modes (weapon-tables `damageModes`), which the core compendium
  * could not express and split into separate items instead.
@@ -6372,7 +6309,7 @@ async function gearPriceMap() {
  * Materialize the RR armour TABLE (suits, shields, helmets, barding) into
  * `armor` items from the reader's own book — the sibling of importWeapons.
  * AC, encumbrance and cost come from the seat's page; a bookless seat gets
- * nothing (a grid has no lazy prose). Deduped by cookbook id, into ACKS
+ * nothing (a grid has no prose of its own). Deduped by cookbook id, into ACKS
  * Cookbook / Armor.
  * @returns {Promise<{table:number, created:number}>}
  */
@@ -6636,7 +6573,7 @@ function preferredId(ids, present) {
  * GM: browse every shipped ability and pick which to import.
  *
  * The counterpart to the monster import dialog. Works WITHOUT a connected book
- * — an ability always imports with its name, classification and lazy descriptor
+ * — an ability always imports with its name, classification and citation
  * — but the header says whether the citing book is open, because that is the
  * difference between importing structure and importing structure + mechanics.
  */
@@ -6800,26 +6737,19 @@ export async function cookbookImportAbilities() {
 }
 
 /**
- * The generated descriptor: one lazy page reference and nothing else.
- *
- * Update writes descriptions in exactly this shape, so an item already carrying
- * one holds nothing of its owner's — which is what lets a second run pass over
- * everything the first run settled without asking again.
- */
-const PDF_DESCRIPTOR_ONLY = /^\s*<p>\s*@PdfText\[[^\]]*\]\{[^}]*\}\s*<\/p>\s*$/;
-
-/**
  * Does this description hold something this module cannot prove it wrote?
  *
- * The test is never "is this worth keeping", it is "is this ours" — empty, or a
- * bare generated descriptor, and nothing else. Structure-only markup (the empty
- * paragraph an editor leaves behind) is empty; an image, a heading or a word of
- * text is someone's work and is never overwritten without being offered first.
+ * The test is never "is this worth keeping", it is "is this ours" — a stamped
+ * block of imported book text, or the legacy `@PdfText` tag that preceded it,
+ * and nothing else. Structure-only markup (the empty paragraph an editor leaves
+ * behind) is empty; an image, a heading or a word of text is someone's work and
+ * is never overwritten without being offered first.
+ *
+ * Update writes descriptions in exactly the stamped shape, which is what lets a
+ * second run pass over everything the first run settled without asking again.
  */
 function handWrittenProse(html) {
-  const s = String(html ?? "");
-  if (!s.trim() || PDF_DESCRIPTOR_ONLY.test(s)) return false;
-  return !!s
+  return !!stripBookText(html)
     .replace(/<\/?(?:p|br|div|span)\b[^>]*>/gi, " ")
     .replace(/&nbsp;|&#160;/gi, " ")
     .trim();
@@ -6947,7 +6877,7 @@ async function placeGeneratedBeside(holder, id, built) {
  *
  * Matched by cookbook id first, then by folded NAME, so abilities made by hand
  * or imported by an older version get adopted and repaired rather than
- * duplicated. Only the generated surface is rewritten (the lazy descriptor, the
+ * duplicated. Only the generated surface is rewritten (the descriptor, the
  * structured extras, the cookbook id); the item's name and the system fields a
  * GM may have tuned are left alone.
  *
@@ -7033,8 +6963,7 @@ export async function cookbookUpdateAbilities() {
         let node = null;
         if (session) {
           node = await executeEntry(session.doc, found.cb, data.registers, id).catch(() => null);
-          if (node?.ok) cookbookCacheParas(bookOf(found), id, node.fields.description ?? []);
-          else node = null;
+          if (!node?.ok) node = null;
         }
         nodeCache.set(id, node);
       }

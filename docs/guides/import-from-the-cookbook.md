@@ -17,8 +17,9 @@ What you get depends on the entry's kind — a monster becomes an Actor with its
 weapons and abilities as embedded Items; a proficiency becomes an `ability` Item;
 a piece of gear becomes a weapon, armour or item.
 
-The descriptor text stays a lazy `@PdfText` tag rather than stored prose, so it
-resolves per seat from that seat's own extraction.
+The descriptor text is read from your PDF as the document is created and saved
+into it, with the book and page as its closing line. Everyone at the table can
+read it from then on, and you can edit it like any other description.
 
 ## What is filled in, and what is not
 

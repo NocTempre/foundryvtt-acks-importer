@@ -1,8 +1,8 @@
 /**
  * World-document creation for browse-loaded recipes.
  *
- * Persists only @PdfText tags, never prose: the tag resolves per seat at
- * render time from that seat's own extraction.
+ * The text the browse pass just extracted is written into the document it
+ * creates, page reference last; nothing is resolved again at render time.
  */
 /**
  * Where browse-loaded documents land, beside the cookbook's "ACKS Cookbook".
@@ -10,12 +10,12 @@
  * a folder in someone's world is a shipped surface.
  */
 import { MODULE_ID } from "./constants.mjs";
+import { bookText } from "./prose.mjs";
 
 const FOLDER_NAME = "ACKS Importer — Browsed";
-const tagFor = (recipe) => `@PdfText[${recipe.id}]{${recipe.cite}}`;
 
 /**
- * Where a monster's streamed description prose belongs, matching applyStats:
+ * Where a monster's description prose belongs, matching applyStats:
  * the Full Monster Sheet's visible APPEARANCE field, which enriches its own
  * description fields. Kept in one place so a monster never ends up with the
  * prose in BOTH fields.
@@ -51,11 +51,13 @@ const loadedFor = (recipe) => {
 /**
  * Create — or REUSE — the world document for one recipe (dynamic browse-loads).
  * The recipe id rides on the document so a re-load finds it.
+ *
+ * @param prose the passage the browse pass read for this heading
  */
-export async function createDocFor(recipe) {
+export async function createDocFor(recipe, prose = "") {
   const existing = loadedFor(recipe);
   if (existing) return existing;
-  const html = `<p>${tagFor(recipe)}</p>`;
+  const html = bookText(prose ? [prose] : [], recipe.cite, { id: recipe.id });
   const flags = { [MODULE_ID]: { browsed: { id: recipe.id, cite: recipe.cite } } };
   if (recipe.kind === "monster") {
     const folder = await ensureFolder("Actor");

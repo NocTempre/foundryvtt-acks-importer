@@ -1,11 +1,12 @@
 /**
- * A keyed area arrives as a PLACE, and its words stay in the reader's book.
+ * A keyed area arrives as a PLACE, carrying the text the import read.
  *
  * Two things this guards. The binding must produce an `acks-extras.location`
  * actor rather than a journal page — a place in this family has a parent, a
  * roster and contents, and prose can never grow those. And the room's text must
- * be a lazy tag, never stored: an area whose description was written into the
- * document would be book text shipped in a world file.
+ * be materialized into it in the stamped shape, closing on the page reference:
+ * a Judge who imported the adventure reads the room without the book open, and
+ * a re-import can tell its own writing from theirs.
  */
 import { oseLocationData, oseAdventureData, LOCATION_TYPE } from "../scripts/ose-location.mjs";
 
@@ -39,13 +40,17 @@ const room = oseLocationData({
   bookLabel: "Quick Delve #1: Milk",
   areaKey: "2",
   parentUuid: "Actor.abcdefghijklmnop",
+  paragraphs: ["A statue of a cow <milk> flows from.", "The hall is cold."],
 });
 
 check("a room is a place", room.type, LOCATION_TYPE);
 check("the number leads, so areas sort as the map is keyed", room.name, "2. Statue Hall");
 check("it sits inside the adventure", room.system.parentUuid, "Actor.abcdefghijklmnop");
-check("its text is a lazy tag, not the text", room.system.notes, "<p>@PdfText[qd1.area2]{QD1 p.10}</p>");
-ok("nothing of the page is stored", !/statue|hall|chocolate/i.test(JSON.stringify(room.system).replace(/Statue Hall/, "")));
+ok("the room carries the text the import read", /A statue of a cow/.test(room.system.notes));
+ok("every paragraph lands, in order", /cow[\s\S]*hall is cold/i.test(room.system.notes));
+ok("extracted text is escaped, never parsed as markup", room.system.notes.includes("&lt;milk&gt;"));
+ok("the page reference closes it", /acks-importer-cite">QD1 p\.10<\/p><\/div>$/.test(room.system.notes));
+ok("and the block is stamped with the entry it came from", room.system.notes.includes('data-acks-entry="qd1.area2"'));
 check("provenance records which area it is", room.flags["acks-importer"].ose.areaKey, "2");
 check("and that a person has not checked it", room.flags["acks-importer"].ose.unaudited, true);
 

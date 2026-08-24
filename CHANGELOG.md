@@ -1,5 +1,33 @@
 # Changelog
 
+## 4.0.0
+
+**The book text you imported is in your world, and it stays there.**
+
+### Changed
+- **Imported descriptions are saved, not re-read.** Every import — monsters,
+  proficiencies, classes, equipment, traps, vehicles, variations, roll tables,
+  journal rooms, OSE creatures and keyed areas — now writes the entry's own
+  paragraphs into the document it creates, with the book and page as the closing
+  line. The GM who owns the PDF reads it once, at import; nobody reads it again.
+- **The "connect your PDF on this seat to read it here" behaviour is gone**, and
+  with it the `@PdfText` tag, the reveal link, and every stub that hid text from
+  a seat without the book. Players connect nothing. A description is a
+  description.
+- **Connecting a book is faster.** It used to extract every shipped recipe up
+  front to fill a session cache that only the reveal link read; now it opens the
+  file, checks it is the right book, and stops. Text is read from the page an
+  import names, when that import runs.
+- **A description you edited is still yours.** Imported text is stamped, so the
+  update passes can tell their own writing from a Judge's and keep hand-written
+  prose exactly as before.
+
+### Upgrading
+- **Documents imported by an earlier version still hold `@PdfText[...]` tags**,
+  and nothing renders them any more — they show as that literal text. *Remove
+  ALL Imports*, then import again, and they come back with the words in them.
+  Documents you wrote yourself are untouched by this.
+
 ## 3.2.0
 
 **Three controls, and two books stop giving you two of everything.**

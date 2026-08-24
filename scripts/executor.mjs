@@ -885,9 +885,9 @@ export function effectScan(paras, registers) {
    * Only shapes that reduce to a VALUE are classified — an encumbrance ceiling,
    * an armour weight. The books state plenty of other restrictions in prose
    * ("cannot tumble past the same enemy on two consecutive rounds"), and those
-   * stay in the lazy description on purpose: copying the sentence into a flag
-   * would put book prose into world data, where a seat without the book could
-   * read it. A conclusion may ship; a sentence may not. */
+   * stay in the imported description on purpose: the sentence already lives
+   * there, and a flag holding a second copy is one this module would have to
+   * state the rule to fill. A conclusion may ship; a sentence may not. */
   const enc = text.match(/encumbrance of more than (\d+) stone/i);
   if (enc) push({ type: "limitation", condition: "encumbrance", value: flat(parseInt(enc[1], 10)) });
   const armour = text.match(/wearing (medium or heavy|heavy|medium|light) armou?r[^.]{0,90}\bcannot\b/i);

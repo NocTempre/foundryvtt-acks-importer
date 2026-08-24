@@ -11,8 +11,8 @@
  * IP posture (matches the rest of acks-importer): the register/recipe ships only
  * GEOMETRY — column x-anchors and cell patterns — never a damage die, an AC, an
  * encumbrance or a price. All of those materialize per-seat from the connected
- * PDF. A bookless seat gets nothing from this path (a grid has no lazy prose to
- * reveal), which is acceptable: this exists for tables core will stop shipping.
+ * PDF. A bookless seat gets nothing from this path (a grid has no prose of its
+ * own), which is acceptable: this exists for tables core will stop shipping.
  *
  * Reuses the proven table primitives (rowsByY / joinRuns) rather than the
  * generic definition compiler, so it stays off the hot shared path other
@@ -20,6 +20,7 @@
  */
 import { rowsByY, joinRuns } from "./table-extract.mjs";
 import { MODULE_ID } from "./constants.mjs";
+import { bookText } from "./prose.mjs";
 
 /* -------------------------------------------------------------------- */
 /*  Recipes — GEOMETRY ONLY (no book values)                            */
@@ -328,7 +329,7 @@ export function bindWeaponRow(row, id, cite) {
   const modes = damageModes(row);
   const primary = modes.find((m) => m.damage) ?? null;
   const system = {
-    description: `<p>@PdfText[${id}]{${cite}}</p>`,
+    description: bookText([], cite, { id }),
     tags,
     melee,
     missile,

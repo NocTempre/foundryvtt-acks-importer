@@ -12,8 +12,8 @@ disagree.
 **ACKS Content → Cookbook** lists every shipped entry with its book, its
 citation, and whether this seat can currently read it.
 
-Reveal an entry to extract its passage from your own PDF. Extraction is lazy and
-per-entry — nothing is pulled eagerly on connect.
+Importing an entry extracts its passage from your own PDF and writes it into the
+document. Extraction is per-entry — nothing is pulled on connect.
 
 ## Unaudited entries
 
@@ -37,7 +37,8 @@ longer resolves), which is what makes them safe to offer for removal.
 
 Worth knowing when you are judging whether something is a bug:
 
-- No prose. Passages resolve from your PDF, per seat.
+- No prose. Passages are read from your own PDF at import; what ships is where
+  to find them on the page.
 - No values read from a page. Costs, damage, AC and build costs are matched
   against your own extracted text at runtime by a shipped *pattern* — the
   pattern ships, the number it finds never does.

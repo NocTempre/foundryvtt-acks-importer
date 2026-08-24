@@ -7,6 +7,63 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Imported text is written into the world, once, by the GM who owns the book (2026-08-24)
+
+**Ruled.** An import materializes the entry's own paragraphs into the document
+it creates, with the page reference as the closing line, and the world holds
+them from then on. The `@PdfText` enricher, the per-seat reveal and every
+"connect your PDF on this seat to read it here" stub are retired with it.
+
+**This supersedes the closing paragraph of "The refresh bridge" (2026-07-29)** —
+"nothing enters world data, and prose remains memory-only everywhere". The new
+evidence is not about the bridge, which stands unchanged: it is that the
+conditional text failed as a reading surface. Resolution ran at render time, so
+a description was only as readable as the seat looking at it, and the reveal
+path had already broken silently — the import path caches paragraph OBJECTS
+where the reveal expected a string, so a revealed cookbook entry rendered
+`[object Object]`. A surface whose failure mode is invisible to the seat that
+imported it is not a surface anyone can rely on.
+
+**What the shape has to carry, and why each part is load-bearing:**
+
+- **Escaped, never parsed.** Extracted text is plain text that happens to be
+  about to live in an HTML field; an angle bracket in a printed formula is a
+  character. The reveal path got this for free through `textContent`; a stored
+  description does not.
+- **Stamped** (`data-acks-entry` on the wrapper). `handWrittenProse` used to ask
+  "is this description exactly one `@PdfText` tag?" to decide whether a re-import
+  may overwrite it. With text in the field that test is impossible without a
+  mark, and losing it would mean either clobbering a Judge's own writing or
+  never updating anything.
+- **The citation is part of the block, not a separate field.** Attribution
+  travels with the reproduction or it is lost the first time someone copies the
+  text out of one field.
+
+**The Full Monster Sheet routes sections to six separate fields**, so the page
+reference closes the last one that received text — the creature carries it once,
+at the bottom of the Description tab, rather than six times.
+
+**Accepted cost: worlds imported before this hold `@PdfText` tags, and there is
+no repair pass.** The enricher that used to render them is gone, so an
+unrepaired document shows the literal `@PdfText[mm.ghoul]{MM p.112}` until it is
+re-imported (*Remove ALL Imports*, then import again). A citation-only shim was
+rejected: it would keep the whole per-seat resolution path alive to pretty-print
+documents that a single re-import fixes properly.
+
+**Also retired, because it lost its only consumer:** the eager per-recipe
+extraction inside `ingestBook`. Connecting a book is now an open and a
+fingerprint; text is read from the page an import names, at the moment it is
+imported.
+
+**IP posture, stated out loud.** This is app-licensed in-app content the GM
+materialized from their own copy, which `.claude/rules/ip-doctrine.md` allows —
+the same hand-typed equivalence that already governs imported stat blocks and
+roll-table rows. What changes is that a world backup now carries the book's
+sentences where it used to carry citations. Nothing about the SHIPPED artifact
+changes: no rules words, no page values, no `ruledata/`.
+
+---
+
 ### Same name, two books: merge unless they differ beyond their source (2026-08-24)
 
 **Ruled.** Two imports that share a printed name are ONE document unless they
@@ -1166,6 +1223,12 @@ What this does and does not concede: a reload is not a new session, so bridging
 it enforces nothing less than before. A *session* still cannot begin without the
 reader's own file. Nothing is uploaded, nothing enters world data, no other seat
 can read it, and prose remains memory-only everywhere.
+
+> **The last sentence is superseded** by "Imported text is written into the
+> world, once, by the GM who owns the book" (2026-08-24): what a GM imports —
+> prose included — now persists in world data. The bridge itself, and everything
+> else in this entry, stands: it still governs the BYTES of a book, which are
+> never stored beyond the window and never uploaded.
 
 **Also:** where a gesture is still required, it is now one gesture for the whole
 shelf. A plain file picker grants no persistent permission and so consumes no

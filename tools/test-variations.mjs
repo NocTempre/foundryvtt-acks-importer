@@ -29,7 +29,9 @@ const entry = {
 };
 
 /* A node as the executor hands it over: `variation` already materialized. */
-const node = (found) => ({ fields: { variation: found } });
+const node = (found) => ({
+  fields: { variation: found, description: [{ text: "A fine blade is keener than a plain one." }] },
+});
 
 const full = bindVariation(entry, node([
   { field: "cost.add", amount: 7 },
@@ -44,7 +46,9 @@ check("supersedes is carried", full.system.supersedes.join() === "magical.*");
 check("a located surcharge reaches cost.add", full.system.cost.add === 7);
 check("a located bonus reaches deltas.bonus", full.system.deltas.bonus === 3);
 check("the citation is recorded", full.system.source.cite === "RR p.999");
-check("the description renders through the lazy tag", /@PdfText\[def\.variation\.fineBladeToHit\]/.test(full.system.description));
+check("the page's text is written into the description", /keener than a plain one/.test(full.system.description));
+check("closing on the page reference", /acks-importer-cite">RR p\.999<\/p><\/div>$/.test(full.system.description));
+check("stamped with the entry it came from", full.system.description.includes('data-acks-entry="def.variation.fineBladeToHit"'));
 
 /* A stone is six sixths, and lighter is negative. */
 const lighter = bindVariation(entry, node([{ field: "deltas.stoneLighter", amount: 1 }]), "x");

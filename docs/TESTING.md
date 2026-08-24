@@ -272,6 +272,51 @@ of what looks unmatchable is a name the price list writes head-first
 ("Rations, Iron"), and that is a rule, not an exception. What genuinely cannot
 be reached by rule goes in `register/_refs/equipmentPhrase.json`.
 
+## Imported text is in the document, not resolved at render
+
+The change that retired the `@PdfText` enricher. Everything here is about what a
+document CONTAINS after import, so every check is worth more from a seat that
+cannot read the book than from the one that imported it.
+
+### Fixtures
+
+1. A folder to import into, and one connected book (`mm` reaches the most
+   shapes). Both go at the end.
+
+### Steps
+
+2. Import one monster. On the Description tab, confirm the block's own
+   paragraphs are there, routed to their fields (appearance, combat, ecology…),
+   and that the book and page appear ONCE, at the end of the last field that got
+   text — not on every field, and not missing.
+3. `api.forgetBooks()`, reload, and open the same actor. The text must be
+   unchanged and complete. This is the whole feature: a seat with no book open
+   reads everything.
+4. **Join as a player** (a real seat, per the shared rule) and open the actor.
+   The player owns no book and has connected nothing; they must read the same
+   text. A stub, a tag, or an empty field here is the bug.
+5. Search the actor's HTML for `@PdfText`. Zero hits — including the journal
+   pages, roll tables, traps, equipment and class items an "Import Everything"
+   run produces.
+6. Confirm the text is ESCAPED, not parsed: import an entry whose page prints a
+   `<` or `&` (a formula or a "&" in a name) and confirm the character shows as
+   itself rather than vanishing into markup.
+7. **A Judge's own writing survives.** Edit an imported ability's description by
+   hand, then run *Update abilities*. The edited one keeps its prose and takes
+   the mechanics; an untouched one is rewritten. Reversing that pair is the
+   failure this stamp exists to prevent.
+8. **The accepted cost, verified deliberately.** Hand-set a document's
+   description to `<p>@PdfText[mm.ghoul]{MM p.112}</p>` — the pre-upgrade shape —
+   and confirm it renders as that literal string, with no enricher left to hide
+   it, and that *Remove ALL Imports* + a fresh import replaces it with real text.
+   A world upgraded from an older build looks like this until it is re-imported,
+   and the report should say so rather than implying otherwise.
+
+### Teardown
+
+9. Delete the folder and everything created, and the hand-made fixture from
+   step 8.
+
 ## OSE import
 
 ### Fixtures
@@ -406,8 +451,8 @@ is what separates them.
    book whose PDF is not connected must report `open: false` and must not be
    importable — check the refusal, not just the list.
 3. Import a SMALL book first (`qd1`, six creatures). Confirm: actors created
-   with the cookbook's names, a Source tab on each, and `@PdfText` biography
-   resolving against the reader's own copy.
+   with the cookbook's names, a Source tab on each, and a biography holding the
+   block's own text with the book and page as its closing line.
 4. **Check a name against the page.** The harvester's names are gated but not
    proofread; an actor named after a room or a sentence is the failure that gate
    exists to prevent, and it is visible only here.
@@ -446,9 +491,10 @@ is what separates them.
 3. Confirm every room's `system.parentUuid` is the adventure's uuid. Nesting is
    the reason this binds to an actor rather than a journal page; unparented
    rooms are the feature not working, not a cosmetic difference.
-4. Open a room and confirm its notes resolve to the printed text — description
-   AND the roster line beneath it ("5 skeletons: Stats on p7, hp 3, 6, 7, 7,
-   8"). The words must arrive from the reader's copy, never from the cookbook.
+4. Open a room and confirm its notes hold the printed text — description AND
+   the roster line beneath it ("5 skeletons: Stats on p7, hp 3, 6, 7, 7, 8"),
+   closing on the book and page. The words must arrive from the reader's copy,
+   never from the cookbook.
 5. Check one room's name against the page. The number leads ("2. Statue Hall")
    so the rooms sort as the map is keyed; a title that wrapped onto a second
    line must be whole, not cut at the wrap.

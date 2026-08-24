@@ -2,13 +2,14 @@
  * acks-importer — bring-your-own-book content streamer (PoC).
  *
  * POSSESSION MODEL: what persists across sessions is the LOCATION of each
- * seat's book (in IndexedDB, per seat) — never the prose. Every session
- * re-reads descriptions from the actual file; lose the file, lose the prose
- * (stubs + citations remain). Mechanical data (stats, attacks, spoils) is
- * imported into world documents and persists like hand-entered data.
+ * seat's book (in IndexedDB, per seat) — never the book. Nothing is ever read
+ * without the file: a session that cannot open the PDF imports nothing.
  *
- * Persisted documents carry only @PdfText[recipe-id]{citation} tags, resolved
- * per viewing seat at render time from that seat's in-memory extraction.
+ * What an import produces DOES persist, and all of it: stats, attacks, spoils
+ * and the entry's own text, written into world documents by the GM who owns the
+ * book, and held there like hand-entered data. Reading an imported document
+ * needs no book on any seat, the importing GM's included.
+ *
  * A location is a file handle, a fetchable path, or — where the browser allows
  * neither — the remembered NAME of the file, which the join-time reconnect
  * dialog offers back with a picker beside it. Same enforcement throughout;
@@ -29,9 +30,10 @@
  *   forgetBooks()    drop this computer's remembered locations (not the shelf)
  */
 import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE } from "./constants.mjs";
+import { bookText } from "./prose.mjs";
 import { BOOKS, fingerprintWarning, identifyBook } from "./books.mjs";
 import { matchFilesToBooks } from "./book-match.mjs";
-import { RECIPES, recipeById } from "./recipes.mjs";
+import { RECIPES } from "./recipes.mjs";
 import { openBook, pageItems, extractRecipe, extractDisplay, extractRunin, extractSpoils, extractPageArt, extractPageArtRegion, listHeadings, setWorker, setWasmUrl } from "./extract.mjs";
 import { extractStatPairs } from "./stats.mjs";
 import { mapPairs } from "./stats-map.mjs";
@@ -42,8 +44,8 @@ import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
   initCookbook, loadCookbook, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities,
-  cookbookFillCompanions, cookbookPruneAbilities, registerAbilityDirectoryButtons, importAbility, cookbookDebug, cookbookStub,
-  cookbookCanReveal, cookbookProse, cookbookCount, refillMonster, resolveAbilities,
+  cookbookFillCompanions, cookbookPruneAbilities, registerAbilityDirectoryButtons, importAbility, cookbookDebug,
+  cookbookCount, refillMonster, resolveAbilities,
   importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
   importWeapons, importArmor,
   importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
@@ -57,12 +59,10 @@ import { importOseBook, importOseAreas, authoredOseBooks } from "./ose-book.mjs"
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
-const LEGACY_KEYS = ["acks-importer.proseCache", "acks-importer.contentCache"]; // pre-possession-model storage
+const LEGACY_KEYS = ["acks-importer.proseCache", "acks-importer.contentCache"]; // pre-possession-model per-seat caches
 
 /** Open PDFs this session: bookId -> { doc, title }. Memory only. */
 const sessionDocs = new Map();
-/** Extracted prose this session: bookId -> { recipeId: prose }. Memory only, by design. */
-const proseMem = new Map();
 
 /* -------------------------------------------- */
 /*  Remembered book locations (IndexedDB)       */
@@ -587,54 +587,11 @@ function startCacheHeartbeat() {
 /* -------------------------------------------- */
 
 const dynamicRecipes = () => game.settings.get(MODULE_ID, SETTING_DYNAMIC) ?? {};
-const resolveRecipe = (id) => recipeById(id) ?? dynamicRecipes()[id] ?? null;
 const allRecipes = () => [...RECIPES, ...Object.values(dynamicRecipes())];
-const recipesForBookAll = (bookId) => allRecipes().filter((r) => r.book === bookId);
-const tagHtmlFor = (recipe) => `<p>@PdfText[${recipe.id}]{${recipe.cite}}</p>`;
-
-function stubFor(recipe) {
-  if (!recipe.dynamic) return game.i18n.localize(`${LANG_PREFIX}.pdftext.${recipe.id}`);
-  return game.i18n.format(`${LANG_PREFIX}.ui.dynamicStub`, {
-    name: recipe.name,
-    book: BOOKS[recipe.book]?.label ?? recipe.book,
-    page: recipe.page,
-  });
-}
-
-function proseFor(recipeId) {
-  const recipe = resolveRecipe(recipeId);
-  if (!recipe) return null;
-  return proseMem.get(recipe.book)?.[recipeId] ?? null;
-}
 
 /* -------------------------------------------- */
 /*  Connect / restore books                     */
 /* -------------------------------------------- */
-
-/**
- * Re-render open sheets that show a @PdfText tag.
- *
- * The enricher decides AT RENDER TIME whether this seat can reveal the text, so
- * a sheet drawn before the book was connected keeps its "connect your PDF on
- * this seat" stub — and no reveal link — for as long as it stays open. The
- * message then tells the reader to do the thing they have just done. Only apps
- * actually showing a tag are touched; this fires on connect, not per frame.
- */
-function rerenderPdfTextApps() {
-  const open = [...(foundry.applications?.instances?.values?.() ?? []), ...Object.values(ui.windows ?? {})];
-  let n = 0;
-  for (const app of open) {
-    const el = app?.element instanceof HTMLElement ? app.element : app?.element?.[0];
-    if (!el?.querySelector?.(".acks-importer-pdftext")) continue;
-    try {
-      app.render();
-      n++;
-    } catch (err) {
-      console.warn(`${MODULE_ID} | could not re-render ${app?.constructor?.name ?? "an open sheet"}`, err);
-    }
-  }
-  return n;
-}
 
 /**
  * Programmatic connect: read a PDF from a URL this seat can fetch (a file the
@@ -642,9 +599,9 @@ function rerenderPdfTextApps() {
  * connectBook() stays the normal path; this one serves hosted copies and
  * automated live tests.
  *
- * The prose is session memory as always — what persists is the PATH, so the
- * seat reconnects itself on every future join. Pass `{ remember: false }` for
- * a one-off read that should leave nothing behind.
+ * The file itself is never kept — what persists is the PATH, so the seat
+ * reconnects itself on every future join. Pass `{ remember: false }` for a
+ * one-off read that should leave nothing behind.
  */
 async function connectBookUrl(bookId, url, { remember = true } = {}) {
   // Throws rather than warning-and-returning: the shelf decides whether to
@@ -679,15 +636,17 @@ async function connectBookUrl(bookId, url, { remember = true } = {}) {
 /**
  * Read a book into this session.
  *
+ * Opening is an open and a fingerprint: nothing is extracted here. Text is read
+ * from the page an import names, at the moment it is imported, and written into
+ * the document — so a connect costs one parse instead of one parse per recipe.
+ *
  * `cache` is the File/Blob the caller read `buffer` from, when it still holds
  * one. It is bridged across page reloads (see the refresh bridge above) and is
  * never a substitute for the file itself.
  */
 async function ingestBook(bookId, buffer, { silent = false, cache = null } = {}) {
-  const recipes = recipesForBookAll(bookId);
-  // Opening a book is the one wait every seat pays, restore included: pdf.js
-  // parses the whole file, then each shipped recipe is extracted from it.
-  const bar = progressBar(game.i18n.format(`${LANG_PREFIX}.ui.progressReading`, { book: BOOKS[bookId]?.label ?? bookId }), recipes.length);
+  const entries = cookbookCount(bookId);
+  const bar = progressBar(game.i18n.format(`${LANG_PREFIX}.ui.progressReading`, { book: BOOKS[bookId]?.label ?? bookId }), 1);
   try {
     bar.note(game.i18n.localize(`${LANG_PREFIX}.ui.progressOpening`));
     const { doc, numPages, title } = await openBook(buffer);
@@ -712,25 +671,13 @@ async function ingestBook(bookId, buffer, { silent = false, cache = null } = {})
     const warning = fingerprintWarning(bookId, numPages, title);
     if (warning && !silent) ui.notifications.warn(`acks-importer | ${warning}`);
     sessionDocs.set(bookId, { doc, title });
-    const entries = proseMem.get(bookId) ?? {};
-    for (const recipe of recipes) {
-      const prose = await extractRecipe(doc, recipe).catch(() => null);
-      if (prose) entries[recipe.id] = prose;
-      bar.step(recipe.name ?? recipe.id);
-    }
-    proseMem.set(bookId, entries);
     // Only once the book actually opened: a file that failed the read is not
     // worth bridging, and bridging it would keep re-failing every reload.
     await cacheBytes(bookId, cache);
-    const hits = Object.keys(entries).length;
-    // Anything already on screen still says "connect your book" until it is drawn
-    // again — the tag resolves per render, not per document.
-    const redrawn = rerenderPdfTextApps();
-    const message = `acks-importer | ${BOOKS[bookId]?.label ?? bookId}: open — ${hits}/${recipes.length} descriptions readable this session (in memory only; never stored).`;
+    const message = `acks-importer | ${BOOKS[bookId]?.label ?? bookId}: open — ${entries} entr${entries === 1 ? "y" : "ies"} available to import.`;
     if (silent) console.log(message);
     else ui.notifications.info(message);
-    if (redrawn) console.log(`${MODULE_ID} | re-rendered ${redrawn} open sheet(s) so their page references resolve.`);
-    return hits;
+    return true;
   } finally {
     bar.finish();
   }
@@ -1757,7 +1704,6 @@ async function forgetBooks() {
   // next reload would quietly reopen the very books that were just dropped.
   await attempt("bridged book bytes", bytesClear);
   await stampClear();
-  proseMem.clear();
   // The SHELF is world data and is deliberately untouched: forgetting is a
   // statement about this browser, and a GM clearing their own seat must not
   // silently unstage the books every other seat reads.
@@ -1862,7 +1808,6 @@ async function pickHeadings(bookId, page) {
 
 async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
   const dyn = foundry.utils.deepClone(dynamicRecipes());
-  const mem = proseMem.get(bookId) ?? {};
   let created = 0;
   for (const head of picked) {
     const prose = head.mode === "runin" ? extractRunin(pageData, head.text) : extractDisplay(pageData, head.text);
@@ -1883,13 +1828,11 @@ async function loadHeadings(bookId, page, pageData, picked, kindChoice) {
       dynamic: true,
     };
     dyn[recipe.id] = recipe;
-    mem[recipe.id] = prose; // this seat's session memory — other seats resolve via their own book
-    const created0 = await createDocFor(recipe);
+    const created0 = await createDocFor(recipe, prose);
     if (recipe.kind === "monster") await applyStatsToActor(created0, sessionDocs.get(bookId).doc, pageData, recipe);
     created++;
   }
   if (!created) return;
-  proseMem.set(bookId, mem);
   await game.settings.set(MODULE_ID, SETTING_DYNAMIC, dyn);
   ui.notifications.info(game.i18n.format(`${LANG_PREFIX}.ui.browseDone`, { n: created, book: BOOKS[bookId].label, page }));
 }
@@ -2013,27 +1956,26 @@ async function applyStatsToActor(actor, doc, pageData, recipe) {
   if (!pairs.length) return ui.notifications.warn(`acks-importer | ${recipe.name}: no stat rows found on PDF p. ${recipe.page}.`);
   const { system, extras, items, applied, unmapped } = mapPairs(pairs);
 
-  // Stream the entry prose where the sheet the seat is using will ENRICH it,
-  // so the @PdfText tag resolves per seat (stub for a bookless seat, "show book
-  // text" reveal for one with the book):
-  //   • Full Monster Sheet active → the visible APPEARANCE field
-  //     (extras.description.appearance). FMS v0.x enriches its description
-  //     fields, so the tag renders there — the first field on the Description
-  //     tab, which is where the reader looks.
-  //   • otherwise → the core biography ({{{enriched.biography}}}).
-  // Each target is written as ONE object/path — never a parent object plus a
-  // dotted leaf of it in the same update() (that ambiguity clobbered the write).
+  // The entry's text goes to the visible APPEARANCE field
+  // (extras.description.appearance) — the first field on the Description tab,
+  // which is where the reader looks. Each target is written as ONE object/path
+  // — never a parent object plus a dotted leaf of it in the same update() (that
+  // ambiguity clobbered the write).
   const update = { [`flags.${MODULE_ID}.statPairs`]: pairs };
   // The Full Monster Sheet is a feature of acks-extras, which this module hard-
   // requires, so the stat-block channel is always available. The old fallback
   // wrote the same prose to system.details.biography instead; it can no longer
   // be reached, and two possible homes for one description is exactly what the
   // channel split existed to prevent.
-  extras.description = { ...(extras.description ?? {}), appearance: tagHtmlFor(recipe) };
+  const prose = await extractRecipe(doc, recipe).catch(() => null);
+  extras.description = {
+    ...(extras.description ?? {}),
+    appearance: bookText(prose ? [prose] : [], recipe.cite, { id: recipe.id }),
+  };
   update["flags.acks-extras.extras"] = extras;
   update.system = system;
   await actor.update(update);
-  // Truthful diagnostics: verify the streamed description actually landed.
+  // Truthful diagnostics: verify the description actually landed.
   const back = actor.getFlag("acks-extras", "extras")?.description?.appearance;
   console.log(`${MODULE_ID} | ${actor.name}: description ${back ? "VERIFIED on actor" : "MISSING after write (!)"}`);
 
@@ -2165,72 +2107,6 @@ async function applyStats() {
 }
 
 /* -------------------------------------------- */
-/*  @PdfText enricher (per-client resolution)   */
-/* -------------------------------------------- */
-
-/**
- * Last-resort stub for an id nothing can look up.
- *
- * The weapon and armour TABLE binders mint their own ids (`def.weapon.staff`,
- * `def.armor.plate`) from each row's printed name. Those ids are not cookbook
- * entries and never will be — a table is materialized from the seat's own book
- * rather than shipped — so both lookups above answer null, and the fall-through
- * used to localize `ACKS-IMPORTER.pdftext.<id>`: a key that exists only for the
- * handful of static PoC recipes. Every table-bound item therefore printed its
- * own i18n key where its description should be.
- *
- * Nothing extra has to be stored to say something useful instead. The tag
- * already carries the citation as its label, and the id carries the printed
- * name that minted it.
- */
-function fallbackStub(recipeId, label) {
-  const tail = String(recipeId).split("#")[0].split(".").pop() ?? "";
-  const name = tail
-    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-    .trim();
-  if (!name) return label ?? "";
-  return label
-    ? game.i18n.format(`${LANG_PREFIX}.ui.cookbookStub`, { name, cite: label })
-    : game.i18n.format(`${LANG_PREFIX}.ui.namelessStub`, { name });
-}
-
-function enrichPdfText(recipeId, label) {
-  const recipe = resolveRecipe(recipeId);
-  const holder = document.createElement("span");
-  holder.classList.add("acks-importer-pdftext");
-  const stubEl = document.createElement("span");
-  stubEl.classList.add("acks-importer-stub");
-  stubEl.textContent = (recipe ? stubFor(recipe) : cookbookStub(recipeId)) ?? fallbackStub(recipeId, label);
-  holder.append(stubEl);
-  if (proseFor(recipeId) || cookbookCanReveal(recipeId)) {
-    const reveal = document.createElement("a");
-    reveal.classList.add("acks-importer-reveal");
-    reveal.dataset.acksImporterId = recipeId;
-    reveal.textContent = `📖 ${game.i18n.localize(`${LANG_PREFIX}.ui.reveal`)}${label ? ` (${label})` : ""}`;
-    holder.append(" ", reveal);
-  }
-  return holder;
-}
-
-async function onRevealClick(event) {
-  const link = event.target.closest?.(".acks-importer-reveal");
-  if (!link) return;
-  event.preventDefault();
-  const holder = link.closest(".acks-importer-pdftext");
-  const open = holder?.querySelector(".acks-importer-prose");
-  if (open) return open.remove(); // toggle off — reproduction stays on-demand
-  // Session memory first; else a cookbook id executes lazily from this seat's book.
-  const id = link.dataset.acksImporterId;
-  const prose = proseFor(id) ?? (cookbookCanReveal(id) ? await cookbookProse(id) : null);
-  if (!prose) return;
-  const block = document.createElement("span");
-  block.classList.add("acks-importer-prose");
-  block.textContent = prose; // textContent: extracted text is never parsed as HTML
-  holder.append(block);
-}
-
-/* -------------------------------------------- */
 /*  Boot                                        */
 /* -------------------------------------------- */
 
@@ -2268,30 +2144,25 @@ Hooks.once("init", () => {
   registerGettingStartedSettings();
   setWorker(`modules/${MODULE_ID}/vendor/pdf.worker.mjs`);
   setWasmUrl(`modules/${MODULE_ID}/vendor/wasm/`);
-  CONFIG.TextEditor.enrichers.push({
-    // id may carry a "#section" suffix (cookbook description sections).
-    pattern: /@PdfText\[([\w.#-]+)\](?:\{([^}]+)\})?/g,
-    enricher: async (match) => enrichPdfText(match[1], match[2]),
-  });
 });
 
 Hooks.once("ready", async () => {
-  // Possession model: purge any prose persisted by earlier PoC builds.
+  // Possession model: a seat caches nothing of a book it read. Imported text
+  // lives in the world documents the GM created, never in this browser.
   for (const key of LEGACY_KEYS) {
     if (localStorage.getItem(key) !== null) {
       localStorage.removeItem(key);
-      console.log(`${MODULE_ID} | purged legacy persisted prose (${key}) — prose is session-memory only now.`);
+      console.log(`${MODULE_ID} | purged a legacy per-seat prose cache (${key}).`);
     }
   }
 
-  document.body.addEventListener("click", onRevealClick);
-  initCookbook({ sessionDocs, proseMem, importArtForPage: importArt, uploadPageArt, cachedArt });
+  initCookbook({ sessionDocs, importArtForPage: importArt, uploadPageArt, cachedArt });
   registerAbilityDirectoryButtons();
   await loadCookbook();
   const api = {
     connectBook, connectBookUrl, reconnectBooks, browseAndLoad, applyStats, bookStatus, forgetBooks,
-    proseFor, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities, cookbookFillCompanions, cookbookPruneAbilities,
-    importAbility, cookbookDebug, cookbookProse, cookbookCount,
+    cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities, cookbookFillCompanions, cookbookPruneAbilities,
+    importAbility, cookbookDebug, cookbookCount,
     cookbookImportTables,
     cookbookImportJournals, cookbookImportRollTables, cookbookAudit, lastAudit,
     cookbookReimportShelf, reimportableShelves,

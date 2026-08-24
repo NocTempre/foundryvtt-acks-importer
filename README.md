@@ -6,8 +6,8 @@ tables, adventure locations and roll tables.
 
 This module ships extraction *recipes* — page geometry, patterns and anchors —
 and never the book text itself. Nothing is read unless you connect a PDF you own,
-the bytes never leave your browser, and prose is streamed per-seat rather than
-copied into the world.
+and the bytes never leave your browser. What you import from your own copy is
+written into your own world, the way anything typed in by hand is.
 
 A Foundry VTT module extending the
 [ACKS II game system](https://github.com/AutarchLLC/foundryvtt-acks-core).
@@ -46,12 +46,12 @@ coordinates, patterns, anchors. Those recipes ship. The values do not.
 At the table, you connect a PDF you own. The module runs the recipes against
 *your* file, in your browser, and writes the results into Foundry documents:
 
-- **Mechanics persist.** Stat blocks, tables and prices become real world data,
-  so once a GM has imported them everyone at the table has them — including
-  players who own no books.
-- **Prose does not.** Descriptions are stored as `@PdfText[...]` tags and
-  resolved per-seat at render time against that seat's own book. A seat without
-  the book sees the tag, not the text.
+- **Everything you import persists.** Stat blocks, tables, prices and the
+  entry's own descriptive text become real world data, so once a GM has imported
+  them everyone at the table has them — including players who own no books.
+  Each imported passage closes on the book and page it was read from.
+- **Only the GM needs the books.** Import is the one moment a PDF is read; no
+  player ever connects anything, and nothing is resolved again afterwards.
 
 The PDF bytes are never uploaded, never cached to the server, and are dropped
 when you disconnect the book.
@@ -121,6 +121,6 @@ Autarch LLC.
 **Requires:** legitimate copies of the ACKS II publications you import from —
 the **ACKS II Revised Rulebook**, **ACKS II Judges Journal**, **ACKS II
 Monstrous Manual**, **By This Axe**, and the adventure volumes for their
-content. This app streams prose only from PDFs you already own and publishes no
-ACKS II content itself. It is not a substitute for the books, and is free to
-use.
+content. This app reads only from PDFs you already own, materializes what you
+import into your own world, and publishes no ACKS II content itself. It is not a
+substitute for the books, and is free to use.
