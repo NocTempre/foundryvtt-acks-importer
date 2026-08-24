@@ -67,7 +67,6 @@
   "ACKS-IMPORTER.ui.progressEquipment": "Importing equipment…",
   "ACKS-IMPORTER.ui.progressUpdate": "Updating abilities…",
   "ACKS-IMPORTER.ui.progressCompanions": "Filling companion slots…",
-  "ACKS-IMPORTER.ui.progressOrganize": "Organizing cookbook documents…",
   "ACKS-IMPORTER.ui.reveal": "Show book text",
   "ACKS-IMPORTER.ui.close": "Close",
   "ACKS-IMPORTER.ui.abilTitle": "Cookbook — import proficiencies, powers & skills",
@@ -79,7 +78,7 @@
   "ACKS-IMPORTER.ui.abilClear": "Clear",
   "ACKS-IMPORTER.ui.abilCount": "{n} selected of {shown} shown",
   "ACKS-IMPORTER.ui.abilGo": "Import selected",
-  "ACKS-IMPORTER.ui.abilDone": "Imported {done} of {picked} into \"{folder}\".",
+  "ACKS-IMPORTER.ui.abilDone": "Imported {done} of {picked} into the \"{pack}\" compendium.",
   "ACKS-IMPORTER.ui.abilAlias": "Its rules text is printed under another entry; it does not stack with that one.",
   "ACKS-IMPORTER.ui.abilDeprecated": "Removed in ACKS II — imports with a caution.",
   "ACKS-IMPORTER.ui.abilPresent": "Already in this world.",
@@ -124,11 +123,11 @@
   "ACKS-IMPORTER.ui.cookbookSelectAll": "Select all",
   "ACKS-IMPORTER.ui.cookbookPresent": "Already imported into this world.",
   "ACKS-IMPORTER.ui.cookbookWorking": "Importing monsters from your book…",
-  "ACKS-IMPORTER.ui.cookbookAllConfirm": "Import {n} monsters from {book} into the \"{folder}\" folder? Each one reads your connected PDF, so this takes a few minutes.",
+  "ACKS-IMPORTER.ui.cookbookAllConfirm": "Import {n} monsters from {book} into the \"{pack}\" compendium? Each one reads your connected PDF, so this takes a few minutes.",
   "ACKS-IMPORTER.ui.cookbookAllConfirmSkip": "{skipped} already in this world will be skipped.",
   "ACKS-IMPORTER.ui.classTraining": "{class} Combat Training",
   "ACKS-IMPORTER.ui.cookbookAllPresent": "All {n} monsters from this book are already imported — nothing to do.",
-  "ACKS-IMPORTER.ui.cookbookDone": "{done}/{picked} imported into the \"{folder}\" folder (details in console).",
+  "ACKS-IMPORTER.ui.cookbookDone": "{done}/{picked} imported into the \"{pack}\" compendium (details in console).",
   "ACKS-IMPORTER.ui.cookbookSkipped": "{skipped} skipped as already imported.",
   "ACKS-IMPORTER.ui.cookbookStub": "{name} — full text: {cite}. Connect your PDF on this seat to read it here.",
   "ACKS-IMPORTER.ui.namelessStub": "{name} — full text is in your book. Connect your PDF on this seat to read it here.",
@@ -296,5 +295,6 @@
   "ACKS-IMPORTER.ui.forgetConfirm": "Drop this browser's remembered book locations and close the books it has open? Books on the server are not affected, and nothing already imported into the world is removed.",
   "ACKS-IMPORTER.ui.forgetDone": "this computer's remembered locations were dropped.",
   "ACKS-IMPORTER.ui.connectBook": "Book",
-  "ACKS-IMPORTER.ui.reconnectAllNothing": "nothing was waiting — every book this seat knows about is already open."
+  "ACKS-IMPORTER.ui.reconnectAllNothing": "nothing was waiting — every book this seat knows about is already open.",
+  "ACKS-IMPORTER.ui.packFailed": "Could not open the {type} compendium — those documents were created in the sidebar instead. See the console."
 }

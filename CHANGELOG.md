@@ -1,5 +1,70 @@
 # Changelog
 
+## 3.0.0
+
+**Everything you import now lands in a compendium, and the shelves are two deep.**
+This release changes where imported documents live. Existing imports are not
+moved: run **Remove Imports**, then import again.
+
+### Changed
+- **Imports go into compendiums, always.** "Import into compendiums" is gone as
+  a setting because it is no longer a choice. Each document type gets its own
+  world pack — "ACKS Cookbook — Actor", "ACKS Cookbook — Item" and so on — and
+  every monster, ability, journal and table is written straight into it. Nothing
+  is staged in the sidebar and tidied up afterwards.
+  *This is about handing your library to your players. A compendium takes ONE
+  ownership setting for the whole pack; sidebar folders take one dialog per
+  folder, and Foundry's folder ownership dialog only reaches a folder's direct
+  contents — so a library filed three deep needed a hundred dialogs and still
+  missed every document below the top. A world pack stays unlocked and editable,
+  so imports drag out and can be repaired exactly as before.*
+- **No more "ACKS Cookbook" folder, and never more than two levels.** The pack is
+  the container now, so repeating its name inside it bought nothing. Monsters
+  file under `<book> / <group>`, items under `<shelf> / <sub-shelf>`, class
+  templates under `Class Templates / <class>`.
+- **A creature generated from a template lands in "Generated", not beside the
+  template.** A generator and the creatures rolled off it are different kinds of
+  document, and filing the creature in the reference shelf buried it.
+  *Needs ACKS Extras 4.19.0.*
+
+### Removed
+- **"Organize Cookbook Documents" is gone**, macro and all. It existed to re-file
+  documents left over from older releases, which delete-and-re-import now does
+  properly — and it was itself the cause of the worst filing bug in the module:
+  class-template gear carries the cookbook id of the item it was skinned from,
+  so Organize read a Barbarian's engraved silver waterskin as the shared
+  Waterskin and moved it out of the Barbarian's folder onto the Equipment shelf.
+  One live world had 1,191 template items scattered this way. Every importer
+  files its documents at creation time and always did.
+
+### Fixed
+- **Vehicles import once, not once per run.** The vehicle importer checked
+  whether a row was already imported by asking the ITEM library — for actors it
+  had written, which are never in it. Every run added another full set; one live
+  world held all 19 printed rows twice. They also asked for an Item folder and
+  so sat loose at the top of the Actors tree instead of under their book.
+- **Priced gear, races and conversion constants stop piling up at the top of the
+  library.** Three id namespaces had no shelf and quietly fell to the root — 178
+  items in one live world. The price list now files under `Equipment / Price
+  List` (where its own importer always intended), races under `Races`, and the
+  four System Compatibility Guide conversion constants are no longer minted as
+  ability items at all: they are numbers the converter is handed, never
+  documents.
+- **Remove Imports no longer leaves the class templates behind.** Bundles, their
+  skinned gear and the per-class 3d6 tables carry ACKS Extras' own stamp rather
+  than the importer's, so a flag-only sweep deleted the folders around them and
+  left 715 orphans loose in the sidebar. They now go with everything else.
+- **Race items reach the library.** They were created with a bare `Item.create`,
+  which ignored the import target entirely.
+- **Class-template packages are filed in the sidebar, where they are made.**
+  They are world documents on purpose — a package exists to be repaired — but
+  the importer was naming their folder in the compendium, so every bundle and
+  every piece of skinned gear was created pointing at a folder the sidebar does
+  not have.
+- A new offline check (`test-item-shelves`) fails the build when an id namespace
+  has no shelf, so this class of stray cannot come back quietly. It found a
+  fourth case on its first run.
+
 ## 2.16.0
 
 ### Added

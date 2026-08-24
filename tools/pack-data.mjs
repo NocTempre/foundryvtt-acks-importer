@@ -151,7 +151,6 @@ ui.notifications.info(\`acks-importer | equipment: \${r.created} created, \${r.t
     apiMacro("ackscMacAbilCmp0", "Fill Companion Slots (GM)", "icons/svg/pawprint.svg", "cookbookFillCompanions", 360, FOLDERS.abilities),
 
     /* --- 4 · Tools & Maintenance. --- */
-    apiMacro("ackscMacOrganize", "Organize Cookbook Documents (GM)", "icons/svg/direction.svg", "cookbookOrganize", 400, FOLDERS.tools),
     apiMacro("ackscMacBrowse00", "Browse & Load a Page (GM)", "icons/svg/hanging-sign.svg", "browseAndLoad", 410, FOLDERS.tools),
     apiMacro("ackscMacStats000", "Apply Stats from Book (GM)", "icons/svg/combat.svg", "applyStats", 420, FOLDERS.tools),
     apiMacro("ackscMacCkDebug0", "Debug Raw Extraction (GM)", "icons/svg/eye.svg", "cookbookDebug", 430, FOLDERS.tools),

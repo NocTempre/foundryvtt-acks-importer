@@ -11,7 +11,7 @@
  * ALREADY world data — extracted from the seat's own book by the table
  * import — so reshaping it is mechanical, never a promotion.
  */
-import { refForPrintedName } from "./cookbook.mjs";
+import { createDoc, ensureItemFolder, importedItemFor, importedItemsByName, refForPrintedName } from "./cookbook.mjs";
 
 const MODULE_ID = "acks-importer";
 const BUILDER_DOC_ID = "acks.classBuilder";
@@ -324,21 +324,24 @@ export function parseBuild(window) {
 /**
  * Resolve an ability by printed name to its cookbook-or-uuid ref.
  *
- * A world item answering to that exact name wins: it is what this seat holds
- * and what its GM meant, homebrew included. Failing that the name goes through
- * the `powerSource` register, because a rung prints the SHORT name while the
+ * An imported item answering to that exact name wins: it is what this seat
+ * holds and what its GM meant. Failing that the name goes through the
+ * `powerSource` register, because a rung prints the SHORT name while the
  * definition carries the full one — "Hardy" is `def.power.hardyPeople`, and
  * neither "Dwarf Tongues" nor "Elf Tongues" is any item's name at all.
  *
- * A register hit is returned even when nothing in the world carries it yet: a
- * `def.*` id is a ref in its own right, so the rung points at the definition
- * and lights up the moment those powers are imported. Only a name the register
- * cannot place stays unresolved, which is what the rung's note is for.
+ * A register hit is returned even when nothing is imported yet: a `def.*` id is
+ * a ref in its own right, so the rung points at the definition and lights up
+ * the moment those powers arrive. Only a name the register cannot place stays
+ * unresolved, which is what the rung's note is for.
+ *
+ * @param byName lower-cased name → imported item, from `importedItemsByName()`.
+ *   Passed in rather than looked up: the caller asks it once per run, where a
+ *   per-name compendium read would be dozens.
  */
-function abilityRefByName(name) {
-  const lower = String(name).toLowerCase();
-  const item = game.items.find((i) => i.type === "ability" && i.name.toLowerCase() === lower);
-  if (item) return item.flags?.[MODULE_ID]?.cookbook?.id ?? `uuid:${item.uuid}`;
+function abilityRefByName(name, byName) {
+  const item = byName.get(String(name).toLowerCase());
+  if (item?.type === "ability") return item.flags?.[MODULE_ID]?.cookbook?.id ?? `uuid:${item.uuid}`;
   return refForPrintedName(name);
 }
 
@@ -365,6 +368,9 @@ export async function applyBuilderImport() {
   }
 
   // --- race items (acks-extras.race), stamped def.race.<key> ---
+  // One index read for the whole run: every rung of every race resolves its
+  // powers against it.
+  const byName = await importedItemsByName();
   for (const race of Object.values(races ?? {})) {
     const cookbookId = `def.race.${race.key}`;
     const system = {
@@ -380,16 +386,20 @@ export async function applyBuilderImport() {
         label: rung.label,
         xpCost: rung.xpCost,
         maxLevel: null,
-        powers: rung.powerNames.map(abilityRefByName).filter(Boolean),
-        note: rung.powerNames.filter((n) => !abilityRefByName(n)).join(", "),
+        powers: rung.powerNames.map((n) => abilityRefByName(n, byName)).filter(Boolean),
+        note: rung.powerNames.filter((n) => !abilityRefByName(n, byName)).join(", "),
       })),
     };
-    const existing = game.items.find((i) => i.type === RACE_ITEM_TYPE && i.flags?.[MODULE_ID]?.cookbook?.id === cookbookId);
+    // Written through createDoc, into the shelf ensureItemFolder names — a race
+    // is an import like any other, and a bare Item.create here put two of them
+    // in the sidebar while the rest of the library sat in the pack.
+    const existing = await importedItemFor(cookbookId);
     if (existing) await existing.update({ name: race.name, system });
     else
-      await Item.create({
+      await createDoc(Item, {
         name: race.name,
         type: RACE_ITEM_TYPE,
+        folder: (await ensureItemFolder(cookbookId))?.id ?? null,
         system,
         flags: { [MODULE_ID]: { cookbook: { id: cookbookId } } },
       });
@@ -401,8 +411,8 @@ export async function applyBuilderImport() {
   for (const [id, block] of Object.entries(builds)) {
     if (!block?.build) continue;
     const parsed = parseBuild(block.build);
-    const cls = game.items.find((i) => i.type === "acks-extras.class" && i.flags?.[MODULE_ID]?.cookbook?.id === `def.class.${id}`);
-    if (!cls) continue;
+    const cls = await importedItemFor(`def.class.${id}`);
+    if (cls?.type !== "acks-extras.class") continue;
     const update = {
       "system.builder.enabled": true,
       "system.builder.hdValue": parsed.hdValue ?? 0,
@@ -416,7 +426,7 @@ export async function applyBuilderImport() {
       "system.builder.notes": parsed.notes,
     };
     if (parsed.race) {
-      const raceItem = game.items.find((i) => i.type === RACE_ITEM_TYPE && i.flags?.[MODULE_ID]?.cookbook?.id === `def.race.${parsed.race.key}`);
+      const raceItem = await importedItemFor(`def.race.${parsed.race.key}`);
       if (raceItem) update["system.race"] = raceItem.flags?.[MODULE_ID]?.cookbook?.id ?? `uuid:${raceItem.uuid}`;
     }
     await cls.update(update);

@@ -7,6 +7,113 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### The pack is the container: compendium-only, two levels deep (2026-08-24)
+
+**Ruled: every import is written to a world compendium, and no folder tree
+inside one is more than two levels deep.** `importToCompendium` is removed —
+where imports land stops being a setting.
+
+**The problem was ownership, and it was structural.** Foundry's folder
+ownership dialog writes `folder.contents`, which is a folder's DIRECT children
+(`client/applications/apps/document-ownership.mjs`); it does not recurse. The
+tree was `ACKS Cookbook / <book> / <group>`, so configuring ownership at the
+root reached nothing — a live world measured 229 flagged actors and 2,317
+items of which 38 and 178 were reachable, both only because they were
+misfiled. Covering the library properly meant opening the dialog on 99 leaf
+folders. A compendium answers the same question with one role-keyed setting on
+the pack, and world packs are unlocked by default, so the documents stay
+editable and draggable exactly as sidebar ones were.
+
+**With the pack as the container, its own name inside it was redundant**, and
+the level it cost mattered: a pack caps folders one shallower than the world
+(`CONST.FOLDER_MAX_DEPTH - 1`), and `ACKS Cookbook / Classes / Templates /
+<Class>` was already four. Dropping the root put every tree at two with a level
+to spare. `ensureFolderPath` now truncates a deeper path rather than creating
+it — a gate, because this grew back one level at a time.
+
+**Rejected: a module-side recursive ownership button.** It would have worked
+and would have rescued existing worlds without a re-import. It leaves the
+underlying shape — a library the sidebar has to hold and a hundred dialogs to
+share — exactly as it was, and adds a second gesture a Judge has to know about.
+
+**Rejected: migrating existing worlds into the packs.** Delete-and-re-import is
+the upgrade path, stated in the changelog. A migration would have to move
+~3,200 documents, re-point every uuid on every character that referenced one,
+and be right about which of two same-id documents was the real definition —
+for a world the re-import rebuilds correctly in minutes.
+
+**Cost:** a breaking change, and the reason this is 3.0.0. A world upgraded
+without re-importing keeps its sidebar documents, which the module no longer
+reads; Remove Imports still finds them by flag, so nothing is stranded.
+
+**Superseding note:** class-template packages stay WORLD documents. That is not
+an exception grudgingly kept — acks-extras copies pack documents into the world
+precisely so a Judge can repair one (its `template-packages.mjs` header), and a
+package exists to be repaired. Their folder is `Class Templates / <Class>` in
+the sidebar, which is what acks-extras' own `defaultFolder` already built; the
+two paths now agree, where before this file's ruling of 2026-08-19 gave the
+importer a different four-level one.
+
+### A namespace with no shelf is a failing test, not a folder nobody notices (2026-08-24)
+
+**Ruled: `tools/test-item-shelves.mjs` asserts the shelf table against the
+DATA.** Every `def.*` namespace the cookbooks carry must have an `ITEM_SHELF`
+row or be named as something that is deliberately not an item, with the reason;
+every row must name a namespace something actually mints.
+
+`itemShelfFor` answered null for an unknown namespace and the document was
+filed at the top of the library with nothing said. Three namespaces drifted in
+that way — `def.priced`, `def.race`, `def.constant` — and one live world held
+178 items loose above the shelves. Nothing could have caught it: validate does
+not know what a shelf is, and a test written against the table alone agrees
+with itself.
+
+The shelf table is deliberately DUPLICATED into the test (parsed out of the
+source), because importing `cookbook.mjs` offline would drag in the Foundry
+globals — and the duplication is what gives the check teeth: it fails when the
+two disagree. The first run found a fourth namespace, `def.classmeta`, which
+had no shelf either; it is a passage read for one name at import time and never
+a document, so it is now stated as such.
+
+**Also ruled:** a namespace declared not-an-item must be excluded from
+`NON_ABILITY_KINDS` too, and the test asserts both together. `kind.constant`
+was missing from that set, so the generic ability walk minted four `ability`
+items for the SCG's conversion constants — numbers the converter is handed, not
+documents. The comment above that set already warned this would happen; the
+warning is now a gate.
+
+### Organize is deleted, because destination has one author (2026-08-24)
+
+**Ruled: `cookbookOrganize` and its macro are removed.**
+
+It existed to re-file documents made by older releases into the current tree.
+Delete-and-re-import now does that, and Organize was itself the worst filing
+bug in the module: a class template's skinned gear carries the cookbook id of
+the definition it was copied from, so Organize read a Barbarian's engraved
+silver waterskin as the shared Waterskin and moved it to the Equipment shelf.
+The correlation in the world that found it was exact — all 1,191 skinned parts
+carrying an importer id had been moved out of their class folder, and all 436
+without one were still in it.
+
+**The general rule it violated:** a document's destination has ONE author, the
+importer that creates it, and it is decided at creation time (see the "FILE IT
+NOW" note in `importOne`). Organize was a second author with a different
+opinion, and the price list proved the two disagreed even for the importer's
+own documents — its importer filed 172 rows under `Equipment / Price List`
+while `ensureItemFolder` said the top level, so whichever ran last won.
+`itemShelfPath` is now the only path-builder for items, and every item importer
+calls `ensureItemFolder`.
+
+**Rejected: keeping Organize with a `templatePart` exclusion.** It fixes the
+symptom and leaves the second author in place. A GM who hand-moves an imported
+document can move it back; nothing else needed it.
+
+**Cost:** no recovery gesture for a hand-moved document, and no repair for
+worlds that already ran the broken Organize. Both are answered by
+delete-and-re-import.
+
+---
+
 ### Four macros, three dialogs, one question (2026-08-21)
 
 **Ruled: the book surfaces collapse into ONE window, and a book's own ROW is
@@ -360,6 +467,10 @@ records what the copy is), and the menu skips any document carrying the
 before the fix still holds the mis-stamped copies.
 
 ### Template packages: extras owns the shape, this side owns the folders (2026-08-19)
+
+> **Folders superseded 2026-08-24** — the path below (`ACKS Cookbook / Classes
+> / Templates / <Class>`) is now `Class Templates / <Class>`, the same path
+> acks-extras' own `defaultFolder` builds. Everything else in this entry stands.
 
 **Problem.** A class's starting templates imported as data rows on the class
 document, so a mis-classified piece of starting gear (the Wonderworker's staff

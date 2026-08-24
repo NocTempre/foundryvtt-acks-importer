@@ -31,7 +31,7 @@
  * instead of laying a fresh twin beside every one that was already there.
  */
 
-import { ensureItemFolder } from "./cookbook.mjs";
+import { ensureItemFolder, importedDocs, packOptsFor } from "./cookbook.mjs";
 
 const MODULE_ID = "acks-importer";
 
@@ -116,18 +116,18 @@ export function languageItems(table) {
 }
 
 /**
- * The world documents that already stand for a language, indexed twice: by the
- * derived id, and by lowercased name.
+ * The imported documents that already stand for a language, indexed twice: by
+ * the derived id, and by lowercased name.
  *
  * Both indexes span EVERY type, not just `language`. An earlier import minted
- * these as abilities, and a world holding those must be recognised as already
+ * these as abilities, and a library holding those must be recognised as already
  * having the tongue — otherwise the fix that switches the type is also the
  * change that doubles everyone's language list.
  */
-function worldIndex() {
+async function libraryIndex() {
   const byId = new Map();
   const byName = new Map();
-  for (const item of game.items ?? []) {
+  for (const item of await importedDocs("Item")) {
     const id = cookbookIdOf(item);
     if (id.startsWith("def.language.") && !byId.has(id)) byId.set(id, item);
     if (item.type === LANGUAGE_TYPE) {
@@ -171,7 +171,7 @@ export async function applyLanguageImport(table) {
   const wanted = languageItems(table);
   if (!wanted.length) return { created: 0, present: 0, adopted: 0, retyped: 0 };
 
-  const { byId, byName } = worldIndex();
+  const { byId, byName } = await libraryIndex();
   const fromSystem = await systemLanguages();
 
   const creates = [];
@@ -199,8 +199,11 @@ export async function applyLanguageImport(table) {
       continue;
     }
 
-    // A tongue the world already knows under this name — a Judge's own, or the
-    // system's. Adopt it and stamp the derived id so the next run finds it.
+    // A tongue the LIBRARY already knows under this name — an earlier import
+    // that predates the derived id. Adopt it and stamp the id so the next run
+    // finds it. A Judge's own world language is deliberately not adopted: the
+    // pack is the library, and stamping a sidebar document into it would leave
+    // the taxonomy with a hole the pack's ownership does not cover.
     const local = byName.get(data.name.toLowerCase());
     if (local) {
       stamps.push({ _id: local.id, [`flags.${MODULE_ID}`]: data.flags[MODULE_ID] });
@@ -221,14 +224,15 @@ export async function applyLanguageImport(table) {
     created++;
   }
 
+  const opts = await packOptsFor("Item");
   if (creates.length) {
     const folder = (await ensureItemFolder(creates[0].flags[MODULE_ID].cookbook.id))?.id ?? null;
-    await Item.createDocuments(creates.map((d) => ({ ...d, folder })));
+    await Item.createDocuments(creates.map((d) => ({ ...d, folder })), opts);
   }
-  if (stamps.length) await Item.updateDocuments(stamps);
+  if (stamps.length) await Item.updateDocuments(stamps, opts);
   // Only now — every replacement is committed, so nothing is lost by removing
   // what it replaced.
-  if (retyped.length) await Item.deleteDocuments(retyped.map((i) => i.id));
+  if (retyped.length) await Item.deleteDocuments(retyped.map((i) => i.id), opts);
 
   return { created, present, adopted, retyped: retyped.length };
 }

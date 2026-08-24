@@ -35,6 +35,11 @@ other VTTs) while cookbooks stay valid.
 - **Possession model:** per-seat book connection, fingerprint gate,
   session-memory prose, world persistence of GM-imported values (allowed there
   — the hand-typed equivalence; never in the cookbook).
+- **Destination:** one WORLD COMPENDIUM per document type ("ACKS Cookbook —
+  Actor", "… — Item", …), created on first use; folders inside it are at most
+  two deep. Decided at creation time by ONE rule per document type
+  (`actorFolderFor`, `ensureItemFolder`) — never by a later pass. The ruling and
+  what it replaced: [DECISIONS.md](DECISIONS.md) 2026-08-24.
 
 ## Contract with the executor
 

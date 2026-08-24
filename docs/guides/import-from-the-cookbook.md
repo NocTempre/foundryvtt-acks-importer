@@ -5,7 +5,7 @@ assists, with no prose and no values read from a page. Importing turns an entry
 into a real Foundry document, filling in from *your* book what only your book can
 supply.
 
-![](../releases/v1.0.0/getting-started.png)
+![](../releases/v3.0.0/book-loader.png)
 
 *Connect your books, then import everything the cookbook ships.*
 

@@ -45,9 +45,9 @@ import {
   cookbookFillCompanions, cookbookPruneAbilities, registerAbilityDirectoryButtons, importAbility, cookbookDebug, cookbookStub,
   cookbookCanReveal, cookbookProse, cookbookCount, refillMonster, resolveAbilities,
   importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
-  importWeapons, importArmor, forgetImportedIndex,
+  importWeapons, importArmor,
   importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,
-  cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
+  cookbookImportJournals, cookbookImportRollTables,
 } from "./cookbook.mjs";
 import { registerGettingStartedSettings, runImportEverything, gettingStartedDismissed, SETTING_DISMISSED } from "./getting-started.mjs";
 import { registerOseSourceSetting } from "./ose-source.mjs";
@@ -2218,21 +2218,6 @@ Hooks.once("init", () => {
   // Judge-registered OSE sources. World-scoped rather than shipped: these are
   // other publishers' books, fingerprinted against the copy the Judge owns.
   registerOseSourceSetting();
-  // Where imports land. A world compendium keeps hundreds of imported monsters
-  // out of the sidebar and makes them drag-and-droppable reference material;
-  // the world-document default stays for GMs who edit imports in place.
-  // Changing it affects the NEXT import, never what is already there.
-  game.settings.register(MODULE_ID, "importToCompendium", {
-    name: "Import into compendiums",
-    hint: "Imported monsters, abilities, journals and tables are created in world compendiums (\"ACKS Cookbook — …\") instead of the sidebar directories.",
-    scope: "world",
-    config: true,
-    type: Boolean,
-    default: false,
-    // Flipping this changes WHERE an already-imported item lives, so the dedup
-    // index built against the old target is stale the moment it changes.
-    onChange: () => forgetImportedIndex(),
-  });
   // The refresh bridge (see above). Client scope: how long a seat's own bytes
   // may survive its own reload is that seat's business, and the answer differs
   // between a GM on the host and a player on a phone tether.
@@ -2287,7 +2272,7 @@ Hooks.once("ready", async () => {
     proseFor, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities, cookbookFillCompanions, cookbookPruneAbilities,
     importAbility, cookbookDebug, cookbookProse, cookbookCount,
     cookbookImportTables,
-    cookbookImportJournals, cookbookImportRollTables, cookbookOrganize,
+    cookbookImportJournals, cookbookImportRollTables,
     importEquipment, importAllEquipment, cookbookEquipmentIds, repairEquipmentAbilities,
     importWeapons, importArmor,
     importClasses, cookbookUpdateClasses, importTemplatePackages, importTraps, importVariations, importVehicles,

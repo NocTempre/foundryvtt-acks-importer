@@ -84,14 +84,66 @@ documents; afterwards the folder tree, its RollTables, and the "ACKS Ruledata
 (the ruledata browser still lists tables, and re-running Create Foundry
 Tables rebuilds the documents without re-importing).
 
+## The library: compendium target and the two-level tree
+
+The go-live gate for 3.0.0. Nothing offline can see a pack, so every claim here
+needs a real one.
+
+### Fixtures
+
+A world that has imported nothing (or one reset with "Remove ALL Imports (GM)"
+first), one connected book, and the **Player** seat for the ownership half.
+
+### Steps
+
+1. Import anything — one monster is enough.
+   *Observable:* no new folder appears in the Actors sidebar. `game.packs` gains
+   "ACKS Cookbook — Actor"; the actor is inside it, filed `<book> / <group>`.
+   `game.actors.size` is unchanged.
+2. Import abilities, equipment, weapons, armour, the price list and classes.
+   *Observable:* every document is in "ACKS Cookbook — Item". Nothing sits loose
+   at the pack's top level —
+   `pack.folders.filter(f => !f.folder).flatMap(f => f.contents).length` accounts
+   for none of them and `pack.index.filter(r => !r.folder).length` is 0. No
+   folder is more than two deep:
+   `[...pack.folders].every(f => (f.ancestors?.length ?? 0) < 2)`.
+3. Check the namespaces that used to fall through: priced rows are under
+   `Equipment / Price List`, races under `Races`, vehicles under
+   `<book> / Vehicles` in the Actor pack, and **no** item has a
+   `def.constant.*` cookbook id anywhere.
+4. Run the vehicle import a second time.
+   *Observable:* it reports every row as already present and
+   `pack.index.size` does not change. (This is the check that was failing: the
+   dedup asked the Item library about Actors.)
+5. Right-click "ACKS Cookbook — Item" → **Configure Ownership**, set Player to
+   Observer. Join as the Player seat.
+   *Observable:* the pack opens and its documents are readable, from ONE
+   setting. No per-folder dialog was involved.
+6. Build class template packages, then open a class.
+   *Observable:* bundles and gear are in the SIDEBAR under
+   `Class Templates / <Class>` — they are world documents on purpose — and the
+   class sheet lists them. This is the acks-extras library reader working: a
+   blank list here means it is reading `game.items` somewhere.
+7. Open an imported template actor and press Generate.
+   *Observable:* the new creature is in a top-level **Generated** folder in the
+   Actors sidebar, not in the pack and not beside the template.
+
+### Teardown
+
+"Remove ALL Imports (GM)". *Observable:* the confirm counts the packs' contents
+AND the class-template documents; afterwards `game.packs` holds no
+"ACKS Cookbook — …" pack, and no orphan is left in the sidebar —
+`game.items.filter(i => i.flags?.["acks-extras"]?.templatePart).length` is 0.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras
 `docs/classes/TESTING.md` § Template packages. This repo's own observables
 inside that recipe: `importTemplatePackages()` (macro "Build Class Template
 Packages (GM)", Getting Started step after classes) materializes with NO book
-connected; bundles and gear land under `ACKS Cookbook / Classes / Templates /
-<Class>` and tables under `ACKS Cookbook / Class Templates`; and after
+connected; bundles and gear land in the SIDEBAR under `Class Templates /
+<Class>` and tables under `Class Templates` (world documents by design — a
+package exists to be repaired, and imports live in a pack); and after
 `cookbookUpdateClasses()` the rows' bundle links are re-derived and a
 Judge-edited document shows up in the skipped count rather than being
 rewritten.

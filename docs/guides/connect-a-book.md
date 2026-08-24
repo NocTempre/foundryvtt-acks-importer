@@ -4,7 +4,7 @@ The importer reads **your own PDFs**. A passage resolves at render time from a
 copy the reading seat can reach — your own disk, or a book the GM has staged on
 the server for the table.
 
-![](../releases/v1.0.0/book-loader.png)
+![](../releases/v3.0.0/book-loader.png)
 
 *The book loader, with three books already open on this seat.*
 
