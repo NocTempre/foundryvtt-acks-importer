@@ -591,6 +591,56 @@ lookup table, not the routing.
    Filter by `flags["acks-importer"]` — a parallel session's fixtures live in
    the same world.
 
+## Cross-line safety: merging, and batched writes
+
+Two paths treat the library as one game's. Both are unreachable through any
+shipped control today — no world Item carries an OSE id, because OSE gear is
+embedded on the actor — so both are checked by **building the future shape on
+purpose**, the same discipline as a pre-upgrade shape.
+
+### Fixtures
+
+1. An Item on a line's own shelf. Import one ACKS equipment entry, clone its
+   full data into a `ACKS Cookbook — <line> — Item` pack under a
+   `<line-book>.<something>` cookbook id, keeping the NAME identical. Cloning
+   real data rather than inventing it is what makes `sameMaterial` true, which
+   is the branch that does the damage.
+
+### Steps
+
+2. Delete the ACKS copy, reload (the name index and the dedup index are session
+   caches), and import that same ACKS entry again.
+   *Observable:* the line's item keeps its name, its own cookbook id and its
+   own book, gains no `merged` array, and the ACKS item is created separately
+   in the ACKS pack. A rename or an id rewrite is the failure.
+3. **Prove it was a candidate**, or step 2 passes for the wrong reason — an
+   item the loop never saw is not an item the guard rejected. In page context,
+   `const m = await import("/modules/acks-importer/scripts/cookbook.mjs")`
+   gives the pure exports against live `game.packs`: `m.importedDocs("Item")`
+   must contain the line's item, `acksExtras.lib.vocab.nameKeys` must return
+   the same keys for both names, and `m.lineOf(m.bookOfCookbookId(...))` must
+   differ between them.
+4. **Batched writes, mixed lines, with a failure in the middle.** Call
+   `m.createDocs(Item, [...])` with five documents: ACKS, line, one whose
+   `type` is invalid, then ACKS and line again.
+   *Observable:* five slots; each holds the document built from ITS input; the
+   invalid one is `null` in its own slot; each document is in its line's pack.
+
+   **`createDocuments` does not throw on a document that fails validation — it
+   drops it and answers with FEWER documents, in order.** So a result array
+   rebuilt by position shifts at the first bad document and every later one
+   lands a slot early. This is why the pairing is by cookbook id, and why a
+   probe with the bad document in the MIDDLE is the only arrangement that
+   catches it: put it last and the misalignment has nothing left to shift.
+
+### Teardown
+
+5. Delete the probes and the line's pack. **Re-import the ACKS entry the
+   fixture borrowed** — step 2 deleted the copy the world already held, so the
+   library is one document short until it is imported again. Confirm the pack
+   is back at its starting count; this is the one place this recipe touches a
+   document it did not create, and the reason it must put it back.
+
 ## Keyed areas as places
 
 117 numbered rooms across Quick Delves 1-3 and Planar Compass 1-3 import as

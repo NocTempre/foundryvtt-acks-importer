@@ -7,6 +7,68 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Reconciling is a claim about one game's library (2026-08-25)
+
+**Ruled: `reconcileByName` skips any candidate on a different LINE.** Neither
+branch below it is meaningful across games — merging rewrites the name, system
+and identity of the loser, and tagging labels it as an edition of a book it has
+nothing to do with.
+
+The whole function is the claim *two BOOKS printed the same thing*: merge the
+reprint and record the loser's id, or keep both and tag them so a reader can
+tell which book each came from. Two games printing "Rope" is not that claim.
+
+**The loser would always have been the non-ACKS one.** `reconcileByName` is
+only reached from `importEquipmentItem`, so the incoming is always ACKS, and
+`bookRank` puts every ACKS book ahead — MAX_SAFE_INTEGER for a Judge-registered
+`ose.*` source that is in no registry, and a real-but-later index for the
+shipped OSE books, which are declared after the ACKS ones. Either way
+`incomingWins`, and someone's imported OSE item silently becomes an ACKS entry
+with an ACKS id. Not a duplicate to notice — an identity quietly overwritten.
+
+Latent when found, and by a wider margin than it looked: no world Item carries
+an OSE id at all, because the OSE paths put converted gear in `items:` embedded
+on the actor rather than minting world documents. It is also **not** a
+regression from shelving reads across packs — before that there was exactly one
+Item pack, so the candidate set is identical. It is a landmine for the first
+line-bearing book that mints an item.
+
+### A batched write files by identity, never by position (2026-08-25)
+
+**Ruled: `createDocs` returns one slot per input — `null` where the document
+was not created — and pairs results to inputs by COOKBOOK ID.**
+
+Two faults, and the second was introduced while fixing the first.
+
+**The original.** `createDocs` pushed only successes, and the abilities import
+paired them back by index: `written.forEach((doc, i) => rememberImported(
+batch[i].id, doc))`. One failed create shifted every later slot, so documents
+were filed in the dedup index under their neighbours' ids — a lookup that
+answers confidently with the wrong document, which is worse than a lost import.
+That pairing was also **redundant**: `createDocs` already runs every document
+through `remembered`, which reads the id off the document's own flag. Its
+comment — "`createDocs` cannot, it is type-generic" — was true when written and
+stopped being true when `remembered` moved inside. The lines are deleted.
+
+**The one introduced.** The first fix rebuilt the array positionally with
+`made.forEach((doc, k) => out[chunk[k].i] = ...)`, on the assumption that
+`createDocuments` answers with one document per input. **It does not throw on a
+document that fails validation — it drops it and returns fewer, in order.** So
+`made[k]` stops being `chunk[k]` at the first invalid document and everything
+after it lands one slot early: the same off-by-one, rebuilt inside its own fix.
+A live probe of five documents with a bad one third caught it — slot 3 held
+slot 4's document — where every offline gate passed. Pairing is now by the
+cookbook id every document this module creates carries; anything unidentifiable
+takes the chunk's first free slot so the count stays honest.
+
+**Also ruled: a batched write groups by line.** One resolved pack for a mixed
+list writes everything to whichever shelf the first document wanted. Nothing
+batched carries a non-ACKS id today, so this groups into one bucket and changes
+no behaviour — "not per-line today" is a property of the current book list, not
+of the code.
+
+---
+
 ### Another game's books get their own shelf (2026-08-25)
 
 **Ruled: imports are shelved by SERIES.** A book declares a `line` in

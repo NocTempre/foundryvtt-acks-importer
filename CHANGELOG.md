@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- **An import can no longer overwrite an item from another game.** When two
+  games print something under the same name — a rope, a torch — importing the
+  ACKS one would take over the other's document: its name, its stats and its
+  identity, silently, because the ACKS book always wins that contest. Books
+  from different games are now left alone entirely. Merging two entries is a
+  statement that one book reprinted another, and that is never true across
+  games.
+- **A batched import files each document on its own shelf**, instead of sending
+  a whole batch to whichever shelf the first document wanted.
+- **A batched import that hits a bad document no longer misfiles the ones after
+  it.** A document Foundry refuses is dropped from the results, which shifted
+  every later document by one and recorded them under their neighbours' names —
+  so a later lookup answered with the wrong item rather than reporting a
+  missing one. Results are now matched by identity, and the count reports what
+  actually landed.
+
 ## 4.3.0
 
 **Every book's creatures are on their own shelf, filed under the book they came

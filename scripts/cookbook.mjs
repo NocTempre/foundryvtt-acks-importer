@@ -836,24 +836,78 @@ function remembered(doc) {
 export const WRITE_CHUNK = 50;
 export async function createDocs(cls, dataList, opts = {}) {
   if (!dataList.length) return [];
-  const packOptions = await packOpts(cls.documentName);
-  const out = [];
-  for (let i = 0; i < dataList.length; i += WRITE_CHUNK) {
-    const chunk = dataList.slice(i, i + WRITE_CHUNK);
-    const made = await cls.createDocuments(chunk, { ...opts, ...packOptions }).catch((err) => {
-      // One bad chunk must not lose the rest of the run. Fall back to one write
-      // per document so the offender is isolated and named, and its neighbours
-      // still land.
-      console.warn(`${MODULE_ID} | batched create of ${chunk.length} ${cls.documentName}(s) failed — retrying singly`, err);
-      return null;
-    });
-    if (made) out.push(...made.map(remembered));
-    else {
-      for (const data of chunk) {
-        const one = await cls
-          .create(data, { ...opts, ...packOptions })
-          .catch((e) => (console.error(`${MODULE_ID} | create "${data?.name}"`, e), null));
-        if (one) out.push(remembered(one));
+  // POSITIONAL: one slot per input, `null` where that document was not
+  // created. An array that silently omits failures shifts every later slot, so
+  // a caller pairing results to inputs files documents under their neighbours'
+  // ids — a lookup that confidently answers with the wrong document rather
+  // than a lost import. The pairing below is by cookbook id and not by
+  // position, for the reason written where it happens.
+  const out = new Array(dataList.length).fill(null);
+
+  // Grouped by LINE, because one resolved pack for a mixed list writes every
+  // document to whichever shelf the first one wanted. Nothing batched carries a
+  // non-ACKS id today — the OSE paths embed their gear on the actor rather than
+  // minting world items — so this groups into exactly one bucket now, and keeps
+  // doing the right thing for the first line-bearing book that mints one.
+  const byLine = new Map();
+  dataList.forEach((data, i) => {
+    const line = lineOfData(data) ?? opts.line ?? null;
+    const key = line ?? "";
+    if (!byLine.has(key)) byLine.set(key, { line, entries: [] });
+    byLine.get(key).entries.push({ data, i });
+  });
+
+  const { line: _ignored, ...createOpts } = opts;
+  for (const { line, entries } of byLine.values()) {
+    const packOptions = await packOpts(cls.documentName, line);
+    for (let i = 0; i < entries.length; i += WRITE_CHUNK) {
+      const chunk = entries.slice(i, i + WRITE_CHUNK);
+      const made = await cls
+        .createDocuments(chunk.map((e) => e.data), { ...createOpts, ...packOptions })
+        .catch((err) => {
+          // One bad chunk must not lose the rest of the run. Fall back to one
+          // write per document so the offender is isolated and named, and its
+          // neighbours still land.
+          console.warn(`${MODULE_ID} | batched create of ${chunk.length} ${cls.documentName}(s) failed — retrying singly`, err);
+          return null;
+        });
+      if (made) {
+        // Matched by cookbook id, NEVER by position. `createDocuments` does not
+        // throw on a document that fails validation — it drops it and answers
+        // with FEWER documents than it was given, in order. So `made[k]` stops
+        // being `chunk[k]` at the first invalid document, and everything after
+        // it lands one slot early: the exact off-by-one this positional
+        // contract exists to prevent, reintroduced inside the fix for it. Every
+        // document this module creates carries a cookbook id, which is the
+        // identity to pair on; anything unidentifiable falls into the chunk's
+        // first free slot so the count still tells the truth.
+        const slotsById = new Map();
+        for (const e of chunk) {
+          const key = e.data?.flags?.[MODULE_ID]?.cookbook?.id;
+          if (!key) continue;
+          if (!slotsById.has(key)) slotsById.set(key, []);
+          slotsById.get(key).push(e.i);
+        }
+        const spare = chunk.map((e) => e.i);
+        const take = (slot) => {
+          const at = spare.indexOf(slot);
+          if (at >= 0) spare.splice(at, 1);
+          return slot;
+        };
+        for (const doc of made) {
+          const key = doc.getFlag(MODULE_ID, "cookbook")?.id;
+          const queue = key ? slotsById.get(key) : null;
+          const slot = queue?.length ? take(queue.shift()) : spare.shift();
+          if (slot !== undefined) out[slot] = remembered(doc);
+          else remembered(doc); // created, but nothing to pair it to — still indexed
+        }
+      } else {
+        for (const { data, i: slot } of chunk) {
+          const one = await cls
+            .create(data, { ...createOpts, ...packOptions })
+            .catch((e) => (console.error(`${MODULE_ID} | create "${data?.name}"`, e), null));
+          if (one) out[slot] = remembered(one);
+        }
       }
     }
   }
@@ -3468,6 +3522,14 @@ async function reconcileByName(data, id, bookId) {
     if (!otherId || otherId === id) continue;
 
     const otherBook = other.getFlag(MODULE_ID, "cookbook")?.book ?? bookOf(cookbookEntry(otherId));
+    // Never across LINES. Everything below is a claim that two BOOKS printed
+    // one thing — merge the reprint, or tag both so a reader can tell them
+    // apart. Two GAMES printing "Rope" is neither: merging rewrites the name,
+    // system and identity of somebody's OSE import in favour of the ACKS entry
+    // (which always outranks it, whether its book is unranked or merely
+    // declared later), and tagging would label it as an edition of a book it
+    // has nothing to do with.
+    if (lineOf(bookOfCookbookId(otherId, otherBook)) !== lineOf(bookOfCookbookId(id, bookId))) continue;
     if (sameMaterial(other, data)) {
       // The same item, printed twice. Keep the higher-precedence copy and teach
       // it this id; if THIS book outranks the one already imported, the kept
@@ -6864,11 +6926,12 @@ export async function cookbookImportAbilities() {
     let batch = [];
     const flush = async () => {
       if (!batch.length) return;
+      // `createDocs` teaches the dedup index itself: every document it makes
+      // goes through `remembered`, which reads the id off the document's own
+      // flag. Re-teaching it here from the batch by index is what filed
+      // documents under their neighbours' ids whenever a create failed.
       const written = await createDocs(Item, batch.map((b) => b.data));
-      // The dedup index has to learn about each one, exactly as a single
-      // create would have taught it — `createDocs` cannot, it is type-generic.
-      written.forEach((doc, i) => rememberImported(batch[i]?.id, doc));
-      made += written.length;
+      made += written.filter(Boolean).length; // positional: nulls are failures, not imports
       batch = [];
     };
     for (const id of ids) {
