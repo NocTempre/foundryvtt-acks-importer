@@ -10,7 +10,7 @@ raw PNG path, so those links survive the next refresh.
 | Workflow | What it shows | Guide | Shot |
 |---|---|---|---|
 | Imported text | What an import now leaves behind: the entry's own words in the document, closing on the book and page it was read from | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/imported-text.png) |
-| The imported library | Where everything lands: one compendium per document type, its shelves two levels deep, the priced rows filed under Equipment / Price List | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/library-compendium.png) |
+| The imported library | Where everything lands: a set of compendiums per SERIES, so another game's creatures never share a shelf with the ACKS ones | [guide](guides/import-from-the-cookbook.md) | [v4.3.0](releases/v4.3.0/library-compendium.png) |
 | Connect a book | The book loader, whole: the server list folded behind its count, the picker that puts a library there at once, and **Add to server** on the rows of books this computer has never opened | [guide](guides/connect-a-book.md) | [v4.2.1](releases/v4.2.1/book-loader.png) |
 | Forget books | The forget confirmation, reported only when the clear really happened | [guide](guides/connect-a-book.md) | [v2.6.0](releases/v2.6.0/forget-books-toast.png) |
 | Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/book-loader.png) |
@@ -19,12 +19,30 @@ raw PNG path, so those links survive the next refresh.
 | Browse and audit | The entry picker — every entry with its book and page citation, and what an import will read from your copy | [guide](guides/browse-and-audit.md) | [v4.0.0](releases/v4.0.0/cookbook-import.png) |
 | Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/equipment-prose-price.png) |
 | Import languages | The Appendix A taxonomy read from the connected book, filed on its own shelf in the library — none shipped | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/languages-import.png) |
-| Import another game's books | What the import chain's OSE step leaves in the library: an authored adventure's keyed rooms and the creatures it prints, converted and filed together | [guide](guides/import-an-ose-adventure.md) | [v4.2.0](releases/v4.2.0/ose-import-everything.png) |
-| Register an OSE adventure | Naming a third-party book yourself, because a PDF's own title is often the file it was exported from | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-register.png) |
+| Import another game's books | What the import chain's OSE step leaves in the library: an authored adventure's keyed rooms and the creatures it prints, filed under the book they came from inside its series' own compendium | [guide](guides/import-an-ose-adventure.md) | [v4.3.0](releases/v4.3.0/ose-import-everything.png) |
+| Register an OSE adventure | Naming a third-party book yourself — and the series it belongs to, which is the shelf its creatures will land on | [guide](guides/import-an-ose-adventure.md) | [v4.3.0](releases/v4.3.0/ose-register.png) |
 | Review an OSE conversion | Each block as printed, what every field converted to and on whose authority, and what was deliberately left alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-review.png) |
 | Calibrate a book's wording | A publisher heading its hit dice differently, taught to that adventure alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-calibrate.png) |
 | Convert a block by hand | Paste a stat block and it fills the fields; correct anything the reader got wrong before converting | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual.png) |
 | Check a hand conversion | What each field became and on whose authority, with everything deliberately left alone listed beneath | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual-confirm.png) |
+
+**4.3.0 is a minor and re-shot three rows.** All three are the release: the
+library is no longer one Actor shelf, so *The imported library* is now the
+compendium list filtered to Actor packs — `ACKS Cookbook — Actor` above
+`— Dolmenwood — Actor` and `— Quick Delve — Actor`, which is the whole change
+in one frame. *Import another game's books* is the same subject as 4.2.0 and
+the same scroll position — where an adventure's rooms meet its creatures — but
+now inside its series' own pack and under folders, where before all of it sat
+loose at the top of the shared shelf. *Register an OSE adventure* gained the
+**Series or publisher** field, which is what decides that shelf.
+
+The rows not re-shot are the OSE dialogs whose surfaces this release does not
+change (*Review*, *Calibrate*, *Convert a block by hand*, *Check a hand
+conversion*). Two changelog entries have no row of their own and got no shot:
+where a hand-converted block is filed is not visible in the dialog that makes
+it, and the "imported into…" message is a notification toast. The documents in
+frame were imported for the live gate from books the tester owns, and deleted
+immediately after.
 
 **4.2.1 re-shot *Connect a book*, and it is a hotfix that earned a picture.**
 The window it fixes is a different shape: the server list folds behind its

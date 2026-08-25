@@ -20,11 +20,35 @@ it. You can import first and fill those in later; see the last section.
 game.modules.get("acks-importer").api.oseRegister()
 ```
 
-Pick the file, **give it a name yourself**, and say which rules it was written
-for. The name matters: a PDF's own title is often just the file it was exported
-from, so the importer will not guess one for you.
+Pick the file, **give it a name yourself**, say which **series or publisher** it
+belongs to, and say which rules it was written for. The name matters: a PDF's
+own title is often just the file it was exported from, so the importer will not
+guess one for you.
+
+The series is what decides which compendiums this book's creatures go into.
+Books sharing a series share a set, so type the same thing for the next
+adventure from the same line — the field suggests the ones you have already
+used. Leave it blank and the book lands on a shared shelf with your other books.
 
 If you register the same book twice, it recognises it and reopens it instead.
+
+## Where your creatures go
+
+Nothing you import from another game's book is mixed in with the ACKS ones. Each
+series gets its own compendiums, named after it:
+
+| Compendium | Holds |
+|---|---|
+| `ACKS Cookbook — Actor` | your ACKS books |
+| `ACKS Cookbook — Dolmenwood — Actor` | the Dolmenwood books |
+| `ACKS Cookbook — Your Books — Actor` | anything you registered without a series |
+
+Inside, there is a folder per book, and inside that: **Creatures**, **Templates**
+for the ones that come in several sizes, and **Areas** for numbered rooms.
+
+They are ordinary world compendiums — unlocked, so you can edit and drag from
+them — and sharing a whole book with your players is one setting on the pack
+rather than a folder at a time.
 
 ## 2. Choose a page
 

@@ -15,7 +15,8 @@
  */
 import { MODULE_ID, LANG_PREFIX, ITEM_TYPE } from "./constants.mjs";
 import { bookText, entryText, escapeText, nodeParagraphs, stripBookText } from "./prose.mjs";
-import { BOOKS } from "./books.mjs";
+import { BOOKS, bookLine } from "./books.mjs";
+import { OSE_PREFIX, oseSourceLabel, oseSourceLine } from "./ose-source.mjs";
 import { executeEntry, materializeEffects, attackModel, convertName } from "./executor.mjs";
 import { slugLabel } from "./table-extract.mjs";
 import { pageItems } from "./extract.mjs";
@@ -26,6 +27,58 @@ import { savesForLevel } from "./stats.mjs";
 import { progressBar } from "./progress.mjs";
 
 const FOLDER_NAME = "ACKS Cookbook";
+/**
+ * Where imports from outside the ACKS library are shelved when their source
+ * names no line of its own — the by-hand path, and a source the Judge
+ * registered without saying what it is.
+ */
+const UNLINED_LINE = "Your Books";
+
+/**
+ * The SERIES a cookbook id's imports belong to, or null for the ACKS library.
+ *
+ * One pure function over the id, and that is the point: every write (`packFor`,
+ * `ensureFolderPath`) and every presence check (`importedActor`,
+ * `importedIdsOfType`) derives the destination from the same input, so a
+ * document can never be filed on one shelf and looked for on another — which is
+ * the twin-minting failure the claim rules already exist to prevent.
+ *
+ * A shipped book answers from `BOOKS`. A Judge-registered source answers from
+ * its own world record, and an `ose.*` id that names no line still leaves the
+ * ACKS shelves: it is another game's creature whatever its source forgot to say.
+ */
+export function lineOf(bookId) {
+  if (!bookId) return null;
+  const id = String(bookId);
+  if (id === "ose" || id.startsWith(OSE_PREFIX)) return oseSourceLine(id) ?? UNLINED_LINE;
+  return bookLine(id);
+}
+
+/**
+ * The book a cookbook id belongs to: what the flag says, else the id's own
+ * prefix. `dmb.group.bard` is dmb; `ose.milk.p7` is the source `ose.milk`,
+ * because an `ose.*` id spends two segments naming its book.
+ *
+ * The registry decides which of the two an `ose.*` id is, rather than the
+ * segment count: `ose.hand` — a block typed from nothing — is two segments and
+ * names no book at all, and reading it as one would file those creatures under
+ * a folder called after the id.
+ */
+export function bookOfCookbookId(id, book = null) {
+  if (book) return String(book);
+  const parts = String(id ?? "").split(".");
+  if (!parts[0]) return null;
+  if (parts[0] !== "ose") return parts[0];
+  const source = parts.length > 1 ? `${parts[0]}.${parts[1]}` : "ose";
+  return oseSourceLabel(source) ? source : "ose";
+}
+
+/** The line a document being created belongs to, read off the flag it carries. */
+const lineOfData = (data) => {
+  const flag = data?.flags?.[MODULE_ID]?.cookbook;
+  if (!flag) return null;
+  return lineOf(bookOfCookbookId(flag.id, flag.book));
+};
 
 /**
  * Shipped data, fetched once at ready. Two cookbook shapes:
@@ -636,15 +689,36 @@ const folderCache = new Map();
 const packCache = new Map();
 
 /**
- * The visible name of this type's pack — what every "imported into…" message
- * names, and what `cookbookRemoveImports` recognises its own packs by whatever
- * `packFor` has cached this session.
+ * The visible name of a pack — what every "imported into…" message names, and
+ * what `cookbookRemoveImports` recognises its own packs by.
+ *
+ * Every label keeps the `FOLDER_NAME` prefix whatever line it holds, for two
+ * reasons: the sidebar sorts packs by label, so the library stays one block
+ * rather than scattering through the world's other compendia; and removal finds
+ * this module's packs by that prefix alone, so a line added by a later release
+ * is swept up by a Remove Imports that has never heard of it.
  */
-const packLabel = (type) => `${FOLDER_NAME} — ${type}`;
+const packLabel = (type, line = null) => (line ? `${FOLDER_NAME} — ${line} — ${type}` : `${FOLDER_NAME} — ${type}`);
 
 /**
- * The pack collection id imports of this type go to, or null if it cannot be
- * opened.
+ * Every world pack of a type this module owns, whatever line it holds.
+ *
+ * The read counterpart of `packFor`: a write goes to ONE shelf, but "have I
+ * imported this already?" has to ask them all — a batch mixes ids from several
+ * lines, and a check that asked only the ACKS shelf would call every Dolmenwood
+ * creature new on every run.
+ */
+const ourPacksOfType = (type) =>
+  game.packs.filter(
+    (p) =>
+      p.metadata.packageType === "world" &&
+      p.documentName === type &&
+      String(p.metadata.label ?? "").startsWith(`${FOLDER_NAME} — `),
+  );
+
+/**
+ * The pack collection id imports of this type and line go to, or null if it
+ * cannot be opened. A null line is the ACKS library's own pack.
  *
  * The cached answer is CONFIRMED against `game.packs` before it is handed out.
  * A pack can go away under a running session — a GM deletes it from the
@@ -653,12 +727,13 @@ const packLabel = (type) => `${FOLDER_NAME} — ${type}`;
  * a target the server has never heard of, and the import reports nothing made
  * with nothing in the log. Re-resolving simply creates the pack again.
  */
-async function packFor(type) {
-  let pending = packCache.get(type);
+async function packFor(type, line = null) {
+  const cacheKey = `${type}|${line ?? ""}`;
+  let pending = packCache.get(cacheKey);
   if (pending) {
     const id = await pending;
     if (id && !game.packs.get(id)) {
-      packCache.delete(type);
+      packCache.delete(cacheKey);
       forgetImportedIndex(); // its documents went with the pack
       // And its FOLDERS. A recreated pack takes the same collection id (Foundry
       // derives it from the label), so the folder cache's keys still match and
@@ -669,7 +744,7 @@ async function packFor(type) {
   }
   if (!pending) {
     pending = (async () => {
-      const label = packLabel(type);
+      const label = packLabel(type, line);
       const found = game.packs.find(
         (p) => p.metadata.packageType === "world" && p.documentName === type && p.metadata.label === label,
       );
@@ -685,7 +760,7 @@ async function packFor(type) {
       ui.notifications?.error(game.i18n.format(`${LANG_PREFIX}.ui.packFailed`, { type }));
       return null;
     });
-    packCache.set(type, pending);
+    packCache.set(cacheKey, pending);
   }
   return pending;
 }
@@ -695,23 +770,30 @@ async function packFor(type) {
  * opened. Exported because a bulk `createDocuments`/`updateDocuments`/
  * `deleteDocuments` cannot go through `createDoc` and still needs the target.
  */
-export const packOptsFor = async (type) => packOpts(type);
+export const packOptsFor = async (type, line = null) => packOpts(type, line);
 
 /** `{pack}` option for document creation, or `{}` if the pack could not be opened. */
-const packOpts = async (type) => {
-  const pack = await packFor(type);
+const packOpts = async (type, line = null) => {
+  const pack = await packFor(type, line);
   return pack ? { pack } : {};
 };
 
 /**
- * Create a document in this type's compendium.
+ * Create a document in this type's compendium, on its own line's shelf.
+ *
+ * The line is read off the document's OWN cookbook flag rather than passed in.
+ * Twenty-odd importers create documents and every one of them already stamps
+ * that flag, so deriving the destination from it means no importer can be
+ * updated and forgotten — and it is the same input every presence check reads,
+ * which is what keeps a document from being filed on one shelf and looked for
+ * on another. `opts.line` answers only for a document with no flag to read.
  *
  * Exported because every import path has to write to the same target; a second
  * creator calling `Actor.create` directly puts half the library in the sidebar,
  * where the presence checks do not look and the pack's ownership does not reach.
  */
-export const createDoc = async (cls, data, opts = {}) =>
-  remembered(await cls.create(data, { ...opts, ...(await packOpts(cls.documentName)) }));
+export const createDoc = async (cls, data, { line = null, ...opts } = {}) =>
+  remembered(await cls.create(data, { ...opts, ...(await packOpts(cls.documentName, lineOfData(data) ?? line)) }));
 
 /**
  * Teach the dedup index about a document the moment it exists.
@@ -796,13 +878,16 @@ export async function createDocs(cls, dataList, opts = {}) {
 let importedCache = null;
 async function importedIndex() {
   if (importedCache) return importedCache;
-  const pack = await packFor("Item");
-  const collection = pack ? game.packs.get(pack) : null;
-  // No pack means the pack could not be opened and those items went to the
+  // Every Item shelf this module owns. Items are shared across books — one
+  // Waterskin serves every one of them — so today they all land on the ACKS
+  // shelf; reading them all anyway means a line that ever does mint an item is
+  // deduplicated rather than twinned.
+  const collections = ourPacksOfType("Item");
+  // No pack means the packs could not be opened and those items went to the
   // sidebar — so read it, but skip the template skins, whose inherited ids are
   // exactly what this index must not answer with.
-  const docs = collection
-    ? await collection.getDocuments()
+  const docs = collections.length
+    ? (await Promise.all(collections.map((c) => c.getDocuments().catch(() => [])))).flat()
     : [...game.items].filter((i) => !i.flags?.["acks-extras"]?.templatePart);
   const byId = new Map();
   for (const doc of docs) {
@@ -916,9 +1001,10 @@ export const importedActorFor = (id) => importedActor(id);
  * those are copies of imported items and would answer for the originals.
  */
 export async function importedDocs(type) {
-  const pack = await packFor(type);
-  const collection = pack ? game.packs.get(pack) : null;
-  if (collection) return collection.getDocuments().catch(() => []);
+  const collections = ourPacksOfType(type);
+  if (collections.length) {
+    return (await Promise.all(collections.map((c) => c.getDocuments().catch(() => [])))).flat();
+  }
   const world = { Actor: game.actors, Item: game.items, JournalEntry: game.journal, RollTable: game.tables }[type];
   return [...(world ?? [])].filter((d) => !d.flags?.["acks-extras"]?.templatePart);
 }
@@ -926,11 +1012,21 @@ export async function importedDocs(type) {
 /** Delete imported documents of a type from wherever the library lives. */
 async function deleteImported(type, docs) {
   if (!docs.length) return 0;
-  const pack = await packFor(type);
-  await foundry.utils
-    .getDocumentClass(type)
-    .deleteDocuments(docs.map((d) => d.id), pack ? { pack } : {})
-    .catch((err) => console.warn(`${MODULE_ID} | delete ${docs.length} ${type}(s)`, err));
+  // Grouped by the pack each document is ON, never by one resolved target: the
+  // list spans lines now, and a delete addressed to the wrong pack removes
+  // nothing and says nothing.
+  const byPack = new Map();
+  for (const doc of docs) {
+    const key = doc.pack ?? "";
+    if (!byPack.has(key)) byPack.set(key, []);
+    byPack.get(key).push(doc.id);
+  }
+  const cls = foundry.utils.getDocumentClass(type);
+  for (const [pack, ids] of byPack) {
+    await cls
+      .deleteDocuments(ids, pack ? { pack } : {})
+      .catch((err) => console.warn(`${MODULE_ID} | delete ${ids.length} ${type}(s) from ${pack || "the sidebar"}`, err));
+  }
   return docs.length;
 }
 
@@ -977,18 +1073,23 @@ const importedItem = async (id) => {
 async function importedActor(id) {
   const world = game.actors.find((a) => a.getFlag(MODULE_ID, "cookbook")?.id === id);
   if (world) return world;
-  const pack = await packFor("Actor");
-  const collection = pack ? game.packs.get(pack) : null;
-  if (!collection) return null;
-  // The cookbook flag is not a default index field — ask for it, exactly as
-  // importedIdSet does, or the row is there and the match never fires.
-  const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch(() => null);
-  const row = [...(index ?? [])].find((r) => r.flags?.[MODULE_ID]?.cookbook?.id === id);
-  return row ? await collection.getDocument(row._id) : null;
+  // Its OWN shelf first — that is where `createDoc` put it — then the others.
+  // A creature re-shelved by a release that changed its line is still found,
+  // which is what keeps a Judge from importing a second copy of it.
+  const own = await packFor("Actor", lineOf(bookOfCookbookId(id)));
+  const collections = ourPacksOfType("Actor").sort((a, b) => (a.collection === own ? -1 : b.collection === own ? 1 : 0));
+  for (const collection of collections) {
+    // The cookbook flag is not a default index field — ask for it, exactly as
+    // importedIdSet does, or the row is there and the match never fires.
+    const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch(() => null);
+    const row = [...(index ?? [])].find((r) => r.flags?.[MODULE_ID]?.cookbook?.id === id);
+    if (row) return collection.getDocument(row._id);
+  }
+  return null;
 }
 
-async function ensureFolderPath(type, names) {
-  const pack = await packFor(type);
+async function ensureFolderPath(type, names, line = null) {
+  const pack = await packFor(type, line);
   const collection = pack ? game.packs.get(pack)?.folders : game.folders;
   const path = names.filter(Boolean).map((n) => String(n).trim()).filter(Boolean);
   // The gate, not a warning: a third level is dropped rather than created, so
@@ -1060,10 +1161,18 @@ async function ensureWorldFolderPath(type, names) {
   return parent;
 }
 
-const bookFolderName = (bookId) => BOOKS[bookId]?.label ?? bookId;
-/** The folder an entry of this kind belongs in, creating the path as needed. */
+/**
+ * The folder a book's imports are filed under. A shipped book is named by the
+ * registry; a Judge-registered source by the name they typed for it, which is
+ * the only name it has.
+ */
+const bookFolderName = (bookId) => BOOKS[bookId]?.label ?? oseSourceLabel(bookId) ?? bookId;
+/**
+ * The folder an entry of this kind belongs in, creating the path as needed —
+ * inside its book's LINE pack, so the tree and the pack always agree.
+ */
 const targetFolder = (type, bookId, group) =>
-  ensureFolderPath(type, [bookFolderName(bookId), group]);
+  ensureFolderPath(type, [bookFolderName(bookId), group], lineOf(bookId));
 
 /**
  * Every cookbook id already held for one document type, in WHICHEVER target is
@@ -1077,13 +1186,17 @@ const targetFolder = (type, bookId, group) =>
  */
 async function importedIdsOfType(type, worldCollection) {
   const ids = new Set([...worldCollection].map((d) => d.getFlag(MODULE_ID, "cookbook")?.id).filter(Boolean));
-  const pack = await packFor(type);
-  const collection = pack ? game.packs.get(pack) : null;
-  if (collection) {
+  // Every shelf, because a batch mixes lines: "import everything" walks the
+  // ACKS books and the OSE ones in one pass, and asking one pack about all of
+  // them answers "not imported" for every book shelved somewhere else.
+  for (const collection of ourPacksOfType(type)) {
     // A failed index read must be LOUD: returning an empty set here reads as
     // "nothing imported yet" and a bulk run re-creates everything as twins.
     const index = await collection.getIndex({ fields: [`flags.${MODULE_ID}.cookbook.id`] }).catch((err) => {
-      console.warn(`${MODULE_ID} | importedIdsOfType: index of ${pack} unreadable — imported ${type}s may be recreated`, err);
+      console.warn(
+        `${MODULE_ID} | importedIdsOfType: index of ${collection.collection} unreadable — imported ${type}s may be recreated`,
+        err,
+      );
       return null;
     });
     for (const row of index ?? []) {
@@ -1108,10 +1221,9 @@ const importedIdSet = () => importedIdsOfType("Actor", game.actors);
 /** Actors of one type, wherever imports live (sidebar + configured pack). */
 async function importedActorsOfType(type) {
   const world = game.actors.filter((a) => a.type === type);
-  const pack = await packFor("Actor");
-  const collection = pack ? game.packs.get(pack) : null;
-  if (!collection) return world;
-  const docs = await collection.getDocuments({ type }).catch(() => []);
+  const collections = ourPacksOfType("Actor");
+  if (!collections.length) return world;
+  const docs = (await Promise.all(collections.map((c) => c.getDocuments({ type }).catch(() => [])))).flat();
   return [...world, ...docs];
 }
 
@@ -1184,9 +1296,30 @@ function actorGroupOf(found, id, { type = null } = {}) {
  * went unused; vehicles asked the ITEM rule and landed loose at the top).
  */
 function actorFolderFor(id, found = cookbookEntry(id), opts = {}) {
-  if (isAnimalEntry(found?.entry)) return ensureFolderPath("Actor", ["Animals"]);
+  // The Animals shelf is cross-book, but not cross-LINE: it is built in
+  // whichever pack this entry's own book writes to, because the folder and the
+  // document have to end up in the same compendium.
+  if (isAnimalEntry(found?.entry)) return ensureFolderPath("Actor", ["Animals"], lineOf(bookOf(found)));
   return targetFolder("Actor", bookOf(found), actorGroupOf(found, id, opts));
 }
+
+/**
+ * The folder an import from this book belongs in — its book's shelf, inside its
+ * line's pack.
+ *
+ * Exported for the OSE importers, which build their documents outside this file
+ * and would otherwise have to know how a line becomes a pack. Their creatures
+ * used to be created with no folder at all, which left every one of them loose
+ * at the top of the library.
+ */
+export const importFolderFor = (type, bookId, group = null) => targetFolder(type, bookId, group);
+
+/**
+ * The folder for an import that belongs to no book at all — a block a Judge
+ * typed in. It goes to the unlined shelf rather than the ACKS one: it is
+ * another game's creature whether or not anything can say which game.
+ */
+export const unlinedFolderFor = (type, name) => ensureFolderPath(type, [name], UNLINED_LINE);
 
 /** Pre-create every folder a batch will need, before the workers fan out. */
 async function prepareFolders(type, ids) {
@@ -1508,11 +1641,24 @@ export async function cookbookRemoveImports() {
   return total;
 }
 
+/**
+ * The pack labels a batch of ids writes to, as one quoted list.
+ *
+ * A run walks every open book, and books from different lines go to different
+ * compendia — so naming one pack in the report would send a Judge to a shelf
+ * their Dolmenwood creatures are not on.
+ */
+const packLabelsFor = (type, ids) =>
+  [...new Set(ids.map((id) => packLabel(type, lineOf(bookOfCookbookId(id)))))].sort().join('", "');
+
 /** Report an import run, naming what was skipped as already present. */
-function reportImport(done, picked, skipped) {
+function reportImport(done, picked, skipped, ids = []) {
   ui.notifications.info(
-    game.i18n.format(`${LANG_PREFIX}.ui.cookbookDone`, { done, picked, pack: packLabel("Actor") }) +
-      (skipped ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.cookbookSkipped`, { skipped })}` : ""),
+    game.i18n.format(`${LANG_PREFIX}.ui.cookbookDone`, {
+      done,
+      picked,
+      pack: packLabelsFor("Actor", ids) || packLabel("Actor"),
+    }) + (skipped ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.cookbookSkipped`, { skipped })}` : ""),
   );
 }
 
@@ -2552,7 +2698,7 @@ export async function cookbookImportJournals() {
       if (!locs.length) continue;
       // The BOOK is the folder now, so the journal itself is named by its group
       // alone ("A. Entrance Caves") rather than repeating the book on every row.
-      const folder = await ensureFolderPath("JournalEntry", [bookFolderName(bookId)]);
+      const folder = await ensureFolderPath("JournalEntry", [bookFolderName(bookId)], lineOf(bookId));
       const groups = new Map();
       for (const [id, e] of locs) {
         const g = e.meta?.group ?? BOOKS[bookId]?.label ?? bookId;
@@ -2562,7 +2708,7 @@ export async function cookbookImportJournals() {
       // Journals go wherever imports go, so the "did I already make this one?"
       // lookup has to read the same target — a world-only search re-created
       // every district journal on each run in compendium mode.
-      const journalPack = await packFor("JournalEntry");
+      const journalPack = await packFor("JournalEntry", lineOf(bookId));
       const journals = journalPack ? await game.packs.get(journalPack).getDocuments() : [...game.journal];
       for (const [group, list] of groups) {
         let journal = journals.find((j) => j.getFlag(MODULE_ID, "cookbook")?.group === group && j.getFlag(MODULE_ID, "cookbook")?.book === bookId);
@@ -7366,7 +7512,7 @@ export async function cookbookImport() {
         const present = await importedIdSet();
         const todo = picked.filter((id) => !present.has(id));
         const done = await importMany(todo, game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
-        reportImport(done, picked.length, picked.length - todo.length);
+        reportImport(done, picked.length, picked.length - todo.length, todo);
       },
     },
   });
@@ -7405,7 +7551,7 @@ export async function cookbookImportMonsters() {
     content: `<p>${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirm`, {
       n: todo.length,
       book: openBooks.map((b) => BOOKS[b]?.label ?? b).join(", "),
-      pack: packLabel("Actor"),
+      pack: packLabelsFor("Actor", todo) || packLabel("Actor"),
     })}${
       todo.length < ids.length
         ? ` ${game.i18n.format(`${LANG_PREFIX}.ui.cookbookAllConfirmSkip`, { skipped: ids.length - todo.length })}`
@@ -7414,7 +7560,7 @@ export async function cookbookImportMonsters() {
   });
   if (!ok) return null;
   const done = await importMany(todo, game.i18n.localize(`${LANG_PREFIX}.ui.cookbookWorking`));
-  reportImport(done, ids.length, ids.length - todo.length);
+  reportImport(done, ids.length, ids.length - todo.length, todo);
   return { done, skipped: ids.length - todo.length };
 }
 

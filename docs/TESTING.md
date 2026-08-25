@@ -472,6 +472,12 @@ is what separates them.
 1. A folder to import into, created for the test and deleted after. Never import
    an authored book into the world root — 340 actors are hard to find again.
 
+   **Pass `folderId` only where the step says to.** It OVERRIDES the shelving
+   rule, so a run that always passes one never exercises the default — which is
+   the thing that was broken: these importers defaulted to no folder at all and
+   nothing passed one, so every authored book piled loose at the top of its
+   pack. At least one book must be imported with no `folderId` at all.
+
 ### Steps
 
 2. `game.modules.get("acks-importer").api.authoredOseBooks()` lists the shipped
@@ -517,6 +523,73 @@ is what separates them.
 
 10. Delete the folders and every actor in them. Report which books were
    exercised and which were not reached.
+
+## Shelves: one line, one set of compendia
+
+Imports are shelved by SERIES, so another game's books never share a compendium
+with the ACKS ones. What proves it is where documents actually LAND and whether
+a second run still finds them — a check that only reads `lineOf` proves the
+lookup table, not the routing.
+
+### Fixtures
+
+1. Nothing to create up front. This recipe imports, inspects and deletes; the
+   packs it creates are part of what is being checked.
+
+### Steps
+
+2. Import a small ACKS book's monsters and a small OSE one (`qd1`) with **no
+   `folderId`**. Confirm in the sidebar: `ACKS Cookbook — Actor` holds the ACKS
+   creatures, `ACKS Cookbook — Quick Delve — Actor` holds the Quick Delve ones,
+   and neither holds the other's. Both packs must be UNLOCKED — a locked pack is
+   a library a Judge cannot edit or drag from.
+3. Open the OSE pack and confirm the tree: `Quick Delve #1: Milk / Creatures`,
+   with the generators under `Templates` if the book has any. Nothing loose at
+   the top of the pack — that is the bug this recipe exists for, and it is
+   visible at a glance.
+4. `api.oseImportAreas("qd1")` with no `folderId`. The adventure sits at the top
+   of the book's own folder and its rooms under `Quick Delve #1: Milk / Areas`.
+   Two levels, never three.
+5. **Import the same book again.** Nothing may be created. This is the check
+   that matters most: the presence read and the write have to agree about which
+   pack to look in, and a disagreement presents as a full second copy of the
+   book rather than as an error.
+6. Import `dmb` as well, then run the ACKS "import everything" control. Confirm
+   the completion notice names EVERY pack it filled, not just the ACKS one — a
+   report naming one shelf sends a Judge to a compendium their Dolmenwood
+   creatures are not on.
+7. Register a source (`oseRegister`) and type a series into **Series or
+   publisher**. Confirm the field offers what the world already shelves, then
+   import a block from it: it must land in `ACKS Cookbook — <that series> —
+   Actor`, in a folder named after the source. Register a second source with the
+   field left BLANK and confirm it lands in `ACKS Cookbook — Your Books — Actor`
+   instead — the blank case is the common one and it is the one that used to
+   create documents with no folder at all.
+8. `api.oseManual()` — type a block with no source and create it. It goes to
+   `Your Books`, under `Entered by Hand`. Then send a blocked candidate to the
+   hand editor from a registered source's review dialog and confirm THAT one is
+   filed with its source's book instead.
+9. **Run Remove Imports.** It must count and delete documents in every pack it
+   created, not only the ACKS one, and remove the packs themselves. A pack left
+   behind holding documents is the failure — the prefix match is what finds
+   them, so a pack whose label lost the prefix would survive with its contents.
+
+### Upgrading a world that imported before this
+
+10. Build the pre-upgrade shape on purpose: `git show v4.2.1:scripts/books.mjs`
+   has no `line`, so an import from that build put the OSE creatures in `ACKS
+   Cookbook — Actor`. Recreate that by creating a few actors in the ACKS Actor
+   pack carrying `flags["acks-importer"].cookbook.id` values from `dmb`, then
+   import `dmb`. Those entries must be reported as ALREADY PRESENT and no second
+   copy created — the reads span every pack, which is what makes "your existing
+   world keeps working" true rather than assumed.
+
+### Teardown
+
+11. Remove Imports clears the packs. Confirm the sidebar has no `ACKS Cookbook —
+   *` compendium left, and delete any fixture actors made by hand in step 10.
+   Filter by `flags["acks-importer"]` — a parallel session's fixtures live in
+   the same world.
 
 ## Keyed areas as places
 

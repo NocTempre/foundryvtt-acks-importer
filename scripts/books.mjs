@@ -5,6 +5,11 @@
  *
  * A book id is a promise that connecting that PDF unlocks something. Do not add
  * one that unlocks nothing — see docs/DECISIONS.md § Withdrawn surface.
+ *
+ * `line` names the series a book belongs to, and is what its imports are
+ * shelved under: a book declaring one goes to that line's own compendia, and a
+ * book declaring none goes to the ACKS ones. Only books from outside the ACKS
+ * library carry it — the ACKS line is the default, not a name in this file.
  */
 
 export const BOOKS = {
@@ -61,30 +66,35 @@ export const BOOKS = {
   // never shipped; these are the named exceptions.
   qd1: {
     label: "Quick Delve #1: Milk",
+    line: "Quick Delve",
     short: "QD1",
     pages: 20,
     titleRe: /^Milk$/i,
   },
   qd2: {
     label: "Quick Delve #2: The Grotesques' Grotto",
+    line: "Quick Delve",
     short: "QD2",
     pages: 20,
     titleRe: /Grotesques/i,
   },
   qd3: {
     label: "Quick Delve #3: Against the Horselord",
+    line: "Quick Delve",
     short: "QD3",
     pages: 24,
     titleRe: /Against the Horselord/i,
   },
   aft: {
     label: "OSE Advanced Fantasy Referee's Tome",
+    line: "Old-School Essentials",
     short: "AFT",
     pages: 257,
     titleRe: /Referee/i,
   },
   dmb: {
     label: "Dolmenwood Monster Book",
+    line: "Dolmenwood",
     short: "DMB",
     pages: 137,
     titleRe: /Dolmenwood/i,
@@ -97,36 +107,42 @@ export const BOOKS = {
   },
   wld1: {
     label: "Wicked Little Delves, vol 1",
+    line: "Wicked Little Delves",
     short: "WLD1",
     pages: 25,
     titleRe: /Wickedv1/i,
   },
   wld2: {
     label: "Wicked Little Delves, vol 2",
+    line: "Wicked Little Delves",
     short: "WLD2",
     pages: 25,
     titleRe: /Wickedv2/i,
   },
   wld3: {
     label: "Wicked Little Delves, vol 3",
+    line: "Wicked Little Delves",
     short: "WLD3",
     pages: 29,
     titleRe: /Wickedv3/i,
   },
   pc1: {
     label: "Planar Compass, Issue 1",
+    line: "Planar Compass",
     short: "PC1",
     pages: 60,
     titleRe: /Planar\s*Compass\s*1/i,
   },
   pc2: {
     label: "Planar Compass, Issue 2",
+    line: "Planar Compass",
     short: "PC2",
     pages: 72,
     titleRe: /Planar\s*Compass\s*2/i,
   },
   pc3: {
     label: "Planar Compass, Issue 3",
+    line: "Planar Compass",
     short: "PC3",
     pages: 72,
     titleRe: /Planar\s*Compass\s*3/i,
@@ -175,3 +191,12 @@ export function identifyBook(numPages, title) {
   );
   return hits.length === 1 ? hits[0][0] : null;
 }
+
+/**
+ * The series a book's imports are shelved under, or null for the ACKS library.
+ *
+ * A pure lookup over the shipped registry. Judge-registered sources are not in
+ * it — those carry their line on their own world record, and `cookbook.mjs`
+ * asks both.
+ */
+export const bookLine = (bookId) => BOOKS[bookId]?.line ?? null;

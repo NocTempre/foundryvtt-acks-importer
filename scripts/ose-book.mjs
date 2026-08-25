@@ -28,6 +28,7 @@ import {
   cookbookRegisters,
   cookbookSessionDoc,
   cookbookArtImporter,
+  importFolderFor,
 } from "./cookbook.mjs";
 import { BOOKS } from "./books.mjs";
 import { entryText, nodeParagraphs } from "./prose.mjs";
@@ -76,6 +77,22 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
   const constants = await currentScgConstants();
   const bounds = moraleBoundsFromSchema();
   const importArt = art ? cookbookArtImporter() : null;
+
+  // Creatures on their book's shelf, generators on their own beside them — and
+  // resolved only once the run is going ahead, because asking for a folder
+  // creates the compendium that holds it. A caller that named a folder keeps
+  // it; the default used to be no folder at all, which left three hundred and
+  // forty of this book's creatures loose at the top of the library.
+  // Both are asked for only when something is about to be filed in them.
+  // Asking CREATES the folder and the compendium under it, so resolving them
+  // up front leaves an empty shelf in the pack of every book that ships no
+  // generators — which is most of them.
+  const shelf = (group) => {
+    let pending;
+    return async () => (pending ??= folderId ?? (await importFolderFor("Actor", bookId, group))?.id ?? null);
+  };
+  const creatureFolder = shelf("Creatures");
+  const templateFolder = shelf("Templates");
 
   const ids = Object.keys(cb.entries).filter((id) => cb.entries[id].kind === "kind.oseMonster");
   const bar = progressBar(loc("ose.bookImporting", { book: BOOKS[bookId]?.label ?? bookId }), ids.length);
@@ -158,7 +175,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
         lineage,
         constants,
         moraleBounds: bounds,
-        folderId,
+        folderId: await templateFolder(),
         cite: entry.cite ?? "",
       });
       tpl.system.details = { biography: entryText(res, id, citeOf(entry)) };
@@ -190,7 +207,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
       lineage,
       constants,
       moraleBounds: bounds,
-      folderId,
+      folderId: await creatureFolder(),
     });
     // The description is written at import, exactly as the ACKS books do it —
     // read once from the Judge's own copy, page reference last.
@@ -216,7 +233,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
   for (const g of Object.values(groups)) {
     if (!g.members.length) continue;
     g.members.sort((a, b) => Number(a.key) - Number(b.key) || String(a.key).localeCompare(String(b.key)));
-    const made2 = await claimActorImport(g.id, () =>
+    const made2 = await claimActorImport(g.id, async () =>
       createDoc(
         Actor,
         oseTemplateFromGroup({
@@ -229,7 +246,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
           lineage,
           constants,
           moraleBounds: bounds,
-          folderId,
+          folderId: await templateFolder(),
         }),
       ),
     );
@@ -279,12 +296,19 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
   if (!doc) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNotConnected", { book: label })}`), 0;
   const registers = cookbookRegisters();
 
+  // The adventure sits at the top of its book's shelf and its rooms nest under
+  // "Areas" beside the creatures — two levels, which is all a pack allows.
+  // Resolved here rather than at the top: asking for a folder creates the
+  // compendium that holds it, and a book with no keyed areas returns above.
+  const adventureFolder = folderId ?? (await importFolderFor("Actor", bookId))?.id ?? null;
+  const areaFolder = folderId ?? (await importFolderFor("Actor", bookId, "Areas"))?.id ?? null;
+
   // The adventure first, so every room has something to sit inside — and only
   // once: a second run nests its rooms under the adventure already there
   // rather than building a second dungeon beside the first.
   const adventureId = oseAdventureId(bookId);
   const adventure = await claimActorImport(adventureId, () =>
-    createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId })),
+    createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId: adventureFolder })),
   );
   const bar = progressBar(loc("ose.areasImporting", { book: label }), ids.length);
   const pageCache = new Map();
@@ -322,7 +346,7 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
           bookLabel: label,
           areaKey: entry.meta?.areaKey ?? "",
           parentUuid: adventure?.uuid ?? "",
-          folderId,
+          folderId: areaFolder,
         }),
       ),
     );

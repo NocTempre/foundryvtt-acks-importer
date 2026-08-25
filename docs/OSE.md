@@ -62,8 +62,29 @@ A candidate marked as another game's block, or as two creatures read as one,
 rather than an obvious failure.
 
 Source PDFs are session-only, exactly as the shipped books are. What persists is
-the Judge's registry entry: a name they typed, a page count, the label spellings
-they confirmed, and the boxes they imported from.
+the Judge's registry entry: a name they typed, the LINE they said it belongs to,
+a page count, the label spellings they confirmed, and the boxes they imported
+from.
+
+## Where the imports land
+
+Another game's creatures do not share a shelf with the ACKS ones. Each SERIES
+gets its own set of compendia — `ACKS Cookbook — Dolmenwood — Actor` beside
+`ACKS Cookbook — Actor` — and inside, a folder per book: `Creatures`,
+`Templates` for the generators, `Areas` for keyed rooms with the adventure at
+the top.
+
+A shipped book names its series in `books.mjs` (`line`). A registered source
+names its own, typed by the Judge at registration and offered from what this
+world already shelves — the module cannot know who published a file it has
+never seen, and asking is the only honest way to find out. A source that names
+none goes to a shared shelf with the rest of the Judge's own books, as does a
+block typed in with no source at all.
+
+The line is derived from the document's own cookbook id, which is what makes it
+safe: the same function answers for the write and for the "have I imported this
+already?" read, so a creature can never be filed on one shelf and looked for on
+another. See DECISIONS, "Another game's books get their own shelf".
 
 ## The conversion instrument
 

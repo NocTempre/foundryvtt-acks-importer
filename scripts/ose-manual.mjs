@@ -24,10 +24,10 @@
 import { MODULE_ID, LANG_PREFIX } from "./constants.mjs";
 import { parseOseStatline, OSE_CANONICAL, resolveProfile } from "./ose-statline.mjs";
 import { LINEAGES } from "./ose-convert.mjs";
-import { oseSources, parsePastedBlock } from "./ose-source.mjs";
+import { oseSource, oseSources, parsePastedBlock } from "./ose-source.mjs";
 import { oseActorDataFromFields, moraleBoundsFromSchema } from "./ose-binding.mjs";
 import { axisTable, currentScgConstants } from "./ose-app.mjs";
-import { createDoc } from "./cookbook.mjs";
+import { createDoc, importFolderFor, unlinedFolderFor } from "./cookbook.mjs";
 
 const loc = (k, data) => (data ? game.i18n.format(`${LANG_PREFIX}.${k}`, data) : game.i18n.localize(`${LANG_PREFIX}.${k}`));
 const esc = (s) => foundry.utils.escapeHTML?.(String(s ?? "")) ?? String(s ?? "");
@@ -87,11 +87,17 @@ function collectSegments(form) {
 /*  The editor                                  */
 /* -------------------------------------------- */
 
+/** The shelf a by-hand creature is filed on. */
+const HAND_FOLDER = "Entered by Hand";
+
 /**
  * Paste a block, correct it, or type one from nothing.
  *
- * @param prefill  `{name, segments, lineage, raw, learned, extra}` when
- *                 re-opening after a read; absent on a cold start.
+ * @param prefill  `{name, segments, lineage, raw, learned, extra, sourceId}`
+ *                 when re-opening after a read; absent on a cold start.
+ *                 `sourceId` is the registered book a blocked candidate was
+ *                 sent here from, and it is what shelves the result with that
+ *                 book rather than on the by-hand pile.
  */
 export async function oseManualDialog(prefill = {}) {
   if (!game.user.isGM) {
@@ -166,7 +172,9 @@ export async function oseManualDialog(prefill = {}) {
   }).catch(() => null);
   if (!result?.action) return null;
 
-  return result.action === "read" ? readIntoForm(result, prefill) : convertFromForm(result);
+  return result.action === "read"
+    ? readIntoForm(result, prefill)
+    : convertFromForm({ ...result, sourceId: prefill.sourceId ?? null });
 }
 
 /**
@@ -194,6 +202,7 @@ async function readIntoForm({ raw, name, lineage }, prefill) {
     segments: parsed.segments,
     extra: parsed.extra,
     learned,
+    sourceId: prefill.sourceId ?? null,
   });
 }
 
@@ -204,10 +213,10 @@ async function readIntoForm({ raw, name, lineage }, prefill) {
  * interpreted here, so hand entry and page import cannot drift apart: there is
  * one reader, and this is a second way of feeding it.
  */
-async function convertFromForm({ segments, name, lineage, raw }) {
+async function convertFromForm({ segments, name, lineage, raw, sourceId = null }) {
   if (!Object.keys(segments).length) {
     ui.notifications.warn(`${MODULE_ID} | ${loc("ose.manualEmpty")}`);
-    return oseManualDialog({ name, lineage, raw });
+    return oseManualDialog({ name, lineage, raw, sourceId });
   }
 
   const line = assembleStatline(segments);
@@ -221,7 +230,10 @@ async function convertFromForm({ segments, name, lineage, raw }) {
     extra: parsed.extra,
     dialect: "ose.hand",
     raw: line,
-    source: null,
+    // The registered book this block came from, when it came from one. It names
+    // the shelf the creature is filed on and the provenance line on its sheet;
+    // a block typed from nothing has no source and says so.
+    source: sourceId ? oseSource(sourceId) : null,
     page: null,
     box: null,
     origin: "hand",
@@ -231,7 +243,7 @@ async function convertFromForm({ segments, name, lineage, raw }) {
   });
   const rec = data.flags[MODULE_ID].ose;
 
-  return confirmManual({ data, rec, segments, name, lineage, raw, line, constants });
+  return confirmManual({ data, rec, segments, name, lineage, raw, line, constants, sourceId });
 }
 
 /* -------------------------------------------- */
@@ -239,7 +251,7 @@ async function convertFromForm({ segments, name, lineage, raw }) {
 /* -------------------------------------------- */
 
 /** Show what the conversion produced, and create the creature on confirmation. */
-async function confirmManual({ data, rec, segments, name, lineage, raw, line, constants }) {
+async function confirmManual({ data, rec, segments, name, lineage, raw, line, constants, sourceId = null }) {
   const warn = !constants ? `<p class="acks-importer-ose-warn">${loc("ose.warnNoGuide")}</p>` : "";
   const leftover = rec.extra?.length
     ? `<p class="notes acks-importer-ose-leftover">${loc("ose.manualLeftover", { list: rec.extra.join(" · ") })}</p>`
@@ -264,10 +276,16 @@ async function confirmManual({ data, rec, segments, name, lineage, raw, line, co
     rejectClose: false,
   }).catch(() => null);
 
-  if (action === "back") return oseManualDialog({ name, lineage, raw, segments });
+  if (action === "back") return oseManualDialog({ name, lineage, raw, segments, sourceId });
   if (action !== "create") return null;
 
-  const actor = await createDoc(Actor, data);
+  // A block from a registered book is filed with that book; one typed from
+  // nothing belongs to no book, and gets a shelf of its own rather than being
+  // created loose at the top of the library.
+  const folder = sourceId
+    ? await importFolderFor("Actor", sourceId, HAND_FOLDER)
+    : await unlinedFolderFor("Actor", HAND_FOLDER);
+  const actor = await createDoc(Actor, { ...data, folder: folder?.id ?? null });
   if (!actor) return null;
   ui.notifications.info(`${MODULE_ID} | ${loc(constants ? "ose.manualMade" : "ose.manualMadeUnconverted", { name: actor.name })}`);
   return actor;

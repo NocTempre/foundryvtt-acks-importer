@@ -88,11 +88,21 @@ export function identifyOseSource(sources, evidence) {
   return hits[0].score > 1 ? hits[0].id : null;
 }
 
-/** A new source record. `profile` and `blocks` start empty — both are learned. */
-export function makeOseSource({ id, label, lineage = "ose", pages, metaTitle, fileName, fileSize, addedBy }) {
+/**
+ * A new source record. `profile` and `blocks` start empty — both are learned.
+ *
+ * `line` is the series or publisher this book belongs to, typed by the Judge:
+ * it names the compendia this source's imports are shelved in, so two
+ * adventures from the same line share a shelf. It is free text and may be
+ * blank — the module cannot know who published a file it has never seen, and
+ * asking is the only honest way to find out. A blank one falls back to the
+ * shared shelf `cookbook.mjs` names.
+ */
+export function makeOseSource({ id, label, line = "", lineage = "ose", pages, metaTitle, fileName, fileSize, addedBy }) {
   return {
     id,
     label: String(label ?? "").trim(),
+    line: String(line ?? "").trim(),
     lineage,
     pages: Number.isFinite(pages) ? pages : null,
     metaTitle: metaTitle ?? "",
@@ -127,6 +137,24 @@ export async function deleteOseSource(id) {
   delete all[id];
   await game.settings.set(MODULE_ID, SETTING_OSE_SOURCES, all);
 }
+
+/**
+ * The name a Judge gave a registered source, or null — the folder their imports
+ * from it are filed under.
+ *
+ * These read the live store rather than taking a record, because the callers
+ * that need them hold a cookbook id and nothing else.
+ */
+export const oseSourceLabel = (id) => oseSource(id)?.label || null;
+
+/**
+ * The series a registered source's imports are shelved under, or null when the
+ * Judge left it blank.
+ */
+export const oseSourceLine = (id) => {
+  const line = oseSource(id)?.line ?? "";
+  return line ? line : null;
+};
 
 /** The resolved grammar profile for a source (canonical + its own overrides). */
 export const profileFor = (rec) => resolveProfile(rec?.profile ?? null);

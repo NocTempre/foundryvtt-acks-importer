@@ -7,6 +7,91 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### Another game's books get their own shelf (2026-08-25)
+
+**Ruled: imports are shelved by SERIES.** A book declares a `line` in
+`books.mjs` and its documents go to that line's own compendia — `ACKS Cookbook
+— Dolmenwood — Actor` beside `ACKS Cookbook — Actor`. A book that declares no
+line is ACKS and uses the unsuffixed packs, which is every ACKS book: the ACKS
+line is the default rather than a name in the source.
+
+**This refines "The pack is the container" (2026-08-24), one day old, and the
+new evidence is what shipping the OSE step made visible.** That ruling settled
+that a pack is the unit of ownership and that the pack's own name inside it was
+redundant; both stand. What it could not have known is what the library would
+hold a day later: 4.2.0 wired `importAuthoredOse` into the one import control,
+so a single press now fills one Actor pack with the ACKS Monstrous Manual, the
+Advanced Fantasy Referee's Tome, the Dolmenwood Monster Book, three Quick
+Delves, three Wicked Little Delves and three Planar Compass issues. One pack was
+the right answer for one publisher's library and the wrong one for six.
+
+**Three things were unorganized, and only one of them was the pack.**
+
+- The registered-source and by-hand paths called `createDoc(Actor, data)` with
+  no folder at all, so every creature a Judge converted themselves was created
+  loose at the top of the library among the ACKS monsters.
+- `importOseBook` and `importOseAreas` defaulted `folderId` to null and nothing
+  passed one, so the authored books did the same thing at scale — 340 Referee's
+  Tome creatures in a heap, and the 165 Dolmenwood ones on top of them.
+- Everything shared one pack per type, so there was no shelf to file them on
+  even once they had folders.
+
+**The shelf is derived from the document's own cookbook flag, not passed in.**
+`createDoc` reads `flags["acks-importer"].cookbook` and resolves the line
+through `lineOf`; twenty-odd importers create documents and every one of them
+already stamps that flag. Threading a `line` argument through all of them
+instead would have been twenty chances to add the twenty-first importer and
+forget — and, worse, the destination would then be decided by the CALLER while
+the presence checks derive it from the id. `importedActor` asking a different
+pack than `createDoc` wrote to reports "not imported" and mints a twin, which is
+the exact failure the claim rules already exist to prevent. One pure function
+over the id answers for both.
+
+**Reads span every pack; only writes pick one.** `importedIdsOfType`,
+`importedIndex`, `importedDocs` and `importedActorsOfType` now enumerate every
+world pack whose label starts with `ACKS Cookbook — `. A batch mixes lines —
+"import everything" walks the ACKS books and the OSE ones in one pass — so a
+check that asked one pack would call every Dolmenwood creature new on every run.
+`deleteImported` groups by the pack each document is actually on, because a
+delete addressed to the wrong pack removes nothing and says nothing.
+
+**The prefix is load-bearing.** Every label keeps `ACKS Cookbook — ` whatever
+line it holds: the sidebar sorts packs by label, so the library stays one block
+instead of scattering; and `cookbookRemoveImports` finds this module's packs by
+that prefix alone, so a line added by a later release is swept up by a Remove
+Imports that has never heard of it.
+
+**A registered source is ASKED which line it belongs to**, in the register
+dialog, offered as a datalist of what this world already shelves. The module
+cannot know who published a file it has never seen — a source's metadata title
+is already known to be unreliable evidence (one sample book carries its author's
+word-processor filename there), and inferring a publisher from it would put two
+adventures on two nearly-identical shelves or one on the wrong one. Suggesting
+is what keeps the list short; requiring a choice from it would refuse every book
+nobody here has heard of. Blank is allowed and lands on a shared shelf.
+
+**Rejected: naming PUBLISHERS rather than series.** It is the more natural
+grouping and it was the first plan. Two things killed it. `ip-scan.mjs`
+hard-fails on publisher attribution in `scripts/` — the ACKS line could not be
+named in the file that would have to name it — and beyond the two lines whose
+publisher is common knowledge, this session could not have named the rest
+without guessing, which would have shipped a wrong attribution in a
+user-visible pack label. A series name is printed on the book's own cover and
+is already in `books.mjs` as part of every one of these titles.
+
+**Rejected: a migration for worlds imported before this.** Consistent with the
+2026-08-24 ruling: delete-and-re-import is the upgrade path. Nothing breaks
+without it — the reads span every pack, so documents already in `ACKS Cookbook —
+Actor` are still found, still counted as imported, and still removed by Remove
+Imports. They simply stay where they are until the library is rebuilt.
+
+**Cost:** more packs in a sidebar — up to six Actor compendia where there was
+one, for a Judge who owns all these books. That is the point of the change, but
+it is a cost for a Judge who owns one OSE adventure and now has a second pack
+for it.
+
+---
+
 ### Imported text is written into the world, once, by the GM who owns the book (2026-08-24)
 
 **Ruled.** An import materializes the entry's own paragraphs into the document

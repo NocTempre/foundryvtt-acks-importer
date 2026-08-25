@@ -33,8 +33,9 @@ import {
   matchOseSources,
 } from "./ose-source.mjs";
 import { oseActorData, moraleBoundsFromSchema, convertUnconvertedOse } from "./ose-binding.mjs";
-import { createDoc, cookbookContentFile, cookbookRegisters, cookbookSessionDoc } from "./cookbook.mjs";
+import { createDoc, cookbookContentFile, cookbookRegisters, cookbookSessionDoc, importFolderFor } from "./cookbook.mjs";
 import { readScgConstants } from "./scg-constants.mjs";
+import { BOOKS } from "./books.mjs";
 import { oseManualDialog } from "./ose-manual.mjs";
 
 /** Opened source PDFs, this session only. */
@@ -72,6 +73,21 @@ async function openPicked(file) {
  * was built against carries its author's word-processor filename there. The
  * title is still stored, as evidence for re-matching the same file later.
  */
+/**
+ * Every line this world already shelves books under, shipped and registered.
+ *
+ * Offered as a datalist rather than a fixed menu: the shipped list is the
+ * handful of series this module has cookbooks for, and a Judge's own library is
+ * everything else. Suggesting what is already there is what keeps two
+ * adventures from the same publisher off two nearly-identical shelves; forcing
+ * a choice from it would refuse every book nobody here has heard of.
+ */
+function knownLines() {
+  const lines = new Set(Object.values(BOOKS).map((b) => b.line).filter(Boolean));
+  for (const src of Object.values(oseSources())) if (src?.line) lines.add(src.line);
+  return [...lines].sort();
+}
+
 export async function registerOseSourceDialog() {
   if (gmOnly()) return null;
   const lineages = Object.entries(LINEAGES)
@@ -82,6 +98,12 @@ export async function registerOseSourceDialog() {
       <input type="file" name="pdf" accept="application/pdf"></div>
     <div class="form-group"><label>${loc("ose.nameLabel")}</label>
       <input type="text" name="label" placeholder="${esc(loc("ose.namePlaceholder"))}"></div>
+    <div class="form-group"><label>${loc("ose.lineLabel")}</label>
+      <input type="text" name="line" list="acks-importer-ose-lines" placeholder="${esc(loc("ose.linePlaceholder"))}">
+      <datalist id="acks-importer-ose-lines">${knownLines()
+        .map((l) => `<option value="${esc(l)}"></option>`)
+        .join("")}</datalist></div>
+    <p class="notes">${loc("ose.lineNote")}</p>
     <div class="form-group"><label>${loc("ose.lineageLabel")}</label>
       <select name="lineage">${lineages}</select></div>
     <p class="notes">${loc("ose.registerNote")}</p>`;
@@ -97,6 +119,7 @@ export async function registerOseSourceDialog() {
         const file = form.elements.pdf.files?.[0];
         if (!file) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.needFile")}`);
         const label = form.elements.label.value.trim();
+        const line = form.elements.line.value.trim();
         const lineage = form.elements.lineage.value;
 
         let opened;
@@ -120,6 +143,7 @@ export async function registerOseSourceDialog() {
         const rec = makeOseSource({
           id: oseIdFor(label || file.name, all),
           label: label || file.name.replace(/\.pdf$/i, ""),
+          line,
           lineage,
           pages: opened.numPages,
           metaTitle: opened.title ?? "",
@@ -319,7 +343,7 @@ export async function oseReviewDialog(sourceId, page) {
         // could not. That is what keeps every block the sweep FINDS reachable,
         // whether or not the grammar could read it.
         for (const p of byHand) {
-          await oseManualDialog({ name: nameOf(p), lineage: rec.lineage, raw: p.ose.raw });
+          await oseManualDialog({ name: nameOf(p), lineage: rec.lineage, raw: p.ose.raw, sourceId: rec.id });
         }
         return null;
       },
@@ -331,6 +355,10 @@ export async function oseReviewDialog(sourceId, page) {
 async function importOseBlocks(rec, page, picked, names, constants, bounds) {
   let made = 0;
   const confirmed = [];
+  // The source's own shelf, in whichever line's compendium it belongs to.
+  // These used to be created with no folder, which piled every book a Judge
+  // registered loose at the top of the library with the ACKS creatures.
+  const folderId = (await importFolderFor("Actor", rec.id))?.id ?? null;
   for (const p of picked) {
     const name = names[p.i] || loc("ose.untitled", { n: p.i + 1 });
     const data = oseActorData({
@@ -340,6 +368,7 @@ async function importOseBlocks(rec, page, picked, names, constants, bounds) {
       page,
       constants,
       moraleBounds: bounds,
+      folderId,
     });
     const actor = await createDoc(Actor, data);
     if (actor) {

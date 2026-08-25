@@ -36,11 +36,21 @@ other VTTs) while cookbooks stay valid.
   persistence of everything a GM imported — values and prose alike (the
   hand-typed equivalence; never in the cookbook). Reading an imported document
   needs no book on any seat.
-- **Destination:** one WORLD COMPENDIUM per document type ("ACKS Cookbook —
-  Actor", "… — Item", …), created on first use; folders inside it are at most
-  two deep. Decided at creation time by ONE rule per document type
-  (`actorFolderFor`, `ensureItemFolder`) — never by a later pass. The ruling and
-  what it replaced: [DECISIONS.md](DECISIONS.md) 2026-08-24.
+- **Destination:** WORLD COMPENDIA, one per document type per LINE — "ACKS
+  Cookbook — Actor" for the ACKS library, "ACKS Cookbook — Dolmenwood — Actor"
+  and its siblings for everything else — created on first use; folders inside
+  are at most two deep. The line is a book's series (`BOOKS[id].line`, or a
+  registered source's own `line`); a book that declares none is ACKS and uses
+  the unsuffixed pack. Every label keeps the `ACKS Cookbook — ` prefix, which is
+  what sorts the library together in the sidebar and what Remove Imports finds
+  its packs by.
+
+  Decided at creation time by ONE rule per document type (`actorFolderFor`,
+  `ensureItemFolder`) — never by a later pass — and the SHELF is derived from
+  the document's own cookbook flag by `lineOf`, so every presence check reads
+  the destination from the same input the write did. Reads span every pack
+  (`ourPacksOfType`); only writes pick one. The rulings and what they replaced:
+  [DECISIONS.md](DECISIONS.md) 2026-08-24 and 2026-08-25.
 
 ## Contract with the executor
 

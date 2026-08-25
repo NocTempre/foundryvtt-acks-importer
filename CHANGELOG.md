@@ -1,5 +1,43 @@
 # Changelog
 
+## 4.3.0
+
+**Every book's creatures are on their own shelf, filed under the book they came
+from.**
+
+### Changed
+- **Books from outside the ACKS library import into their OWN compendiums, one
+  set per series.** `ACKS Cookbook — Dolmenwood — Actor` sits beside `ACKS
+  Cookbook — Actor`, with `Old-School Essentials`, `Quick Delve`, `Wicked Little
+  Delves` and `Planar Compass` alongside. Your ACKS books are unchanged and stay
+  where they were. Sharing a whole book with your players is still one setting
+  on a pack — now it is one setting on the book you meant, instead of on the
+  whole library at once.
+- **Registering your own adventure asks which series or publisher it belongs
+  to.** Books sharing a series share a set of compendiums, and the field
+  suggests the ones you have already used. Leave it blank and the book lands on
+  a shared shelf with your other books.
+
+### Fixed
+- **Imported creatures are no longer created loose at the top of the library.**
+  Every path that made them — the authored books, an adventure you registered
+  yourself, and a block typed in by hand — created them with no folder at all,
+  so importing the Referee's Tome dropped 340 creatures in a heap and the
+  Dolmenwood Monster Book put another 165 on top of them. They now go into a
+  folder named for their book, with **Creatures**, **Templates** for the ones
+  that come in several sizes, and **Areas** for numbered rooms.
+- **A block sent to the hand editor from an adventure you registered is filed
+  with that adventure**, and its Source tab names the book it came from. Only a
+  block typed from nothing goes on the by-hand shelf.
+- **The "imported into…" message names every compendium the run filled**, not
+  just the ACKS one — a run that walked several books used to send you to a
+  shelf your creatures were not on.
+
+### Upgrading
+Nothing breaks and nothing is duplicated: creatures imported by an earlier
+release stay in the compendium they are in, are still recognised as imported, and
+are still removed by Remove Imports. Re-import a book if you want it re-filed.
+
 ## 4.2.1
 
 **The server list says what is on the server.**
