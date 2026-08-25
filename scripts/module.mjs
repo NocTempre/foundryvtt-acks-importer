@@ -335,23 +335,81 @@ async function scanShelf() {
   return { matched, unmatched, missing: false };
 }
 
+/** The path a name already occupies in the shelf directory, or null. */
+async function shelfFile(name) {
+  const FP = filePicker();
+  let listing;
+  try {
+    listing = await FP.browse("data", SHELF_DIR);
+  } catch {
+    return null; // no directory yet: nothing is taken
+  }
+  const wanted = name.toLowerCase();
+  return (
+    (listing?.files ?? []).find((path) => decodeURIComponent(path.split("/").pop()).toLowerCase() === wanted) ?? null
+  );
+}
+
 /**
- * Put a book on the shelf from the file this seat already has open.
+ * Put a book on the shelf from a file this seat holds. Upload goes through the
+ * same `FilePicker.upload` call the art importer uses.
  *
- * The bytes come from the refresh bridge when it still holds them, so shelving
- * a book connected moments ago costs no second read of the same file; a seat
- * whose bridge has been swept re-reads from the picked File instead. Upload
- * goes through the same `FilePicker.upload` call the art importer uses.
+ * The shelf copy is always named `<bookId>.pdf`. That is the module's own
+ * directory and its own convention — the scan's first pass reads it, and one
+ * name per book is what makes "is this book already up there?" a question with
+ * an answer.
+ *
+ * Which matters, because **Foundry refuses to overwrite a non-media file**: a
+ * second upload over a name already taken fails the request outright rather
+ * than replacing it. So a taken name is answered by reading what is already
+ * there instead of by a second copy of a hundred-megabyte book — and it is
+ * staged only if it fingerprints as this book, which is also how a leftover
+ * from another printing is caught rather than silently adopted.
+ *
+ * `verified` says the caller fingerprinted THESE bytes. That is stronger
+ * evidence than re-reading the copy just written, so the entry is recorded
+ * from the upload; an unverified upload is read back before anything is
+ * written.
  */
-async function shelveUpload(bookId, file) {
+async function shelveUpload(bookId, file, { verified = false } = {}) {
   const FP = filePicker();
   await FP.createDirectory("data", SHELF_DIR).catch((err) =>
     console.debug(`${MODULE_ID} | shelf directory "${SHELF_DIR}" not created (it usually already exists)`, err),
   );
-  const named = file.name?.toLowerCase().endsWith(".pdf") ? file : new File([file], `${bookId}.pdf`, { type: "application/pdf" });
+  const name = `${bookId}.pdf`;
+  const taken = await shelfFile(name);
+  if (taken) {
+    // Size is left at 0 rather than copied from the local pick: nothing was
+    // uploaded, and the file up there is not necessarily this one.
+    const held = await shelvePath(bookId, taken, { name });
+    if (!held) throw new Error(game.i18n.format(`${LANG_PREFIX}.ui.shelfTaken`, { path: taken }));
+    return held;
+  }
+  const named = file.name === name ? file : new File([file], name, { type: "application/pdf" });
   const res = await FP.upload("data", SHELF_DIR, named, {}, { notify: false });
   if (!res?.path) throw new Error(game.i18n.localize(`${LANG_PREFIX}.ui.shelfUploadFailed`));
-  return shelvePath(bookId, res.path, { name: named.name, size: named.size ?? 0 });
+  const record = { path: res.path, name, size: named.size ?? 0 };
+  if (!verified) return shelvePath(bookId, res.path, { name, size: record.size });
+  await shelfPut(bookId, record);
+  return record;
+}
+
+/**
+ * Put a book on the server from a file this seat can read, whether or not that
+ * book is open here. This is what a GM who has never connected a book on this
+ * machine reaches for: staging is a property of the world, so it must not cost
+ * a seat-local connect first.
+ *
+ * The fingerprint is read BEFORE the upload, because an upload cannot be taken
+ * back — Foundry offers no delete, so a file written before it was identified
+ * leaves the wrong book on the server under a right name. `ingestBook` refuses
+ * a file that fingerprints as another book, and only what it accepted is sent.
+ * Reading it also opens it here, which is the same thing the row's own connect
+ * control would have done.
+ */
+async function stageFile(bookId, file) {
+  await ingestBook(bookId, await file.arrayBuffer(), { cache: file });
+  return shelveUpload(bookId, file, { verified: true });
 }
 
 /**
@@ -1167,8 +1225,19 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
       </div>`,
     )
     .join("");
+  // Two ways in, because a book does not have to be open here to belong on the
+  // server: pick the files and they are read, checked and uploaded; or copy
+  // them onto the host yourself and scan. Neither asks the seat to connect
+  // first — staging is a property of the WORLD, and making it cost a
+  // seat-local connect left a GM with no control at all on the rows of books
+  // this browser had never opened.
   const shelfControls = isGM
     ? `<div class="acks-importer-reconnect-head acks-importer-band-actions">
+         <input type="file" name="shelf-bulk" data-shelf-bulk accept="application/pdf" multiple>
+         <span class="notes" data-shelf-bulk-status></span>
+       </div>
+       <p class="notes">${L("shelfBulkNote")}</p>
+       <div class="acks-importer-reconnect-head acks-importer-band-actions">
          <button type="button" data-shelf-scan>${L("shelfScanGo")}</button>
          <span class="notes" data-shelf-scan-status></span>
        </div>
@@ -1219,6 +1288,19 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
     }
     return `<button type="button" data-book="${esc(id)}">${L(record.kind === "url" ? "reconnectRetry" : "reconnectGo")}</button>`;
   };
+  // "Add to server" on a book that is NOT open here. The row names the book,
+  // so the file it is handed needs no guessing — the same evidence a row-level
+  // connect rests on, and the strongest available anywhere in this window.
+  // Nothing is uploaded before the file has been read and identified, so a
+  // wrong pick is refused rather than staged.
+  const stage = (id) => {
+    if (!isGM || staged[id]) return "";
+    return fsa
+      ? `<button type="button" data-shelve-pick="${esc(id)}">${L("shelfAdd")}</button>`
+      : `<label class="acks-importer-shelf-pick">${L("shelfAdd")}
+           <input type="file" name="shelf-${esc(id)}" data-shelve-file="${esc(id)}" accept="application/pdf">
+         </label>`;
+  };
   const why = (record) => {
     if (record?.kind === "file") return L("reconnectFile", { name: esc(record.name ?? "") });
     if (record?.kind === "url") return L("reconnectUrlFailed", { where: esc(record.url) });
@@ -1242,6 +1324,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
       <div class="acks-importer-reconnect-head">
         <strong>${esc(book.label)}</strong>
         ${control(id, record)}
+        ${stage(id)}
       </div>
       <p class="notes" data-status="${esc(id)}">${record ? why(record) : L("booksAbsent", { scope })}</p>
     </div>`;
@@ -1350,7 +1433,11 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
             // means the reader picks it once more, and the row says so.
             const blob = await bytesGet(bookId).catch(() => null);
             if (!blob) throw new Error(L("shelfNoBytes"));
-            const record = await shelveUpload(bookId, new File([blob], `${bookId}.pdf`, { type: "application/pdf" }));
+            // Verified: these are the bytes this seat fingerprinted when the
+            // book was opened, so the copy on the server needs no read-back.
+            const record = await shelveUpload(bookId, new File([blob], `${bookId}.pdf`, { type: "application/pdf" }), {
+              verified: true,
+            });
             if (!record) throw new Error(L("shelfUploadFailed"));
             say(`[data-status="${bookId}"]`, L("shelfHeld", { name: record.name }));
             button.remove();
@@ -1361,6 +1448,76 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           }
         });
       }
+
+      // Staging a book this seat does NOT have open: from its own row, or
+      // several at once from the shelf band. Both land in `stageFile`, which
+      // reads and identifies the file here and uploads only what it accepted.
+      const stageInto = async (bookId, file, control) => {
+        if (control) control.disabled = true;
+        say(`[data-status="${bookId}"]`, L("shelfUploading"));
+        try {
+          const record = await stageFile(bookId, file);
+          settle(bookId, true, L("shelfHeld", { name: record.name }));
+          root.querySelector(`[data-row="${bookId}"] button[data-shelve-pick]`)?.remove();
+          root.querySelector(`[data-row="${bookId}"] .acks-importer-shelf-pick`)?.remove();
+          return true;
+        } catch (err) {
+          console.error(`${MODULE_ID} | add ${bookId} to the server`, err);
+          say(`[data-status="${bookId}"]`, err.message || L("shelfUploadFailed"));
+          if (control) control.disabled = false;
+          return false;
+        }
+      };
+
+      for (const button of root.querySelectorAll("button[data-shelve-pick]")) {
+        button.addEventListener("click", async () => {
+          const bookId = button.dataset.shelvePick;
+          try {
+            const [handle] = await window.showOpenFilePicker({
+              multiple: false,
+              types: [{ description: "PDF", accept: { "application/pdf": [".pdf"] } }],
+            });
+            await stageInto(bookId, await handle.getFile(), button);
+          } catch (err) {
+            if (err?.name === "AbortError") return; // the reader closed the picker
+            console.error(`${MODULE_ID} | add ${bookId} to the server`, err);
+            say(`[data-status="${bookId}"]`, L("shelfUploadFailed"));
+          }
+        });
+      }
+
+      for (const input of root.querySelectorAll("input[type=file][data-shelve-file]")) {
+        input.addEventListener("change", async () => {
+          const file = input.files?.[0];
+          if (file) await stageInto(input.dataset.shelveFile, file, input);
+        });
+      }
+
+      const shelfBulk = root.querySelector("input[type=file][data-shelf-bulk]");
+      shelfBulk?.addEventListener("change", async () => {
+        const files = [...(shelfBulk.files ?? [])];
+        if (!files.length) return;
+        shelfBulk.disabled = true;
+        say("[data-shelf-bulk-status]", L("shelfUploading"));
+        // The files' own evidence decides: a name this seat remembers, a size
+        // it has seen, or the book's title in the filename. A file that names
+        // no book is never guessed at — it is reported by name, and that
+        // book's own row takes it in one pick.
+        const candidates = Object.keys(BOOKS).filter((id) => !shelf()[id]);
+        const { matched, unmatched } = matchFilesToBooks(files, candidates, records);
+        let added = 0;
+        // Sequentially: several ACKS PDFs read at once is hundreds of
+        // megabytes in flight, and each is parsed here before it is uploaded.
+        for (const [bookId, file] of matched) if (await stageInto(bookId, file)) added++;
+        shelfBulk.disabled = false;
+        shelfBulk.value = "";
+        say(
+          "[data-shelf-bulk-status]",
+          unmatched.length
+            ? L("shelfBulkUnmatched", { count: added, files: unmatched.map((f) => f.name).join(", ") })
+            : L("shelfScanDone", { count: added }),
+        );
+      });
 
       for (const button of root.querySelectorAll("button[data-unshelve]")) {
         button.addEventListener("click", async () => {
@@ -2161,6 +2318,8 @@ Hooks.once("ready", async () => {
   await loadCookbook();
   const api = {
     connectBook, connectBookUrl, reconnectBooks, browseAndLoad, applyStats, bookStatus, forgetBooks,
+    /** Put a book on the server from a File this seat holds: read here, checked here, uploaded only then. */
+    stageBook: stageFile,
     cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities, cookbookFillCompanions, cookbookPruneAbilities,
     importAbility, cookbookDebug, cookbookCount,
     cookbookImportTables,

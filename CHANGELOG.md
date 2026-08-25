@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.1.0
+
+**Every book gets to the server, whether or not it is open on your computer.**
+
+### Fixed
+- **"Add to server" is on every book's row now, not only the ones already
+  open.** A Judge with their whole library on disk and a fresh browser saw an
+  empty server band and a row per book with nothing to press: staging was
+  offered only where a book happened to be connected on that seat. The file is
+  still read and identified before anything is staged — it is read *here*
+  first, so nothing reaches the server until it has proved which book it is.
+- **A book already on the server can be staged again.** Foundry refuses to
+  overwrite a file that is not an image or a video, so pressing *Add to server*
+  for a book whose copy was already up there failed the upload and reported
+  that nothing was staged. The copy already on the server is now read and
+  staged instead, and a file that turns out to be a *different* book is named,
+  with its path, rather than quietly adopted.
+
+### Added
+- **Pick your whole library at once.** The **On the server** band takes as many
+  PDFs as you care to select, reads and checks each one, and stages everything
+  it can name. Anything that names no book is listed back to you and left
+  alone — its own row takes it in one pick.
+- `acksImporter.stageBook(bookId, file)` on the api, for a Judge who would
+  rather script the shelf than click it.
+
 ## 4.0.0
 
 **The book text you imported is in your world, and it stays there.**

@@ -288,6 +288,23 @@
   width: auto;
 }
 
+/* A row can carry two pickers — one connects the book here, one puts it on the
+   server — and a bare file input says which it is nowhere. The staging one
+   wears its name, so the pair is never a guess. */
+.acks-importer-shelf-pick {
+  display: flex;
+  flex: 1 1 18em;
+  gap: 0.35em;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.acks-importer-shelf-pick input[type="file"] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .acks-importer-reconnect-done {
   opacity: 0.6;
 }

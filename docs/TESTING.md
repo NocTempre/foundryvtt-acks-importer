@@ -35,8 +35,19 @@ gates that anything reaches a document.
    renders. Rows move to the "Open this session" group.
 3. **Add to server** on an open book's row.
    *Observable:* the row says it is uploading, then the book appears in the
-   server band; `Data/acks-importer-books/` holds the PDF; the world setting
-   `game.settings.get("acks-importer","shelf")` names it.
+   server band; `Data/acks-importer-books/` holds the PDF as `<bookId>.pdf`;
+   the world setting `game.settings.get("acks-importer","shelf")` names it.
+   Press it a second time for the same book (re-open the window): the name is
+   already taken on the server, and the copy up there is read and staged
+   instead of a second upload being attempted — Foundry refuses to overwrite a
+   non-media file, so an upload here fails the whole request.
+3b. **Add to server** on a book that is NOT open and NOT staged, and the shelf
+   band's own picker with several files at once.
+   *Observable:* the row carries the control at all — this is the case that had
+   none. The file is read and identified BEFORE anything is uploaded, so
+   handing a row the wrong book's PDF is refused with nothing on the server;
+   the bulk picker stages everything it can name and lists the files that named
+   no book. Both leave the row reading "Read from the server on every launch".
 4. **Shut the world down and relaunch it.** This is the check the whole shelf
    exists for and a page reload does not substitute for it.
    *Observable:* the staged book is open at `ready` with NO gesture, no picker
@@ -64,6 +75,23 @@ gates that anything reaches a document.
 9. Join as the **Player** seat.
    *Observable:* the window does not auto-open; opening it by macro shows the
    server band read-only, with no Add/Remove/Scan controls.
+
+### Driving the pickers
+
+No automation opens a native file dialog, so the two picking routes are driven
+differently. An `<input type="file">` accepts a FileList built in page context —
+`const dt = new DataTransfer(); dt.items.add(file); input.files = dt.files;`
+then dispatch a bubbling `change` — which drives the shelf band's own picker
+end to end, real handler and all. The FSA branch (a row's **Add to server**
+button, which calls `showOpenFilePicker`) cannot be driven at all; exercise
+`acksImporter.stageBook(bookId, file)` instead, which is the function the
+handler calls, and say so in the report. Files themselves come from the data
+directory over HTTP: `new File([await (await fetch(path)).blob()], name)`.
+
+To test a FRESH upload where the shelf already holds every book, move one file
+aside on disk (`mv wld1.pdf wld1.pdf.aside`), stage it, then delete what the
+upload wrote and move the original back — the uploaded copy must be
+byte-identical, so `md5sum` is the check.
 
 ### Teardown
 

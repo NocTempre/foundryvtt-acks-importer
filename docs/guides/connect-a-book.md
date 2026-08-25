@@ -51,18 +51,27 @@ Browsers will not hand a file back after a reload without a fresh click, which
 is why a book connected from your own disk asks for a gesture every session.
 A book the **server** holds asks for nothing.
 
-In the Books window's **On the server** band, either:
+There are three ways in, and none of them asks you to connect the book on this
+computer first:
 
-- press **Add to server** on a book that is already open — its file is uploaded
-  into `acks-importer-books/` under the Foundry data folder; or
+- in the Books window's **On the server** band, **pick your PDFs** — as many as
+  you like at once. Each one is read here, identified, and uploaded into
+  `acks-importer-books/` under the Foundry data folder. Anything that names no
+  book is listed back to you and left alone;
+- press **Add to server** on any book's own row. The row names the book, so
+  the file you hand it needs no guessing at all;
 - copy your PDFs into that folder yourself (drag, FTP, host panel) and press
   **Scan the folder**.
 
-Either way the file is **opened and checked before it is staged**: a PDF is
-only recorded as a book once it proves to be that book, so a misnamed file is
-refused rather than staged wrong. From then on every GM seat, on any machine,
-reads it automatically at launch — no picker, no permission click, nothing to
-remember.
+Every route **opens and checks the file before anything is staged**, and the
+first two check it before anything is uploaded: a PDF is only recorded as a
+book once it proves to be that book, so a misnamed file is refused rather than
+staged wrong. From then on every GM seat, on any machine, reads it
+automatically at launch — no picker, no permission click, nothing to remember.
+
+If the server already holds a file under that book's name, nothing is uploaded
+a second time: the copy already there is read and staged if it is that book,
+and named to you if it is not.
 
 Removing a book from the server only stops the module reading it; the file
 stays where it was put, and the window tells you where.

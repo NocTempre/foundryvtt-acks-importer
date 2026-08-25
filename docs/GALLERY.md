@@ -11,7 +11,7 @@ raw PNG path, so those links survive the next refresh.
 |---|---|---|---|
 | Imported text | What an import now leaves behind: the entry's own words in the document, closing on the book and page it was read from | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/imported-text.png) |
 | The imported library | Where everything lands: one compendium per document type, its shelves two levels deep, the priced rows filed under Equipment / Price List | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/library-compendium.png) |
-| Connect a book | The book loader: the Getting Started band, and each book read from the server on every launch | [guide](guides/connect-a-book.md) | [v4.0.0](releases/v4.0.0/book-loader.png) |
+| Connect a book | The book loader: books read from the server on every launch, the picker that puts a whole library there at once, and **Add to server** on the rows of books this computer has never opened | [guide](guides/connect-a-book.md) | [v4.1.0](releases/v4.1.0/book-loader.png) |
 | Forget books | The forget confirmation, reported only when the clear really happened | [guide](guides/connect-a-book.md) | [v2.6.0](releases/v2.6.0/forget-books-toast.png) |
 | Import content | The onboarding panel: connect, then import everything the cookbook ships | [guide](guides/import-from-the-cookbook.md) | [v4.0.0](releases/v4.0.0/book-loader.png) |
 | Import classes | A class doc's Templates pane: each printed template materialized as a bundle of world documents a Judge can repair | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/classes-template-spells.png) |
@@ -24,6 +24,13 @@ raw PNG path, so those links survive the next refresh.
 | Calibrate a book's wording | A publisher heading its hit dice differently, taught to that adventure alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-calibrate.png) |
 | Convert a block by hand | Paste a stat block and it fills the fields; correct anything the reader got wrong before converting | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual.png) |
 | Check a hand conversion | What each field became and on whose authority, with everything deliberately left alone listed beneath | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual-confirm.png) |
+
+**4.1.0 is a minor and re-shot one row.** *Connect a book* is the only surface
+it changes, and the frame is scrolled to the change rather than to the top of
+the window: the shelf band's own picker with its note, and two books this seat
+has never opened carrying **Add to server**. The other rows keep their older
+links, which is what those links are for. The shelf in frame is this test
+world's real one, staged from books the tester owns.
 
 Snapshots are captured during a live-verification session against the release
 (`acks-module-template/docs/TOOLCHAIN.md` §4b), never staged from data that was

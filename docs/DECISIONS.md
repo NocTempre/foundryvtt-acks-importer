@@ -2127,3 +2127,42 @@ of a hundred and seventeen.
 
 Wicked Little Delves ships no areas. It keys its rooms another way, and a tool
 that guessed would invent areas rather than find them.
+
+### Staging is a property of the world, so it must not cost a seat-local connect (2026-08-24)
+
+**Ruled: any book can be put on the server from its own row or from a picker in
+the shelf band, whether or not that book is open on this computer.**
+
+"Add to server" was offered only on a book already OPEN this session, because
+the file has to be read before anything can vouch for what it is. True, and it
+put the control on the wrong side of the work: a GM with nineteen PDFs on disk
+and a fresh browser saw a shelf band with nothing in it and nineteen rows with
+no way to stage anything. The reported symptom was "no button on most rows" —
+the button was on the two rows that happened to be open.
+
+Reading first is kept; what changed is WHERE the reading happens. `stageFile`
+reads the picked file here, lets `ingestBook`'s fingerprint refuse a wrong one,
+and only then uploads — so the guarantee is now stronger than it was: nothing
+reaches the server before it has been identified, where the open-book route
+uploaded first and read back after. The read-back is dropped for a caller that
+fingerprinted the bytes it is sending (`verified`), which also takes a
+hundred-megabyte re-fetch-and-reparse off every use of the original button.
+
+**Found while shipping it: Foundry refuses to overwrite a non-media file.** The
+upload of a name already taken fails the whole request — so a shelf staged
+once could never be re-staged, and the reader was told "the upload did not
+complete" over a book that was sitting on the server the whole time. A taken
+name is now answered by reading the copy already there and staging it if it is
+that book, which costs nothing and is the outcome the reader wanted; a file
+that is a DIFFERENT book is named, with its path, rather than silently adopted.
+
+**The shelf copy is always `<bookId>.pdf`.** One name per book is what makes
+"is this book already up there?" a question with an answer, it is the name the
+scan's first pass already reads, and the directory is the module's own.
+
+**Rejected — matching picked files by an exact id stem.** The bulk picker takes
+the reader's own filenames and matches them on evidence only (a remembered
+name, a size this seat has seen, the book's title in the filename), leaving the
+id-stem pass confined to the shelf directory where the module controls the
+naming. A file that names no book is reported by name and left alone; its own
+row takes it in one pick, which is the strongest evidence in the window.
