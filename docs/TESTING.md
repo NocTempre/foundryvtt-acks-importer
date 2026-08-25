@@ -493,12 +493,29 @@ is what separates them.
    several points the other way and looks entirely plausible. Confirm against
    the page for at least one creature, and confirm `flags["acks-importer"].ose`
    records `lineage: "dolmenwood"`.
-7. Re-import the same book into a second folder and confirm the first set is
-   untouched — the path creates, it never updates in place.
+7. **Run the same import a second time.** Nothing may be created, and it must
+   be FAST: the presence check is taken before the page is read, so a book
+   already imported costs an index lookup per entry, not a re-read. Measured on
+   the full library, 643 documents in 41s becomes 0 in 1s. A second run that
+   takes as long as the first means the check moved behind the read.
+8. **Delete what was imported and import it again.** The claim is keyed by
+   identity, and a claim that answers for deleted documents is the failure this
+   step exists to catch — everything must come back.
+9. `api.oseImportAuthored()` — the step "import everything" runs. It walks every
+   authored book the seat has OPEN and is silent about the rest: a Judge who
+   owns three of the eleven must not be told about the other eight. Confirm the
+   documents carry one id each — no two share
+   `flags["acks-importer"].cookbook.id` — and that a book printing several
+   creatures on one page (`dmb`) produced one document per creature.
+
+   Driving it: fire it without awaiting and poll a global, because reading a
+   library of PDFs pins the renderer's main thread and an awaited eval times
+   out. `art: false` keeps a test run from writing hundreds of extracted
+   illustrations into the data directory, which nothing deletes afterwards.
 
 ### Teardown
 
-8. Delete the folders and every actor in them. Report which books were
+10. Delete the folders and every actor in them. Report which books were
    exercised and which were not reached.
 
 ## Keyed areas as places
@@ -528,6 +545,9 @@ is what separates them.
    line must be whole, not cut at the wrap.
 6. Import a book that ships none (`wld1`) and confirm it says so rather than
    inventing rooms.
+7. Import the areas twice. The second run must create nothing — neither rooms
+   NOR a second adventure beside the first, which is what a book-level id
+   (`<book>.adventure`) is for.
 
 ### Teardown
 

@@ -858,8 +858,11 @@ async function claimImport(id, build) {
  * ITEM index gets "not imported" every time — which is how one run of the
  * vehicle importer minted a second copy of all 19 printed rows, then a third.
  * Nothing is remembered: actors are found by their flag, not by an index.
+ *
+ * Exported because the OSE book importers write actors too, and an importer
+ * that skips the claim is how a second run mints twins.
  */
-async function claimActorImport(id, build) {
+export async function claimActorImport(id, build) {
   return claimed(id, importedActor, (_id, doc) => doc, build);
 }
 
@@ -894,6 +897,14 @@ export function forgetImportedIndex() {
  * outside this file has to ask before it can point at a document.
  */
 export const importedItemFor = (id) => importedItem(id);
+
+/**
+ * The imported ACTOR for a cookbook id, or null — the same question against the
+ * collection an actor importer writes to. Asked before an expensive read, not
+ * only before the write: a page render per entry is the cost a second run of a
+ * whole book is trying to avoid.
+ */
+export const importedActorFor = (id) => importedActor(id);
 
 /**
  * Every document of a type the library holds — the pack's, loaded.

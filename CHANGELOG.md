@@ -1,5 +1,32 @@
 # Changelog
 
+## 4.2.0
+
+**Your other games' books come in with everything else.**
+
+### Added
+- **"Import everything" now imports the third-party books it can read.** The
+  eleven authored books — Old-School Essentials, Dolmenwood, the Planar
+  Compasses, the Quick Delves, the Wicked Little Delves — shipped their recipes
+  and had no control that reached them: their creatures and keyed areas could
+  only be imported by typing at the console. They are a step of the import
+  chain now, taking every one of those books you have connected, and saying
+  nothing at all about the ones you do not own.
+- **Importing the same book twice no longer builds it twice.** What an import
+  makes is stamped with the entry it came from, so a second run recognises the
+  creatures and rooms already in your world and leaves them alone. It is also
+  quick about it: the check happens before the page is read, not after, so
+  re-running the chain over a world that already holds these books costs
+  seconds rather than minutes.
+
+### Fixed
+- **A book on the server is no longer copied into your browser as well.** Every
+  launch wrote every staged book into this seat's storage — for a full shelf,
+  better than half a gigabyte, to save a file-picking gesture that a book on
+  the server never asks for. It is what made the first minute of a session
+  sluggish. Books you connect from your own disk are still held across a page
+  reload exactly as before.
+
 ## 4.1.0
 
 **Every book gets to the server, whether or not it is open on your computer.**

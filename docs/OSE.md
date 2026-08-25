@@ -264,3 +264,19 @@ lists, and a creature the page never drew has none rather than a neighbour's.
 
     qd1 100%   qd2 100%   qd3 100%   aft  98%   dmb  90%   wld1-3 100%
     pc1  95%   pc2  86%   pc3  88%
+
+They are imported by **"import everything"**, like everything else the module
+ships: its OSE step walks every authored book this seat has open, taking each
+book's creatures and then the keyed areas that are numbered against them, and
+saying nothing at all about books the seat does not have. `oseImportBook` and
+`oseImportAreas` remain on the api for one book at a time.
+
+Which entry a document IS decides whether a second run builds it again, so an
+authored import stamps the ENTRY id — `aft.woollyRhinoceros`, `qd3.area5` — and
+asks for it before it reads the page. A book already imported costs one index
+lookup per entry and creates nothing. A generator built from several entries is
+stamped with its group under its book (`dmb.group.bard`), because group keys are
+bare words that repeat from book to book; an adventure with `<book>.adventure`.
+The registered-source and by-hand paths have no entry to name and keep the
+page-derived id, which cannot tell two blocks on one page apart — they are the
+paths a Judge drives a block at a time, and they are not deduplicated.

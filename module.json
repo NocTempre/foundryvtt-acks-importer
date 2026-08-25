@@ -2,7 +2,7 @@
   "id": "acks-importer",
   "title": "ACKS II — Importer",
   "description": "Imports ACKS II book content into Foundry from the reader's own PDFs: monsters, proficiencies and class powers, equipment and price tables, adventure locations and roll tables. Ships extraction recipes — page geometry and patterns — and never the book text itself. Bring your own book.",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "authors": [
     {
       "name": "NocTempre"

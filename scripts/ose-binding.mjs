@@ -108,10 +108,13 @@ export function nameFromCandidate(candidate, fallback = "Imported creature") {
  * @param opts.fields   OSE-idiom fields, as `parseOseStatline(...).fields`
  * @param opts.origin   `"page"` | `"hand"`
  * @param opts.lineage  which ruleset the fields are written in
+ * @param opts.entryId  the authored cookbook entry this creature IS, when it
+ *                      came from one — see the cookbook flag below
  */
 export function oseActorDataFromFields({
   name,
   blockName = "",
+  entryId = null,
   fields,
   extra = [],
   dialect = "ose.canonical",
@@ -190,8 +193,16 @@ export function oseActorDataFromFields({
           suspectLineage: !!suspectLineage,
           mergedBlocks: !!mergedBlocks,
         },
+        // Identity, and the thing a second run of the same import asks about.
+        // An AUTHORED book knows which entry this creature is, so the entry id
+        // is the id — one per creature, stable across runs and printings. The
+        // registered-source and by-hand paths have no entry to name, and fall
+        // back to where the block was found; that id is NOT unique (a bestiary
+        // prints up to nine creatures on a page), so those paths are the ones
+        // that cannot be deduplicated, and they are the ones a Judge drives one
+        // block at a time.
         cookbook: {
-          id: `${source?.id ?? "ose"}.${origin === "hand" ? "hand" : `p${page}`}`,
+          id: entryId ?? `${source?.id ?? "ose"}.${origin === "hand" ? "hand" : `p${page}`}`,
           book: source?.id ?? "ose",
           kind: "kind.oseMonster",
           unaudited: true,

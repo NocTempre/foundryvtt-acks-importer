@@ -18,10 +18,12 @@ import { executeEntry } from "./executor.mjs";
 import { parseOseStatline, PROFILES, OSE_CANONICAL } from "./ose-statline.mjs";
 import { oseActorDataFromFields, moraleBoundsFromSchema } from "./ose-binding.mjs";
 import { isRangedCreature, oseTemplateDataFromFields, oseTemplateFromGroup } from "./ose-template.mjs";
-import { oseLocationData, oseAdventureData } from "./ose-location.mjs";
+import { oseLocationData, oseAdventureData, oseAdventureId } from "./ose-location.mjs";
 import { currentScgConstants } from "./ose-app.mjs";
 import {
   createDoc,
+  claimActorImport,
+  importedActorFor,
   cookbookBookFile,
   cookbookRegisters,
   cookbookSessionDoc,
@@ -84,13 +86,34 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
   let made = 0;
   let refused = 0;
   let templates = 0;
+  let already = 0;
   /** Entries that are steps of one creature, gathered by their group key. */
   const groups = {};
   // Where the entry says it came from, for the line that closes its text.
   const citeOf = (e) => e.cite || `${BOOKS[bookId]?.short ?? bookId} p.${e.pages?.[0] ?? "?"}`;
+  /** Generator id for a group of steps: keys are bare words shared by books. */
+  const groupId = (key) => `${bookId}.group.${key}`;
+  /** Group keys whose generator this world already holds — asked once each. */
+  const groupHeld = new Map();
   for (const id of ids) {
     const entry = cb.entries[id];
     bar.step(entry.name ?? id);
+    // Ask the shelf BEFORE reading the page. Every entry here costs a page
+    // render and a parse, and this importer now runs inside "import
+    // everything" — where a Judge re-runs it over a world that already holds
+    // the whole book, and a presence check taken after the read would pay for
+    // three hundred creatures to decide it wanted none of them.
+    const group = entry.meta?.templateGroup;
+    if (group) {
+      if (!groupHeld.has(group)) groupHeld.set(group, !!(await importedActorFor(groupId(group))));
+      if (groupHeld.get(group)) {
+        already++;
+        continue;
+      }
+    } else if (await importedActorFor(id)) {
+      already++;
+      continue;
+    }
     const res = await executeEntry(doc, cb, registers, id, { pageCache });
     // `ok` is the heading anchor. A printing that moved the text fails here
     // rather than importing whatever creature now occupies the box.
@@ -103,6 +126,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     // and built as a single generator once every step has been read.
     if (entry.meta?.templateGroup) {
       const g = (groups[entry.meta.templateGroup] ??= {
+        id: groupId(entry.meta.templateGroup),
         name: entry.meta.templateName ?? entry.name,
         axisKey: entry.meta.templateAxis ?? "level",
         members: [],
@@ -124,6 +148,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     if (isRangedCreature(parsed.fields)) {
       const tpl = oseTemplateDataFromFields({
         name: entry.name,
+        entryId: id,
         fields: parsed.fields,
         extra: parsed.extra,
         raw: res.fields.block,
@@ -137,7 +162,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
         cite: entry.cite ?? "",
       });
       tpl.system.details = { biography: entryText(res, id, citeOf(entry)) };
-      const generator = await createDoc(Actor, tpl);
+      const generator = await claimActorImport(id, () => createDoc(Actor, tpl));
       if (generator) {
         templates++;
         if (importArt && entry.fields?.art) {
@@ -153,6 +178,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     }
     const data = oseActorDataFromFields({
       name: entry.name,
+      entryId: id,
       fields: parsed.fields,
       extra: parsed.extra,
       dialect: parsed.dialect,
@@ -173,7 +199,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
       biography: entryText(res, id, citeOf(entry)),
     };
 
-    const actor = await createDoc(Actor, data);
+    const actor = await claimActorImport(id, () => createDoc(Actor, data));
     if (!actor) continue;
     made++;
     if (importArt && entry.fields?.art) {
@@ -190,19 +216,22 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
   for (const g of Object.values(groups)) {
     if (!g.members.length) continue;
     g.members.sort((a, b) => Number(a.key) - Number(b.key) || String(a.key).localeCompare(String(b.key)));
-    const made2 = await createDoc(
-      Actor,
-      oseTemplateFromGroup({
-        name: g.name,
-        axisKey: g.axisKey,
-        axisLabel: g.axisKey === "level" ? "Level" : g.axisKey,
-        members: g.members,
-        source: { id: bookId, label: BOOKS[bookId]?.label ?? bookId, lineage },
-        lineage,
-        constants,
-        moraleBounds: bounds,
-        folderId,
-      }),
+    const made2 = await claimActorImport(g.id, () =>
+      createDoc(
+        Actor,
+        oseTemplateFromGroup({
+          name: g.name,
+          groupId: g.id,
+          axisKey: g.axisKey,
+          axisLabel: g.axisKey === "level" ? "Level" : g.axisKey,
+          members: g.members,
+          source: { id: bookId, label: BOOKS[bookId]?.label ?? bookId, lineage },
+          lineage,
+          constants,
+          moraleBounds: bounds,
+          folderId,
+        }),
+      ),
     );
     if (made2) templates++;
   }
@@ -212,7 +241,7 @@ export async function importOseBook(bookId, { folderId = null, art = true } = {}
     `${MODULE_ID} | ${loc(constants ? "ose.bookDone" : "ose.bookDoneUnconverted", {
       n: made,
       book: BOOKS[bookId]?.label ?? bookId,
-    })}${templates ? ` ${loc("ose.bookTemplates", { n: templates })}` : ""}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
+    })}${templates ? ` ${loc("ose.bookTemplates", { n: templates })}` : ""}${already ? ` ${loc("ose.bookHeld", { n: already })}` : ""}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
   );
   return made + templates;
 }
@@ -250,16 +279,28 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
   if (!doc) return ui.notifications.warn(`${MODULE_ID} | ${loc("ose.bookNotConnected", { book: label })}`), 0;
   const registers = cookbookRegisters();
 
-  // The adventure first, so every room has something to sit inside.
-  const adventure = await createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId }));
+  // The adventure first, so every room has something to sit inside — and only
+  // once: a second run nests its rooms under the adventure already there
+  // rather than building a second dungeon beside the first.
+  const adventureId = oseAdventureId(bookId);
+  const adventure = await claimActorImport(adventureId, () =>
+    createDoc(Actor, oseAdventureData({ book: bookId, bookLabel: label, folderId })),
+  );
   const bar = progressBar(loc("ose.areasImporting", { book: label }), ids.length);
   const pageCache = new Map();
 
   let made = 0;
   let refused = 0;
+  let already = 0;
   for (const id of ids) {
     const entry = cb.entries[id];
     bar.step(entry.name ?? id);
+    // Asked before the page is read, not only before the write: reading a room
+    // this world already holds is the cost a re-run exists to avoid.
+    if (await importedActorFor(id)) {
+      already++;
+      continue;
+    }
     // The anchor proves the heading still titles this room. A printing that
     // moved the text fails here rather than importing whatever now occupies
     // those coordinates.
@@ -268,26 +309,66 @@ export async function importOseAreas(bookId, { folderId = null } = {}) {
       refused++;
       continue;
     }
-    const place = await createDoc(
-      Actor,
-      oseLocationData({
-        name: entry.name,
-        entryId: id,
-        paragraphs: nodeParagraphs(res),
-        cite: entry.cite || `${short} p.${entry.pages?.[0] ?? "?"}`,
-        page: entry.pages?.[0] ?? null,
-        book: bookId,
-        bookLabel: label,
-        areaKey: entry.meta?.areaKey ?? "",
-        parentUuid: adventure?.uuid ?? "",
-        folderId,
-      }),
+    const place = await claimActorImport(id, () =>
+      createDoc(
+        Actor,
+        oseLocationData({
+          name: entry.name,
+          entryId: id,
+          paragraphs: nodeParagraphs(res),
+          cite: entry.cite || `${short} p.${entry.pages?.[0] ?? "?"}`,
+          page: entry.pages?.[0] ?? null,
+          book: bookId,
+          bookLabel: label,
+          areaKey: entry.meta?.areaKey ?? "",
+          parentUuid: adventure?.uuid ?? "",
+          folderId,
+        }),
+      ),
     );
     if (place) made++;
   }
   bar.finish();
   ui.notifications.info(
-    `${MODULE_ID} | ${loc("ose.areasDone", { n: made, book: label })}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
+    `${MODULE_ID} | ${loc("ose.areasDone", { n: made, book: label })}${already ? ` ${loc("ose.areasHeld", { n: already })}` : ""}${refused ? ` ${loc("ose.bookRefused", { n: refused })}` : ""}`,
+  );
+  return made;
+}
+
+/**
+ * Import every authored book this seat has open — creatures, then the keyed
+ * areas that reference them.
+ *
+ * This is the OSE step of "import everything", and it exists because a shipped
+ * cookbook nobody can reach is a cookbook that does not ship: `importOseBook`
+ * and `importOseAreas` were on the api and on nothing else, so the Judge's one
+ * import control walked past seven hundred authored entries in the books it
+ * had just read.
+ *
+ * A book the seat has NOT connected is skipped in silence rather than warned
+ * about. In a chain the Judge did not aim at any particular book, "connect
+ * Dolmenwood first" is not an error report — it is a list of books they do not
+ * own, once per run.
+ */
+export async function importAuthoredOse({ folderId = null, art = true } = {}) {
+  if (!game.user.isGM) {
+    ui.notifications.warn(`${MODULE_ID} | GM only (creates documents).`);
+    return 0;
+  }
+  const open = authoredOseBooks().filter((b) => b.open);
+  if (!open.length) {
+    ui.notifications.info(`${MODULE_ID} | ${loc("ose.allNone")}`);
+    return 0;
+  }
+  let made = 0;
+  // One book at a time: each opens its own pages, and two books read at once
+  // is two rendered PDFs in memory for no gain.
+  for (const book of open) {
+    made += (await importOseBook(book.id, { folderId, art })) ?? 0;
+    if (book.areas) made += (await importOseAreas(book.id, { folderId })) ?? 0;
+  }
+  ui.notifications.info(
+    `${MODULE_ID} | ${loc("ose.allDone", { n: made, books: open.map((b) => b.label).join(", ") })}`,
   );
   return made;
 }

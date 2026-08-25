@@ -55,7 +55,7 @@ import { registerGettingStartedSettings, runImportEverything, gettingStartedDism
 import { registerOseSourceSetting } from "./ose-source.mjs";
 import { registerOseSourceDialog, oseBrowseDialog, oseCalibrateDialog, oseConvertAll } from "./ose-app.mjs";
 import { oseManualDialog } from "./ose-manual.mjs";
-import { importOseBook, importOseAreas, authoredOseBooks } from "./ose-book.mjs";
+import { importOseBook, importOseAreas, importAuthoredOse, authoredOseBooks } from "./ose-book.mjs";
 
 const SETTING_DYNAMIC = "dynamicRecipes";
 const SETTING_REFRESH_CACHE = "refreshCacheSeconds";
@@ -270,7 +270,7 @@ async function shelfPut(bookId, record) {
  */
 async function shelvePath(bookId, path, { name = null, size = 0 } = {}) {
   try {
-    await connectBookUrl(bookId, path, { remember: false });
+    await connectBookUrl(bookId, path, { remember: false, bridge: false });
   } catch (err) {
     console.warn(`${MODULE_ID} | ${path} could not be shelved as ${BOOKS[bookId]?.label ?? bookId}`, err);
     ui.notifications.warn(
@@ -395,6 +395,28 @@ async function shelveUpload(bookId, file, { verified = false } = {}) {
 }
 
 /**
+ * Put a book that is OPEN on this seat onto the server.
+ *
+ * The server is asked first, because it may already hold this book — a file
+ * the GM copied there by hand, or one this world staged and then removed — and
+ * a copy already up there needs no bytes from this seat at all. Only when the
+ * name is free are the bridged bytes needed, and they are the bytes this seat
+ * fingerprinted when it opened the book, so nothing is read back.
+ */
+async function shelveOpen(bookId) {
+  const name = `${bookId}.pdf`;
+  const taken = await shelfFile(name);
+  if (taken) {
+    const held = await shelvePath(bookId, taken, { name });
+    if (!held) throw new Error(game.i18n.format(`${LANG_PREFIX}.ui.shelfTaken`, { path: taken }));
+    return held;
+  }
+  const blob = await bytesGet(bookId).catch(() => null);
+  if (!blob) throw new Error(game.i18n.localize(`${LANG_PREFIX}.ui.shelfNoBytes`));
+  return shelveUpload(bookId, new File([blob], name, { type: "application/pdf" }), { verified: true });
+}
+
+/**
  * Put a book on the server from a file this seat can read, whether or not that
  * book is open here. This is what a GM who has never connected a book on this
  * machine reaches for: staging is a property of the world, so it must not cost
@@ -424,7 +446,7 @@ async function restoreShelf() {
   for (const [bookId, record] of staged) {
     if (!BOOKS[bookId] || sessionDocs.has(bookId)) continue;
     try {
-      await connectBookUrl(bookId, record.path, { remember: false });
+      await connectBookUrl(bookId, record.path, { remember: false, bridge: false });
       opened.push(bookId);
     } catch (err) {
       console.warn(`${MODULE_ID} | shelved ${BOOKS[bookId]?.label ?? bookId} could not be read at ${record.path}`, err);
@@ -660,8 +682,15 @@ const allRecipes = () => [...RECIPES, ...Object.values(dynamicRecipes())];
  * The file itself is never kept — what persists is the PATH, so the seat
  * reconnects itself on every future join. Pass `{ remember: false }` for a
  * one-off read that should leave nothing behind.
+ *
+ * `bridge` says whether the bytes are worth keeping across a page reload. The
+ * refresh bridge exists for a file this seat CANNOT reopen without a gesture;
+ * a book the server holds is refetched on every join with no gesture at all,
+ * so bridging one buys nothing and costs the whole shelf — seventeen books is
+ * better than half a gigabyte written into this seat's storage at every join,
+ * for reads that were never going to ask the reader for anything.
  */
-async function connectBookUrl(bookId, url, { remember = true } = {}) {
+async function connectBookUrl(bookId, url, { remember = true, bridge = true } = {}) {
   // Throws rather than warning-and-returning: the shelf decides whether to
   // record a path from whether this resolved, and a soft return told it the
   // read had succeeded. Callers that only want the message still get it — the
@@ -680,7 +709,7 @@ async function connectBookUrl(bookId, url, { remember = true } = {}) {
   // Blob first, buffer from it: pdf.js detaches the array it is handed, and a
   // re-download of a whole book is exactly what the refresh bridge saves.
   const blob = await resp.blob();
-  const hits = await ingestBook(bookId, await blob.arrayBuffer(), { cache: blob });
+  const hits = await ingestBook(bookId, await blob.arrayBuffer(), { cache: bridge ? blob : null });
   // A path IS a location, and the one kind that needs no gesture to reopen, so
   // a seat pointed at a staged copy reconnects itself on every future join.
   if (remember) {
@@ -1428,16 +1457,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           button.disabled = true;
           say(`[data-status="${bookId}"]`, L("shelfUploading"));
           try {
-            // The bridge usually still holds the bytes of a book opened this
-            // session, which saves reading the same file twice; a swept bridge
-            // means the reader picks it once more, and the row says so.
-            const blob = await bytesGet(bookId).catch(() => null);
-            if (!blob) throw new Error(L("shelfNoBytes"));
-            // Verified: these are the bytes this seat fingerprinted when the
-            // book was opened, so the copy on the server needs no read-back.
-            const record = await shelveUpload(bookId, new File([blob], `${bookId}.pdf`, { type: "application/pdf" }), {
-              verified: true,
-            });
+            const record = await shelveOpen(bookId);
             if (!record) throw new Error(L("shelfUploadFailed"));
             say(`[data-status="${bookId}"]`, L("shelfHeld", { name: record.name }));
             button.remove();
@@ -2341,6 +2361,8 @@ Hooks.once("ready", async () => {
     oseManual: oseManualDialog,
     oseImportBook: importOseBook,
     oseImportAreas: importOseAreas,
+    /** Every authored book this seat has open — the OSE step of the import chain. */
+    oseImportAuthored: importAuthoredOse,
     oseAuthoredBooks: authoredOseBooks,
     RECIPES, BOOKS,
   };

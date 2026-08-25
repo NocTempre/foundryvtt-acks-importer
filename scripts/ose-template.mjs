@@ -76,6 +76,7 @@ export function bonusSteps(thac0, count, countMax) {
  */
 export function oseTemplateFromGroup({
   name,
+  groupId = null,
   axisKey = "level",
   axisLabel = "Level",
   members,
@@ -136,6 +137,12 @@ export function oseTemplateFromGroup({
           unaudited: true,
           group: { axis: axisKey, members: members.map((m) => ({ key: m.key, entryId: m.entryId, page: m.page })) },
         },
+        // A generator built from several authored entries is one document, so
+        // it needs an identity of its own: the group's key, under its book.
+        // Group keys are bare words ("bard", "cleric") and repeat across books.
+        ...(groupId
+          ? { cookbook: { id: groupId, book: source?.id ?? "ose", kind: "kind.oseMonster", unaudited: true } }
+          : {}),
       },
     },
   };
@@ -150,6 +157,7 @@ export function oseTemplateFromGroup({
  */
 export function oseTemplateDataFromFields({
   name,
+  entryId = null,
   fields,
   extra = [],
   raw = "",
@@ -249,6 +257,13 @@ export function oseTemplateDataFromFields({
           range: { from: hd.count, to: hd.countMax, throwsDerived: !!bonuses },
           ...(cite ? { cite } : {}),
         },
+        // Identity, on the same rule the creature binding states: the authored
+        // entry when there is one, and nothing at all when there is not — an
+        // id that cannot tell two blocks on a page apart is worse than none,
+        // because the dedup check would answer for the wrong creature.
+        ...(entryId
+          ? { cookbook: { id: entryId, book: source?.id ?? "ose", kind: "kind.oseMonster", unaudited: true } }
+          : {}),
       },
     },
   };

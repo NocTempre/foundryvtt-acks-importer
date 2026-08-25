@@ -47,8 +47,12 @@ export const gettingStartedDismissed = () => !!game.settings.get(MODULE_ID, SETT
  *  5. companions  — an ability's companion slot points at a creature, and
  *                   abilities were imported before any creature existed, so the
  *                   link can only be made once 4 has run;
- *  6. journals + roll tables — reference the creatures imported in 4;
- *  7. rules tables — last (they warn by themselves if the provider is absent).
+ *  6. authored OSE books — another game's creatures and keyed areas, converted
+ *                   through the System Compatibility Guide; the areas follow
+ *                   the creatures they are keyed to. Only books this seat has
+ *                   open, and silent when that is none of them;
+ *  7. journals + roll tables — reference the creatures imported in 4;
+ *  8. rules tables — last (they warn by themselves if the provider is absent).
  *
  * A step missing from this list is a step a GM can only reach by hunting for
  * its macro — which is how the class import came to be run by hand, repeatedly.
@@ -73,6 +77,11 @@ const GM_STEPS = [
   ["stepTemplatePackages", (api) => api.importTemplatePackages()],
   ["stepMonsters", (api) => api.cookbookImportMonsters()],
   ["stepCompanions", (api) => api.cookbookFillCompanions()],
+  // Every authored third-party book the seat has open. Reachable ONLY from
+  // here and the api: there is no per-book control, exactly as there is none
+  // for traps or vehicles, because choosing between them is not a decision a
+  // Judge has to make to import their own books.
+  ["stepOseBooks", (api) => api.oseImportAuthored()],
   ["stepJournals", (api) => api.cookbookImportJournals()],
   ["stepRollTables", (api) => api.cookbookImportRollTables()],
   ["stepTables", (api) => api.cookbookImportTables()],

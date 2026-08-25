@@ -64,10 +64,16 @@ export function oseLocationData({
           origin: "page",
           unaudited: true,
         },
+        // The same identity every other import writes, and what a second run
+        // of the import asks before it builds a room again.
+        cookbook: { id: entryId, book, kind: "kind.oseLocation", unaudited: true },
       },
     },
   };
 }
+
+/** The adventure's own id — one per book, so its rooms nest under one place. */
+export const oseAdventureId = (book) => `${book}.adventure`;
 
 /**
  * Actor data for the adventure the areas belong to.
@@ -82,6 +88,11 @@ export function oseAdventureData({ book, bookLabel, folderId = null }) {
     type: LOCATION_TYPE,
     folder: folderId,
     system: { region: bookLabel, notes: "", parentUuid: "" },
-    flags: { "acks-importer": { ose: { kind: "adventure", sourceId: book, sourceLabel: bookLabel, origin: "page" } } },
+    flags: {
+      "acks-importer": {
+        ose: { kind: "adventure", sourceId: book, sourceLabel: bookLabel, origin: "page" },
+        cookbook: { id: oseAdventureId(book), book, kind: "kind.oseAdventure", unaudited: true },
+      },
+    },
   };
 }

@@ -2166,3 +2166,55 @@ name, a size this seat has seen, the book's title in the filename), leaving the
 id-stem pass confined to the shelf directory where the module controls the
 naming. A file that names no book is reported by name and left alone; its own
 row takes it in one pick, which is the strongest evidence in the window.
+
+### An authored entry is an identity, and that is what puts the OSE books in the import (2026-08-24)
+
+**Ruled: an import from an authored book stamps the ENTRY id on what it makes,
+and "import everything" gains an OSE step that walks every authored book the
+seat has open.**
+
+`importOseBook` and `importOseAreas` were on the api and on nothing else — no
+macro, no button, no step. The module's one import control therefore walked
+past about seven hundred authored entries in books it had just read, and the
+only way to reach them was the console. A shipped cookbook nobody can reach is
+a cookbook that does not ship.
+
+Wiring it in needed an identity first. The OSE binding stamped
+`<bookId>.p<page>`, which is not one creature: Dolmenwood prints up to nine on
+a page. So an authored import passes its entry id — `aft.woollyRhinoceros`,
+`qd3.area5` — and the page-derived id stays only where there is no entry to
+name (the registered-source and by-hand paths, which a Judge drives one block
+at a time and which stay undeduplicated rather than deduplicated WRONG). A
+generator built from several entries carries its group under its book,
+`dmb.group.bard`, because group keys are bare words — "bard", "cleric" — that
+repeat from book to book. The adventure a book's rooms nest inside gets
+`<book>.adventure`, so a second run nests its rooms under the dungeon already
+there instead of building a second one beside it.
+
+**The presence check is taken BEFORE the page is read, not before the write.**
+Every entry costs a page render and a parse, and this now runs inside a chain a
+Judge re-runs over a world that already holds the books: asking after the read
+would pay for six hundred creatures to decide it wanted none of them. Measured
+on this library: 643 documents in 41 seconds the first time, 0 in 1 second the
+second.
+
+**Rooms and adventures gained the same `cookbook` flag every other import
+writes.** They had only an `ose` flag, so nothing could ask whether a room was
+already imported. Their removal never depended on it — imports live in the
+module's own compendia and those are deleted whole — but identity did.
+
+### A book the server holds is never bridged (2026-08-24)
+
+**Ruled: `connectBookUrl` takes `bridge`, and the shelf passes it false.**
+
+The refresh bridge exists for a file this seat cannot reopen without a gesture.
+A shelved book is refetched on every join with no gesture at all, so bridging
+one buys nothing — and the shelf is the case where the cost is real: seventeen
+books, better than half a gigabyte, written into this seat's storage at every
+single join, for reads that were never going to ask the reader for anything. It
+is also what pinned the renderer for the first minute of a session.
+
+The open-book **Add to server** button asks the server before it asks the
+bridge, which is why dropping those bytes costs nothing: a book whose copy is
+already up there is staged from that copy, and only a name that is free needs
+bytes from this seat at all.

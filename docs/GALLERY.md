@@ -19,11 +19,20 @@ raw PNG path, so those links survive the next refresh.
 | Browse and audit | The entry picker — every entry with its book and page citation, and what an import will read from your copy | [guide](guides/browse-and-audit.md) | [v4.0.0](releases/v4.0.0/cookbook-import.png) |
 | Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/equipment-prose-price.png) |
 | Import languages | The Appendix A taxonomy read from the connected book, filed on its own shelf in the library — none shipped | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/languages-import.png) |
+| Import another game's books | What the import chain's OSE step leaves in the library: an authored adventure's keyed rooms and the creatures it prints, converted and filed together | [guide](guides/import-an-ose-adventure.md) | [v4.2.0](releases/v4.2.0/ose-import-everything.png) |
 | Register an OSE adventure | Naming a third-party book yourself, because a PDF's own title is often the file it was exported from | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-register.png) |
 | Review an OSE conversion | Each block as printed, what every field converted to and on whose authority, and what was deliberately left alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-review.png) |
 | Calibrate a book's wording | A publisher heading its hit dice differently, taught to that adventure alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-calibrate.png) |
 | Convert a block by hand | Paste a stat block and it fills the fields; correct anything the reader got wrong before converting | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual.png) |
 | Check a hand conversion | What each field became and on whose authority, with everything deliberately left alone listed beneath | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual-confirm.png) |
+
+**4.2.0 is a minor and added one row.** *Import another game's books* is new,
+because the release is what it shows: books whose recipes shipped with no
+control that reached them are now part of the one import. The frame is the
+library listing rather than a sheet — names only, no stat line and no printed
+prose, scrolled to where an adventure's rooms meet its creatures. The
+documents in it were imported for the shot from a book the tester owns and
+deleted immediately after.
 
 **4.1.0 is a minor and re-shot one row.** *Connect a book* is the only surface
 it changes, and the frame is scrolled to the change rather than to the top of
