@@ -2218,3 +2218,33 @@ The open-book **Add to server** button asks the server before it asks the
 bridge, which is why dropping those bytes costs nothing: a book whose copy is
 already up there is staged from that copy, and only a name that is free needs
 bytes from this seat at all.
+
+### A window whose bands are a snapshot has to be built again (2026-08-25)
+
+**Ruled: every change to the shelf closes the Books window and opens it again,
+carrying its report into the new one.**
+
+Staging a book wrote the world setting, updated the row it was pressed from,
+and left every other band describing the world as it was when the window
+opened. A GM who staged thirteen books through the new picker therefore saw
+"On the server" still listing the six it had at open, thirteen rows in ANOTHER
+band claiming to be read from the server, and — because the scan counted a file
+whose book was already staged as a file that matched no book — "nothing new to
+stage: 19 PDF(s) there matched no book" over a shelf that was completely full.
+Every one of those is the same fault, and patching rows one at a time is how it
+happened: the bands are derived from world state, so the honest refresh is to
+derive them again.
+
+The report travels as a `notice` rather than dying with the old window, because
+the thing worth keeping from a staging run is exactly what it could not name —
+the files that matched no book.
+
+**`close()` must be AWAITED before the reopen.** The window is a singleton
+keyed on being open, so an application asked for while the last one is still
+closing is answered with the one going away — the first cut of this closed the
+window and opened nothing, which is worse than the bug it fixed. Found in the
+live run, not in review.
+
+**A full shelf collapses behind its count**, like the book groups below it. A
+reader who owns nineteen books had them listed twice in one window, and the
+controls under the first list were a scroll away.

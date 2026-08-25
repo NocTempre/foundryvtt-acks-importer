@@ -1,5 +1,24 @@
 # Changelog
 
+## 4.2.1
+
+**The server list says what is on the server.**
+
+### Fixed
+- **Books staged from the picker now appear under "On the server".** They were
+  staged — the setting was written and the file was up there — but the band
+  went on listing whatever it held when the window opened, so staging thirteen
+  books left a list of six and thirteen rows elsewhere claiming to be read from
+  the server. Every shelf change now builds the window again, and carries its
+  report — including the files that named no book — into the new one.
+- **"Scan the folder" no longer calls a full shelf a failure.** A PDF whose
+  book is already staged was counted as a file that "matched no book", so a GM
+  whose whole library was on the server was told all nineteen of their files
+  matched nothing. It now says they are already read from the server.
+- **A long shelf folds up.** Nineteen staged books listed every one of them
+  twice in one window, with the controls a scroll away; the server list now
+  collapses behind its count like the book groups do.
+
 ## 4.2.0
 
 **Your other games' books come in with everything else.**

@@ -316,7 +316,7 @@ async function scanShelf() {
   try {
     listing = await FP.browse("data", SHELF_DIR);
   } catch {
-    return { matched: new Map(), unmatched: [], missing: true };
+    return { matched: new Map(), unmatched: [], held: [], missing: true };
   }
   const files = (listing?.files ?? [])
     .filter((path) => /\.pdf$/i.test(path))
@@ -324,15 +324,22 @@ async function scanShelf() {
   const already = shelf();
   const candidates = Object.keys(BOOKS).filter((id) => !already[id]);
   const byId = new Map();
+  const held = [];
   const rest = [];
   for (const file of files) {
     const stem = file.name.replace(/\.pdf$/i, "").toLowerCase();
-    if (candidates.includes(stem) && !byId.has(stem)) byId.set(stem, file);
+    // A file whose stem names a book the shelf ALREADY holds is not a file
+    // that matched nothing — it is the file that book is read from. Counting
+    // it as unmatched told a GM whose whole library was staged that all
+    // nineteen of their PDFs "matched no book", which reads as total failure
+    // over a shelf that is completely full.
+    if (already[stem]) held.push(file);
+    else if (candidates.includes(stem) && !byId.has(stem)) byId.set(stem, file);
     else rest.push(file);
   }
   const { matched, unmatched } = matchFilesToBooks(rest, candidates.filter((id) => !byId.has(id)), await locations());
   for (const [bookId, file] of byId) matched.set(bookId, file);
-  return { matched, unmatched, missing: false };
+  return { matched, unmatched, held, missing: false };
 }
 
 /** The path a name already occupies in the shelf directory, or null. */
@@ -1188,7 +1195,7 @@ async function connectFolderPicks(picks, { remember = null } = {}) {
  */
 const openBooksDialog = (opts) => singleton("books", (capture) => booksDialog(capture, opts));
 
-async function booksDialog(capture, { firstRun = false, autoClose = false } = {}) {
+async function booksDialog(capture, { firstRun = false, autoClose = false, notice = "" } = {}) {
   const records = await locations();
   const staged = shelf();
   const dir = fsaAvailable() ? await dirGet() : null;
@@ -1266,15 +1273,26 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
          <span class="notes" data-shelf-bulk-status></span>
        </div>
        <p class="notes">${L("shelfBulkNote")}</p>
+       ${notice ? `<p class="notes acks-importer-shelf-notice">${esc(notice)}</p>` : ""}
        <div class="acks-importer-reconnect-head acks-importer-band-actions">
          <button type="button" data-shelf-scan>${L("shelfScanGo")}</button>
          <span class="notes" data-shelf-scan-status></span>
        </div>
        <p class="notes">${L("shelfScanNote", { dir: esc(SHELF_DIR) })}</p>`
     : "";
+  // A full shelf is every book the reader owns, listed twice in one window —
+  // once here and once in its own group below. Past a handful it collapses
+  // behind its count, the same way the book groups do, so the controls under
+  // it stay reachable without a scroll to the bottom.
+  const staffCount = Object.keys(staged).filter((id) => BOOKS[id]).length;
+  const shelfList = !shelfRows
+    ? `<p class="notes">${L(isGM ? "shelfEmpty" : "shelfEmptyPlayer")}</p>`
+    : staffCount > 4
+      ? `<details class="acks-importer-book-group"><summary>${L("shelfCount", { count: staffCount })}</summary>${shelfRows}</details>`
+      : shelfRows;
   const shelfBand = `<section class="acks-importer-band">
     <h4>${L("shelfHead")}</h4>
-    ${shelfRows || `<p class="notes">${L(isGM ? "shelfEmpty" : "shelfEmptyPlayer")}</p>`}
+    ${shelfList}
     ${shelfControls}
   </section>`;
 
@@ -1438,6 +1456,26 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
         const el = root.querySelector(selector);
         if (el) el.textContent = text;
       };
+      /**
+       * Build the window again, carrying the report of what just happened.
+       *
+       * Every band is a snapshot of the world as it was when the window
+       * opened, so a book staged since then is in the wrong place in all of
+       * them at once: absent from "On the server", still counted among the
+       * books waiting for this seat, and describing itself as held on the
+       * server from a row in another band. A GM who staged thirteen books saw
+       * a server list of six and could only read that as failure. The report
+       * travels into the new window rather than dying with the old one.
+       */
+      const rebuild = async (report = "") => {
+        // AWAIT the close. The window is a singleton keyed on being open, and
+        // an application asked for while the last one is still closing is
+        // answered with the one that is going away: the slot only frees when
+        // `close()` has actually finished, so a fire-and-forget close here
+        // leaves the reader with no window at all.
+        await dialog.close();
+        await openBooksDialog({ notice: report });
+      };
 
       /* -- band 1 ---------------------------------------------------- */
 
@@ -1459,8 +1497,8 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           try {
             const record = await shelveOpen(bookId);
             if (!record) throw new Error(L("shelfUploadFailed"));
-            say(`[data-status="${bookId}"]`, L("shelfHeld", { name: record.name }));
             button.remove();
+            await rebuild(L("shelfHeld", { name: record.name }));
           } catch (err) {
             console.error(`${MODULE_ID} | shelve ${bookId}`, err);
             say(`[data-status="${bookId}"]`, err.message);
@@ -1481,6 +1519,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           root.querySelector(`[data-row="${bookId}"] button[data-shelve-pick]`)?.remove();
           root.querySelector(`[data-row="${bookId}"] .acks-importer-shelf-pick`)?.remove();
           return true;
+
         } catch (err) {
           console.error(`${MODULE_ID} | add ${bookId} to the server`, err);
           say(`[data-status="${bookId}"]`, err.message || L("shelfUploadFailed"));
@@ -1497,7 +1536,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
               multiple: false,
               types: [{ description: "PDF", accept: { "application/pdf": [".pdf"] } }],
             });
-            await stageInto(bookId, await handle.getFile(), button);
+            if (await stageInto(bookId, await handle.getFile(), button)) await rebuild(L("shelfScanDone", { count: 1 }));
           } catch (err) {
             if (err?.name === "AbortError") return; // the reader closed the picker
             console.error(`${MODULE_ID} | add ${bookId} to the server`, err);
@@ -1509,7 +1548,9 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
       for (const input of root.querySelectorAll("input[type=file][data-shelve-file]")) {
         input.addEventListener("change", async () => {
           const file = input.files?.[0];
-          if (file) await stageInto(input.dataset.shelveFile, file, input);
+          if (file && (await stageInto(input.dataset.shelveFile, file, input))) {
+            await rebuild(L("shelfScanDone", { count: 1 }));
+          }
         });
       }
 
@@ -1531,12 +1572,11 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
         for (const [bookId, file] of matched) if (await stageInto(bookId, file)) added++;
         shelfBulk.disabled = false;
         shelfBulk.value = "";
-        say(
-          "[data-shelf-bulk-status]",
-          unmatched.length
-            ? L("shelfBulkUnmatched", { count: added, files: unmatched.map((f) => f.name).join(", ") })
-            : L("shelfScanDone", { count: added }),
-        );
+        const report = unmatched.length
+          ? L("shelfBulkUnmatched", { count: added, files: unmatched.map((f) => f.name).join(", ") })
+          : L("shelfScanDone", { count: added });
+        if (added) await rebuild(report);
+        else say("[data-shelf-bulk-status]", report);
       });
 
       for (const button of root.querySelectorAll("button[data-unshelve]")) {
@@ -1548,7 +1588,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           // The FILE stays where it was put — Foundry offers no delete, and a
           // GM who wants the disk space back needs to be told where to look
           // rather than left assuming the removal took it with it.
-          say(`[data-shelf-status="${bookId}"]`, L("shelfRemoved", { path: record?.path ?? SHELF_DIR }));
+          await rebuild(L("shelfRemoved", { path: record?.path ?? SHELF_DIR }));
         });
       }
 
@@ -1557,7 +1597,7 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
         scanBtn.disabled = true;
         say("[data-shelf-scan-status]", L("shelfScanning"));
         try {
-          const { matched, unmatched, missing } = await scanShelf();
+          const { matched, unmatched, held, missing } = await scanShelf();
           if (missing) {
             say("[data-shelf-scan-status]", L("shelfNoDir", { dir: SHELF_DIR }));
             return;
@@ -1569,12 +1609,13 @@ async function booksDialog(capture, { firstRun = false, autoClose = false } = {}
           for (const [bookId, file] of matched) {
             if (await shelvePath(bookId, file.path, { name: file.name })) added++;
           }
-          say(
-            "[data-shelf-scan-status]",
-            added
-              ? L("shelfScanDone", { count: added })
-              : L("shelfScanNone", { skipped: unmatched.length }),
-          );
+          const report = added
+            ? L("shelfScanDone", { count: added })
+            : unmatched.length
+              ? L("shelfScanNone", { skipped: unmatched.length })
+              : L("shelfScanHeld", { count: held.length });
+          if (added) await rebuild(report);
+          else say("[data-shelf-scan-status]", report);
         } catch (err) {
           console.error(`${MODULE_ID} | shelf scan`, err);
           say("[data-shelf-scan-status]", err.message);
