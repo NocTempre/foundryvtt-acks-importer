@@ -392,7 +392,7 @@ export const TABLE_RECIPES = {
   // assembles the engine-shaped `terrainMultipliers`/`roads`/`gettingLost`
   // tables acks-extras declares via expectTables.
   travel: {
-    source: { book: "ACKS II Revised Rulebook", pages: "272, 275" },
+    source: { book: "ACKS II Revised Rulebook + Judges Journal", pages: "RR 272, 275; JJ 41" },
     tables: {
       terrainGroups: {
         shape: "gridRows",
@@ -431,6 +431,140 @@ export const TABLE_RECIPES = {
           { key: "swampForested", labelRe: "^swamp \\(forested" },
         ],
         cellColumns: [{ key: "navigation", x: 499, w: 48, pattern: "raw", row: true }],
+      },
+      // Wilderness Frequency of Encounters (JJ ~41): activity rows × the four
+      // territory classifications, cells raw ("once per attempt", "none");
+      // travel-binding parses them onto the engine's frequency kinds. Labels
+      // arrive as split small-caps runs, hence the \s* seams.
+      encounterFrequencyRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 41,
+        locate: "Wilderness Frequency of Encounters",
+        column: { xMin: 70, xMax: 580 },
+        labelMaxX: 173,
+        rows: [
+          { key: "hunting", labelRe: "^hunting$" },
+          { key: "managingTraps", labelRe: "^managing\\s*t\\s*raps$" },
+          { key: "restingDay", labelRe: "^r\\s*esting/\\s*s\\s*tationary\\s*\\(day\\)$" },
+          { key: "restingNight", labelRe: "^r\\s*esting/\\s*s\\s*tationary\\s*\\(night\\)$" },
+          { key: "searching", labelRe: "^s\\s*earching$" },
+          { key: "traveling", labelRe: "^t\\s*raveling$" },
+        ],
+        cellColumns: [
+          { key: "civilized", x: 175, w: 95, pattern: "raw", row: true },
+          { key: "borderlands", x: 274, w: 95, pattern: "raw", row: true },
+          { key: "outlands", x: 373, w: 95, pattern: "raw", row: true },
+          { key: "unsettled", x: 471, w: 105, pattern: "raw", row: true },
+        ],
+      },
+    },
+  },
+  // The daily weather generator's pages: the JJ's Daily Weather bands and
+  // climate/season modifier grid, and the RR's condition factors and mud/snow
+  // thresholds (prose). Raw reads only; weather-binding.mjs assembles the
+  // engine-shaped tables acks-extras declares on the `weather` document.
+  weather: {
+    source: { book: "ACKS II Judges Journal + Revised Rulebook", pages: "JJ 39-41; RR 277-279" },
+    tables: {
+      // 27 modifier rows × four axis cells; a dash means the column does not
+      // reach that modifier. Band words parse to keys in the binding.
+      dailyWeatherRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 39,
+        locate: "Daily Weather Table",
+        column: { xMin: 60, xMax: 590 },
+        labelMaxX: 145,
+        rows: [
+          { key: "-7", labelRe: "^-7\\s*or\\s*less$" },
+          ...[-6, -5, -4, -3, -2, -1].map((n) => ({ key: String(n), labelRe: `^${n}$` })),
+          ...Array.from({ length: 19 }, (_, n) => ({ key: String(n), labelRe: `^${n}$` })),
+          { key: "19", labelRe: "^19\\s*or\\s*more$" },
+        ],
+        cellColumns: [
+          { key: "tempLow", x: 152, w: 120, pattern: "raw", row: true },
+          { key: "tempHigh", x: 276, w: 128, pattern: "raw", row: true },
+          { key: "precipitation", x: 408, w: 70, pattern: "raw", row: true },
+          { key: "wind", x: 481, w: 95, pattern: "raw", row: true },
+        ],
+      },
+      // 30 Köppen rows × four season cells, each a compound
+      // "T +3 (day), +0 (night), P -3, W +2" kept raw for the binding.
+      // The table's own TITLE also appears in the facing page's prose ("…
+      // table, opposite") over the Climate by Terrain grid, whose rows carry
+      // the same codes — so the anchor is the polar rows' "(day and night)"
+      // phrasing, which only the modifier table prints.
+      climateModifiersRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 41,
+        locate: "(day and night)",
+        column: { xMin: 70, xMax: 580 },
+        labelMaxX: 112,
+        rows: [
+          "Af", "Am", "Aw", "As", "BWh", "BWk", "BSh", "BSk",
+          "Csa", "Csb", "Csc", "Cwa", "Cwb", "Cwc", "Cfa", "Cfb", "Cfc",
+          "Dsa", "Dsb", "Dsc", "Dwa", "Dwb", "Dwc", "Dwd", "Dfa", "Dfb", "Dfc", "Dfd",
+          "ET", "EF",
+        ].map((code) => ({ key: code, labelRe: `^${code.toLowerCase()}$` })),
+        cellColumns: [
+          { key: "winter", x: 117, w: 110, pattern: "raw", row: true },
+          { key: "spring", x: 230, w: 110, pattern: "raw", row: true },
+          { key: "summer", x: 344, w: 110, pattern: "raw", row: true },
+          { key: "fall", x: 457, w: 115, pattern: "raw", row: true },
+        ],
+      },
+      // Each condition's speed sentence, captured as a short window; the
+      // binding maps the printed word to a factor. Anchors carry no values.
+      conditionProse: {
+        shape: "proseValues",
+        book: "rr",
+        valueBlocks: [
+          {
+            id: "p277",
+            printedPage: 277,
+            locate: "in frigid temperature have their expedition speed",
+            values: [
+              { key: "frigid", find: "in frigid temperature have their expedition speed", take: "window", span: 30 },
+              { key: "sweltering", find: "in sweltering weather have their expedition speed", take: "window", span: 30 },
+            ],
+          },
+          {
+            id: "p278",
+            printedPage: 278,
+            locate: "in foggy conditions have their speeds",
+            values: [
+              { key: "foggy", find: "in foggy conditions have their speeds", take: "window", span: 30 },
+              { key: "snowy", find: "in snowy weather have their speed", take: "window", span: 30 },
+            ],
+          },
+          {
+            id: "p279",
+            printedPage: 279,
+            locate: "in stormy conditions have their expedition speed",
+            values: [
+              { key: "stormy", find: "in stormy conditions have their expedition speed", take: "window", span: 30 },
+              { key: "windy", find: "in windy conditions have their expedition speed", take: "window", span: 30 },
+              { key: "mud", find: "once mud forms, adventurers have their speeds", take: "window", span: 30 },
+              { key: "snowGround", find: "once snow accumulates, adventurers have their speeds", take: "window", span: 30 },
+            ],
+          },
+        ],
+      },
+      // The Mud and Snow paragraph's thresholds, one window per clause; the
+      // binding reads the day counts out of each.
+      accumulationProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        locate: "Mud accumulates after",
+        values: [
+          { key: "mudForm", find: "mud accumulates after", take: "window", span: 150 },
+          { key: "mudDry", find: "mud dries in", take: "window", span: 170 },
+          { key: "snowForm", find: "snow accumulates after", take: "window", span: 120 },
+          { key: "snowMelt", find: "snow melts in", take: "window", span: 120 },
+        ],
       },
     },
   },

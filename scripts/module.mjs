@@ -41,6 +41,7 @@ import { createDocFor } from "./poc.mjs";
 import { importTables, tableRecipeCount } from "./tables-binding.mjs";
 import { applyBuilderImport } from "./builder-binding.mjs";
 import { applyTravelImport, TRAVEL_DOC_ID } from "./travel-binding.mjs";
+import { applyWeatherImport, WEATHER_DOC_ID } from "./weather-binding.mjs";
 import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
@@ -845,6 +846,17 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | travel table binding failed`, err);
       ui.notifications.warn(`acks-importer | travel tables: ${err.message}`);
+    }
+  }
+  // And the weather doc: bands, climate modifiers, condition factors and
+  // footing thresholds for the formation feature's daily generator.
+  if (report.imported.some((d) => d.docId === WEATHER_DOC_ID)) {
+    try {
+      const w = await applyWeatherImport();
+      if (w.assembled.length) console.log(`${MODULE_ID} | weather tables assembled`, w.assembled);
+    } catch (err) {
+      console.error(`${MODULE_ID} | weather table binding failed`, err);
+      ui.notifications.warn(`acks-importer | weather tables: ${err.message}`);
     }
   }
   // The taxonomy is read, not shipped, so the items exist only once a seat has

@@ -51,6 +51,33 @@ export function parseThrow(cell) {
 }
 
 /**
+ * A frequency cell onto the engine's cadence kinds (acks-extras'
+ * ANCILLARY_ACTIVITIES vocabulary): "once per 6-mile hex" → perHex,
+ * "once per hour" → perHour, "once per attempt" / "once per 6 traps" →
+ * perAttempt, "once per 12 hours" / "once per 7 nights" → perPeriod with its
+ * count, "none" → null. Junk → undefined, so a cell that did not read is
+ * omitted rather than silently quiet.
+ */
+export function parseFrequencyCell(cell) {
+  // Small-caps runs weld unpredictably ("o" + "nce per attempt"), so the
+  // match runs on the cell's characters alone.
+  const s = String(cell ?? "").toLowerCase().replace(/\s+/g, "");
+  if (!s) return undefined;
+  if (s === "none") return null;
+  let m = /onceper(\d+)-?milehex/.exec(s);
+  if (m) return { kind: "perHex", mileHex: Number(m[1]) };
+  if (/onceperhour/.test(s)) return { kind: "perHour" };
+  m = /onceper(\d+)traps/.exec(s);
+  if (m) return { kind: "perAttempt", per: Number(m[1]) };
+  if (/onceperattempt/.test(s)) return { kind: "perAttempt" };
+  m = /onceper(\d+)hours/.exec(s);
+  if (m) return { kind: "perPeriod", hours: Number(m[1]) };
+  m = /onceper(\d+)nights/.exec(s);
+  if (m) return { kind: "perPeriod", nights: Number(m[1]) };
+  return undefined;
+}
+
+/**
  * The engine tables from the raw ones. Pure — the committed tests feed it
  * invented cells.
  *
@@ -88,6 +115,19 @@ export function assembleTravelTables(raw = {}) {
       if (v != null) gettingLost[key] = v;
     }
     if (Object.keys(gettingLost).length) out.gettingLost = gettingLost;
+  }
+  const freq = raw.encounterFrequencyRaw;
+  if (freq) {
+    const encounterFrequency = {};
+    for (const [activity, cells] of Object.entries(freq)) {
+      const row = {};
+      for (const territory of ["civilized", "borderlands", "outlands", "unsettled"]) {
+        const v = parseFrequencyCell(cells?.[territory]);
+        if (v !== undefined) row[territory] = v;
+      }
+      if (Object.keys(row).length) encounterFrequency[activity] = row;
+    }
+    if (Object.keys(encounterFrequency).length) out.encounterFrequency = encounterFrequency;
   }
   return out;
 }
