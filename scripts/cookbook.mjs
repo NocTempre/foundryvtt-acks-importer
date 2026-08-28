@@ -5551,6 +5551,7 @@ const printedPair = (cell) =>
  * reading of this table.
  */
 export function bindVehicleRow(row, entry, id) {
+  if (entry?.meta?.kindOfVehicle === "sea") return bindSeaVesselRow(row, entry, id);
   const cells = row?.cells ?? {};
   // Presentation only: the table sets each row's first letter as a small
   // capital, which extracts lowercase ("cart, Large"), and a comma at a line
@@ -5598,6 +5599,78 @@ export function bindVehicleRow(row, entry, id) {
       ...(tiers.length && !trades ? { speeds: { tiers } } : {}),
       ...(Number.isFinite(Number(cells.ac)) ? { ac: Number(cells.ac) } : {}),
       ...(Number.isFinite(Number(cells.shp)) ? { shp: { value: Number(cells.shp), max: Number(cells.shp) } } : {}),
+    },
+  };
+}
+
+/**
+ * One printed row of the Sea Vessels table as a sea `acks-extras.vehicle`.
+ *
+ * The sea table's conventions differ from the land one's: three crew columns
+ * are three ROLE complements (sailors and rowers motive, marines not — they
+ * are cargo that fights); four combat speeds and two voyage speeds land on
+ * the schema's named sea fields rather than tiers; cargo is a single figure,
+ * never a pair. A dash is an absent cell, not a zero — a barge has no rowers
+ * rather than nought of them. A PARENTHESISED marines figure (the longship)
+ * is an allowance drawn from the crew itself rather than an extra
+ * complement; it binds as the bench size all the same, because the schema's
+ * `required` on a non-motive role is a bench, not extra manpower. Cost is
+ * the markets' business, not the hull's, and is not read.
+ */
+function bindSeaVesselRow(row, entry, id) {
+  const cells = row?.cells ?? {};
+  // Same presentation repairs as the land binder, plus one of its own: this
+  // table prints Title Case after the comma ("Boat, Row") and the small-cap
+  // R extracts lowercase. The land table genuinely prints lowercase there
+  // ("Howdah, riding"), so the repair stays sea-side.
+  const label = String(row?.label ?? "")
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[a-z]/, (c) => c.toUpperCase())
+    .replace(/, ([a-z])/g, (_m, c) => `, ${c.toUpperCase()}`);
+  const num1 = (cell) => {
+    const v = printedPair(cell);
+    return v.length ? v[0] : null;
+  };
+
+  const roles = [];
+  const complement = (key, label_, cell, motive) => {
+    const n = num1(cell);
+    if (n != null && n > 0) roles.push({ key, label: label_, required: n, aboard: 0, motive });
+  };
+  complement("sailors", "Sailors", cells.sailors, true);
+  complement("rowers", "Rowers", cells.rowers, true);
+  complement("marines", "Marines", cells.marines, false);
+
+  const speeds = {};
+  const speed = (key, cell) => {
+    const n = num1(cell);
+    if (n != null) speeds[key] = n;
+  };
+  speed("oarSprint", cells.oarSprint);
+  speed("oarCruise", cells.oarCruise);
+  speed("oarSlow", cells.oarSlow);
+  speed("sail", cells.sail);
+  speed("voyageOar", cells.voyageOar);
+  speed("voyageSail", cells.voyageSail);
+
+  const cargo = num1(cells.cargo);
+  const shp = num1(cells.shp);
+  return {
+    name: label,
+    type: VEHICLE_ACTOR_TYPE,
+    ...(entry.icon ? { img: entry.icon } : {}),
+    flags: { [MODULE_ID]: { cookbook: { id: `${id}.${rowClaimKey(row)}`, cite: entry.cite ?? "" } } },
+    system: {
+      kind: "sea",
+      source: { book: entry.book ?? "rr", cite: entry.cite ?? "", ref: id },
+      description: bookText([], entry.cite ?? "", { id }),
+      ...(cargo != null ? { cargo: { capacityStone: cargo } } : {}),
+      ...(roles.length ? { crew: { roles } } : {}),
+      ...(Object.keys(speeds).length ? { speeds } : {}),
+      ...(Number.isFinite(Number(cells.ac)) ? { ac: Number(cells.ac) } : {}),
+      ...(shp != null ? { shp: { value: shp, max: shp } } : {}),
     },
   };
 }

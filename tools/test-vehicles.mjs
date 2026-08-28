@@ -83,4 +83,42 @@ check(
 check("a row with no label falls back to its key", rowClaimKey({ key: "sledge" }) === "sledge");
 check("an empty row still yields a claim", rowClaimKey({}) === "row");
 
+/* The SEA table: three role complements, named sea speeds, single cargo.
+   Shaped like the printed rows with invented numbers, as above. */
+const seaEntry = { book: "rr", cite: "RR p.999", icon: "icons/svg/anchor.svg", meta: { category: "vehicle", kindOfVehicle: "sea" } };
+const sea = (label, cells) => bindVehicleRow(row(label, cells), seaEntry, "def.vehicle.seaTable");
+
+const galley = sea("galley, 9-rower", {
+  sailors: "7", rowers: "111", marines: "22",
+  oarSprint: "260’", oarCruise: "220’", oarSlow: "110’", sail: "230’",
+  voyageOar: "44", voyageSail: "88", cargo: "1,700", ac: 2, shp: "45", cost: "9,999gp",
+});
+check("meta routes the row to the sea binder", galley.system.kind === "sea");
+check("three crew columns become three roles", galley.system.crew.roles.length === 3);
+check("sailors and rowers are motive", galley.system.crew.roles[0].motive === true && galley.system.crew.roles[1].motive === true);
+check("marines are not", galley.system.crew.roles[2].motive === false);
+check("complements land as required, nobody aboard", galley.system.crew.roles[1].required === 111 && galley.system.crew.roles[1].aboard === 0);
+check("feet marks strip from combat speeds", galley.system.speeds.oarSprint === 260 && galley.system.speeds.sail === 230);
+check("voyage speeds land on the voyage fields", galley.system.speeds.voyageOar === 44 && galley.system.speeds.voyageSail === 88);
+check("a thousands separator does not split the hold", galley.system.cargo.capacityStone === 1700);
+check("no tiers on a vessel", galley.system.speeds.tiers === undefined);
+check("shp fills value and max", galley.system.shp.value === 45 && galley.system.shp.max === 45);
+
+const sailer = sea("Sailing Ship, Middling", {
+  sailors: "13", rowers: "-", marines: "-", oarSprint: "-", oarCruise: "-", oarSlow: "-",
+  sail: "210’", voyageOar: "-", voyageSail: "84", cargo: "12,000", ac: 2, shp: "80",
+});
+check("a dash is an absent role, not a zero", sailer.system.crew.roles.length === 1 && sailer.system.crew.roles[0].key === "sailors");
+check("a dash is an absent speed too", sailer.system.speeds.oarSprint === undefined && sailer.system.speeds.sail === 210);
+
+const rowboat = sea("Boat,row", { rowers: "1", oarSprint: "200’", voyageOar: "28", cargo: "90", ac: 1, shp: "2" });
+check("the sea table's Title Case survives the small-cap comma", rowboat.name === "Boat, Row");
+
+const longboat = sea("Longboat", {
+  sailors: "14", rowers: "55", marines: "(70)",
+  oarSprint: "200’", oarCruise: "140’", oarSlow: "80’", sail: "230’",
+  voyageOar: "28", voyageSail: "84", cargo: "1,900", ac: 2, shp: "28",
+});
+check("a parenthesised marine allowance still binds as the bench", longboat.system.crew.roles[2].required === 70);
+
 console.log(`test-vehicles: all ${pass} checks passed`);
