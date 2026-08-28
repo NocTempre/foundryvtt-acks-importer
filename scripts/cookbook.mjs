@@ -6298,6 +6298,38 @@ export async function repairAnimalItems() {
   return wrong.length;
 }
 
+/**
+ * Correct the SUBTYPE of priced items an earlier run filed as plain inventory.
+ *
+ * Before a grid row carried the section it was printed under, every one of them
+ * was written `subtype: "item"` — so a belt, a cloak and a pair of boots were
+ * ordinary inventory: filed among the gear rather than in the sheet's clothing
+ * band, and weighed against encumbrance, which core exempts clothing from.
+ *
+ * Corrected in place rather than re-created. An item's subtype is mutable, so
+ * there is nothing here of the delete `repairAnimalItems` needs (a type is
+ * not), and re-creating would mint a duplicate: the id is already claimed.
+ * Only documents carrying our `generated` flag are touched, and only that one
+ * field, so a Judge's own "Belt" is never rewritten. Skins already copied onto
+ * a character belong to the template package, which re-derives them.
+ *
+ * @param {{name:string, section:string}[]} rows the grid as this seat read it
+ * @returns {Promise<number>} how many were corrected
+ */
+async function repairPricedSubtypes(rows) {
+  let repaired = 0;
+  for (const row of rows) {
+    const want = subtypeForSection(row.section);
+    const doc = await importedItem(pricedId(row.name));
+    if (!doc || doc.type !== "item" || !doc.getFlag(MODULE_ID, "generated")) continue;
+    if (doc.system?.subtype === want) continue;
+    await doc.update({ "system.subtype": want });
+    repaired++;
+  }
+  if (repaired) console.warn(`${MODULE_ID} | corrected the subtype of ${repaired} priced item(s) imported before their section was read.`);
+  return repaired;
+}
+
 /** Bulk import: every equipment entry, shared folder, dedup via importEquipment. */
 export async function importAllEquipment() {
   // Same reason as importClasses: the macro says "(GM)" but every seat can run
@@ -6396,6 +6428,31 @@ const pricedId = (name) =>
   `def.priced.${String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "row"}`;
 
 /**
+ * The core item subtype a printed price SECTION corresponds to, defaulting to
+ * plain inventory.
+ *
+ * The second price grid stacks three sections, and only the first is clothing.
+ * A subtype is not decoration: core files a clothing item on its own part of
+ * the sheet and leaves it out of encumbrance, so a belt imported as ordinary
+ * inventory is weighed against the character for as long as it stands. A
+ * described entry gets this from the register (`bindEquipment`); a grid row
+ * has no entry, and the heading it was printed under is the page's own answer.
+ *
+ * WHICH headings mean something is asked of the SYSTEM's subtype vocabulary,
+ * by key and by localized label alike, so no name off the page is written down
+ * here and a heading the vocabulary does not know stays plain inventory.
+ */
+function subtypeForSection(section) {
+  const fold = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const want = fold(section);
+  if (!want) return "item";
+  for (const [key, label] of Object.entries(CONFIG.ACKS?.item_subtypes ?? {})) {
+    if (fold(key) === want || fold(game.i18n?.localize?.(label) ?? label) === want) return key;
+  }
+  return "item";
+}
+
+/**
  * Materialize the printed price rows that no cookbook entry of its own claims.
  *
  * The gear cookbook is a list of things the book DESCRIBES; the price grid is
@@ -6421,6 +6478,13 @@ export async function importPricedGear(folderId) {
     return { rows: 0, created: 0, reason: "extraction error" };
   }
   if (!rows.length) return { rows: 0, created: 0, reason: "grid not found in book" };
+
+  // Correct what an earlier run got wrong, BEFORE anything is claimed. A row
+  // this world already holds claims itself on the next run — the library check
+  // below matches the document against the row it was made from — so nothing
+  // downstream of the claim can ever reach one, and a repair written there
+  // reports zero forever while the wrong documents stand.
+  const repaired = await repairPricedSubtypes(rows);
 
   // Exactly what priceFor resolves, asked once for the whole grid: a row is
   // claimed by an entry with its key, or by an entry whose key it alone
@@ -6492,12 +6556,13 @@ export async function importPricedGear(folderId) {
     // priced row is plain inventory.
     const klass = globalThis.acksExtras?.equipment?.equipmentClass?.(row.name) ?? null;
     const type = klass?.type ?? "item";
+    const subtype = subtypeForSection(row.section);
     const doc = {
       name: row.name,
       type,
       img: "icons/containers/bags/pouch-simple-brown.webp",
       system: {
-        ...(type === "item" ? { subtype: "item", quantity: { value: 1, max: 0 } } : {}),
+        ...(type === "item" ? { subtype, quantity: { value: 1, max: 0 } } : {}),
         ...(row.cost != null ? { cost: row.cost } : {}),
         ...(row.weight6 != null ? { weight6: row.weight6 } : {}),
       },
@@ -6506,7 +6571,7 @@ export async function importPricedGear(folderId) {
     rememberImported(id, await createDoc(Item, { ...doc, folder }));
     created++;
   }
-  return { rows: rows.length, created };
+  return { rows: rows.length, created, repaired };
 }
 
 /** The RR gear/clothing price map, built once per session from the reader's book. */

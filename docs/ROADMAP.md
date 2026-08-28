@@ -86,6 +86,50 @@ sections. Two rows the price list sells as one purchase (a bundle of torches,
 a count of sling stones) import as the single article instead, and the elven
 helmet has no row in the books read so far.
 
+## A training stated as a subtraction
+
+One spread grants "all weapons except" two of them. The grant vocabulary
+(acks-extras `equipment/proficiency.mjs`, JJ p. 290) has no way to say that:
+its tokens are additive, so the sentence's unrestricted half would grant
+precisely the two weapons the class is denied. `parseCombatTraining` refuses
+the clause and the class imports with its armour and fighting styles and no
+weapon grant — which reads on the sheet as a class that was never asked.
+
+The refusal is right; being SILENT about it is the part that costs. Two ways
+out, both starting in the other repo: a denial token the grant vocabulary
+understands (`!longbow`), which `weaponProficiency` would subtract after
+matching; or a stated-but-unresolved surface beside `unresolvedProfs`, so the
+sheet says a clause was read and refused rather than showing nothing. Either
+one changes what a class item carries, so neither is a patch.
+
+## A priced livestock row is still a thing, not a creature
+
+`importEquipment` has ruled since the animals work that a mule is a creature —
+a described `animal` entry becomes an ACTOR, and `repairAnimalItems` removes
+the ones an older import left as items. The price grid's own livestock section
+never got the same treatment: 26 rows, and seventeen class templates name a
+riding horse.
+
+Doing it needs three things a patch cannot carry: the actor-side dedup
+`importEquipment` uses, `repairAnimalItems` extended to `def.priced.*` ids, and
+an answer for `resolveBase`, which searches items — a template naming a horse
+would stop resolving to one and fall back to a bare named item. The rows now
+carry the section they were printed under, so the fact needed to decide is
+already there.
+
+## A variant group is labelled from the register, which never reaches it
+
+`bindClass` reads `entry.class?.tables?.training?.labelHeader` to name a path
+group. The compiler CONSUMES that field to lay the grid out and never emits it
+onto the compiled entry, so the read is always undefined and every printed
+variant table imports as a group labelled "Variant" with the key `variant` —
+the barbarian's regions among them.
+
+The fix is one field in the compile, but the group KEY is what a character's
+chosen path is stored under (`actorPaths`, keyed by group), so changing
+`variant` to the printed heading orphans a selection already made. It needs a
+migration, and a recompiled cookbook.
+
 ## A class whose paragraph is interleaved with its own table
 
 The zaharan ruinguard states its combat training in a paragraph the level

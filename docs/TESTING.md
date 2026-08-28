@@ -258,6 +258,50 @@ cloaks, coats, turbans and tunics file under `Equipment / Clothing`, not
 Adventuring Gear, and the war and guard bears are `acks-extras.animal` ACTORS.
 They were all authored `group: "gear"`, which is what stopped Boots merging.
 
+## A priced row is the kind of thing its section says
+
+### Fixtures
+
+The Revised Rulebook connected, and the equipment import run. To exercise the
+repair as well as the create, first make the pre-fix shape on purpose: import
+equipment, then set one materialized clothing row back by hand —
+`game.items.getName("Belt/Sash, Leather").update({"system.subtype":"item"})` —
+and run the import again.
+
+### Steps
+
+1. Import equipment with the Rulebook connected.
+   *Observable:* every row of the grid's first section is `subtype: "clothing"`
+   and every row of the two below it is `subtype: "item"`. The one-liner that
+   proves it without opening 92 sheets:
+
+   ```
+   game.items.filter(i => i.getFlag("acks-importer","cookbook")?.id?.startsWith("def.priced.")).reduce((m,i)=>{(m[i.system.subtype ?? i.type] ??= []).push(i.name); return m}, {})
+   ```
+
+   Clothing holds the belts, boots, cloaks, chitons and gowns; `item` holds the
+   livestock and the foodstuffs. A run where EVERYTHING is `item` means the
+   section headings were not found and the rows fell back — the failure mode
+   this is here to catch, and it is silent on a sheet.
+2. Open one of them on a character.
+   *Observable:* it sits in the sheet's clothing band, not among the gear, and
+   the character's encumbrance does not move when it is added — core exempts a
+   clothing item, which is the whole reason the subtype matters.
+3. Re-run the import after hand-setting one row back (fixture above).
+   *Observable:* the console warns that it corrected N priced item(s), the
+   document's subtype is `clothing` again, and NOTHING was created — the
+   `created` count is 0. A repair that re-creates instead of correcting shows
+   up here as a duplicate.
+4. Apply a class template package that names a belt (any vaultguard or explorer
+   template).
+   *Observable:* the skinned "leather belt" on the character carries the base's
+   subtype. A skin copied BEFORE this fix keeps the old one — re-apply the
+   package to refresh it; the importer does not reach onto characters.
+
+### Teardown
+
+Delete the fixtures you created; the imported library is the world's.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras

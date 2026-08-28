@@ -134,14 +134,26 @@ function cellAt(runs, x, tol = 16) {
 }
 
 /**
- * Extract every {name, cost, weight6} from a price grid (both columns).
- * @returns {{name:string, cost:number|null, weight6:number|null}[]}
+ * Extract every {name, cost, weight6, section} from a price grid (both columns).
+ *
+ * A price page can stack several SECTIONS under one grid — the second one
+ * prints clothing, then livestock, then provisions — and what a row IS is
+ * stated by the heading above it and nowhere else on the row. A grid row
+ * carries the last heading seen, so a caller that has to decide what kind of
+ * thing a row becomes has the page's own answer instead of the row's name.
+ * The section is whatever the page printed, verbatim; nothing here knows or
+ * declares which headings mean anything.
+ * @returns {{name:string, cost:number|null, weight6:number|null, section:string}[]}
  */
 export function extractPrices(items, recipe) {
   const rows = rowsByY(dropMarks(items), recipe.rowTol ?? 3);
   const out = [];
+  let section = "";
   for (const r of rows) {
+    const names = [];
+    let priced = 0;
     for (const side of recipe.sides) {
+      names.push("");
       const nameRuns = r.items.filter((it) => it.x >= side.nameX0 && it.x < side.nameX1);
       const raw = joinRuns(nameRuns, recipe.nameGap ?? NAME_GAP).replace(/\s+/g, " ").trim();
       if (!raw || raw.length < 2) continue;
@@ -157,6 +169,7 @@ export function extractPrices(items, recipe) {
       const bled = /(\d[\d\s,]*(?:\.\d+)?\s*(?:gp|sp|cp))\s*$/i.exec(raw);
       const name = tidyRowName(bled ? raw.slice(0, bled.index).replace(/[\s,]+$/, "") : raw);
       if (!name || name.length < 2) continue;
+      names[names.length - 1] = name;
       // The bled reading wins when there is one. It begins at the price's
       // first digit, whereas the cost column starts wherever its own tolerance
       // does — which for these rows is past the leading digit, so the column
@@ -165,8 +178,14 @@ export function extractPrices(items, recipe) {
       const weight6 = side.encX != null ? encToWeight6(cellAt(r.items, side.encX)) : null;
       // A real row must carry a price; header/section rows do not.
       if (cost == null && weight6 == null) continue;
-      out.push({ name, cost, weight6 });
+      priced++;
+      out.push({ name, cost, weight6, section });
     }
+    // A SECTION HEADING, not a row: nothing on the line is priced, and only
+    // the first column carries text. The column-heading line under it repeats
+    // across every column, so it can never be read as one; a data row whose
+    // price failed to parse always has its neighbour column beside it.
+    if (!priced && names[0] && names.slice(1).every((n) => !n)) section = names[0];
   }
   return out;
 }
@@ -193,9 +212,14 @@ export async function extractPriceMapFromDoc(doc, readPage) {
 
 /**
  * Every printed price row, in page order, keeping the name each was printed
- * under. The map above folds these to one entry per key; the row list is what
- * a caller needs to make an ITEM out of a row, which requires its name.
- * @returns {Promise<{name:string, cost:number|null, weight6:number|null, table:string}[]>}
+ * under and the section it was printed in. The map above folds these to one
+ * entry per key; the row list is what a caller needs to make an ITEM out of a
+ * row, which requires its name and what kind of thing the page says it is.
+ *
+ * `table` is the RECIPE that read the row; `section` is the heading the page
+ * printed it under. They are not the same fact and the second page is why:
+ * one recipe reads a grid that stacks clothing, livestock and provisions.
+ * @returns {Promise<{name:string, cost:number|null, weight6:number|null, section:string, table:string}[]>}
  */
 export async function extractPriceRowsFromDoc(doc, readPage) {
   const out = [];

@@ -1,8 +1,21 @@
 # Changelog
 
-## Unreleased
+## 4.3.1
+
+**Clothing you buy is clothing you wear.**
 
 ### Fixed
+- **Clothing from the price list arrives as clothing.** Belts, boots, cloaks,
+  gowns, tunics and the bolts of linen, wool and silk imported as ordinary
+  gear: filed among the rope and the torches instead of in your character
+  sheet's clothing band, and — because the system does not weigh what you are
+  wearing — counted against encumbrance for as long as they stood. The price
+  page prints clothing, livestock and provisions one after another under a
+  single grid, and a row now knows which of the three it was printed under.
+  Thirty-four items, and the starting kits of every class: a class template
+  that dresses a character in a leather belt was handing them luggage.
+  Re-importing equipment corrects the ones already in your world; rebuild your
+  class template packages to refresh the copies on the templates themselves.
 - **An import can no longer overwrite an item from another game.** When two
   games print something under the same name — a rope, a torch — importing the
   ACKS one would take over the other's document: its name, its stats and its

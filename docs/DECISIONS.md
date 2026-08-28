@@ -7,6 +7,54 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A grid row is what the SECTION above it says, not what its name looks like (2026-08-26)
+
+**Problem.** A vaultguard's leather belt arrived as ordinary inventory. Core
+files a `clothing` item on its own part of the character sheet and leaves it
+out of encumbrance, so the belt sat among the rope and the torches and was
+weighed with them. The reporter noticed it on two classes and read it as a
+class-import bug; it is neither about classes nor about belts.
+
+`importPricedGear` wrote `subtype: "item"` on every row it materialized. A
+DESCRIBED entry gets its subtype from the register (`bindEquipment` reads
+`meta.subtype`), but a priced row has no entry — it exists precisely because
+the shop list itemizes what a description treats as one subject, and three
+printed belts is exactly that case. So every clothing row the entries did not
+claim imported as plain inventory: 38 of them, and the classes' own starting
+templates skin 70-odd pieces of gear off that half of the grid.
+
+**Ruled: the row carries the heading it was printed under.** One recipe reads
+a grid that stacks clothing, then livestock, then provisions, so `table` — the
+recipe that read the row — cannot answer what the row IS. `extractPrices`
+carries the last section heading forward onto every row; a heading is a line
+where nothing is priced and only the first column has text, which the
+column-heading line under it can never be, because that one repeats across
+every column.
+
+**Ruled: which headings MEAN something is the system's question, not ours.**
+`subtypeForSection` folds the printed heading against `CONFIG.ACKS.item_subtypes`
+— by key and by localized label — so the importer writes down no name off the
+page and a heading the system's vocabulary does not know stays plain inventory.
+The alternative was declaring the three headings in the recipe beside the
+column geometry, which would have put three of the book's words in shipped
+source to say something core already says in its own.
+
+**A wrong subtype is corrected in place, not re-created.** Re-import cannot
+reach these: the id is already claimed and the loop skips it, so a belt filed
+as inventory would stay filed there forever. Only documents carrying our
+`generated` flag are touched, and only the one field — this is
+`repairAnimalItems`' posture without the delete, which an item's mutable
+subtype does not need. Skins already copied onto a character are the template
+package's to refresh, not ours.
+
+**Left standing, and why:** the livestock rows on the same grid still import as
+ITEMS, though `importEquipment` has ruled since the animals work that a mule is
+a creature and a described animal entry becomes an actor. Seventeen class
+templates name a riding horse. Making a priced row an actor moves it out of the
+collection `resolveBase` searches and wants the `repairAnimalItems` migration
+extended to `def.priced.*`; that is a release with a migration in it, not a
+patch.
+
 ### Reconciling is a claim about one game's library (2026-08-25)
 
 **Ruled: `reconcileByName` skips any candidate on a different LINE.** Neither
