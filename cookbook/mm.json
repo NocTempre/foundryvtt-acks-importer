@@ -11,7 +11,7 @@
     "mm.acanthaspisGiant": {
       "kind": "kind.monster",
       "name": "Acanthaspis, Giant",
-      "cite": "MM p.25",
+      "cite": "MM p.23",
       "pages": [
         25
       ],
@@ -717,7 +717,7 @@
     "mm.amphisbaena": {
       "kind": "kind.monster",
       "name": "Amphisbaena",
-      "cite": "MM p.26",
+      "cite": "MM p.24",
       "pages": [
         26
       ],
@@ -1428,7 +1428,7 @@
     "mm.antGiant": {
       "kind": "kind.monster",
       "name": "Ant, Giant",
-      "cite": "MM p.27",
+      "cite": "MM p.25",
       "pages": [
         27
       ],
@@ -2116,7 +2116,7 @@
     "mm.arane": {
       "kind": "kind.monster",
       "name": "Arane",
-      "cite": "MM p.29",
+      "cite": "MM p.27",
       "pages": [
         29
       ],
@@ -2853,7 +2853,7 @@
     "mm.attercopDemonic": {
       "kind": "kind.monster",
       "name": "Attercop, Demonic",
-      "cite": "MM p.30",
+      "cite": "MM p.28",
       "pages": [
         30,
         31
@@ -3786,7 +3786,7 @@
     "mm.attercopFoul": {
       "kind": "kind.monster",
       "name": "Attercop, Foul",
-      "cite": "MM p.32",
+      "cite": "MM p.30",
       "pages": [
         32
       ],
@@ -4524,7 +4524,7 @@
     "mm.attercopHideous": {
       "kind": "kind.monster",
       "name": "Attercop, Hideous",
-      "cite": "MM p.33",
+      "cite": "MM p.31",
       "pages": [
         33
       ],
@@ -5265,7 +5265,7 @@
     "mm.attercopMonstrous": {
       "kind": "kind.monster",
       "name": "Attercop, Monstrous",
-      "cite": "MM p.34",
+      "cite": "MM p.32",
       "pages": [
         34
       ],
@@ -6013,7 +6013,7 @@
     "mm.baboonRock": {
       "kind": "kind.monster",
       "name": "Baboon, Rock",
-      "cite": "MM p.35",
+      "cite": "MM p.33",
       "pages": [
         35
       ],
@@ -6749,7 +6749,7 @@
     "mm.bLeygr": {
       "kind": "kind.monster",
       "name": "Báleygr",
-      "cite": "MM p.36",
+      "cite": "MM p.34",
       "pages": [
         36
       ],
@@ -7430,7 +7430,7 @@
     "mm.barghestGreater": {
       "kind": "kind.monster",
       "name": "Barghest, Greater",
-      "cite": "MM p.38",
+      "cite": "MM p.36",
       "pages": [
         38
       ],
@@ -8144,7 +8144,7 @@
     "mm.barghestLesser": {
       "kind": "kind.monster",
       "name": "Barghest, Lesser",
-      "cite": "MM p.39",
+      "cite": "MM p.37",
       "pages": [
         39
       ],
@@ -8852,7 +8852,7 @@
     "mm.basiliskNoxious": {
       "kind": "kind.monster",
       "name": "Basilisk, Noxious",
-      "cite": "MM p.40",
+      "cite": "MM p.38",
       "pages": [
         40
       ],
@@ -9544,7 +9544,7 @@
     "mm.basiliskPetrifying": {
       "kind": "kind.monster",
       "name": "Basilisk, Petrifying",
-      "cite": "MM p.41",
+      "cite": "MM p.39",
       "pages": [
         41
       ],
@@ -10224,7 +10224,7 @@
     "mm.batCommon": {
       "kind": "kind.monster",
       "name": "Bat, Common",
-      "cite": "MM p.42",
+      "cite": "MM p.40",
       "pages": [
         42
       ],
@@ -10909,7 +10909,7 @@
     "mm.batGiant": {
       "kind": "kind.monster",
       "name": "Bat, Giant",
-      "cite": "MM p.43",
+      "cite": "MM p.41",
       "pages": [
         43
       ],
@@ -11612,7 +11612,7 @@
     "mm.batGiantVampire": {
       "kind": "kind.monster",
       "name": "Bat, Giant Vampire",
-      "cite": "MM p.44",
+      "cite": "MM p.42",
       "pages": [
         44
       ],
@@ -12338,7 +12338,7 @@
     "mm.bearBlack": {
       "kind": "kind.monster",
       "name": "Bear, Black",
-      "cite": "MM p.45",
+      "cite": "MM p.43",
       "pages": [
         45
       ],
@@ -13066,7 +13066,7 @@
     "mm.bearBrown": {
       "kind": "kind.monster",
       "name": "Bear, Brown",
-      "cite": "MM p.46",
+      "cite": "MM p.44",
       "pages": [
         46
       ],
@@ -13795,7 +13795,7 @@
     "mm.bearCave": {
       "kind": "kind.monster",
       "name": "Bear, Cave",
-      "cite": "MM p.47",
+      "cite": "MM p.45",
       "pages": [
         47
       ],
@@ -14554,7 +14554,7 @@
     "mm.bearPolar": {
       "kind": "kind.monster",
       "name": "Bear, Polar",
-      "cite": "MM p.48",
+      "cite": "MM p.46",
       "pages": [
         48
       ],
@@ -15285,7 +15285,7 @@
     "mm.beastman": {
       "kind": "kind.monster",
       "name": "Beastman",
-      "cite": "MM p.49",
+      "cite": "MM p.47",
       "pages": [
         49,
         50
@@ -16113,7 +16113,7 @@
     "mm.beastmanBugbear": {
       "kind": "kind.monster",
       "name": "Beastman, Bugbear",
-      "cite": "MM p.50",
+      "cite": "MM p.48",
       "pages": [
         50
       ],
@@ -16808,7 +16808,7 @@
     "mm.beastmanGnoll": {
       "kind": "kind.monster",
       "name": "Beastman, Gnoll",
-      "cite": "MM p.51",
+      "cite": "MM p.49",
       "pages": [
         51
       ],
@@ -17511,7 +17511,7 @@
     "mm.beastmanGoblin": {
       "kind": "kind.monster",
       "name": "Beastman, Goblin",
-      "cite": "MM p.52",
+      "cite": "MM p.50",
       "pages": [
         52
       ],
@@ -18192,7 +18192,7 @@
     "mm.beastmanHobgoblin": {
       "kind": "kind.monster",
       "name": "Beastman, Hobgoblin",
-      "cite": "MM p.53",
+      "cite": "MM p.51",
       "pages": [
         53
       ],
@@ -18890,7 +18890,7 @@
     "mm.beastmanKobold": {
       "kind": "kind.monster",
       "name": "Beastman, Kobold",
-      "cite": "MM p.54",
+      "cite": "MM p.52",
       "pages": [
         54
       ],
@@ -19590,7 +19590,7 @@
     "mm.beastmanOrc": {
       "kind": "kind.monster",
       "name": "Beastman, Orc",
-      "cite": "MM p.55",
+      "cite": "MM p.53",
       "pages": [
         55
       ],
@@ -20278,7 +20278,7 @@
     "mm.beeGiantKiller": {
       "kind": "kind.monster",
       "name": "Bee, Giant Killer",
-      "cite": "MM p.60",
+      "cite": "MM p.58",
       "pages": [
         60
       ],
@@ -20992,7 +20992,7 @@
     "mm.beetleGiantBombardier": {
       "kind": "kind.monster",
       "name": "Beetle, Giant Bombardier",
-      "cite": "MM p.62",
+      "cite": "MM p.60",
       "pages": [
         62
       ],
@@ -21692,7 +21692,7 @@
     "mm.beetleGiantLuminous": {
       "kind": "kind.monster",
       "name": "Beetle, Giant Luminous",
-      "cite": "MM p.63",
+      "cite": "MM p.61",
       "pages": [
         63
       ],
@@ -22376,7 +22376,7 @@
     "mm.beetleGiantTiger": {
       "kind": "kind.monster",
       "name": "Beetle, Giant Tiger",
-      "cite": "MM p.64",
+      "cite": "MM p.62",
       "pages": [
         64
       ],
@@ -23070,7 +23070,7 @@
     "mm.blobBlack": {
       "kind": "kind.monster",
       "name": "Blob, Black",
-      "cite": "MM p.65",
+      "cite": "MM p.63",
       "pages": [
         65
       ],
@@ -23794,7 +23794,7 @@
     "mm.bloodHound": {
       "kind": "kind.monster",
       "name": "Blood Hound",
-      "cite": "MM p.66",
+      "cite": "MM p.64",
       "pages": [
         66
       ],
@@ -24508,7 +24508,7 @@
     "mm.boarCommon": {
       "kind": "kind.monster",
       "name": "Boar, Common",
-      "cite": "MM p.67",
+      "cite": "MM p.65",
       "pages": [
         67
       ],
@@ -25184,7 +25184,7 @@
     "mm.boarGiant": {
       "kind": "kind.monster",
       "name": "Boar, Giant",
-      "cite": "MM p.68",
+      "cite": "MM p.66",
       "pages": [
         68
       ],
@@ -25942,7 +25942,7 @@
     "mm.bronzeBull": {
       "kind": "kind.monster",
       "name": "Bronze Bull",
-      "cite": "MM p.69",
+      "cite": "MM p.67",
       "pages": [
         69
       ],
@@ -26628,7 +26628,7 @@
     "mm.cacodemon": {
       "kind": "kind.monsterTemplate",
       "name": "Cacodemon",
-      "cite": "MM p.70",
+      "cite": "MM p.68",
       "pages": [
         70,
         71,
@@ -29182,7 +29182,7 @@
     "mm.cairnDwellers": {
       "kind": "kind.monster",
       "name": "Cairn Dwellers",
-      "cite": "MM p.76",
+      "cite": "MM p.74",
       "pages": [
         76
       ],
@@ -29931,7 +29931,7 @@
     "mm.camel": {
       "kind": "kind.monster",
       "name": "Camel",
-      "cite": "MM p.77",
+      "cite": "MM p.75",
       "pages": [
         77
       ],
@@ -30613,7 +30613,7 @@
     "mm.carrionHorror": {
       "kind": "kind.monster",
       "name": "Carrion Horror",
-      "cite": "MM p.78",
+      "cite": "MM p.76",
       "pages": [
         78
       ],
@@ -31310,7 +31310,7 @@
     "mm.catCatamount": {
       "kind": "kind.monster",
       "name": "Cat, Catamount",
-      "cite": "MM p.79",
+      "cite": "MM p.77",
       "pages": [
         79
       ],
@@ -32088,7 +32088,7 @@
     "mm.catCheetah": {
       "kind": "kind.monster",
       "name": "Cat, Cheetah",
-      "cite": "MM p.80",
+      "cite": "MM p.78",
       "pages": [
         80
       ],
@@ -32860,7 +32860,7 @@
     "mm.catLeopard": {
       "kind": "kind.monster",
       "name": "Cat, Leopard",
-      "cite": "MM p.81",
+      "cite": "MM p.79",
       "pages": [
         81
       ],
@@ -33614,7 +33614,7 @@
     "mm.catLion": {
       "kind": "kind.monster",
       "name": "Cat, Lion",
-      "cite": "MM p.82",
+      "cite": "MM p.80",
       "pages": [
         82
       ],
@@ -34397,7 +34397,7 @@
     "mm.catLynx": {
       "kind": "kind.monster",
       "name": "Cat, Lynx",
-      "cite": "MM p.83",
+      "cite": "MM p.81",
       "pages": [
         83
       ],
@@ -35145,7 +35145,7 @@
     "mm.catSaberTooth": {
       "kind": "kind.monster",
       "name": "Cat, Saber-Tooth",
-      "cite": "MM p.84",
+      "cite": "MM p.82",
       "pages": [
         84
       ],
@@ -35935,7 +35935,7 @@
     "mm.catTiger": {
       "kind": "kind.monster",
       "name": "Cat, Tiger",
-      "cite": "MM p.85",
+      "cite": "MM p.83",
       "pages": [
         85
       ],
@@ -36691,7 +36691,7 @@
     "mm.catoblepas": {
       "kind": "kind.monster",
       "name": "Catoblepas",
-      "cite": "MM p.86",
+      "cite": "MM p.84",
       "pages": [
         86
       ],
@@ -37403,7 +37403,7 @@
     "mm.centaur": {
       "kind": "kind.monster",
       "name": "Centaur",
-      "cite": "MM p.87",
+      "cite": "MM p.85",
       "pages": [
         87
       ],
@@ -38106,7 +38106,7 @@
     "mm.centipedeGiant": {
       "kind": "kind.monster",
       "name": "Centipede, Giant",
-      "cite": "MM p.88",
+      "cite": "MM p.86",
       "pages": [
         88
       ],
@@ -38806,7 +38806,7 @@
     "mm.chaosHulk": {
       "kind": "kind.monster",
       "name": "Chaos Hulk",
-      "cite": "MM p.89",
+      "cite": "MM p.87",
       "pages": [
         89
       ],
@@ -39627,7 +39627,7 @@
     "mm.childOfNasga": {
       "kind": "kind.monster",
       "name": "Child of Nasga",
-      "cite": "MM p.90",
+      "cite": "MM p.88",
       "pages": [
         90
       ],
@@ -40367,7 +40367,7 @@
     "mm.chimera": {
       "kind": "kind.monster",
       "name": "Chimera",
-      "cite": "MM p.91",
+      "cite": "MM p.89",
       "pages": [
         91
       ],
@@ -41112,7 +41112,7 @@
     "mm.crabGiant": {
       "kind": "kind.monster",
       "name": "Crab, Giant",
-      "cite": "MM p.92",
+      "cite": "MM p.90",
       "pages": [
         92
       ],
@@ -41844,7 +41844,7 @@
     "mm.crocodileCommon": {
       "kind": "kind.monster",
       "name": "Crocodile, Common",
-      "cite": "MM p.93",
+      "cite": "MM p.91",
       "pages": [
         93
       ],
@@ -42516,7 +42516,7 @@
     "mm.crocodileGiant": {
       "kind": "kind.monster",
       "name": "Crocodile, Giant",
-      "cite": "MM p.94",
+      "cite": "MM p.92",
       "pages": [
         94
       ],
@@ -43187,7 +43187,7 @@
     "mm.crocodileLarge": {
       "kind": "kind.monster",
       "name": "Crocodile, Large",
-      "cite": "MM p.95",
+      "cite": "MM p.93",
       "pages": [
         95
       ],
@@ -43853,7 +43853,7 @@
     "mm.cyclops": {
       "kind": "kind.monster",
       "name": "Cyclops",
-      "cite": "MM p.96",
+      "cite": "MM p.94",
       "pages": [
         96
       ],
@@ -44561,7 +44561,7 @@
     "mm.dakhanavarGreater": {
       "kind": "kind.monster",
       "name": "Dakhanavar, Greater",
-      "cite": "MM p.97",
+      "cite": "MM p.95",
       "pages": [
         97
       ],
@@ -45331,7 +45331,7 @@
     "mm.dakhanavarLesser": {
       "kind": "kind.monster",
       "name": "Dakhanavar, Lesser",
-      "cite": "MM p.98",
+      "cite": "MM p.96",
       "pages": [
         98
       ],
@@ -46053,7 +46053,7 @@
     "mm.deathCharger": {
       "kind": "kind.monster",
       "name": "Death Charger",
-      "cite": "MM p.99",
+      "cite": "MM p.97",
       "pages": [
         99
       ],
@@ -46789,7 +46789,7 @@
     "mm.deathKnight": {
       "kind": "kind.monster",
       "name": "Death Knight",
-      "cite": "MM p.100",
+      "cite": "MM p.98",
       "pages": [
         100
       ],
@@ -47540,7 +47540,7 @@
     "mm.devilBoar": {
       "kind": "kind.monster",
       "name": "Devil Boar",
-      "cite": "MM p.101",
+      "cite": "MM p.99",
       "pages": [
         101
       ],
@@ -48261,7 +48261,7 @@
     "mm.devilRayGiant": {
       "kind": "kind.monster",
       "name": "Devil Ray, Giant",
-      "cite": "MM p.102",
+      "cite": "MM p.100",
       "pages": [
         102
       ],
@@ -48982,7 +48982,7 @@
     "mm.dogHunting": {
       "kind": "kind.monster",
       "name": "Dog, Hunting",
-      "cite": "MM p.103",
+      "cite": "MM p.101",
       "pages": [
         103
       ],
@@ -49717,7 +49717,7 @@
     "mm.dogWar": {
       "kind": "kind.monster",
       "name": "Dog, War",
-      "cite": "MM p.104",
+      "cite": "MM p.102",
       "pages": [
         104
       ],
@@ -50412,7 +50412,7 @@
     "mm.dolphinCommon": {
       "kind": "kind.monster",
       "name": "Dolphin, Common",
-      "cite": "MM p.105",
+      "cite": "MM p.103",
       "pages": [
         105
       ],
@@ -51168,7 +51168,7 @@
     "mm.doppelgNger": {
       "kind": "kind.monster",
       "name": "Doppelgänger",
-      "cite": "MM p.106",
+      "cite": "MM p.104",
       "pages": [
         106
       ],
@@ -51876,7 +51876,7 @@
     "mm.dragon": {
       "kind": "kind.monsterTemplate",
       "name": "Dragon",
-      "cite": "MM p.107",
+      "cite": "MM p.105",
       "pages": [
         107,
         108,
@@ -54639,7 +54639,7 @@
     "mm.dragonTurtle": {
       "kind": "kind.monster",
       "name": "Dragon Turtle",
-      "cite": "MM p.114",
+      "cite": "MM p.112",
       "pages": [
         114
       ],
@@ -55367,7 +55367,7 @@
     "mm.dragonflyGiant": {
       "kind": "kind.monster",
       "name": "Dragonfly, Giant",
-      "cite": "MM p.115",
+      "cite": "MM p.113",
       "pages": [
         115
       ],
@@ -56083,7 +56083,7 @@
     "mm.draugr": {
       "kind": "kind.monster",
       "name": "Draugr",
-      "cite": "MM p.116",
+      "cite": "MM p.114",
       "pages": [
         116
       ],
@@ -56896,7 +56896,7 @@
     "mm.dwarf": {
       "kind": "kind.monster",
       "name": "Dwarf",
-      "cite": "MM p.118",
+      "cite": "MM p.116",
       "pages": [
         118
       ],
@@ -57649,7 +57649,7 @@
     "mm.elemental": {
       "kind": "kind.monsterTemplate",
       "name": "Elemental",
-      "cite": "MM p.119",
+      "cite": "MM p.117",
       "pages": [
         119,
         120
@@ -58817,7 +58817,7 @@
     "mm.elephant": {
       "kind": "kind.monster",
       "name": "Elephant",
-      "cite": "MM p.121",
+      "cite": "MM p.119",
       "pages": [
         121
       ],
@@ -59516,7 +59516,7 @@
     "mm.elf": {
       "kind": "kind.monster",
       "name": "Elf",
-      "cite": "MM p.122",
+      "cite": "MM p.120",
       "pages": [
         122
       ],
@@ -60273,7 +60273,7 @@
     "mm.equineDonkey": {
       "kind": "kind.monster",
       "name": "Equine, Donkey",
-      "cite": "MM p.123",
+      "cite": "MM p.121",
       "pages": [
         123
       ],
@@ -60957,7 +60957,7 @@
     "mm.equineHeavyHorse": {
       "kind": "kind.monster",
       "name": "Equine, Heavy Horse",
-      "cite": "MM p.124",
+      "cite": "MM p.122",
       "pages": [
         124
       ],
@@ -61630,7 +61630,7 @@
     "mm.equineLightHorse": {
       "kind": "kind.monster",
       "name": "Equine, Light Horse",
-      "cite": "MM p.125",
+      "cite": "MM p.123",
       "pages": [
         125
       ],
@@ -62310,7 +62310,7 @@
     "mm.equineMediumHorse": {
       "kind": "kind.monster",
       "name": "Equine, Medium Horse",
-      "cite": "MM p.126",
+      "cite": "MM p.124",
       "pages": [
         126
       ],
@@ -62984,7 +62984,7 @@
     "mm.equineMule": {
       "kind": "kind.monster",
       "name": "Equine, Mule",
-      "cite": "MM p.127",
+      "cite": "MM p.125",
       "pages": [
         127
       ],
@@ -63655,7 +63655,7 @@
     "mm.equineSteppeHorse": {
       "kind": "kind.monster",
       "name": "Equine, Steppe Horse",
-      "cite": "MM p.128",
+      "cite": "MM p.126",
       "pages": [
         128
       ],
@@ -64356,7 +64356,7 @@
     "mm.ettin": {
       "kind": "kind.monster",
       "name": "Ettin",
-      "cite": "MM p.129",
+      "cite": "MM p.127",
       "pages": [
         129
       ],
@@ -65071,7 +65071,7 @@
     "mm.faerieBrownieBoggart": {
       "kind": "kind.monster",
       "name": "Faerie, Brownie (Boggart)",
-      "cite": "MM p.130",
+      "cite": "MM p.128",
       "pages": [
         130
       ],
@@ -65826,7 +65826,7 @@
     "mm.faerieKnocker": {
       "kind": "kind.monster",
       "name": "Faerie, Knocker",
-      "cite": "MM p.131",
+      "cite": "MM p.129",
       "pages": [
         131
       ],
@@ -66564,7 +66564,7 @@
     "mm.faerieNixie": {
       "kind": "kind.monster",
       "name": "Faerie, Nixie",
-      "cite": "MM p.132",
+      "cite": "MM p.130",
       "pages": [
         132
       ],
@@ -67332,7 +67332,7 @@
     "mm.faeriePiskie": {
       "kind": "kind.monster",
       "name": "Faerie, Piskie",
-      "cite": "MM p.133",
+      "cite": "MM p.131",
       "pages": [
         133
       ],
@@ -68061,7 +68061,7 @@
     "mm.faeriePixie": {
       "kind": "kind.monster",
       "name": "Faerie, Pixie",
-      "cite": "MM p.134",
+      "cite": "MM p.132",
       "pages": [
         134
       ],
@@ -68796,7 +68796,7 @@
     "mm.faerieRedcap": {
       "kind": "kind.monster",
       "name": "Faerie, Redcap",
-      "cite": "MM p.135",
+      "cite": "MM p.133",
       "pages": [
         135
       ],
@@ -69542,7 +69542,7 @@
     "mm.faerieSpriggan": {
       "kind": "kind.monster",
       "name": "Faerie, Spriggan",
-      "cite": "MM p.136",
+      "cite": "MM p.134",
       "pages": [
         136
       ],
@@ -70247,7 +70247,7 @@
     "mm.faerieSprite": {
       "kind": "kind.monster",
       "name": "Faerie, Sprite",
-      "cite": "MM p.137",
+      "cite": "MM p.135",
       "pages": [
         137
       ],
@@ -71024,7 +71024,7 @@
     "mm.faravahar": {
       "kind": "kind.monster",
       "name": "Faravahar",
-      "cite": "MM p.138",
+      "cite": "MM p.136",
       "pages": [
         138
       ],
@@ -71768,7 +71768,7 @@
     "mm.fishGiantCatfish": {
       "kind": "kind.monster",
       "name": "Fish, Giant Catfish",
-      "cite": "MM p.139",
+      "cite": "MM p.137",
       "pages": [
         139
       ],
@@ -72498,7 +72498,7 @@
     "mm.fishGiantPiranha": {
       "kind": "kind.monster",
       "name": "Fish, Giant Piranha",
-      "cite": "MM p.140",
+      "cite": "MM p.138",
       "pages": [
         140
       ],
@@ -73200,7 +73200,7 @@
     "mm.fishGiantRockfish": {
       "kind": "kind.monster",
       "name": "Fish, Giant Rockfish",
-      "cite": "MM p.141",
+      "cite": "MM p.139",
       "pages": [
         141
       ],
@@ -73906,7 +73906,7 @@
     "mm.fishGiantSturgeon": {
       "kind": "kind.monster",
       "name": "Fish, Giant Sturgeon",
-      "cite": "MM p.142",
+      "cite": "MM p.140",
       "pages": [
         142
       ],
@@ -74593,7 +74593,7 @@
     "mm.flayFiend": {
       "kind": "kind.monster",
       "name": "Flay Fiend",
-      "cite": "MM p.143",
+      "cite": "MM p.141",
       "pages": [
         143
       ],
@@ -75308,7 +75308,7 @@
     "mm.flyGiantCarnivorous": {
       "kind": "kind.monster",
       "name": "Fly, Giant Carnivorous",
-      "cite": "MM p.144",
+      "cite": "MM p.142",
       "pages": [
         144
       ],
@@ -76035,7 +76035,7 @@
     "mm.frogGiant": {
       "kind": "kind.monster",
       "name": "Frog, Giant",
-      "cite": "MM p.145",
+      "cite": "MM p.143",
       "pages": [
         145
       ],
@@ -76753,7 +76753,7 @@
     "mm.fungusShrieking": {
       "kind": "kind.monster",
       "name": "Fungus, Shrieking",
-      "cite": "MM p.146",
+      "cite": "MM p.144",
       "pages": [
         146
       ],
@@ -77491,7 +77491,7 @@
     "mm.fungusViolet": {
       "kind": "kind.monster",
       "name": "Fungus, Violet",
-      "cite": "MM p.147",
+      "cite": "MM p.145",
       "pages": [
         147
       ],
@@ -78213,7 +78213,7 @@
     "mm.galdrtr": {
       "kind": "kind.monster",
       "name": "Galdrtré",
-      "cite": "MM p.148",
+      "cite": "MM p.146",
       "pages": [
         148
       ],
@@ -78964,7 +78964,7 @@
     "mm.gargoyle": {
       "kind": "kind.monster",
       "name": "Gargoyle",
-      "cite": "MM p.149",
+      "cite": "MM p.147",
       "pages": [
         149
       ],
@@ -79726,7 +79726,7 @@
     "mm.genieEfreet": {
       "kind": "kind.monster",
       "name": "Genie, Efreet",
-      "cite": "MM p.150",
+      "cite": "MM p.148",
       "pages": [
         150
       ],
@@ -80475,7 +80475,7 @@
     "mm.genieHafar": {
       "kind": "kind.monster",
       "name": "Genie, Hafar",
-      "cite": "MM p.151",
+      "cite": "MM p.149",
       "pages": [
         151
       ],
@@ -81242,7 +81242,7 @@
     "mm.genieJann": {
       "kind": "kind.monster",
       "name": "Genie, Jann",
-      "cite": "MM p.152",
+      "cite": "MM p.150",
       "pages": [
         152
       ],
@@ -81989,7 +81989,7 @@
     "mm.genieMarid": {
       "kind": "kind.monster",
       "name": "Genie, Marid",
-      "cite": "MM p.153",
+      "cite": "MM p.151",
       "pages": [
         153
       ],
@@ -82757,7 +82757,7 @@
     "mm.ghoulDesert": {
       "kind": "kind.monster",
       "name": "Ghoul, Desert",
-      "cite": "MM p.154",
+      "cite": "MM p.152",
       "pages": [
         154
       ],
@@ -83479,7 +83479,7 @@
     "mm.ghoulGrave": {
       "kind": "kind.monster",
       "name": "Ghoul, Grave",
-      "cite": "MM p.155",
+      "cite": "MM p.153",
       "pages": [
         155
       ],
@@ -84187,7 +84187,7 @@
     "mm.ghoulMarsh": {
       "kind": "kind.monster",
       "name": "Ghoul, Marsh",
-      "cite": "MM p.156",
+      "cite": "MM p.154",
       "pages": [
         156
       ],
@@ -84934,7 +84934,7 @@
     "mm.giantFire": {
       "kind": "kind.monster",
       "name": "Giant, Fire",
-      "cite": "MM p.157",
+      "cite": "MM p.155",
       "pages": [
         157
       ],
@@ -85664,7 +85664,7 @@
     "mm.giantFrost": {
       "kind": "kind.monster",
       "name": "Giant, Frost",
-      "cite": "MM p.158",
+      "cite": "MM p.156",
       "pages": [
         158
       ],
@@ -86394,7 +86394,7 @@
     "mm.giantHill": {
       "kind": "kind.monster",
       "name": "Giant, Hill",
-      "cite": "MM p.159",
+      "cite": "MM p.157",
       "pages": [
         159
       ],
@@ -87119,7 +87119,7 @@
     "mm.giantStone": {
       "kind": "kind.monster",
       "name": "Giant, Stone",
-      "cite": "MM p.160",
+      "cite": "MM p.158",
       "pages": [
         160
       ],
@@ -87838,7 +87838,7 @@
     "mm.gnome": {
       "kind": "kind.monster",
       "name": "Gnome",
-      "cite": "MM p.161",
+      "cite": "MM p.159",
       "pages": [
         161
       ],
@@ -88573,7 +88573,7 @@
     "mm.golemAmber": {
       "kind": "kind.monster",
       "name": "Golem, Amber",
-      "cite": "MM p.162",
+      "cite": "MM p.160",
       "pages": [
         162
       ],
@@ -89314,7 +89314,7 @@
     "mm.golemBone": {
       "kind": "kind.monster",
       "name": "Golem, Bone",
-      "cite": "MM p.163",
+      "cite": "MM p.161",
       "pages": [
         163
       ],
@@ -90019,7 +90019,7 @@
     "mm.golemBronze": {
       "kind": "kind.monster",
       "name": "Golem, Bronze",
-      "cite": "MM p.164",
+      "cite": "MM p.162",
       "pages": [
         164
       ],
@@ -90744,7 +90744,7 @@
     "mm.golemIron": {
       "kind": "kind.monster",
       "name": "Golem, Iron",
-      "cite": "MM p.165",
+      "cite": "MM p.163",
       "pages": [
         165
       ],
@@ -91466,7 +91466,7 @@
     "mm.golemStone": {
       "kind": "kind.monster",
       "name": "Golem, Stone",
-      "cite": "MM p.166",
+      "cite": "MM p.164",
       "pages": [
         166
       ],
@@ -92256,7 +92256,7 @@
     "mm.golemWood": {
       "kind": "kind.monster",
       "name": "Golem, Wood",
-      "cite": "MM p.167",
+      "cite": "MM p.165",
       "pages": [
         167
       ],
@@ -92990,7 +92990,7 @@
     "mm.gooGrey": {
       "kind": "kind.monster",
       "name": "Goo, Grey",
-      "cite": "MM p.168",
+      "cite": "MM p.166",
       "pages": [
         168
       ],
@@ -93730,7 +93730,7 @@
     "mm.gorgon": {
       "kind": "kind.monster",
       "name": "Gorgon",
-      "cite": "MM p.169",
+      "cite": "MM p.167",
       "pages": [
         169
       ],
@@ -94447,7 +94447,7 @@
     "mm.gorillaCave": {
       "kind": "kind.monster",
       "name": "Gorilla, Cave",
-      "cite": "MM p.170",
+      "cite": "MM p.168",
       "pages": [
         170
       ],
@@ -95136,7 +95136,7 @@
     "mm.griffon": {
       "kind": "kind.monster",
       "name": "Griffon",
-      "cite": "MM p.171",
+      "cite": "MM p.169",
       "pages": [
         171
       ],
@@ -95856,7 +95856,7 @@
     "mm.grimlock": {
       "kind": "kind.monster",
       "name": "Grimlock",
-      "cite": "MM p.172",
+      "cite": "MM p.170",
       "pages": [
         172
       ],
@@ -96569,7 +96569,7 @@
     "mm.hag": {
       "kind": "kind.monster",
       "name": "Hag",
-      "cite": "MM p.173",
+      "cite": "MM p.171",
       "pages": [
         173
       ],
@@ -97307,7 +97307,7 @@
     "mm.halfling": {
       "kind": "kind.monster",
       "name": "Halfling",
-      "cite": "MM p.174",
+      "cite": "MM p.172",
       "pages": [
         174
       ],
@@ -98007,7 +98007,7 @@
     "mm.harpy": {
       "kind": "kind.monster",
       "name": "Harpy",
-      "cite": "MM p.175",
+      "cite": "MM p.173",
       "pages": [
         175
       ],
@@ -98747,7 +98747,7 @@
     "mm.haugbui": {
       "kind": "kind.monster",
       "name": "Haugbui",
-      "cite": "MM p.176",
+      "cite": "MM p.174",
       "pages": [
         176
       ],
@@ -99464,7 +99464,7 @@
     "mm.haunt": {
       "kind": "kind.monster",
       "name": "Haunt",
-      "cite": "MM p.177",
+      "cite": "MM p.175",
       "pages": [
         177
       ],
@@ -100243,7 +100243,7 @@
     "mm.hellhawk": {
       "kind": "kind.monster",
       "name": "Hellhawk",
-      "cite": "MM p.178",
+      "cite": "MM p.176",
       "pages": [
         178
       ],
@@ -100978,7 +100978,7 @@
     "mm.hellhoundGreater": {
       "kind": "kind.monster",
       "name": "Hellhound, Greater",
-      "cite": "MM p.179",
+      "cite": "MM p.177",
       "pages": [
         179
       ],
@@ -101702,7 +101702,7 @@
     "mm.hellhoundLesser": {
       "kind": "kind.monster",
       "name": "Hellhound, Lesser",
-      "cite": "MM p.180",
+      "cite": "MM p.178",
       "pages": [
         180
       ],
@@ -102425,7 +102425,7 @@
     "mm.heraldAngel": {
       "kind": "kind.monster",
       "name": "Herald Angel",
-      "cite": "MM p.181",
+      "cite": "MM p.179",
       "pages": [
         181
       ],
@@ -103210,7 +103210,7 @@
     "mm.herdAnimal": {
       "kind": "kind.monster",
       "name": "Herd Animal",
-      "cite": "MM p.182",
+      "cite": "MM p.180",
       "pages": [
         182
       ],
@@ -103928,7 +103928,7 @@
     "mm.hippogriff": {
       "kind": "kind.monster",
       "name": "Hippogriff",
-      "cite": "MM p.185",
+      "cite": "MM p.183",
       "pages": [
         185
       ],
@@ -104685,7 +104685,7 @@
     "mm.hippopotamus": {
       "kind": "kind.monster",
       "name": "Hippopotamus",
-      "cite": "MM p.186",
+      "cite": "MM p.184",
       "pages": [
         186
       ],
@@ -105412,7 +105412,7 @@
     "mm.hoarflesh": {
       "kind": "kind.monster",
       "name": "Hoarflesh",
-      "cite": "MM p.187",
+      "cite": "MM p.185",
       "pages": [
         187
       ],
@@ -106144,7 +106144,7 @@
     "mm.hobgholl": {
       "kind": "kind.monster",
       "name": "Hobgholl",
-      "cite": "MM p.188",
+      "cite": "MM p.186",
       "pages": [
         188
       ],
@@ -106842,7 +106842,7 @@
     "mm.hydra": {
       "kind": "kind.monster",
       "name": "Hydra",
-      "cite": "MM p.189",
+      "cite": "MM p.187",
       "pages": [
         189
       ],
@@ -107580,7 +107580,7 @@
     "mm.hyenaCommon": {
       "kind": "kind.monster",
       "name": "Hyena, Common",
-      "cite": "MM p.190",
+      "cite": "MM p.188",
       "pages": [
         190
       ],
@@ -108279,7 +108279,7 @@
     "mm.hyenaGiant": {
       "kind": "kind.monster",
       "name": "Hyena, Giant",
-      "cite": "MM p.191",
+      "cite": "MM p.189",
       "pages": [
         191
       ],
@@ -108953,7 +108953,7 @@
     "mm.invisibleStalker": {
       "kind": "kind.monster",
       "name": "Invisible Stalker",
-      "cite": "MM p.192",
+      "cite": "MM p.190",
       "pages": [
         192
       ],
@@ -109669,7 +109669,7 @@
     "mm.jackalCommon": {
       "kind": "kind.monster",
       "name": "Jackal, Common",
-      "cite": "MM p.193",
+      "cite": "MM p.191",
       "pages": [
         193
       ],
@@ -110403,7 +110403,7 @@
     "mm.jellyfishGiant": {
       "kind": "kind.monster",
       "name": "Jellyfish, Giant",
-      "cite": "MM p.194",
+      "cite": "MM p.192",
       "pages": [
         194
       ],
@@ -111137,7 +111137,7 @@
     "mm.khepri": {
       "kind": "kind.monster",
       "name": "Khepri",
-      "cite": "MM p.195",
+      "cite": "MM p.193",
       "pages": [
         195
       ],
@@ -111880,7 +111880,7 @@
     "mm.kraken": {
       "kind": "kind.monster",
       "name": "Kraken",
-      "cite": "MM p.197",
+      "cite": "MM p.195",
       "pages": [
         197
       ],
@@ -112680,7 +112680,7 @@
     "mm.lamia": {
       "kind": "kind.monster",
       "name": "Lamia",
-      "cite": "MM p.199",
+      "cite": "MM p.197",
       "pages": [
         199
       ],
@@ -113397,7 +113397,7 @@
     "mm.lammasu": {
       "kind": "kind.monster",
       "name": "Lammasu",
-      "cite": "MM p.200",
+      "cite": "MM p.198",
       "pages": [
         200
       ],
@@ -114143,7 +114143,7 @@
     "mm.leechGiant": {
       "kind": "kind.monster",
       "name": "Leech, Giant",
-      "cite": "MM p.201",
+      "cite": "MM p.199",
       "pages": [
         201
       ],
@@ -114859,7 +114859,7 @@
     "mm.leyak": {
       "kind": "kind.monster",
       "name": "Leyak",
-      "cite": "MM p.202",
+      "cite": "MM p.200",
       "pages": [
         202
       ],
@@ -115726,7 +115726,7 @@
     "mm.livingAncestor": {
       "kind": "kind.monster",
       "name": "Living Ancestor",
-      "cite": "MM p.204",
+      "cite": "MM p.202",
       "pages": [
         204
       ],
@@ -116460,7 +116460,7 @@
     "mm.lizardGiantDraco": {
       "kind": "kind.monster",
       "name": "Lizard, Giant Draco",
-      "cite": "MM p.205",
+      "cite": "MM p.203",
       "pages": [
         205
       ],
@@ -117154,7 +117154,7 @@
     "mm.lizardGiantGecko": {
       "kind": "kind.monster",
       "name": "Lizard, Giant Gecko",
-      "cite": "MM p.206",
+      "cite": "MM p.204",
       "pages": [
         206
       ],
@@ -117855,7 +117855,7 @@
     "mm.lizardGiantHornedChameleon": {
       "kind": "kind.monster",
       "name": "Lizard, Giant Horned Chameleon",
-      "cite": "MM p.207",
+      "cite": "MM p.205",
       "pages": [
         207
       ],
@@ -118575,7 +118575,7 @@
     "mm.lizardGiantTuatara": {
       "kind": "kind.monster",
       "name": "Lizard, Giant Tuatara",
-      "cite": "MM p.208",
+      "cite": "MM p.206",
       "pages": [
         208
       ],
@@ -119287,7 +119287,7 @@
     "mm.lizardman": {
       "kind": "kind.monster",
       "name": "Lizardman",
-      "cite": "MM p.209",
+      "cite": "MM p.207",
       "pages": [
         209
       ],
@@ -120024,7 +120024,7 @@
     "mm.locustCavern": {
       "kind": "kind.monster",
       "name": "Locust, Cavern",
-      "cite": "MM p.210",
+      "cite": "MM p.208",
       "pages": [
         210
       ],
@@ -120757,7 +120757,7 @@
     "mm.lycanthrope": {
       "kind": "kind.monster",
       "name": "Lycanthrope",
-      "cite": "MM p.211",
+      "cite": "MM p.209",
       "pages": [
         211,
         212
@@ -121469,7 +121469,7 @@
     "mm.lycanthropeWerebear": {
       "kind": "kind.monster",
       "name": "Lycanthrope, Werebear",
-      "cite": "MM p.212",
+      "cite": "MM p.210",
       "pages": [
         212
       ],
@@ -122190,7 +122190,7 @@
     "mm.lycanthropeWereboar": {
       "kind": "kind.monster",
       "name": "Lycanthrope, Wereboar",
-      "cite": "MM p.213",
+      "cite": "MM p.211",
       "pages": [
         213
       ],
@@ -122910,7 +122910,7 @@
     "mm.lycanthropeWererat": {
       "kind": "kind.monster",
       "name": "Lycanthrope, Wererat",
-      "cite": "MM p.214",
+      "cite": "MM p.212",
       "pages": [
         214
       ],
@@ -123647,7 +123647,7 @@
     "mm.lycanthropeWeretiger": {
       "kind": "kind.monster",
       "name": "Lycanthrope, Weretiger",
-      "cite": "MM p.215",
+      "cite": "MM p.213",
       "pages": [
         215
       ],
@@ -124379,7 +124379,7 @@
     "mm.lycanthropeWerewolf": {
       "kind": "kind.monster",
       "name": "Lycanthrope, Werewolf",
-      "cite": "MM p.216",
+      "cite": "MM p.214",
       "pages": [
         216
       ],
@@ -125063,7 +125063,7 @@
     "mm.maggotMurder": {
       "kind": "kind.monster",
       "name": "Maggot, Murder",
-      "cite": "MM p.217",
+      "cite": "MM p.215",
       "pages": [
         217
       ],
@@ -125754,7 +125754,7 @@
     "mm.mammoth": {
       "kind": "kind.monster",
       "name": "Mammoth",
-      "cite": "MM p.218",
+      "cite": "MM p.216",
       "pages": [
         218
       ],
@@ -126449,7 +126449,7 @@
     "mm.manBandit": {
       "kind": "kind.monster",
       "name": "Man, Bandit",
-      "cite": "MM p.219",
+      "cite": "MM p.217",
       "pages": [
         219
       ],
@@ -127173,7 +127173,7 @@
     "mm.manBerserker": {
       "kind": "kind.monster",
       "name": "Man, Berserker",
-      "cite": "MM p.220",
+      "cite": "MM p.218",
       "pages": [
         220
       ],
@@ -127897,7 +127897,7 @@
     "mm.manBrigand": {
       "kind": "kind.monster",
       "name": "Man, Brigand",
-      "cite": "MM p.221",
+      "cite": "MM p.219",
       "pages": [
         221
       ],
@@ -128604,7 +128604,7 @@
     "mm.manCommoner": {
       "kind": "kind.monster",
       "name": "Man, Commoner",
-      "cite": "MM p.222",
+      "cite": "MM p.220",
       "pages": [
         222
       ],
@@ -129319,7 +129319,7 @@
     "mm.manMerchant": {
       "kind": "kind.monster",
       "name": "Man, Merchant",
-      "cite": "MM p.223",
+      "cite": "MM p.221",
       "pages": [
         223
       ],
@@ -130018,7 +130018,7 @@
     "mm.manMerchantMariner": {
       "kind": "kind.monster",
       "name": "Man, Merchant Mariner",
-      "cite": "MM p.224",
+      "cite": "MM p.222",
       "pages": [
         224
       ],
@@ -130795,7 +130795,7 @@
     "mm.manNavalMariner": {
       "kind": "kind.monster",
       "name": "Man, Naval Mariner",
-      "cite": "MM p.226",
+      "cite": "MM p.224",
       "pages": [
         226
       ],
@@ -131553,7 +131553,7 @@
     "mm.manNomad": {
       "kind": "kind.monster",
       "name": "Man, Nomad",
-      "cite": "MM p.227",
+      "cite": "MM p.225",
       "pages": [
         227
       ],
@@ -132287,7 +132287,7 @@
     "mm.manPatroller": {
       "kind": "kind.monster",
       "name": "Man, Patroller",
-      "cite": "MM p.228",
+      "cite": "MM p.226",
       "pages": [
         228
       ],
@@ -133013,7 +133013,7 @@
     "mm.manPilgrim": {
       "kind": "kind.monster",
       "name": "Man, Pilgrim",
-      "cite": "MM p.229",
+      "cite": "MM p.227",
       "pages": [
         229
       ],
@@ -133695,7 +133695,7 @@
     "mm.manPirate": {
       "kind": "kind.monster",
       "name": "Man, Pirate",
-      "cite": "MM p.230",
+      "cite": "MM p.228",
       "pages": [
         230
       ],
@@ -134429,7 +134429,7 @@
     "mm.manRaider": {
       "kind": "kind.monster",
       "name": "Man, Raider",
-      "cite": "MM p.232",
+      "cite": "MM p.230",
       "pages": [
         232
       ],
@@ -135128,7 +135128,7 @@
     "mm.manTribalWarrior": {
       "kind": "kind.monster",
       "name": "Man, Tribal Warrior",
-      "cite": "MM p.233",
+      "cite": "MM p.231",
       "pages": [
         233
       ],
@@ -135863,7 +135863,7 @@
     "mm.manes": {
       "kind": "kind.monster",
       "name": "Manes",
-      "cite": "MM p.234",
+      "cite": "MM p.232",
       "pages": [
         234
       ],
@@ -136581,7 +136581,7 @@
     "mm.manticore": {
       "kind": "kind.monster",
       "name": "Manticore",
-      "cite": "MM p.235",
+      "cite": "MM p.233",
       "pages": [
         235
       ],
@@ -137348,7 +137348,7 @@
     "mm.massGelatinous": {
       "kind": "kind.monster",
       "name": "Mass, Gelatinous",
-      "cite": "MM p.236",
+      "cite": "MM p.234",
       "pages": [
         236
       ],
@@ -138080,7 +138080,7 @@
     "mm.medusa": {
       "kind": "kind.monster",
       "name": "Medusa",
-      "cite": "MM p.237",
+      "cite": "MM p.235",
       "pages": [
         237
       ],
@@ -138817,7 +138817,7 @@
     "mm.minotaur": {
       "kind": "kind.monster",
       "name": "Minotaur",
-      "cite": "MM p.238",
+      "cite": "MM p.236",
       "pages": [
         238
       ],
@@ -139534,7 +139534,7 @@
     "mm.moldMustard": {
       "kind": "kind.monster",
       "name": "Mold, Mustard",
-      "cite": "MM p.239",
+      "cite": "MM p.237",
       "pages": [
         239
       ],
@@ -140227,7 +140227,7 @@
     "mm.morlock": {
       "kind": "kind.monster",
       "name": "Morlock",
-      "cite": "MM p.240",
+      "cite": "MM p.238",
       "pages": [
         240
       ],
@@ -140942,7 +140942,7 @@
     "mm.mummy": {
       "kind": "kind.monster",
       "name": "Mummy",
-      "cite": "MM p.241",
+      "cite": "MM p.239",
       "pages": [
         241
       ],
@@ -141664,7 +141664,7 @@
     "mm.mummyLord": {
       "kind": "kind.monster",
       "name": "Mummy Lord",
-      "cite": "MM p.242",
+      "cite": "MM p.240",
       "pages": [
         242
       ],
@@ -142425,7 +142425,7 @@
     "mm.nathagholGlintersnatch": {
       "kind": "kind.monster",
       "name": "Nathaghol (Glintersnatch)",
-      "cite": "MM p.244",
+      "cite": "MM p.242",
       "pages": [
         244
       ],
@@ -143151,7 +143151,7 @@
     "mm.neanderthal": {
       "kind": "kind.monster",
       "name": "Neanderthal",
-      "cite": "MM p.246",
+      "cite": "MM p.244",
       "pages": [
         246
       ],
@@ -143860,7 +143860,7 @@
     "mm.necropede": {
       "kind": "kind.monster",
       "name": "Necropede",
-      "cite": "MM p.247",
+      "cite": "MM p.245",
       "pages": [
         247
       ],
@@ -144591,7 +144591,7 @@
     "mm.nymphDryad": {
       "kind": "kind.monster",
       "name": "Nymph, Dryad",
-      "cite": "MM p.248",
+      "cite": "MM p.246",
       "pages": [
         248
       ],
@@ -145306,7 +145306,7 @@
     "mm.nymphNaiad": {
       "kind": "kind.monster",
       "name": "Nymph, Naiad",
-      "cite": "MM p.249",
+      "cite": "MM p.247",
       "pages": [
         249
       ],
@@ -146047,7 +146047,7 @@
     "mm.nymphOread": {
       "kind": "kind.monster",
       "name": "Nymph, Oread",
-      "cite": "MM p.250",
+      "cite": "MM p.248",
       "pages": [
         250
       ],
@@ -146777,7 +146777,7 @@
     "mm.octopusGiant": {
       "kind": "kind.monster",
       "name": "Octopus, Giant",
-      "cite": "MM p.251",
+      "cite": "MM p.249",
       "pages": [
         251
       ],
@@ -147521,7 +147521,7 @@
     "mm.ogre": {
       "kind": "kind.monster",
       "name": "Ogre",
-      "cite": "MM p.252",
+      "cite": "MM p.250",
       "pages": [
         252
       ],
@@ -148210,7 +148210,7 @@
     "mm.oozeOchre": {
       "kind": "kind.monster",
       "name": "Ooze, Ochre",
-      "cite": "MM p.253",
+      "cite": "MM p.251",
       "pages": [
         253
       ],
@@ -148950,7 +148950,7 @@
     "mm.ostrichCommon": {
       "kind": "kind.monster",
       "name": "Ostrich, Common",
-      "cite": "MM p.254",
+      "cite": "MM p.252",
       "pages": [
         254
       ],
@@ -149642,7 +149642,7 @@
     "mm.ostrichGiant": {
       "kind": "kind.monster",
       "name": "Ostrich, Giant",
-      "cite": "MM p.255",
+      "cite": "MM p.253",
       "pages": [
         255
       ],
@@ -150323,7 +150323,7 @@
     "mm.owlbeast": {
       "kind": "kind.monster",
       "name": "Owlbeast",
-      "cite": "MM p.256",
+      "cite": "MM p.254",
       "pages": [
         256
       ],
@@ -151063,7 +151063,7 @@
     "mm.pegasus": {
       "kind": "kind.monster",
       "name": "Pegasus",
-      "cite": "MM p.257",
+      "cite": "MM p.255",
       "pages": [
         257
       ],
@@ -151775,7 +151775,7 @@
     "mm.phoenix": {
       "kind": "kind.monster",
       "name": "Phoenix",
-      "cite": "MM p.258",
+      "cite": "MM p.256",
       "pages": [
         258
       ],
@@ -152539,7 +152539,7 @@
     "mm.rakshasa": {
       "kind": "kind.monster",
       "name": "Rakshasa",
-      "cite": "MM p.259",
+      "cite": "MM p.257",
       "pages": [
         259
       ],
@@ -153270,7 +153270,7 @@
     "mm.raptorGiant": {
       "kind": "kind.monster",
       "name": "Raptor, Giant",
-      "cite": "MM p.260",
+      "cite": "MM p.258",
       "pages": [
         260
       ],
@@ -153990,7 +153990,7 @@
     "mm.raptorLarge": {
       "kind": "kind.monster",
       "name": "Raptor, Large",
-      "cite": "MM p.261",
+      "cite": "MM p.259",
       "pages": [
         261
       ],
@@ -154707,7 +154707,7 @@
     "mm.raptorMedium": {
       "kind": "kind.monster",
       "name": "Raptor, Medium",
-      "cite": "MM p.262",
+      "cite": "MM p.260",
       "pages": [
         262
       ],
@@ -155469,7 +155469,7 @@
     "mm.raptorSmall": {
       "kind": "kind.monster",
       "name": "Raptor, Small",
-      "cite": "MM p.263",
+      "cite": "MM p.261",
       "pages": [
         263
       ],
@@ -156174,7 +156174,7 @@
     "mm.rhinocerosCommon": {
       "kind": "kind.monster",
       "name": "Rhinoceros, Common",
-      "cite": "MM p.264",
+      "cite": "MM p.262",
       "pages": [
         264
       ],
@@ -156852,7 +156852,7 @@
     "mm.rhinocerosWoolly": {
       "kind": "kind.monster",
       "name": "Rhinoceros, Woolly",
-      "cite": "MM p.265",
+      "cite": "MM p.263",
       "pages": [
         265
       ],
@@ -157524,7 +157524,7 @@
     "mm.rocGiant": {
       "kind": "kind.monster",
       "name": "Roc, Giant",
-      "cite": "MM p.266",
+      "cite": "MM p.264",
       "pages": [
         266
       ],
@@ -158268,7 +158268,7 @@
     "mm.rocLarge": {
       "kind": "kind.monster",
       "name": "Roc, Large",
-      "cite": "MM p.267",
+      "cite": "MM p.265",
       "pages": [
         267
       ],
@@ -159003,7 +159003,7 @@
     "mm.rocSmall": {
       "kind": "kind.monster",
       "name": "Roc, Small",
-      "cite": "MM p.268",
+      "cite": "MM p.266",
       "pages": [
         268
       ],
@@ -159748,7 +159748,7 @@
     "mm.rustbeast": {
       "kind": "kind.monster",
       "name": "Rustbeast",
-      "cite": "MM p.269",
+      "cite": "MM p.267",
       "pages": [
         269
       ],
@@ -160485,7 +160485,7 @@
     "mm.salamanderFlame": {
       "kind": "kind.monster",
       "name": "Salamander, Flame",
-      "cite": "MM p.270",
+      "cite": "MM p.268",
       "pages": [
         270
       ],
@@ -161234,7 +161234,7 @@
     "mm.salamanderFrost": {
       "kind": "kind.monster",
       "name": "Salamander, Frost",
-      "cite": "MM p.271",
+      "cite": "MM p.269",
       "pages": [
         271
       ],
@@ -161991,7 +161991,7 @@
     "mm.scorpionGiant": {
       "kind": "kind.monster",
       "name": "Scorpion, Giant",
-      "cite": "MM p.272",
+      "cite": "MM p.270",
       "pages": [
         272
       ],
@@ -162698,7 +162698,7 @@
     "mm.sealCommon": {
       "kind": "kind.monster",
       "name": "Seal, Common",
-      "cite": "MM p.273",
+      "cite": "MM p.271",
       "pages": [
         273
       ],
@@ -163419,7 +163419,7 @@
     "mm.seaSerpent": {
       "kind": "kind.monster",
       "name": "Sea Serpent",
-      "cite": "MM p.274",
+      "cite": "MM p.272",
       "pages": [
         274
       ],
@@ -164144,7 +164144,7 @@
     "mm.sepulchralWorm": {
       "kind": "kind.monster",
       "name": "Sepulchral Worm",
-      "cite": "MM p.275",
+      "cite": "MM p.273",
       "pages": [
         275
       ],
@@ -164844,7 +164844,7 @@
     "mm.shadow": {
       "kind": "kind.monster",
       "name": "Shadow",
-      "cite": "MM p.276",
+      "cite": "MM p.274",
       "pages": [
         276
       ],
@@ -165583,7 +165583,7 @@
     "mm.sharkBull": {
       "kind": "kind.monster",
       "name": "Shark, Bull",
-      "cite": "MM p.277",
+      "cite": "MM p.275",
       "pages": [
         277
       ],
@@ -166272,7 +166272,7 @@
     "mm.sharkGreatWhite": {
       "kind": "kind.monster",
       "name": "Shark, Great White",
-      "cite": "MM p.278",
+      "cite": "MM p.276",
       "pages": [
         278
       ],
@@ -166983,7 +166983,7 @@
     "mm.sharkMako": {
       "kind": "kind.monster",
       "name": "Shark, Mako",
-      "cite": "MM p.279",
+      "cite": "MM p.277",
       "pages": [
         279
       ],
@@ -167694,7 +167694,7 @@
     "mm.siren": {
       "kind": "kind.monster",
       "name": "Siren",
-      "cite": "MM p.280",
+      "cite": "MM p.278",
       "pages": [
         280
       ],
@@ -168426,7 +168426,7 @@
     "mm.skeletalSlayer": {
       "kind": "kind.monster",
       "name": "Skeletal Slayer",
-      "cite": "MM p.281",
+      "cite": "MM p.279",
       "pages": [
         281
       ],
@@ -169151,7 +169151,7 @@
     "mm.skeleton": {
       "kind": "kind.monster",
       "name": "Skeleton",
-      "cite": "MM p.282",
+      "cite": "MM p.280",
       "pages": [
         282
       ],
@@ -169870,7 +169870,7 @@
     "mm.skitteringMaw": {
       "kind": "kind.monster",
       "name": "Skittering Maw",
-      "cite": "MM p.283",
+      "cite": "MM p.281",
       "pages": [
         283
       ],
@@ -170583,7 +170583,7 @@
     "mm.slimeSage": {
       "kind": "kind.monster",
       "name": "Slime, Sage",
-      "cite": "MM p.284",
+      "cite": "MM p.282",
       "pages": [
         284
       ],
@@ -171298,7 +171298,7 @@
     "mm.slugGiant": {
       "kind": "kind.monster",
       "name": "Slug, Giant",
-      "cite": "MM p.285",
+      "cite": "MM p.283",
       "pages": [
         285
       ],
@@ -172044,7 +172044,7 @@
     "mm.snakeGiantConstrictingViper": {
       "kind": "kind.monster",
       "name": "Snake, Giant Constricting Viper",
-      "cite": "MM p.286",
+      "cite": "MM p.284",
       "pages": [
         286
       ],
@@ -172757,7 +172757,7 @@
     "mm.snakeKingCobra": {
       "kind": "kind.monster",
       "name": "Snake, King Cobra",
-      "cite": "MM p.287",
+      "cite": "MM p.285",
       "pages": [
         287
       ],
@@ -173484,7 +173484,7 @@
     "mm.snakePython": {
       "kind": "kind.monster",
       "name": "Snake, Python",
-      "cite": "MM p.288",
+      "cite": "MM p.286",
       "pages": [
         288
       ],
@@ -174192,7 +174192,7 @@
     "mm.snakeSeaSnake": {
       "kind": "kind.monster",
       "name": "Snake, Sea Snake",
-      "cite": "MM p.289",
+      "cite": "MM p.287",
       "pages": [
         289
       ],
@@ -174913,7 +174913,7 @@
     "mm.snakeSpittingCobra": {
       "kind": "kind.monster",
       "name": "Snake, Spitting Cobra",
-      "cite": "MM p.290",
+      "cite": "MM p.288",
       "pages": [
         290
       ],
@@ -175641,7 +175641,7 @@
     "mm.snakeViper": {
       "kind": "kind.monster",
       "name": "Snake, Viper",
-      "cite": "MM p.291",
+      "cite": "MM p.289",
       "pages": [
         291
       ],
@@ -176335,7 +176335,7 @@
     "mm.specter": {
       "kind": "kind.monster",
       "name": "Specter",
-      "cite": "MM p.292",
+      "cite": "MM p.290",
       "pages": [
         292
       ],
@@ -177082,7 +177082,7 @@
     "mm.spellTyrant": {
       "kind": "kind.monster",
       "name": "Spell Tyrant",
-      "cite": "MM p.293",
+      "cite": "MM p.291",
       "pages": [
         293
       ],
@@ -177876,7 +177876,7 @@
     "mm.sphinx": {
       "kind": "kind.monster",
       "name": "Sphinx",
-      "cite": "MM p.294",
+      "cite": "MM p.292",
       "pages": [
         294
       ],
@@ -178647,7 +178647,7 @@
     "mm.spiderGiantBlackWidow": {
       "kind": "kind.monster",
       "name": "Spider, Giant Black Widow",
-      "cite": "MM p.295",
+      "cite": "MM p.293",
       "pages": [
         295
       ],
@@ -179365,7 +179365,7 @@
     "mm.spiderGiantCrab": {
       "kind": "kind.monster",
       "name": "Spider, Giant Crab",
-      "cite": "MM p.296",
+      "cite": "MM p.294",
       "pages": [
         296
       ],
@@ -180101,7 +180101,7 @@
     "mm.spiderGiantTarantula": {
       "kind": "kind.monster",
       "name": "Spider, Giant Tarantula",
-      "cite": "MM p.297",
+      "cite": "MM p.295",
       "pages": [
         297
       ],
@@ -180828,7 +180828,7 @@
     "mm.squidGiant": {
       "kind": "kind.monster",
       "name": "Squid, Giant",
-      "cite": "MM p.298",
+      "cite": "MM p.296",
       "pages": [
         298
       ],
@@ -181589,7 +181589,7 @@
     "mm.statueAnimatedBronze": {
       "kind": "kind.monster",
       "name": "Statue, Animated Bronze",
-      "cite": "MM p.299",
+      "cite": "MM p.297",
       "pages": [
         299
       ],
@@ -182302,7 +182302,7 @@
     "mm.statueAnimatedChryselephantine": {
       "kind": "kind.monster",
       "name": "Statue, Animated Chryselephantine",
-      "cite": "MM p.300",
+      "cite": "MM p.298",
       "pages": [
         300
       ],
@@ -183020,7 +183020,7 @@
     "mm.statueAnimatedCrystal": {
       "kind": "kind.monster",
       "name": "Statue, Animated Crystal",
-      "cite": "MM p.301",
+      "cite": "MM p.299",
       "pages": [
         301
       ],
@@ -183764,7 +183764,7 @@
     "mm.statueAnimatedIron": {
       "kind": "kind.monster",
       "name": "Statue, Animated Iron",
-      "cite": "MM p.302",
+      "cite": "MM p.300",
       "pages": [
         302
       ],
@@ -184496,7 +184496,7 @@
     "mm.statueAnimatedStone": {
       "kind": "kind.monster",
       "name": "Statue, Animated Stone",
-      "cite": "MM p.303",
+      "cite": "MM p.301",
       "pages": [
         303
       ],
@@ -185213,7 +185213,7 @@
     "mm.strix": {
       "kind": "kind.monster",
       "name": "Strix",
-      "cite": "MM p.304",
+      "cite": "MM p.302",
       "pages": [
         304
       ],
@@ -185945,7 +185945,7 @@
     "mm.stymph": {
       "kind": "kind.monster",
       "name": "Stymph",
-      "cite": "MM p.305",
+      "cite": "MM p.303",
       "pages": [
         305
       ],
@@ -186688,7 +186688,7 @@
     "mm.swarmBat": {
       "kind": "kind.monster",
       "name": "Swarm, Bat",
-      "cite": "MM p.306",
+      "cite": "MM p.304",
       "pages": [
         306
       ],
@@ -187451,7 +187451,7 @@
     "mm.swarmFish": {
       "kind": "kind.monster",
       "name": "Swarm, Fish",
-      "cite": "MM p.307",
+      "cite": "MM p.305",
       "pages": [
         307
       ],
@@ -188216,7 +188216,7 @@
     "mm.swarmInsect": {
       "kind": "kind.monster",
       "name": "Swarm, Insect",
-      "cite": "MM p.308",
+      "cite": "MM p.306",
       "pages": [
         308
       ],
@@ -188988,7 +188988,7 @@
     "mm.swarmRat": {
       "kind": "kind.monster",
       "name": "Swarm, Rat",
-      "cite": "MM p.309",
+      "cite": "MM p.307",
       "pages": [
         309
       ],
@@ -189758,7 +189758,7 @@
     "mm.thrassianGreaterLizardman": {
       "kind": "kind.monster",
       "name": "Thrassian (Greater Lizardman)",
-      "cite": "MM p.310",
+      "cite": "MM p.308",
       "pages": [
         310
       ],
@@ -190535,7 +190535,7 @@
     "mm.tickGiant": {
       "kind": "kind.monster",
       "name": "Tick, Giant",
-      "cite": "MM p.312",
+      "cite": "MM p.310",
       "pages": [
         312
       ],
@@ -191237,7 +191237,7 @@
     "mm.titanGreater": {
       "kind": "kind.monster",
       "name": "Titan, Greater",
-      "cite": "MM p.313",
+      "cite": "MM p.311",
       "pages": [
         313
       ],
@@ -192003,7 +192003,7 @@
     "mm.titanLesser": {
       "kind": "kind.monster",
       "name": "Titan, Lesser",
-      "cite": "MM p.314",
+      "cite": "MM p.312",
       "pages": [
         314
       ],
@@ -192730,7 +192730,7 @@
     "mm.toadGiant": {
       "kind": "kind.monster",
       "name": "Toad, Giant",
-      "cite": "MM p.315",
+      "cite": "MM p.313",
       "pages": [
         315
       ],
@@ -193445,7 +193445,7 @@
     "mm.tokayGull": {
       "kind": "kind.monster",
       "name": "Tokay Gull",
-      "cite": "MM p.316",
+      "cite": "MM p.314",
       "pages": [
         316
       ],
@@ -194186,7 +194186,7 @@
     "mm.treeherder": {
       "kind": "kind.monster",
       "name": "Treeherder",
-      "cite": "MM p.317",
+      "cite": "MM p.315",
       "pages": [
         317
       ],
@@ -194912,7 +194912,7 @@
     "mm.triton": {
       "kind": "kind.monster",
       "name": "Triton",
-      "cite": "MM p.318",
+      "cite": "MM p.316",
       "pages": [
         318
       ],
@@ -195639,7 +195639,7 @@
     "mm.troglodyte": {
       "kind": "kind.monster",
       "name": "Troglodyte",
-      "cite": "MM p.319",
+      "cite": "MM p.317",
       "pages": [
         319
       ],
@@ -196393,7 +196393,7 @@
     "mm.troll": {
       "kind": "kind.monster",
       "name": "Troll",
-      "cite": "MM p.320",
+      "cite": "MM p.318",
       "pages": [
         320
       ],
@@ -197115,7 +197115,7 @@
     "mm.turtleSea": {
       "kind": "kind.monster",
       "name": "Turtle, Sea",
-      "cite": "MM p.321",
+      "cite": "MM p.319",
       "pages": [
         321
       ],
@@ -197813,7 +197813,7 @@
     "mm.unicorn": {
       "kind": "kind.monster",
       "name": "Unicorn",
-      "cite": "MM p.322",
+      "cite": "MM p.320",
       "pages": [
         322
       ],
@@ -198519,7 +198519,7 @@
     "mm.vampire": {
       "kind": "kind.monster",
       "name": "Vampire",
-      "cite": "MM p.323",
+      "cite": "MM p.321",
       "pages": [
         323
       ],
@@ -199344,7 +199344,7 @@
     "mm.vampireThrall": {
       "kind": "kind.monsterTemplate",
       "name": "Vampire Thrall",
-      "cite": "MM p.325",
+      "cite": "MM p.323",
       "pages": [
         325
       ],
@@ -199535,7 +199535,7 @@
     "mm.varmintGiantFerret": {
       "kind": "kind.monster",
       "name": "Varmint, Giant Ferret",
-      "cite": "MM p.326",
+      "cite": "MM p.324",
       "pages": [
         326
       ],
@@ -200232,7 +200232,7 @@
     "mm.varmintGiantRat": {
       "kind": "kind.monster",
       "name": "Varmint, Giant Rat",
-      "cite": "MM p.327",
+      "cite": "MM p.325",
       "pages": [
         327
       ],
@@ -200967,7 +200967,7 @@
     "mm.varmintGiantShrew": {
       "kind": "kind.monster",
       "name": "Varmint, Giant Shrew",
-      "cite": "MM p.328",
+      "cite": "MM p.326",
       "pages": [
         328
       ],
@@ -201726,7 +201726,7 @@
     "mm.varmintGiantWeasel": {
       "kind": "kind.monster",
       "name": "Varmint, Giant Weasel",
-      "cite": "MM p.329",
+      "cite": "MM p.327",
       "pages": [
         329
       ],
@@ -202493,7 +202493,7 @@
     "mm.venousSentinel": {
       "kind": "kind.monster",
       "name": "Venous Sentinel",
-      "cite": "MM p.330",
+      "cite": "MM p.328",
       "pages": [
         330
       ],
@@ -203221,7 +203221,7 @@
     "mm.waspGiantParasitic": {
       "kind": "kind.monster",
       "name": "Wasp, Giant Parasitic",
-      "cite": "MM p.331",
+      "cite": "MM p.329",
       "pages": [
         331
       ],
@@ -203971,7 +203971,7 @@
     "mm.whaleKiller": {
       "kind": "kind.monster",
       "name": "Whale, Killer",
-      "cite": "MM p.332",
+      "cite": "MM p.330",
       "pages": [
         332
       ],
@@ -204683,7 +204683,7 @@
     "mm.whaleNarwhal": {
       "kind": "kind.monster",
       "name": "Whale, Narwhal",
-      "cite": "MM p.333",
+      "cite": "MM p.331",
       "pages": [
         333
       ],
@@ -205374,7 +205374,7 @@
     "mm.whaleSperm": {
       "kind": "kind.monster",
       "name": "Whale, Sperm",
-      "cite": "MM p.334",
+      "cite": "MM p.332",
       "pages": [
         334
       ],
@@ -206100,7 +206100,7 @@
     "mm.wight": {
       "kind": "kind.monster",
       "name": "Wight",
-      "cite": "MM p.335",
+      "cite": "MM p.333",
       "pages": [
         335
       ],
@@ -206822,7 +206822,7 @@
     "mm.wildHuntsman": {
       "kind": "kind.monster",
       "name": "Wild Huntsman",
-      "cite": "MM p.336",
+      "cite": "MM p.334",
       "pages": [
         336
       ],
@@ -207607,7 +207607,7 @@
     "mm.wolfCommon": {
       "kind": "kind.monster",
       "name": "Wolf, Common",
-      "cite": "MM p.338",
+      "cite": "MM p.336",
       "pages": [
         338
       ],
@@ -208362,7 +208362,7 @@
     "mm.wolfDire": {
       "kind": "kind.monster",
       "name": "Wolf, Dire",
-      "cite": "MM p.339",
+      "cite": "MM p.337",
       "pages": [
         339
       ],
@@ -209114,7 +209114,7 @@
     "mm.wolfWarg": {
       "kind": "kind.monster",
       "name": "Wolf, Warg",
-      "cite": "MM p.340",
+      "cite": "MM p.338",
       "pages": [
         340
       ],
@@ -209871,7 +209871,7 @@
     "mm.wormGiantOverview": {
       "kind": "kind.monster",
       "name": "Worm, Giant (Overview)",
-      "cite": "MM p.341",
+      "cite": "MM p.339",
       "pages": [
         341,
         342
@@ -210557,7 +210557,7 @@
     "mm.wormGiantBlack": {
       "kind": "kind.monster",
       "name": "Worm, Giant Black",
-      "cite": "MM p.342",
+      "cite": "MM p.340",
       "pages": [
         342
       ],
@@ -211272,7 +211272,7 @@
     "mm.wormGiantGrey": {
       "kind": "kind.monster",
       "name": "Worm, Giant Grey",
-      "cite": "MM p.343",
+      "cite": "MM p.341",
       "pages": [
         343
       ],
@@ -211994,7 +211994,7 @@
     "mm.wormGreatIce": {
       "kind": "kind.monster",
       "name": "Worm, Great Ice",
-      "cite": "MM p.344",
+      "cite": "MM p.342",
       "pages": [
         344
       ],
@@ -212717,7 +212717,7 @@
     "mm.wraith": {
       "kind": "kind.monster",
       "name": "Wraith",
-      "cite": "MM p.345",
+      "cite": "MM p.343",
       "pages": [
         345
       ],
@@ -213456,7 +213456,7 @@
     "mm.wyvern": {
       "kind": "kind.monster",
       "name": "Wyvern",
-      "cite": "MM p.346",
+      "cite": "MM p.344",
       "pages": [
         346
       ],
@@ -214197,7 +214197,7 @@
     "mm.yali": {
       "kind": "kind.monster",
       "name": "Yali",
-      "cite": "MM p.347",
+      "cite": "MM p.345",
       "pages": [
         347
       ],
@@ -214914,7 +214914,7 @@
     "mm.zombie": {
       "kind": "kind.monster",
       "name": "Zombie",
-      "cite": "MM p.348",
+      "cite": "MM p.346",
       "pages": [
         348
       ],
@@ -220495,7 +220495,7 @@
     "mm.familyAttercop": {
       "name": "Attercop",
       "nameFormat": "{variant}",
-      "cite": "MM p.30",
+      "cite": "MM p.28",
       "pages": [
         30
       ],
@@ -220521,7 +220521,7 @@
     "mm.familyBarghest": {
       "name": "Barghest",
       "nameFormat": "{variant}",
-      "cite": "MM p.38",
+      "cite": "MM p.36",
       "pages": [
         38
       ],
@@ -220539,7 +220539,7 @@
     "mm.familyBasilisk": {
       "name": "Basilisk",
       "nameFormat": "{variant}",
-      "cite": "MM p.40",
+      "cite": "MM p.38",
       "pages": [
         40
       ],
@@ -220557,7 +220557,7 @@
     "mm.familyBat": {
       "name": "Bat",
       "nameFormat": "{variant}",
-      "cite": "MM p.42",
+      "cite": "MM p.40",
       "pages": [
         42
       ],
@@ -220579,7 +220579,7 @@
     "mm.familyBear": {
       "name": "Bear",
       "nameFormat": "{variant}",
-      "cite": "MM p.45",
+      "cite": "MM p.43",
       "pages": [
         45
       ],
@@ -220605,7 +220605,7 @@
     "mm.familyBeastman": {
       "name": "Beastman",
       "nameFormat": "{variant}",
-      "cite": "MM p.49",
+      "cite": "MM p.47",
       "pages": [
         49
       ],
@@ -220643,7 +220643,7 @@
     "mm.familyBeetle": {
       "name": "Beetle",
       "nameFormat": "{variant}",
-      "cite": "MM p.62",
+      "cite": "MM p.60",
       "pages": [
         62
       ],
@@ -220665,7 +220665,7 @@
     "mm.familyBoar": {
       "name": "Boar",
       "nameFormat": "{variant}",
-      "cite": "MM p.67",
+      "cite": "MM p.65",
       "pages": [
         67
       ],
@@ -220683,7 +220683,7 @@
     "mm.familyCat": {
       "name": "Cat",
       "nameFormat": "{variant}",
-      "cite": "MM p.79",
+      "cite": "MM p.77",
       "pages": [
         79
       ],
@@ -220721,7 +220721,7 @@
     "mm.familyCrocodile": {
       "name": "Crocodile",
       "nameFormat": "{variant}",
-      "cite": "MM p.93",
+      "cite": "MM p.91",
       "pages": [
         93
       ],
@@ -220743,7 +220743,7 @@
     "mm.familyDakhanavar": {
       "name": "Dakhanavar",
       "nameFormat": "{variant}",
-      "cite": "MM p.97",
+      "cite": "MM p.95",
       "pages": [
         97
       ],
@@ -220761,7 +220761,7 @@
     "mm.familyDog": {
       "name": "Dog",
       "nameFormat": "{variant}",
-      "cite": "MM p.103",
+      "cite": "MM p.101",
       "pages": [
         103
       ],
@@ -220779,7 +220779,7 @@
     "mm.familyEquine": {
       "name": "Equine",
       "nameFormat": "{variant}",
-      "cite": "MM p.123",
+      "cite": "MM p.121",
       "pages": [
         123
       ],
@@ -220813,7 +220813,7 @@
     "mm.familyFaerie": {
       "name": "Faerie",
       "nameFormat": "{variant}",
-      "cite": "MM p.130",
+      "cite": "MM p.128",
       "pages": [
         130
       ],
@@ -220855,7 +220855,7 @@
     "mm.familyFish": {
       "name": "Fish",
       "nameFormat": "{variant}",
-      "cite": "MM p.139",
+      "cite": "MM p.137",
       "pages": [
         139
       ],
@@ -220881,7 +220881,7 @@
     "mm.familyFungus": {
       "name": "Fungus",
       "nameFormat": "{variant}",
-      "cite": "MM p.146",
+      "cite": "MM p.144",
       "pages": [
         146
       ],
@@ -220899,7 +220899,7 @@
     "mm.familyGenie": {
       "name": "Genie",
       "nameFormat": "{variant}",
-      "cite": "MM p.150",
+      "cite": "MM p.148",
       "pages": [
         150
       ],
@@ -220925,7 +220925,7 @@
     "mm.familyGhoul": {
       "name": "Ghoul",
       "nameFormat": "{variant}",
-      "cite": "MM p.154",
+      "cite": "MM p.152",
       "pages": [
         154
       ],
@@ -220947,7 +220947,7 @@
     "mm.familyGiant": {
       "name": "Giant",
       "nameFormat": "{variant}",
-      "cite": "MM p.157",
+      "cite": "MM p.155",
       "pages": [
         157
       ],
@@ -220973,7 +220973,7 @@
     "mm.familyGolem": {
       "name": "Golem",
       "nameFormat": "{variant}",
-      "cite": "MM p.162",
+      "cite": "MM p.160",
       "pages": [
         162
       ],
@@ -221007,7 +221007,7 @@
     "mm.familyHellhound": {
       "name": "Hellhound",
       "nameFormat": "{variant}",
-      "cite": "MM p.179",
+      "cite": "MM p.177",
       "pages": [
         179
       ],
@@ -221025,7 +221025,7 @@
     "mm.familyHyena": {
       "name": "Hyena",
       "nameFormat": "{variant}",
-      "cite": "MM p.190",
+      "cite": "MM p.188",
       "pages": [
         190
       ],
@@ -221043,7 +221043,7 @@
     "mm.familyLizard": {
       "name": "Lizard",
       "nameFormat": "{variant}",
-      "cite": "MM p.205",
+      "cite": "MM p.203",
       "pages": [
         205
       ],
@@ -221069,7 +221069,7 @@
     "mm.familyLycanthrope": {
       "name": "Lycanthrope",
       "nameFormat": "{variant}",
-      "cite": "MM p.211",
+      "cite": "MM p.209",
       "pages": [
         211
       ],
@@ -221103,7 +221103,7 @@
     "mm.familyMan": {
       "name": "Man",
       "nameFormat": "{variant}",
-      "cite": "MM p.219",
+      "cite": "MM p.217",
       "pages": [
         219
       ],
@@ -221165,7 +221165,7 @@
     "mm.familyNymph": {
       "name": "Nymph",
       "nameFormat": "{variant}",
-      "cite": "MM p.248",
+      "cite": "MM p.246",
       "pages": [
         248
       ],
@@ -221187,7 +221187,7 @@
     "mm.familyOstrich": {
       "name": "Ostrich",
       "nameFormat": "{variant}",
-      "cite": "MM p.254",
+      "cite": "MM p.252",
       "pages": [
         254
       ],
@@ -221205,7 +221205,7 @@
     "mm.familyRaptor": {
       "name": "Raptor",
       "nameFormat": "{variant}",
-      "cite": "MM p.260",
+      "cite": "MM p.258",
       "pages": [
         260
       ],
@@ -221231,7 +221231,7 @@
     "mm.familyRhinoceros": {
       "name": "Rhinoceros",
       "nameFormat": "{variant}",
-      "cite": "MM p.264",
+      "cite": "MM p.262",
       "pages": [
         264
       ],
@@ -221249,7 +221249,7 @@
     "mm.familyRoc": {
       "name": "Roc",
       "nameFormat": "{variant}",
-      "cite": "MM p.266",
+      "cite": "MM p.264",
       "pages": [
         266
       ],
@@ -221271,7 +221271,7 @@
     "mm.familySalamander": {
       "name": "Salamander",
       "nameFormat": "{variant}",
-      "cite": "MM p.270",
+      "cite": "MM p.268",
       "pages": [
         270
       ],
@@ -221289,7 +221289,7 @@
     "mm.familyShark": {
       "name": "Shark",
       "nameFormat": "{variant}",
-      "cite": "MM p.277",
+      "cite": "MM p.275",
       "pages": [
         277
       ],
@@ -221311,7 +221311,7 @@
     "mm.familySnake": {
       "name": "Snake",
       "nameFormat": "{variant}",
-      "cite": "MM p.286",
+      "cite": "MM p.284",
       "pages": [
         286
       ],
@@ -221345,7 +221345,7 @@
     "mm.familySpider": {
       "name": "Spider",
       "nameFormat": "{variant}",
-      "cite": "MM p.295",
+      "cite": "MM p.293",
       "pages": [
         295
       ],
@@ -221367,7 +221367,7 @@
     "mm.familyStatue": {
       "name": "Statue",
       "nameFormat": "{variant}",
-      "cite": "MM p.299",
+      "cite": "MM p.297",
       "pages": [
         299
       ],
@@ -221397,7 +221397,7 @@
     "mm.familySwarm": {
       "name": "Swarm",
       "nameFormat": "{variant}",
-      "cite": "MM p.306",
+      "cite": "MM p.304",
       "pages": [
         306
       ],
@@ -221423,7 +221423,7 @@
     "mm.familyTitan": {
       "name": "Titan",
       "nameFormat": "{variant}",
-      "cite": "MM p.313",
+      "cite": "MM p.311",
       "pages": [
         313
       ],
@@ -221441,7 +221441,7 @@
     "mm.familyVarmint": {
       "name": "Varmint",
       "nameFormat": "{variant}",
-      "cite": "MM p.326",
+      "cite": "MM p.324",
       "pages": [
         326
       ],
@@ -221467,7 +221467,7 @@
     "mm.familyWhale": {
       "name": "Whale",
       "nameFormat": "{variant}",
-      "cite": "MM p.332",
+      "cite": "MM p.330",
       "pages": [
         332
       ],
@@ -221489,7 +221489,7 @@
     "mm.familyWolf": {
       "name": "Wolf",
       "nameFormat": "{variant}",
-      "cite": "MM p.338",
+      "cite": "MM p.336",
       "pages": [
         338
       ],
@@ -221511,7 +221511,7 @@
     "mm.familyWorm": {
       "name": "Worm",
       "nameFormat": "{variant}",
-      "cite": "MM p.341",
+      "cite": "MM p.339",
       "pages": [
         341
       ],
@@ -221537,7 +221537,7 @@
     "mm.familyMummy": {
       "name": "Mummy",
       "nameFormat": "{variant}",
-      "cite": "MM p.241",
+      "cite": "MM p.239",
       "pages": [
         241
       ],

@@ -19,7 +19,7 @@ import { fileURLToPath } from "node:url";
 import { openBook, pageItems, listHeadings, detectColumns, colOf, glyphColorRuns, pageArtPlacements } from "../scripts/extract.mjs";
 import { runsIn, joinRuns, attackModel } from "../scripts/executor.mjs";
 import { rowsByY, slugLabel } from "../scripts/table-extract.mjs";
-import { BOOKS, fingerprintWarning } from "../scripts/books.mjs";
+import { BOOKS, citeFor, fingerprintWarning } from "../scripts/books.mjs";
 import { FILES, OSE_FILES } from "./reference-lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -800,7 +800,7 @@ async function compileMonster(doc, entry, kindRow, glyphChars) {
   return {
     kind: entry.kind,
     name: entry.name,
-    cite: `${BOOKS[entry.book].short} p.${page}`,
+    cite: citeFor(entry.book, page),
     pages: statPage !== page ? [page, statPage] : entry.pages,
     fields,
     ...(unmapped.length ? { _unmappedLabels: unmapped } : {}),
@@ -1390,7 +1390,7 @@ async function compileMonsterTemplate(doc, entry, kindRow, bookCtx) {
   return {
     kind: entry.kind,
     name: entry.name,
-    cite: `${BOOKS[entry.book].short} p.${page}`,
+    cite: citeFor(entry.book, page),
     pages,
     fields,
     ...(Object.keys(template).length ? { template } : {}),
@@ -1429,7 +1429,6 @@ const AX_HANG = 12;
 const AX_DIE_RE = /^\d+(?:\s*[-–]\s*\d+)?(?:\s*,\s*\d+(?:\s*[-–]\s*\d+)?)*$/;
 const axColOf = (x, cols) => colOf(x + AX_HANG, cols);
 
-const axCite = (book, page) => `${BOOKS[book].short} p.${page - (BOOKS[book].printedOffset ?? 0)}`;
 const collapse = (s) => s.replace(/\s+/g, " ").trim();
 // Mirror of the executor's expect fold (NFKD + strip marks + alnum): anchor
 // FINDING must agree with runtime anchor CHECKING or a compiled entry stubs.
@@ -1908,7 +1907,7 @@ async function compileLocation(doc, entry, kindRow) {
     };
   });
   const out = {
-    kind: entry.kind, name: entry.name, cite: axCite(entry.book, page), pages: entry.pages,
+    kind: entry.kind, name: entry.name, cite: citeFor(entry.book, page), pages: entry.pages,
     ...(entry.meta ? { meta: entry.meta } : {}), fields,
   };
   const skipsOut2 = await axResidueAll(doc, entry.id, fields, { [page]: pd });
@@ -2024,7 +2023,7 @@ async function compileNpc(doc, entry, kindRow, bookCtx) {
     if (art) fields.art = art;
   }
   const out = {
-    kind: entry.kind, name: entry.name, cite: axCite(entry.book, page), pages: entry.pages,
+    kind: entry.kind, name: entry.name, cite: citeFor(entry.book, page), pages: entry.pages,
     ...(entry.meta ? { meta: entry.meta } : {}), fields,
   };
   const skipsOut2 = await axResidueAll(doc, entry.id, fields, { [page]: pd });
@@ -2204,7 +2203,7 @@ async function compileRollTable(doc, entry, kindRow) {
     fields.roll = { op: "value", page: assists.rollAt.page ?? page, pattern: "dice", box: assists.rollAt.box };
   }
   const out = {
-    kind: entry.kind, name: entry.name, cite: axCite(entry.book, page), pages: entry.pages,
+    kind: entry.kind, name: entry.name, cite: citeFor(entry.book, page), pages: entry.pages,
     ...(entry.meta ? { meta: entry.meta } : {}), fields,
   };
   const rSkips = await axResidueAll(doc, entry.id, fields, { [fields.name.page ?? page]: pd });
@@ -2300,7 +2299,7 @@ async function compileLegacyMonster(doc, entry, kindRow) {
     if (art) fields.art = art;
   }
   const out = {
-    kind: entry.kind, name: entry.name, cite: axCite(entry.book, page), pages: entry.pages,
+    kind: entry.kind, name: entry.name, cite: citeFor(entry.book, page), pages: entry.pages,
     ...(entry.meta ? { meta: entry.meta } : {}), fields,
   };
   const skipsOut2 = await axResidueAll(doc, entry.id, fields, { [page]: pd });
@@ -2893,7 +2892,7 @@ async function compileClass(doc, entry, kindRow) {
     kind: entry.kind,
     name: entry.name,
     book: entry.book,
-    cite: `${BOOKS[entry.book].short} p.${page}`,
+    cite: citeFor(entry.book, page),
     pages: entry.pages,
     ...(entry.icon ? { icon: entry.icon } : {}),
     meta: {
@@ -2955,7 +2954,7 @@ async function compileClassMeta(doc, entry) {
       kind: entry.kind,
       name: entry.name,
       book: entry.book,
-      cite: `${BOOKS[entry.book].short} p.${entry.pages[0]}`,
+      cite: citeFor(entry.book, entry.pages[0]),
       pages: entry.pages,
       meta: { ...(entry.meta ?? {}) },
       fields,
@@ -3001,7 +3000,7 @@ async function compileClassMeta(doc, entry) {
     kind: entry.kind,
     name: entry.name,
     book: entry.book,
-    cite: `${BOOKS[entry.book].short} p.${page}`,
+    cite: citeFor(entry.book, page),
     pages: entry.pages,
     meta: { ...(entry.meta ?? {}) },
     fields: {
@@ -3719,7 +3718,7 @@ async function compileDefinition(doc, entry, kindRow, siblings = []) {
     kind: entry.kind,
     name: entry.name,
     book: entry.book,
-    cite: `${BOOKS[entry.book].short} p.${page}`,
+    cite: citeFor(entry.book, page),
     pages: entry.pages,
     // Classification facts are AUTHORED, never inferred from the page here.
     // A pattern over body text is a scan, and scans locate rather than
@@ -4149,7 +4148,7 @@ async function main() {
         families[famId] = {
           name: base,
           nameFormat: "{variant}",
-          cite: `${BOOKS[bookId].short} p.${ordered[0].page}`,
+          cite: citeFor(bookId, ordered[0].page),
           pages: [ordered[0].page],
           members: ordered.map((x) => ({ id: x.id, variant: x.variant })),
         };

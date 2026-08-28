@@ -7,7 +7,7 @@
       "kind": "kind.trap",
       "name": "Ceiling Collapse Trap",
       "book": "jj",
-      "cite": "JJ p.241",
+      "cite": "JJ p.239",
       "pages": [
         241
       ],
@@ -102,7 +102,7 @@
       "kind": "kind.trap",
       "name": "Deadfall Trap",
       "book": "jj",
-      "cite": "JJ p.241",
+      "cite": "JJ p.239",
       "pages": [
         241
       ],
@@ -195,7 +195,7 @@
       "kind": "kind.trap",
       "name": "Excavated Earth Pit Trap",
       "book": "jj",
-      "cite": "JJ p.241",
+      "cite": "JJ p.239",
       "pages": [
         241
       ],
@@ -279,7 +279,7 @@
       "kind": "kind.trap",
       "name": "Fire Trap",
       "book": "jj",
-      "cite": "JJ p.241",
+      "cite": "JJ p.239",
       "pages": [
         241
       ],
@@ -400,7 +400,7 @@
       "kind": "kind.trap",
       "name": "Missile Trap",
       "book": "jj",
-      "cite": "JJ p.241",
+      "cite": "JJ p.239",
       "pages": [
         241
       ],
@@ -524,7 +524,7 @@
       "kind": "kind.trap",
       "name": "Needle Trap",
       "book": "jj",
-      "cite": "JJ p.242",
+      "cite": "JJ p.240",
       "pages": [
         242
       ],
@@ -647,7 +647,7 @@
       "kind": "kind.trap",
       "name": "Portcullis Trap",
       "book": "jj",
-      "cite": "JJ p.242",
+      "cite": "JJ p.240",
       "pages": [
         242
       ],
@@ -776,7 +776,7 @@
       "kind": "kind.trap",
       "name": "Rock-Cut Pit Trap",
       "book": "jj",
-      "cite": "JJ p.242",
+      "cite": "JJ p.240",
       "pages": [
         242
       ],
@@ -863,7 +863,7 @@
       "kind": "kind.trap",
       "name": "Rolling Rock Trap",
       "book": "jj",
-      "cite": "JJ p.242",
+      "cite": "JJ p.240",
       "pages": [
         242
       ],
@@ -962,7 +962,7 @@
       "kind": "kind.trap",
       "name": "Scything Blade Trap",
       "book": "jj",
-      "cite": "JJ p.242",
+      "cite": "JJ p.240",
       "pages": [
         242
       ],
@@ -1088,7 +1088,7 @@
       "kind": "kind.trap",
       "name": "Spring Snare Trap",
       "book": "jj",
-      "cite": "JJ p.243",
+      "cite": "JJ p.241",
       "pages": [
         243
       ],
@@ -1189,7 +1189,7 @@
       "kind": "kind.trap",
       "name": "Swinging Log Trap",
       "book": "jj",
-      "cite": "JJ p.243",
+      "cite": "JJ p.241",
       "pages": [
         243
       ],
@@ -1314,7 +1314,7 @@
       "kind": "kind.trap",
       "name": "Whipping Branch Trap",
       "book": "jj",
-      "cite": "JJ p.243",
+      "cite": "JJ p.241",
       "pages": [
         243
       ],

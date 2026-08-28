@@ -6,7 +6,7 @@
       "kind": "kind.class",
       "name": "Dwarven Delver",
       "book": "bta",
-      "cite": "BTA p.61",
+      "cite": "BTA p.60",
       "pages": [
         61,
         62,
@@ -487,7 +487,7 @@
       "kind": "kind.class",
       "name": "Dwarven Earthforger",
       "book": "bta",
-      "cite": "BTA p.63",
+      "cite": "BTA p.62",
       "pages": [
         63,
         64,
@@ -990,7 +990,7 @@
       "kind": "kind.class",
       "name": "Dwarven Excavator",
       "book": "bta",
-      "cite": "BTA p.67",
+      "cite": "BTA p.66",
       "pages": [
         67,
         68,
@@ -1427,7 +1427,7 @@
       "kind": "kind.class",
       "name": "Dwarven Furnacewife",
       "book": "bta",
-      "cite": "BTA p.70",
+      "cite": "BTA p.69",
       "pages": [
         70,
         71,
@@ -1867,7 +1867,7 @@
       "kind": "kind.class",
       "name": "Dwarven Fury",
       "book": "bta",
-      "cite": "BTA p.73",
+      "cite": "BTA p.72",
       "pages": [
         73,
         74,
@@ -2274,7 +2274,7 @@
       "kind": "kind.class",
       "name": "Dwarven Machinist",
       "book": "bta",
-      "cite": "BTA p.76",
+      "cite": "BTA p.75",
       "pages": [
         76,
         77,
@@ -2722,7 +2722,7 @@
       "kind": "kind.class",
       "name": "Dwarven Pugilist",
       "book": "bta",
-      "cite": "BTA p.79",
+      "cite": "BTA p.78",
       "pages": [
         79,
         80,
@@ -3161,7 +3161,7 @@
       "kind": "kind.class",
       "name": "Dwarven Rhetor",
       "book": "bta",
-      "cite": "BTA p.82",
+      "cite": "BTA p.81",
       "pages": [
         82,
         83,
@@ -3608,7 +3608,7 @@
       "kind": "kind.class",
       "name": "Dwarven Sporecaster",
       "book": "bta",
-      "cite": "BTA p.85",
+      "cite": "BTA p.84",
       "pages": [
         85,
         86,
@@ -4129,7 +4129,7 @@
       "kind": "kind.class",
       "name": "Dwarven Tombsealer",
       "book": "bta",
-      "cite": "BTA p.90",
+      "cite": "BTA p.89",
       "pages": [
         90,
         91,
@@ -4582,7 +4582,7 @@
       "kind": "kind.classMeta",
       "name": "Starting languages",
       "book": "rr",
-      "cite": "RR p.20",
+      "cite": "RR p.18",
       "pages": [
         20
       ],
@@ -4618,7 +4618,7 @@
       "kind": "kind.class",
       "name": "Fighter",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26,
         27
@@ -4972,7 +4972,7 @@
       "kind": "kind.class",
       "name": "Explorer",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28,
         29,
@@ -5362,7 +5362,7 @@
       "kind": "kind.class",
       "name": "Thief",
       "book": "rr",
-      "cite": "RR p.32",
+      "cite": "RR p.30",
       "pages": [
         32,
         33,
@@ -5831,7 +5831,7 @@
       "kind": "kind.class",
       "name": "Mage",
       "book": "rr",
-      "cite": "RR p.36",
+      "cite": "RR p.34",
       "pages": [
         36,
         37
@@ -6230,7 +6230,7 @@
       "kind": "kind.class",
       "name": "Crusader",
       "book": "rr",
-      "cite": "RR p.38",
+      "cite": "RR p.36",
       "pages": [
         38,
         39,
@@ -6667,7 +6667,7 @@
       "kind": "kind.class",
       "name": "Venturer",
       "book": "rr",
-      "cite": "RR p.42",
+      "cite": "RR p.40",
       "pages": [
         42,
         43,
@@ -7098,7 +7098,7 @@
       "kind": "kind.class",
       "name": "Assassin",
       "book": "rr",
-      "cite": "RR p.46",
+      "cite": "RR p.44",
       "pages": [
         46,
         47,
@@ -7493,7 +7493,7 @@
       "kind": "kind.class",
       "name": "Barbarian",
       "book": "rr",
-      "cite": "RR p.50",
+      "cite": "RR p.48",
       "pages": [
         50,
         51,
@@ -7937,7 +7937,7 @@
       "kind": "kind.class",
       "name": "Bard",
       "book": "rr",
-      "cite": "RR p.54",
+      "cite": "RR p.52",
       "pages": [
         54,
         55,
@@ -8399,7 +8399,7 @@
       "kind": "kind.class",
       "name": "Bladedancer",
       "book": "rr",
-      "cite": "RR p.58",
+      "cite": "RR p.56",
       "pages": [
         58,
         59,
@@ -8814,7 +8814,7 @@
       "kind": "kind.class",
       "name": "Paladin",
       "book": "rr",
-      "cite": "RR p.62",
+      "cite": "RR p.60",
       "pages": [
         62,
         63,
@@ -9184,7 +9184,7 @@
       "kind": "kind.class",
       "name": "Priestess",
       "book": "rr",
-      "cite": "RR p.66",
+      "cite": "RR p.64",
       "pages": [
         66,
         67,
@@ -9639,7 +9639,7 @@
       "kind": "kind.class",
       "name": "Shaman",
       "book": "rr",
-      "cite": "RR p.70",
+      "cite": "RR p.68",
       "pages": [
         70,
         71,
@@ -10096,7 +10096,7 @@
       "kind": "kind.class",
       "name": "Warlock",
       "book": "rr",
-      "cite": "RR p.74",
+      "cite": "RR p.72",
       "pages": [
         74,
         75,
@@ -10579,7 +10579,7 @@
       "kind": "kind.class",
       "name": "Witch",
       "book": "rr",
-      "cite": "RR p.78",
+      "cite": "RR p.76",
       "pages": [
         78,
         79,
@@ -11078,7 +11078,7 @@
       "kind": "kind.class",
       "name": "Dwarven Craftpriest",
       "book": "rr",
-      "cite": "RR p.82",
+      "cite": "RR p.80",
       "pages": [
         82,
         83,
@@ -11521,7 +11521,7 @@
       "kind": "kind.class",
       "name": "Dwarven Vaultguard",
       "book": "rr",
-      "cite": "RR p.86",
+      "cite": "RR p.84",
       "pages": [
         86,
         87
@@ -11885,7 +11885,7 @@
       "kind": "kind.class",
       "name": "Elven Nightblade",
       "book": "rr",
-      "cite": "RR p.88",
+      "cite": "RR p.86",
       "pages": [
         88,
         89,
@@ -12406,7 +12406,7 @@
       "kind": "kind.class",
       "name": "Elven Spellsword",
       "book": "rr",
-      "cite": "RR p.92",
+      "cite": "RR p.90",
       "pages": [
         92,
         93
@@ -12814,7 +12814,7 @@
       "kind": "kind.class",
       "name": "Nobiran Wonderworker",
       "book": "rr",
-      "cite": "RR p.94",
+      "cite": "RR p.92",
       "pages": [
         94,
         95,
@@ -13290,7 +13290,7 @@
       "kind": "kind.class",
       "name": "Zaharan Ruinguard",
       "book": "rr",
-      "cite": "RR p.98",
+      "cite": "RR p.96",
       "pages": [
         98,
         99,
@@ -13778,7 +13778,7 @@
       "kind": "kind.classMeta",
       "name": "Proficiencies Gained per Level",
       "book": "rr",
-      "cite": "RR p.104",
+      "cite": "RR p.102",
       "pages": [
         104
       ],

@@ -10666,7 +10666,7 @@
     "ax2.familyCobraMechanical": {
       "name": "Cobra, Mechanical",
       "nameFormat": "{variant}",
-      "cite": "AX2 p.144",
+      "cite": "AX2 p.142",
       "pages": [
         144
       ],
@@ -10684,7 +10684,7 @@
     "ax2.familyFaewyrd": {
       "name": "Faewyrd",
       "nameFormat": "{variant}",
-      "cite": "AX2 p.144",
+      "cite": "AX2 p.142",
       "pages": [
         144
       ],
@@ -10702,7 +10702,7 @@
     "ax2.familyGolemUndeadBone": {
       "name": "Golem, Undead Bone",
       "nameFormat": "{variant}",
-      "cite": "AX2 p.146",
+      "cite": "AX2 p.144",
       "pages": [
         146
       ],
@@ -10720,7 +10720,7 @@
     "ax2.familyMummy": {
       "name": "Mummy",
       "nameFormat": "{variant}",
-      "cite": "AX2 p.150",
+      "cite": "AX2 p.148",
       "pages": [
         150
       ],
@@ -10762,7 +10762,7 @@
     "ax2.familyStatueAnimated": {
       "name": "Statue, Animated",
       "nameFormat": "{variant}",
-      "cite": "AX2 p.152",
+      "cite": "AX2 p.150",
       "pages": [
         152
       ],

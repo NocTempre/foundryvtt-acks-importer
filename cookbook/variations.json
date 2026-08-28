@@ -7,7 +7,7 @@
       "kind": "kind.variation",
       "name": "Auxiliary Shield",
       "book": "jj",
-      "cite": "JJ p.409",
+      "cite": "JJ p.407",
       "pages": [
         409
       ],
@@ -109,7 +109,7 @@
       "kind": "kind.variation",
       "name": "Buckler",
       "book": "jj",
-      "cite": "JJ p.409",
+      "cite": "JJ p.407",
       "pages": [
         409
       ],
@@ -204,7 +204,7 @@
       "kind": "kind.variation",
       "name": "Crescent Shield",
       "book": "jj",
-      "cite": "JJ p.409",
+      "cite": "JJ p.407",
       "pages": [
         409
       ],
@@ -278,7 +278,7 @@
       "kind": "kind.variation",
       "name": "Heater Shield",
       "book": "jj",
-      "cite": "JJ p.409",
+      "cite": "JJ p.407",
       "pages": [
         409
       ],
@@ -419,7 +419,7 @@
       "kind": "kind.variation",
       "name": "Kite Shield",
       "book": "jj",
-      "cite": "JJ p.410",
+      "cite": "JJ p.408",
       "pages": [
         410
       ],
@@ -490,7 +490,7 @@
       "kind": "kind.variation",
       "name": "Phalanx Shield",
       "book": "jj",
-      "cite": "JJ p.410",
+      "cite": "JJ p.408",
       "pages": [
         410
       ],
@@ -582,7 +582,7 @@
       "kind": "kind.variation",
       "name": "Silver",
       "book": "rr",
-      "cite": "RR p.129",
+      "cite": "RR p.127",
       "pages": [
         129
       ],
@@ -675,7 +675,7 @@
       "kind": "kind.variation",
       "name": "Masterwork Weapon (Attack Throw)",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],
@@ -758,7 +758,7 @@
       "kind": "kind.variation",
       "name": "Masterwork Weapon (Damage)",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],
@@ -841,7 +841,7 @@
       "kind": "kind.variation",
       "name": "Masterwork Weapon (Attack & Damage)",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],
@@ -931,7 +931,7 @@
       "kind": "kind.variation",
       "name": "Ornamented",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],
@@ -991,7 +991,7 @@
       "kind": "kind.variation",
       "name": "Masterwork Armor (Lightened)",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],
@@ -1079,7 +1079,7 @@
       "kind": "kind.variation",
       "name": "Masterwork Armor (Protection)",
       "book": "rr",
-      "cite": "RR p.161",
+      "cite": "RR p.159",
       "pages": [
         161
       ],

@@ -42,15 +42,38 @@ own type stands.
 ## Starting equipment on a class template
 
 A template's printed Starting Equipment line becomes one item per piece the book
-lists. The splitter separates the pieces; it does not judge what they are, so
-anything the line names arrives as an item — including a **spell recorded in the
-spellbook it came packed with** ("discern magic"), and a **choice the player has
-not made yet** ("one spell of character's choice"). Both are the line as printed,
-not a misread of it.
+lists, and two kinds of piece are taken off that list because they are not gear:
 
-Delete the rows that are not gear after generating a character; the pieces that
-are gear are already separated correctly. Teaching the importer to tell a spell
-from a trinket needs the spell list, which it does not have — see `ROADMAP.md`.
+- **What a book is packed with.** A cell that names a spellbook or a prayer book
+  and then its contents — the shape of "battered grimoire with *one spell*, *another*,
+  and *a third*" — is one book and three spells. The book keeps its printed name,
+  its contents are preserved on its note, and the spells go to the template's
+  **spell list**. The contents are an English list written across commas, so they
+  are put back together before anything is read from them; a divine caster's
+  prayer book is read exactly as a mage's spellbook is.
+- **A choice the player has not made.** A cell that offers a spell of the
+  character's choosing names a decision, not a spell. It stays on the book's note
+  and nothing is minted for it — see `ROADMAP.md` for turning it into a prompt.
+
+Before 2.13.2 neither separation happened: a three-spell book arrived as the book
+welded to its first spell, with the rest of the list beside it as inventory. A
+character built then keeps what that run produced — Foundry does not revisit
+documents it has already written — so re-import the class and rebuild the
+character to pick up the current shape.
+
+### A template's spells have to exist in your world already
+
+The importer has **no spell list of its own** — the spells are book content it
+carries no recipe for — so each name on a template's spell list is matched
+against the **spell documents your world already holds**, and a name nothing
+answers to is reported on the chat card rather than invented. Nothing is created
+for it, and nothing is lost: the template still names it.
+
+So a caster can finish generation with an empty repertoire while another caster
+in the same world fills hers, and the difference is which spells the world holds
+— not which class was applied. If that happens, bring a spell library into the
+world and apply the template again. The system's own *Arcane Spells* and *Divine
+Spells* compendia answer part of the ACKS II list; most worlds add the rest.
 
 ## Where a monster files itself
 
@@ -90,3 +113,11 @@ whole and resolve against the character who owns the item.
 **I imported twice and got a duplicate.** Import checks for an entry already
 present; a duplicate usually means the first copy was renamed or moved out of the
 folder it was created in.
+
+**The page an item cites is two pages past the entry.** Fixed in 4.3.2: a
+citation now names the number printed on the page, where before it named the
+page's position in the PDF file, which the front matter puts two ahead (one, in
+*By This Axe*). Documents already in your world keep the number they were written
+with — run **Update Abilities** to rewrite them, or delete and import the entry
+again. An item whose description you have edited yourself is left alone by
+Update Abilities, so its citation stays as it was.

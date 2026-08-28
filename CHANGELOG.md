@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.3.2
+
+**The page a citation names is the page you turn to.**
+
+### Fixed
+- **A citation names the printed page, not the file's page.** Every imported
+  ability, item, monster, trap and class cited a number two past its own entry
+  — one past, in *By This Axe* — because the citation was built from the page's
+  position in the PDF file, and the front matter sits ahead of page 1. A power
+  printed on 314 said 316. All 1154 core-book citations now name the number
+  printed on the paper, and one place in the code does the conversion so no new
+  citation can miss it.
+
+  Documents already in your world keep the number they were written with. Run
+  **Update Abilities** to rewrite them, or delete and import the entry again.
+
+### Documentation
+- **What happens to a spellbook's contents, corrected.** The starting-equipment
+  guide still described the behaviour that preceded 2.13.2 — that a spell packed
+  in a book arrives as inventory. It has not since: the book's contents are
+  lifted onto the template's spell list, and a "choice" the cell offers stays on
+  the book's note. The guide now also says what the module cannot do — it has no
+  spell list of its own, so a template's spells are matched against the spells
+  your world already holds, and a name nothing answers to is reported rather
+  than invented.
+
 ## 4.3.1
 
 **Clothing you buy is clothing you wear.**

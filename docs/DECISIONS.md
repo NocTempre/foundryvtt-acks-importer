@@ -7,6 +7,51 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A citation names the printed folio; everything else names the PDF page (2026-08-27)
+
+**Problem.** A field report showed a class power citing a page two past its own
+entry. Every core-book citation was wrong the same way, and had been since the
+first one shipped: the Judges Journal prints folio 314 on PDF page 316, and the
+Revised Rulebook, Monstrous Manual and Treasure Tome carry the same two pages of
+front matter (By This Axe carries one). 1154 shipped citations sent a reader
+past what they were looking for.
+
+**Why nothing caught it.** The registry already had `printedOffset`, added for
+the AX line whose folios visibly disagreed with their PDF pages, and exactly one
+cite composer applied it — the one written beside it. The other six interpolated
+the raw page, and the five core books were never given an offset at all, so the
+composers agreed with each other and with the register. Page numbers are never
+converted anywhere else in the pipeline: no gate, no probe and no round-trip
+compares a citation against anything that knows what the paper says.
+
+**Ruled.** Every book carries a `printedOffset`, and `citeFor` in
+`scripts/books.mjs` is the ONE place a page number is translated for a reader.
+Register entries, compiled instructions and art pointers keep addressing the PDF
+page — that is what the reader hands the extractor — and the conversion happens
+at the single point a number is shown.
+
+**Rejected — deriving the citation at runtime from `book` + `pages`.** It would
+make the offset impossible to forget, but 29 entries cite a page their `pages[0]`
+does not name: an alias is read from the passage its text prints in, and its
+citation follows the text rather than the listing. Deriving would lose exactly
+what the 2026-08-12 alias ruling established.
+
+**Rejected — a migration.** Consistent with the 2026-08-24 ruling: existing
+documents keep the citation they were written with, and *Update Abilities* —
+which already rewrites the generated surface — repairs them. An item whose prose
+a Judge has edited keeps its old citation, because that path holds the whole
+description back; that is the accepted cost of never clobbering someone's
+writing.
+
+**The gate that was missing.** `test-cookbook-coherence.mjs` now asserts that
+every citation equals `citeFor(book, description page ?? pages[0])` — a check per
+shipped citation that fails on the raw page and passes only on the folio. The
+offset itself is not derivable from shipped data, so the gate proves the
+composer, not the number; the five offsets were measured off the books' own
+folios, sampled the length of each book, before being declared.
+
+---
+
 ### A grid row is what the SECTION above it says, not what its name looks like (2026-08-26)
 
 **Problem.** A vaultguard's leather belt arrived as ordinary inventory. Core

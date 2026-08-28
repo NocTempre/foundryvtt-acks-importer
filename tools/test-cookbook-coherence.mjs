@@ -11,6 +11,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { citeFor } from "../scripts/books.mjs";
+
 const COOKBOOK = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "cookbook");
 
 let pass = 0;
@@ -57,6 +59,24 @@ for (const e of entries.values()) {
   const m = CITE_BOOK.exec(e.cite);
   if (!m) continue;
   check(`${e.id}: cite "${e.cite}" names the book it is read from (${e.book})`, m[1].toLowerCase() === e.book.toLowerCase());
+}
+
+/* A citation names the PRINTED FOLIO, not the PDF page. Everything upstream
+ * addresses the PDF page — that is what a reader hands the extractor — and the
+ * translation happens once, in `citeFor`. Six of the seven cite composers
+ * interpolated the raw page instead, so every core-book citation sent a reader
+ * two pages past the entry: a proficiency printed on 109 cited 111, and the
+ * class power on 314 cited 316. The offset is invisible to every other gate,
+ * because nothing else in the pipeline ever converts a page number.
+ *
+ * The page a citation names is the page its TEXT prints on — an alias's
+ * description page, where it has one, not the listing page it was found under. */
+for (const e of entries.values()) {
+  if (!e.cite || !e.book) continue;
+  const page = e.fields?.description?.page ?? e.pages?.[0];
+  if (!Number.isFinite(page)) continue;
+  const expected = citeFor(e.book, page);
+  check(`${e.id}: cite "${e.cite}" names the printed folio for PDF p.${page} ("${expected}")`, e.cite === expected);
 }
 
 /* The compiler keys each reference register by its `registry` field

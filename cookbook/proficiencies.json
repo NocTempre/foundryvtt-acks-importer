@@ -7,7 +7,7 @@
       "kind": "kind.proficiency",
       "name": "Inventing",
       "book": "bta",
-      "cite": "BTA p.93",
+      "cite": "BTA p.92",
       "pages": [
         93
       ],
@@ -60,7 +60,7 @@
       "kind": "kind.proficiency",
       "name": "Jury-Rigging",
       "book": "bta",
-      "cite": "BTA p.93",
+      "cite": "BTA p.92",
       "pages": [
         93
       ],
@@ -120,7 +120,7 @@
       "kind": "kind.proficiency",
       "name": "Mechanical Engineering",
       "book": "bta",
-      "cite": "BTA p.93",
+      "cite": "BTA p.92",
       "pages": [
         93
       ],
@@ -185,7 +185,7 @@
       "kind": "kind.proficiency",
       "name": "Scavenging",
       "book": "bta",
-      "cite": "BTA p.94",
+      "cite": "BTA p.93",
       "pages": [
         94
       ],
@@ -243,7 +243,7 @@
       "kind": "kind.proficiency",
       "name": "Tinkering",
       "book": "bta",
-      "cite": "BTA p.94",
+      "cite": "BTA p.93",
       "pages": [
         94
       ],
@@ -303,7 +303,7 @@
       "kind": "kind.combatProficiency",
       "name": "Weapons",
       "book": "rr",
-      "cite": "RR p.17",
+      "cite": "RR p.15",
       "pages": [
         17
       ],
@@ -407,7 +407,7 @@
       "kind": "kind.combatProficiency",
       "name": "Armor",
       "book": "rr",
-      "cite": "RR p.17",
+      "cite": "RR p.15",
       "pages": [
         17
       ],
@@ -464,7 +464,7 @@
       "kind": "kind.combatProficiency",
       "name": "Fighting Styles",
       "book": "rr",
-      "cite": "RR p.17",
+      "cite": "RR p.15",
       "pages": [
         17
       ],
@@ -595,7 +595,7 @@
       "kind": "kind.combatProficiency",
       "name": "Non-Proficient Use of Weapons and Armor",
       "book": "rr",
-      "cite": "RR p.17",
+      "cite": "RR p.15",
       "pages": [
         17
       ],
@@ -658,7 +658,7 @@
       "kind": "kind.proficiency",
       "name": "Adventuring",
       "book": "rr",
-      "cite": "RR p.107",
+      "cite": "RR p.105",
       "pages": [
         107
       ],
@@ -869,7 +869,7 @@
       "kind": "kind.proficiency",
       "name": "Acrobatics",
       "book": "rr",
-      "cite": "RR p.107",
+      "cite": "RR p.105",
       "pages": [
         107
       ],
@@ -947,7 +947,7 @@
       "kind": "kind.proficiency",
       "name": "Alchemy",
       "book": "rr",
-      "cite": "RR p.107",
+      "cite": "RR p.105",
       "pages": [
         107
       ],
@@ -1140,7 +1140,7 @@
       "kind": "kind.proficiency",
       "name": "Alertness",
       "book": "rr",
-      "cite": "RR p.107",
+      "cite": "RR p.105",
       "pages": [
         107
       ],
@@ -1207,7 +1207,7 @@
       "kind": "kind.proficiency",
       "name": "Ambushing",
       "book": "rr",
-      "cite": "RR p.107",
+      "cite": "RR p.105",
       "pages": [
         107
       ],
@@ -1297,7 +1297,7 @@
       "kind": "kind.proficiency",
       "name": "Animal Husbandry",
       "book": "rr",
-      "cite": "RR p.108",
+      "cite": "RR p.106",
       "pages": [
         108
       ],
@@ -1487,7 +1487,7 @@
       "kind": "kind.proficiency",
       "name": "Animal Training",
       "book": "rr",
-      "cite": "RR p.108",
+      "cite": "RR p.106",
       "pages": [
         108
       ],
@@ -1586,7 +1586,7 @@
       "kind": "kind.proficiency",
       "name": "Arcane Dabbling",
       "book": "rr",
-      "cite": "RR p.108",
+      "cite": "RR p.106",
       "pages": [
         108
       ],
@@ -1690,7 +1690,7 @@
       "kind": "kind.proficiency",
       "name": "Armor Training",
       "book": "rr",
-      "cite": "RR p.109",
+      "cite": "RR p.107",
       "pages": [
         109
       ],
@@ -1763,7 +1763,7 @@
       "kind": "kind.proficiency",
       "name": "Art/Craft",
       "book": "rr",
-      "cite": "RR p.109",
+      "cite": "RR p.107",
       "pages": [
         109
       ],
@@ -1968,7 +1968,7 @@
       "kind": "kind.proficiency",
       "name": "Bargaining",
       "book": "rr",
-      "cite": "RR p.109",
+      "cite": "RR p.107",
       "pages": [
         109
       ],
@@ -2042,7 +2042,7 @@
       "kind": "kind.proficiency",
       "name": "Battle Magic",
       "book": "rr",
-      "cite": "RR p.109",
+      "cite": "RR p.107",
       "pages": [
         109
       ],
@@ -2092,7 +2092,7 @@
       "kind": "kind.proficiency",
       "name": "Beast Friendship",
       "book": "rr",
-      "cite": "RR p.109",
+      "cite": "RR p.107",
       "pages": [
         109
       ],
@@ -2199,7 +2199,7 @@
       "kind": "kind.proficiency",
       "name": "Berserkergang",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2276,7 +2276,7 @@
       "kind": "kind.proficiency",
       "name": "Black Lore of Zahar",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2339,7 +2339,7 @@
       "kind": "kind.proficiency",
       "name": "Blind Fighting",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2430,7 +2430,7 @@
       "kind": "kind.proficiency",
       "name": "Bribery",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2519,7 +2519,7 @@
       "kind": "kind.proficiency",
       "name": "Bright Lore of Aura",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2575,7 +2575,7 @@
       "kind": "kind.proficiency",
       "name": "Cat Burglary",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2629,7 +2629,7 @@
       "kind": "kind.proficiency",
       "name": "Caving",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2685,7 +2685,7 @@
       "kind": "kind.proficiency",
       "name": "Climbing",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2743,7 +2743,7 @@
       "kind": "kind.proficiency",
       "name": "Collegiate Wizardry",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2798,7 +2798,7 @@
       "kind": "kind.proficiency",
       "name": "Combat Ferocity",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2848,7 +2848,7 @@
       "kind": "kind.proficiency",
       "name": "Combat Reflexes",
       "book": "rr",
-      "cite": "RR p.110",
+      "cite": "RR p.108",
       "pages": [
         110
       ],
@@ -2897,7 +2897,7 @@
       "kind": "kind.proficiency",
       "name": "Combat Trickery",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -2956,7 +2956,7 @@
       "kind": "kind.proficiency",
       "name": "Command",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3009,7 +3009,7 @@
       "kind": "kind.proficiency",
       "name": "Contemplation",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3060,7 +3060,7 @@
       "kind": "kind.proficiency",
       "name": "Contortionism",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3117,7 +3117,7 @@
       "kind": "kind.proficiency",
       "name": "Counterspelling",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3169,7 +3169,7 @@
       "kind": "kind.proficiency",
       "name": "Diplomacy",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3241,7 +3241,7 @@
       "kind": "kind.proficiency",
       "name": "Disguise",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3362,7 +3362,7 @@
       "kind": "kind.proficiency",
       "name": "Divine Blessing",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3411,7 +3411,7 @@
       "kind": "kind.proficiency",
       "name": "Divine Health",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3460,7 +3460,7 @@
       "kind": "kind.proficiency",
       "name": "Driving",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3513,7 +3513,7 @@
       "kind": "kind.proficiency",
       "name": "Dungeonbashing Expertise",
       "book": "rr",
-      "cite": "RR p.111",
+      "cite": "RR p.109",
       "pages": [
         111
       ],
@@ -3590,7 +3590,7 @@
       "kind": "kind.proficiency",
       "name": "Dwarven Brewing",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3650,7 +3650,7 @@
       "kind": "kind.proficiency",
       "name": "Eavesdropping",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3707,7 +3707,7 @@
       "kind": "kind.proficiency",
       "name": "Elementalism",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3765,7 +3765,7 @@
       "kind": "kind.proficiency",
       "name": "Elven Bloodline",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3818,7 +3818,7 @@
       "kind": "kind.proficiency",
       "name": "Endurance",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3875,7 +3875,7 @@
       "kind": "kind.proficiency",
       "name": "Engineering",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3935,7 +3935,7 @@
       "kind": "kind.proficiency",
       "name": "Expanded Repertoire",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -3990,7 +3990,7 @@
       "kind": "kind.proficiency",
       "name": "Experimenting",
       "book": "rr",
-      "cite": "RR p.112",
+      "cite": "RR p.110",
       "pages": [
         112
       ],
@@ -4107,7 +4107,7 @@
       "kind": "kind.proficiency",
       "name": "Familiar",
       "book": "rr",
-      "cite": "RR p.113",
+      "cite": "RR p.111",
       "pages": [
         113
       ],
@@ -4186,7 +4186,7 @@
       "kind": "kind.proficiency",
       "name": "Fighting Style Specialization",
       "book": "rr",
-      "cite": "RR p.113",
+      "cite": "RR p.111",
       "pages": [
         113
       ],
@@ -4294,7 +4294,7 @@
       "kind": "kind.proficiency",
       "name": "Folkways",
       "book": "rr",
-      "cite": "RR p.113",
+      "cite": "RR p.111",
       "pages": [
         113
       ],
@@ -4403,7 +4403,7 @@
       "kind": "kind.proficiency",
       "name": "Gambling",
       "book": "rr",
-      "cite": "RR p.113",
+      "cite": "RR p.111",
       "pages": [
         113
       ],
@@ -4487,7 +4487,7 @@
       "kind": "kind.proficiency",
       "name": "Goblin-Slaying",
       "book": "rr",
-      "cite": "RR p.113",
+      "cite": "RR p.111",
       "pages": [
         113
       ],
@@ -4581,7 +4581,7 @@
       "kind": "kind.proficiency",
       "name": "Healing",
       "book": "rr",
-      "cite": "RR p.114",
+      "cite": "RR p.112",
       "pages": [
         114
       ],
@@ -4744,7 +4744,7 @@
       "kind": "kind.proficiency",
       "name": "Illusion Resistance",
       "book": "rr",
-      "cite": "RR p.114",
+      "cite": "RR p.112",
       "pages": [
         114
       ],
@@ -4795,7 +4795,7 @@
       "kind": "kind.proficiency",
       "name": "Intimidation",
       "book": "rr",
-      "cite": "RR p.114",
+      "cite": "RR p.112",
       "pages": [
         114
       ],
@@ -4870,7 +4870,7 @@
       "kind": "kind.proficiency",
       "name": "Kin-Slaying",
       "book": "rr",
-      "cite": "RR p.114",
+      "cite": "RR p.112",
       "pages": [
         114
       ],
@@ -4920,7 +4920,7 @@
       "kind": "kind.proficiency",
       "name": "Knowledge",
       "book": "rr",
-      "cite": "RR p.114",
+      "cite": "RR p.112",
       "pages": [
         114
       ],
@@ -4999,7 +4999,7 @@
       "kind": "kind.proficiency",
       "name": "Labor",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5074,7 +5074,7 @@
       "kind": "kind.proficiency",
       "name": "Land Surveying",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5135,7 +5135,7 @@
       "kind": "kind.proficiency",
       "name": "Language",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5190,7 +5190,7 @@
       "kind": "kind.proficiency",
       "name": "Laying on Hands",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5324,7 +5324,7 @@
       "kind": "kind.proficiency",
       "name": "Leadership",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5377,7 +5377,7 @@
       "kind": "kind.proficiency",
       "name": "Lip Reading",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5428,7 +5428,7 @@
       "kind": "kind.proficiency",
       "name": "Lockpicking Expertise",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5478,7 +5478,7 @@
       "kind": "kind.proficiency",
       "name": "Loremastery",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5534,7 +5534,7 @@
       "kind": "kind.proficiency",
       "name": "Magical Engineering",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -5594,7 +5594,7 @@
       "kind": "kind.proficiency",
       "name": "Magical Music",
       "book": "rr",
-      "cite": "RR p.116",
+      "cite": "RR p.114",
       "pages": [
         116
       ],
@@ -5780,7 +5780,7 @@
       "kind": "kind.proficiency",
       "name": "Manual of Arms",
       "book": "rr",
-      "cite": "RR p.116",
+      "cite": "RR p.114",
       "pages": [
         116
       ],
@@ -5901,7 +5901,7 @@
       "kind": "kind.proficiency",
       "name": "Mapping",
       "book": "rr",
-      "cite": "RR p.116",
+      "cite": "RR p.114",
       "pages": [
         116
       ],
@@ -5955,7 +5955,7 @@
       "kind": "kind.proficiency",
       "name": "Martial Training",
       "book": "rr",
-      "cite": "RR p.116",
+      "cite": "RR p.114",
       "pages": [
         116
       ],
@@ -6034,7 +6034,7 @@
       "kind": "kind.proficiency",
       "name": "Mastery of Conjuration & Summoning",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6097,7 +6097,7 @@
       "kind": "kind.proficiency",
       "name": "Mastery of Enchantments & Illusions",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6154,7 +6154,7 @@
       "kind": "kind.proficiency",
       "name": "Military Strategy",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6209,7 +6209,7 @@
       "kind": "kind.proficiency",
       "name": "Mimicry",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6263,7 +6263,7 @@
       "kind": "kind.proficiency",
       "name": "Mountaineering",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6335,7 +6335,7 @@
       "kind": "kind.proficiency",
       "name": "Mounted Combat",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6387,7 +6387,7 @@
       "kind": "kind.proficiency",
       "name": "Mystic Aura",
       "book": "rr",
-      "cite": "RR p.117",
+      "cite": "RR p.115",
       "pages": [
         117
       ],
@@ -6486,7 +6486,7 @@
       "kind": "kind.proficiency",
       "name": "Naturalism",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6565,7 +6565,7 @@
       "kind": "kind.proficiency",
       "name": "Navigation",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6618,7 +6618,7 @@
       "kind": "kind.proficiency",
       "name": "Passing Without Trace",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6669,7 +6669,7 @@
       "kind": "kind.proficiency",
       "name": "Performance",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6773,7 +6773,7 @@
       "kind": "kind.proficiency",
       "name": "Poisoning",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6828,7 +6828,7 @@
       "kind": "kind.proficiency",
       "name": "Precise Shooting",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6884,7 +6884,7 @@
       "kind": "kind.proficiency",
       "name": "Prestidigitation",
       "book": "rr",
-      "cite": "RR p.118",
+      "cite": "RR p.116",
       "pages": [
         118
       ],
@@ -6938,7 +6938,7 @@
       "kind": "kind.proficiency",
       "name": "Profession",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7002,7 +7002,7 @@
       "kind": "kind.proficiency",
       "name": "Prophecy",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7053,7 +7053,7 @@
       "kind": "kind.proficiency",
       "name": "Prospecting",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7107,7 +7107,7 @@
       "kind": "kind.proficiency",
       "name": "Quiet Magic",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7160,7 +7160,7 @@
       "kind": "kind.proficiency",
       "name": "Reliquarianism",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7241,7 +7241,7 @@
       "kind": "kind.proficiency",
       "name": "Revelry",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7323,7 +7323,7 @@
       "kind": "kind.proficiency",
       "name": "Riding",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7381,7 +7381,7 @@
       "kind": "kind.proficiency",
       "name": "Righteous Rebuke",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7430,7 +7430,7 @@
       "kind": "kind.proficiency",
       "name": "Running",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7479,7 +7479,7 @@
       "kind": "kind.proficiency",
       "name": "Seafaring",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7532,7 +7532,7 @@
       "kind": "kind.proficiency",
       "name": "Seduction",
       "book": "rr",
-      "cite": "RR p.119",
+      "cite": "RR p.117",
       "pages": [
         119
       ],
@@ -7654,7 +7654,7 @@
       "kind": "kind.proficiency",
       "name": "Sensing Evil",
       "book": "rr",
-      "cite": "RR p.120",
+      "cite": "RR p.118",
       "pages": [
         120
       ],
@@ -7715,7 +7715,7 @@
       "kind": "kind.proficiency",
       "name": "Sensing Good",
       "book": "rr",
-      "cite": "RR p.120",
+      "cite": "RR p.118",
       "pages": [
         120
       ],
@@ -7776,7 +7776,7 @@
       "kind": "kind.proficiency",
       "name": "Sensing Power",
       "book": "rr",
-      "cite": "RR p.120",
+      "cite": "RR p.118",
       "pages": [
         120
       ],
@@ -7831,7 +7831,7 @@
       "kind": "kind.proficiency",
       "name": "Siege Engineering",
       "book": "rr",
-      "cite": "RR p.120",
+      "cite": "RR p.118",
       "pages": [
         120
       ],
@@ -7910,7 +7910,7 @@
       "kind": "kind.proficiency",
       "name": "Signaling",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -7963,7 +7963,7 @@
       "kind": "kind.proficiency",
       "name": "Skirmishing",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8030,7 +8030,7 @@
       "kind": "kind.proficiency",
       "name": "Skulking",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8081,7 +8081,7 @@
       "kind": "kind.proficiency",
       "name": "Sniping",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8131,7 +8131,7 @@
       "kind": "kind.proficiency",
       "name": "Soothsaying",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8183,7 +8183,7 @@
       "kind": "kind.proficiency",
       "name": "Streetwise",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8255,7 +8255,7 @@
       "kind": "kind.proficiency",
       "name": "Survival",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8310,7 +8310,7 @@
       "kind": "kind.proficiency",
       "name": "Swashbuckling",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8363,7 +8363,7 @@
       "kind": "kind.proficiency",
       "name": "Swimming",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8457,7 +8457,7 @@
       "kind": "kind.proficiency",
       "name": "Syncretism",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8519,7 +8519,7 @@
       "kind": "kind.proficiency",
       "name": "Theology",
       "book": "rr",
-      "cite": "RR p.121",
+      "cite": "RR p.119",
       "pages": [
         121
       ],
@@ -8602,7 +8602,7 @@
       "kind": "kind.proficiency",
       "name": "Tracking",
       "book": "rr",
-      "cite": "RR p.122",
+      "cite": "RR p.120",
       "pages": [
         122
       ],
@@ -8733,7 +8733,7 @@
       "kind": "kind.proficiency",
       "name": "Transmogrification",
       "book": "rr",
-      "cite": "RR p.122",
+      "cite": "RR p.120",
       "pages": [
         122
       ],
@@ -8819,7 +8819,7 @@
       "kind": "kind.proficiency",
       "name": "Trapfinding",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -8887,7 +8887,7 @@
       "kind": "kind.proficiency",
       "name": "Trapping",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9045,7 +9045,7 @@
       "kind": "kind.proficiency",
       "name": "Unarmed Fighting",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9097,7 +9097,7 @@
       "kind": "kind.proficiency",
       "name": "Unflappable Casting",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9151,7 +9151,7 @@
       "kind": "kind.proficiency",
       "name": "Vermin-Slaying",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9207,7 +9207,7 @@
       "kind": "kind.proficiency",
       "name": "Wakefulness",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9268,7 +9268,7 @@
       "kind": "kind.proficiency",
       "name": "Weapon Finesse",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],
@@ -9330,7 +9330,7 @@
       "kind": "kind.proficiency",
       "name": "Weapon Focus",
       "book": "rr",
-      "cite": "RR p.123",
+      "cite": "RR p.121",
       "pages": [
         123
       ],

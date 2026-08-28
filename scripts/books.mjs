@@ -12,41 +12,53 @@
  * library carry it — the ACKS line is the default, not a name in this file.
  */
 
+/**
+ * `printedOffset`: printed folio = PDF page - offset. Register pages and every
+ * compiled instruction always address the PDF page; the offset is applied at
+ * the ONE point a page number is shown to a reader, so a citation names the
+ * number printed on the page they turn to. Every book carries one, because
+ * every book has front matter: a reader handed a raw PDF page is sent two
+ * pages past what they were looking for.
+ */
 export const BOOKS = {
   rr: {
     label: "ACKS II Revised Rulebook",
     short: "RR",
     pages: 553,
     titleRe: /Revised Rulebook/i,
+    printedOffset: 2,
   },
   jj: {
     label: "ACKS II Judges Journal",
     short: "JJ",
     pages: 489,
     titleRe: /Judges Journal/i,
+    printedOffset: 2,
   },
   bta: {
     label: "By This Axe: The Cyclopedia of Dwarven Civilization",
     short: "BTA",
     pages: 273,
     titleRe: /By This Axe/i,
+    printedOffset: 1,
   },
   mm: {
     label: "ACKS II Monstrous Manual",
     short: "MM",
     pages: 441,
     titleRe: /Monstrous Manual/i,
+    printedOffset: 2,
   },
   tt: {
     label: "ACKS II Treasure Tome",
     short: "TT",
     pages: 346,
     titleRe: /Treasure Tome/i,
+    printedOffset: 2,
   },
   // ACKS I adventures (AX line). Metadata titles are EMPTY in these printings,
   // so the fingerprint gates on page count alone; titleRe stays for printings
-  // that do carry one. printedOffset: printed folio = PDF page - offset, used
-  // for citations (register pages/instructions always use PDF pages).
+  // that do carry one.
   ax2: {
     label: "AX2 Secrets of the Nethercity",
     short: "AX2",
@@ -161,6 +173,18 @@ export const BOOKS = {
   },
 };
 
+
+/**
+ * The citation a reader is shown for one PDF page of one book.
+ *
+ * THE ONE PLACE A PAGE NUMBER IS TRANSLATED. Everything upstream — register
+ * entries, compiled instructions, art pointers — addresses the PDF page,
+ * because that is what the reader hands the extractor. A citation is the
+ * opposite direction: it is read by a person holding the book, so it names the
+ * folio printed on the paper. Composing one by interpolating the raw page is
+ * how six of the seven call sites came to cite two pages past the entry.
+ */
+export const citeFor = (bookId, page) => `${BOOKS[bookId]?.short ?? bookId} p.${page - (BOOKS[bookId]?.printedOffset ?? 0)}`;
 
 /** Human-readable fingerprint check; returns null when OK, else a warning. */
 export function fingerprintWarning(bookId, numPages, title) {

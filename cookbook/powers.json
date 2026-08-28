@@ -7,7 +7,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.62",
+      "cite": "BTA p.61",
       "pages": [
         62
       ],
@@ -96,7 +96,7 @@
       "kind": "kind.power",
       "name": "Dwarven Throat-Singing",
       "book": "bta",
-      "cite": "BTA p.63",
+      "cite": "BTA p.62",
       "pages": [
         63
       ],
@@ -153,7 +153,7 @@
       "kind": "kind.power",
       "name": "Gnostic Magic",
       "book": "bta",
-      "cite": "BTA p.63",
+      "cite": "BTA p.62",
       "pages": [
         63,
         64
@@ -212,7 +212,7 @@
       "kind": "kind.power",
       "name": "Deep Knowledge",
       "book": "bta",
-      "cite": "BTA p.63",
+      "cite": "BTA p.62",
       "pages": [
         63
       ],
@@ -286,7 +286,7 @@
       "kind": "kind.power",
       "name": "Greater Gnosis",
       "book": "bta",
-      "cite": "BTA p.63",
+      "cite": "BTA p.62",
       "pages": [
         63,
         64
@@ -428,7 +428,7 @@
       "kind": "kind.power",
       "name": "Sigils of Creation",
       "book": "bta",
-      "cite": "BTA p.64",
+      "cite": "BTA p.63",
       "pages": [
         64
       ],
@@ -479,7 +479,7 @@
       "kind": "kind.power",
       "name": "Master Gnosis",
       "book": "bta",
-      "cite": "BTA p.64",
+      "cite": "BTA p.63",
       "pages": [
         64
       ],
@@ -534,7 +534,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.64",
+      "cite": "BTA p.63",
       "pages": [
         64
       ],
@@ -603,7 +603,7 @@
       "kind": "kind.power",
       "name": "Sigil of the Mountain's Bones",
       "book": "bta",
-      "cite": "BTA p.65",
+      "cite": "BTA p.64",
       "pages": [
         65
       ],
@@ -711,7 +711,7 @@
       "kind": "kind.power",
       "name": "Sigil of the Eternal Forge",
       "book": "bta",
-      "cite": "BTA p.65",
+      "cite": "BTA p.64",
       "pages": [
         65
       ],
@@ -823,7 +823,7 @@
       "kind": "kind.power",
       "name": "Sigil of the Iron Crucible",
       "book": "bta",
-      "cite": "BTA p.65",
+      "cite": "BTA p.64",
       "pages": [
         65
       ],
@@ -939,7 +939,7 @@
       "kind": "kind.power",
       "name": "Sigil of the Open Gate",
       "book": "bta",
-      "cite": "BTA p.66",
+      "cite": "BTA p.65",
       "pages": [
         66
       ],
@@ -1077,7 +1077,7 @@
       "kind": "kind.power",
       "name": "Mine Management",
       "book": "bta",
-      "cite": "BTA p.69",
+      "cite": "BTA p.68",
       "pages": [
         69
       ],
@@ -1136,7 +1136,7 @@
       "kind": "kind.power",
       "name": "Industrialism",
       "book": "bta",
-      "cite": "BTA p.69",
+      "cite": "BTA p.68",
       "pages": [
         69
       ],
@@ -1198,7 +1198,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.69",
+      "cite": "BTA p.68",
       "pages": [
         69
       ],
@@ -1278,7 +1278,7 @@
       "kind": "kind.power",
       "name": "Fiery Torch",
       "book": "bta",
-      "cite": "BTA p.71",
+      "cite": "BTA p.70",
       "pages": [
         71
       ],
@@ -1335,7 +1335,7 @@
       "kind": "kind.power",
       "name": "Trinkets of Power",
       "book": "bta",
-      "cite": "BTA p.71",
+      "cite": "BTA p.70",
       "pages": [
         71
       ],
@@ -1386,7 +1386,7 @@
       "kind": "kind.power",
       "name": "Fiery Aura",
       "book": "bta",
-      "cite": "BTA p.71",
+      "cite": "BTA p.70",
       "pages": [
         71
       ],
@@ -1447,7 +1447,7 @@
       "kind": "kind.power",
       "name": "Fiery Blessing",
       "book": "bta",
-      "cite": "BTA p.72",
+      "cite": "BTA p.71",
       "pages": [
         72
       ],
@@ -1504,7 +1504,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.72",
+      "cite": "BTA p.71",
       "pages": [
         72
       ],
@@ -1573,7 +1573,7 @@
       "kind": "kind.power",
       "name": "Superior Flesh-Runes",
       "book": "bta",
-      "cite": "BTA p.75",
+      "cite": "BTA p.74",
       "pages": [
         75
       ],
@@ -1646,7 +1646,7 @@
       "kind": "kind.power",
       "name": "Mechanic Knowledge",
       "book": "bta",
-      "cite": "BTA p.77",
+      "cite": "BTA p.76",
       "pages": [
         77
       ],
@@ -1711,7 +1711,7 @@
       "kind": "kind.power",
       "name": "Personal Automaton",
       "book": "bta",
-      "cite": "BTA p.77",
+      "cite": "BTA p.76",
       "pages": [
         77,
         78
@@ -1957,7 +1957,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.78",
+      "cite": "BTA p.77",
       "pages": [
         78
       ],
@@ -2045,7 +2045,7 @@
       "kind": "kind.power",
       "name": "Old Man Bones",
       "book": "bta",
-      "cite": "BTA p.80",
+      "cite": "BTA p.79",
       "pages": [
         80
       ],
@@ -2117,7 +2117,7 @@
       "kind": "kind.power",
       "name": "Eye of the Tiger",
       "book": "bta",
-      "cite": "BTA p.80",
+      "cite": "BTA p.79",
       "pages": [
         80,
         81
@@ -2228,7 +2228,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.81",
+      "cite": "BTA p.80",
       "pages": [
         81
       ],
@@ -2294,7 +2294,7 @@
       "kind": "kind.power",
       "name": "Second Wind",
       "book": "bta",
-      "cite": "BTA p.81",
+      "cite": "BTA p.80",
       "pages": [
         81
       ],
@@ -2350,7 +2350,7 @@
       "kind": "kind.power",
       "name": "Unyielding Spirit",
       "book": "bta",
-      "cite": "BTA p.81",
+      "cite": "BTA p.80",
       "pages": [
         81
       ],
@@ -2414,7 +2414,7 @@
       "kind": "kind.power",
       "name": "Jurisprudence",
       "book": "bta",
-      "cite": "BTA p.83",
+      "cite": "BTA p.82",
       "pages": [
         83
       ],
@@ -2475,7 +2475,7 @@
       "kind": "kind.power",
       "name": "Rule of Law",
       "book": "bta",
-      "cite": "BTA p.84",
+      "cite": "BTA p.83",
       "pages": [
         84
       ],
@@ -2556,7 +2556,7 @@
       "kind": "kind.power",
       "name": "Rhetorical Training",
       "book": "bta",
-      "cite": "BTA p.84",
+      "cite": "BTA p.83",
       "pages": [
         84
       ],
@@ -2607,7 +2607,7 @@
       "kind": "kind.power",
       "name": "Tireless",
       "book": "bta",
-      "cite": "BTA p.84",
+      "cite": "BTA p.83",
       "pages": [
         84
       ],
@@ -2662,7 +2662,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.84",
+      "cite": "BTA p.83",
       "pages": [
         84
       ],
@@ -2731,7 +2731,7 @@
       "kind": "kind.power",
       "name": "Blooming Spores",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -2791,7 +2791,7 @@
       "kind": "kind.power",
       "name": "Fungal Humors",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -2843,7 +2843,7 @@
       "kind": "kind.power",
       "name": "Blossoming Spores",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -2897,7 +2897,7 @@
       "kind": "kind.power",
       "name": "Billowing Spores",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -2951,7 +2951,7 @@
       "kind": "kind.power",
       "name": "Spore Servitude",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -3010,7 +3010,7 @@
       "kind": "kind.power",
       "name": "Mushroom Mutation",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87,
         88,
@@ -3077,7 +3077,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.87",
+      "cite": "BTA p.86",
       "pages": [
         87
       ],
@@ -3162,7 +3162,7 @@
       "kind": "kind.power",
       "name": "Lesser Rite of Sealing",
       "book": "bta",
-      "cite": "BTA p.90",
+      "cite": "BTA p.89",
       "pages": [
         90
       ],
@@ -3230,7 +3230,7 @@
       "kind": "kind.power",
       "name": "Rite of Discovery",
       "book": "bta",
-      "cite": "BTA p.91",
+      "cite": "BTA p.90",
       "pages": [
         91
       ],
@@ -3394,7 +3394,7 @@
       "kind": "kind.power",
       "name": "Renown",
       "book": "bta",
-      "cite": "BTA p.91",
+      "cite": "BTA p.90",
       "pages": [
         91
       ],
@@ -3470,7 +3470,7 @@
       "kind": "kind.power",
       "name": "Abominable Mutation",
       "book": "jj",
-      "cite": "JJ p.310",
+      "cite": "JJ p.308",
       "pages": [
         310
       ],
@@ -3560,7 +3560,7 @@
       "kind": "kind.power",
       "name": "Accuracy",
       "book": "jj",
-      "cite": "JJ p.310",
+      "cite": "JJ p.308",
       "pages": [
         310
       ],
@@ -3609,7 +3609,7 @@
       "kind": "kind.power",
       "name": "Adhesive Toe Pads",
       "book": "jj",
-      "cite": "JJ p.310",
+      "cite": "JJ p.308",
       "pages": [
         310
       ],
@@ -3663,7 +3663,7 @@
       "kind": "kind.power",
       "name": "Ageless",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -3723,7 +3723,7 @@
       "kind": "kind.power",
       "name": "Alien Beings",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         310
       ],
@@ -3789,7 +3789,7 @@
       "kind": "kind.power",
       "name": "Alien Intuition",
       "book": "jj",
-      "cite": "JJ p.310",
+      "cite": "JJ p.308",
       "pages": [
         310
       ],
@@ -3848,7 +3848,7 @@
       "kind": "kind.power",
       "name": "Alien Lore",
       "book": "jj",
-      "cite": "JJ p.310",
+      "cite": "JJ p.308",
       "pages": [
         310
       ],
@@ -3901,7 +3901,7 @@
       "kind": "kind.power",
       "name": "Alien Senses",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -3960,7 +3960,7 @@
       "kind": "kind.power",
       "name": "Alluring Beauty",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         310
       ],
@@ -4028,7 +4028,7 @@
       "kind": "kind.power",
       "name": "Analyze Data",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4092,7 +4092,7 @@
       "kind": "kind.power",
       "name": "Animal Companion",
       "book": "rr",
-      "cite": "RR p.71",
+      "cite": "RR p.69",
       "pages": [
         71
       ],
@@ -4165,7 +4165,7 @@
       "kind": "kind.power",
       "name": "Animal Friendship",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4227,7 +4227,7 @@
       "kind": "kind.power",
       "name": "Antennae for Potions",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4279,7 +4279,7 @@
       "kind": "kind.power",
       "name": "Arena Reputation",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -4341,7 +4341,7 @@
       "kind": "kind.power",
       "name": "Armor Training",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4410,7 +4410,7 @@
       "kind": "kind.power",
       "name": "Artificial Youth",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -4470,7 +4470,7 @@
       "kind": "kind.power",
       "name": "Avoid Getting Lost",
       "book": "rr",
-      "cite": "RR p.29",
+      "cite": "RR p.27",
       "pages": [
         29
       ],
@@ -4531,7 +4531,7 @@
       "kind": "kind.power",
       "name": "Awareness of the Earth",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4587,7 +4587,7 @@
       "kind": "kind.power",
       "name": "Aura of Protection",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         311
       ],
@@ -4668,7 +4668,7 @@
       "kind": "kind.power",
       "name": "Baleful Transformation",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -4721,7 +4721,7 @@
       "kind": "kind.power",
       "name": "Ballistics Expertise",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -4783,7 +4783,7 @@
       "kind": "kind.power",
       "name": "Battle Magic",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -4837,7 +4837,7 @@
       "kind": "kind.power",
       "name": "Battle Plan",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -4906,7 +4906,7 @@
       "kind": "kind.power",
       "name": "Bedazzling Glamour",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5011,7 +5011,7 @@
       "kind": "kind.power",
       "name": "Berserkergang, Greater",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5101,7 +5101,7 @@
       "kind": "kind.power",
       "name": "Berserkergang, Lesser",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5166,7 +5166,7 @@
       "kind": "kind.power",
       "name": "Bestial Cry",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5223,7 +5223,7 @@
       "kind": "kind.power",
       "name": "Bestial Fury",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5292,7 +5292,7 @@
       "kind": "kind.power",
       "name": "Blade-Dancing",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5375,7 +5375,7 @@
       "kind": "kind.power",
       "name": "Blessing of the Dead",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -5432,7 +5432,7 @@
       "kind": "kind.power",
       "name": "Blindsight",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         312
       ],
@@ -5485,7 +5485,7 @@
       "kind": "kind.power",
       "name": "Bloody Healing",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5540,7 +5540,7 @@
       "kind": "kind.power",
       "name": "Bone-Breaking Strength",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5595,7 +5595,7 @@
       "kind": "kind.power",
       "name": "Bonus Languages",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5651,7 +5651,7 @@
       "kind": "kind.power",
       "name": "Boon Companion",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5738,7 +5738,7 @@
       "kind": "kind.power",
       "name": "Brewing Quacksalves",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5788,7 +5788,7 @@
       "kind": "kind.power",
       "name": "Bright Lore",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5851,7 +5851,7 @@
       "kind": "kind.power",
       "name": "Broad Spectrum Inoculations",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -5908,7 +5908,7 @@
       "kind": "kind.power",
       "name": "Brutality",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -5960,7 +5960,7 @@
       "kind": "kind.power",
       "name": "Cast the Runes",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -6026,7 +6026,7 @@
       "kind": "kind.power",
       "name": "Ceremonial Magic",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -6099,7 +6099,7 @@
       "kind": "kind.power",
       "name": "Charismatic Ferocity",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -6151,7 +6151,7 @@
       "kind": "kind.power",
       "name": "Child-Like",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         313
       ],
@@ -6217,7 +6217,7 @@
       "kind": "kind.power",
       "name": "Chitinous Carapace",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         313
       ],
@@ -6305,7 +6305,7 @@
       "kind": "kind.power",
       "name": "Chosen Weapon",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -6372,7 +6372,7 @@
       "kind": "kind.power",
       "name": "Chthonic Hegemon",
       "book": "rr",
-      "cite": "RR p.100",
+      "cite": "RR p.98",
       "pages": [
         100
       ],
@@ -6438,7 +6438,7 @@
       "kind": "kind.power",
       "name": "Clarion Commander",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         313
       ],
@@ -6494,7 +6494,7 @@
       "kind": "kind.power",
       "name": "Classical Weapons Training",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         313
       ],
@@ -6555,7 +6555,7 @@
       "kind": "kind.power",
       "name": "Claws and Bite",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6637,7 +6637,7 @@
       "kind": "kind.power",
       "name": "Cleansing Touch",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6688,7 +6688,7 @@
       "kind": "kind.power",
       "name": "Close Friend of Birds and Beasts",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6756,7 +6756,7 @@
       "kind": "kind.power",
       "name": "Comfort and Console the Wounded",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6818,7 +6818,7 @@
       "kind": "kind.power",
       "name": "Command of Voice",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6882,7 +6882,7 @@
       "kind": "kind.power",
       "name": "Command Undead",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -6931,7 +6931,7 @@
       "kind": "kind.power",
       "name": "Commune with Ancestral Spirits",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7005,7 +7005,7 @@
       "kind": "kind.power",
       "name": "Compel Submission",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7062,7 +7062,7 @@
       "kind": "kind.power",
       "name": "Concealed from Undead",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7113,7 +7113,7 @@
       "kind": "kind.power",
       "name": "Conduit to the Esoteric",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7179,7 +7179,7 @@
       "kind": "kind.power",
       "name": "Conjure Dark Powers (1level)",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7251,7 +7251,7 @@
       "kind": "kind.power",
       "name": "Consume Souls",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7305,7 +7305,7 @@
       "kind": "kind.power",
       "name": "Contact Dark Powers",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7362,7 +7362,7 @@
       "kind": "kind.power",
       "name": "Courage",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         314
       ],
@@ -7432,7 +7432,7 @@
       "kind": "kind.power",
       "name": "Create Advanced Technology",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         314
       ],
@@ -7485,7 +7485,7 @@
       "kind": "kind.power",
       "name": "Cunning and Flexible Reconnoiter",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7547,7 +7547,7 @@
       "kind": "kind.power",
       "name": "Curse with Ill Fate",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7597,7 +7597,7 @@
       "kind": "kind.power",
       "name": "Daredevil",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         315
       ],
@@ -7667,7 +7667,7 @@
       "kind": "kind.power",
       "name": "Dark Blessing",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         315
       ],
@@ -7737,7 +7737,7 @@
       "kind": "kind.power",
       "name": "Deadly Additive",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7810,7 +7810,7 @@
       "kind": "kind.power",
       "name": "Death-Dealing Dance",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7870,7 +7870,7 @@
       "kind": "kind.power",
       "name": "Deathly Visage",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7923,7 +7923,7 @@
       "kind": "kind.power",
       "name": "Deciphering",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -7981,7 +7981,7 @@
       "kind": "kind.power",
       "name": "Demand Surrender",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -8041,7 +8041,7 @@
       "kind": "kind.power",
       "name": "Demi-Human Ancestry",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -8093,7 +8093,7 @@
       "kind": "kind.power",
       "name": "Design, Build, and Repair Automatons",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         315
       ],
@@ -8150,7 +8150,7 @@
       "kind": "kind.power",
       "name": "Design, Build, and Repair Ingenious Devices",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         316
       ],
@@ -8211,7 +8211,7 @@
       "kind": "kind.power",
       "name": "Destined",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8260,7 +8260,7 @@
       "kind": "kind.power",
       "name": "Detachable Tail",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8314,7 +8314,7 @@
       "kind": "kind.power",
       "name": "Detect Good",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8370,7 +8370,7 @@
       "kind": "kind.power",
       "name": "Detect Evil",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8449,7 +8449,7 @@
       "kind": "kind.power",
       "name": "Detect Traps",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8506,7 +8506,7 @@
       "kind": "kind.power",
       "name": "Determined",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8558,7 +8558,7 @@
       "kind": "kind.power",
       "name": "Difficult to Corrupt",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8617,7 +8617,7 @@
       "kind": "kind.power",
       "name": "Difficult to Spot",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8676,7 +8676,7 @@
       "kind": "kind.power",
       "name": "Divine Blessing",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8743,7 +8743,7 @@
       "kind": "kind.power",
       "name": "Divine Proficiency",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8819,7 +8819,7 @@
       "kind": "kind.power",
       "name": "Discern Good",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8871,7 +8871,7 @@
       "kind": "kind.power",
       "name": "Discern Evil",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -8946,7 +8946,7 @@
       "kind": "kind.power",
       "name": "Distract",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -9007,7 +9007,7 @@
       "kind": "kind.power",
       "name": "Dominate Beastmen",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -9060,7 +9060,7 @@
       "kind": "kind.power",
       "name": "Dread Shadow",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -9117,7 +9117,7 @@
       "kind": "kind.power",
       "name": "Eldritch Talent",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         316
       ],
@@ -9200,7 +9200,7 @@
       "kind": "kind.power",
       "name": "Eldritch Warrior",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9268,7 +9268,7 @@
       "kind": "kind.power",
       "name": "Elemental Connection",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9326,7 +9326,7 @@
       "kind": "kind.power",
       "name": "Enchanted Forest",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9384,7 +9384,7 @@
       "kind": "kind.power",
       "name": "Engineering Aptitude",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9434,7 +9434,7 @@
       "kind": "kind.power",
       "name": "Evil Eye",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9488,7 +9488,7 @@
       "kind": "kind.power",
       "name": "Experimentation",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9542,7 +9542,7 @@
       "kind": "kind.power",
       "name": "Exquisite Torture",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9615,7 +9615,7 @@
       "kind": "kind.power",
       "name": "Expert Traveler",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9664,7 +9664,7 @@
       "kind": "kind.power",
       "name": "Extensive Firearms Training",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9714,7 +9714,7 @@
       "kind": "kind.power",
       "name": "Exult in Glorious Battle",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9769,7 +9769,7 @@
       "kind": "kind.power",
       "name": "Familial Loyalty",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9822,7 +9822,7 @@
       "kind": "kind.power",
       "name": "Familiar with Technology",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9875,7 +9875,7 @@
       "kind": "kind.power",
       "name": "Farseeing",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -9929,7 +9929,7 @@
       "kind": "kind.power",
       "name": "Fellowship of Animals",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         317
       ],
@@ -9995,7 +9995,7 @@
       "kind": "kind.power",
       "name": "Expert Scout",
       "book": "jj",
-      "cite": "JJ p.317",
+      "cite": "JJ p.315",
       "pages": [
         317
       ],
@@ -10054,7 +10054,7 @@
       "kind": "kind.power",
       "name": "Fiery Spirit",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -10116,7 +10116,7 @@
       "kind": "kind.power",
       "name": "Fiery Cauterization",
       "book": "rr",
-      "cite": "RR p.115",
+      "cite": "RR p.113",
       "pages": [
         115
       ],
@@ -10249,7 +10249,7 @@
       "kind": "kind.power",
       "name": "Fiery Resistance",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10304,7 +10304,7 @@
       "kind": "kind.power",
       "name": "Fighting Fury",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10364,7 +10364,7 @@
       "kind": "kind.power",
       "name": "Fists of Iron",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10420,7 +10420,7 @@
       "kind": "kind.power",
       "name": "Flagellation",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10484,7 +10484,7 @@
       "kind": "kind.power",
       "name": "Flawless Precision",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10536,7 +10536,7 @@
       "kind": "kind.power",
       "name": "Flesh-Runes",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10603,7 +10603,7 @@
       "kind": "kind.power",
       "name": "Flying",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10654,7 +10654,7 @@
       "kind": "kind.power",
       "name": "Fool’s Luck",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10711,7 +10711,7 @@
       "kind": "kind.power",
       "name": "Four Arms",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         318
       ],
@@ -10824,7 +10824,7 @@
       "kind": "kind.power",
       "name": "Forbidden Spells",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -10880,7 +10880,7 @@
       "kind": "kind.power",
       "name": "Friend of Birds and Beasts",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -10946,7 +10946,7 @@
       "kind": "kind.power",
       "name": "Fungal Awareness",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -10998,7 +10998,7 @@
       "kind": "kind.power",
       "name": "Fungal Communion",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11050,7 +11050,7 @@
       "kind": "kind.power",
       "name": "Fungal Friendship",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11105,7 +11105,7 @@
       "kind": "kind.power",
       "name": "Fungal Immunity",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11159,7 +11159,7 @@
       "kind": "kind.power",
       "name": "Fungal Spawn (10)",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11217,7 +11217,7 @@
       "kind": "kind.power",
       "name": "Gather Together the Darkness",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11281,7 +11281,7 @@
       "kind": "kind.power",
       "name": "Gift of Tongues",
       "book": "jj",
-      "cite": "JJ p.313",
+      "cite": "JJ p.311",
       "pages": [
         319
       ],
@@ -11341,7 +11341,7 @@
       "kind": "kind.power",
       "name": "Glamorous Aura",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11405,7 +11405,7 @@
       "kind": "kind.power",
       "name": "Graceful Fighting",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         319
       ],
@@ -11492,7 +11492,7 @@
       "kind": "kind.power",
       "name": "Greater Rite of Sealing",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11561,7 +11561,7 @@
       "kind": "kind.power",
       "name": "Greatness of Soul",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -11623,7 +11623,7 @@
       "kind": "kind.power",
       "name": "Grey Lore",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11679,7 +11679,7 @@
       "kind": "kind.power",
       "name": "Grotesque Arts of Transformation (1)",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11741,7 +11741,7 @@
       "kind": "kind.power",
       "name": "Guardian Spirit",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         319
       ],
@@ -11825,7 +11825,7 @@
       "kind": "kind.power",
       "name": "Hard to Kill",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -11887,7 +11887,7 @@
       "kind": "kind.power",
       "name": "Harmony of Spirit",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         320
       ],
@@ -11957,7 +11957,7 @@
       "kind": "kind.power",
       "name": "Healing Touch",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12008,7 +12008,7 @@
       "kind": "kind.power",
       "name": "Hearty Constitution",
       "book": "jj",
-      "cite": "JJ p.316",
+      "cite": "JJ p.314",
       "pages": [
         320
       ],
@@ -12078,7 +12078,7 @@
       "kind": "kind.power",
       "name": "Heroic Breakfast",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12140,7 +12140,7 @@
       "kind": "kind.power",
       "name": "Heroic Spirit",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12193,7 +12193,7 @@
       "kind": "kind.power",
       "name": "Hideous Servant",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12261,7 +12261,7 @@
       "kind": "kind.power",
       "name": "Horrible Truths",
       "book": "rr",
-      "cite": "RR p.100",
+      "cite": "RR p.98",
       "pages": [
         100
       ],
@@ -12327,7 +12327,7 @@
       "kind": "kind.power",
       "name": "Impersonate Others",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12380,7 +12380,7 @@
       "kind": "kind.power",
       "name": "Implacable Will",
       "book": "jj",
-      "cite": "JJ p.320",
+      "cite": "JJ p.318",
       "pages": [
         320
       ],
@@ -12450,7 +12450,7 @@
       "kind": "kind.power",
       "name": "Infravision",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         320
       ],
@@ -12520,7 +12520,7 @@
       "kind": "kind.power",
       "name": "Inhumanity",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12582,7 +12582,7 @@
       "kind": "kind.power",
       "name": "Initiative",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12636,7 +12636,7 @@
       "kind": "kind.power",
       "name": "Innate Illusion Mastery",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12695,7 +12695,7 @@
       "kind": "kind.power",
       "name": "Innovative Researcher",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12751,7 +12751,7 @@
       "kind": "kind.power",
       "name": "Inspire Dread",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12811,7 +12811,7 @@
       "kind": "kind.power",
       "name": "Inspire Exceptional Performance",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12868,7 +12868,7 @@
       "kind": "kind.power",
       "name": "Instill Strength",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -12925,7 +12925,7 @@
       "kind": "kind.power",
       "name": "Instinctive Dodge",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -13023,7 +13023,7 @@
       "kind": "kind.power",
       "name": "Invulnerable",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -13077,7 +13077,7 @@
       "kind": "kind.power",
       "name": "Iron Leadership",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         321
       ],
@@ -13139,7 +13139,7 @@
       "kind": "kind.power",
       "name": "Irresistible Voice",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         321
       ],
@@ -13207,7 +13207,7 @@
       "kind": "kind.power",
       "name": "Jumping",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -13260,7 +13260,7 @@
       "kind": "kind.power",
       "name": "Keen Eyes",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -13318,7 +13318,7 @@
       "kind": "kind.power",
       "name": "Keen Insect Senses",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -13377,7 +13377,7 @@
       "kind": "kind.power",
       "name": "Killing Spree",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         321
       ],
@@ -13446,7 +13446,7 @@
       "kind": "kind.power",
       "name": "Kinship with Arthropods and Fungi",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         321
       ],
@@ -13502,7 +13502,7 @@
       "kind": "kind.power",
       "name": "Kiss of Life",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -13572,7 +13572,7 @@
       "kind": "kind.power",
       "name": "Laugh at Pain",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -13628,7 +13628,7 @@
       "kind": "kind.power",
       "name": "Lay on Hands",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -13706,7 +13706,7 @@
       "kind": "kind.power",
       "name": "Legwork",
       "book": "jj",
-      "cite": "JJ p.312",
+      "cite": "JJ p.310",
       "pages": [
         322
       ],
@@ -13793,7 +13793,7 @@
       "kind": "kind.power",
       "name": "Lightless Vision",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -13859,7 +13859,7 @@
       "kind": "kind.power",
       "name": "Lion-Hearted Leader",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -13917,7 +13917,7 @@
       "kind": "kind.power",
       "name": "Lizard Brain",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         322
       ],
@@ -13975,7 +13975,7 @@
       "kind": "kind.power",
       "name": "Loadbearing",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14025,7 +14025,7 @@
       "kind": "kind.power",
       "name": "Lordship Over the Undead",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14089,7 +14089,7 @@
       "kind": "kind.power",
       "name": "Lore of Stars and Spheres",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14139,7 +14139,7 @@
       "kind": "kind.power",
       "name": "Low-Light Vision",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14191,7 +14191,7 @@
       "kind": "kind.power",
       "name": "Luck’s Boon",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14244,7 +14244,7 @@
       "kind": "kind.power",
       "name": "Lucky",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14329,7 +14329,7 @@
       "kind": "kind.power",
       "name": "Magic Hands",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14378,7 +14378,7 @@
       "kind": "kind.power",
       "name": "Magic Mirror",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14437,7 +14437,7 @@
       "kind": "kind.power",
       "name": "Magical Proficiency",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14503,7 +14503,7 @@
       "kind": "kind.power",
       "name": "Majesty of the Dragon",
       "book": "jj",
-      "cite": "JJ p.314",
+      "cite": "JJ p.312",
       "pages": [
         322
       ],
@@ -14571,7 +14571,7 @@
       "kind": "kind.power",
       "name": "Malevolent Reputation",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14625,7 +14625,7 @@
       "kind": "kind.power",
       "name": "Mapper",
       "book": "jj",
-      "cite": "JJ p.322",
+      "cite": "JJ p.320",
       "pages": [
         322
       ],
@@ -14686,7 +14686,7 @@
       "kind": "kind.power",
       "name": "Martial Proficiency",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -14760,7 +14760,7 @@
       "kind": "kind.power",
       "name": "Martial Talent",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -14817,7 +14817,7 @@
       "kind": "kind.power",
       "name": "Martyrdom",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -14877,7 +14877,7 @@
       "kind": "kind.power",
       "name": "Marvelous Machines",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -14935,7 +14935,7 @@
       "kind": "kind.power",
       "name": "Mastery of Enchantments and Illusions",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -15017,7 +15017,7 @@
       "kind": "kind.power",
       "name": "Mastery of Domination and Deception",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -15103,7 +15103,7 @@
       "kind": "kind.power",
       "name": "Meditative Focus",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -15159,7 +15159,7 @@
       "kind": "kind.power",
       "name": "Mindfulness",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -15218,7 +15218,7 @@
       "kind": "kind.power",
       "name": "Military Genius",
       "book": "jj",
-      "cite": "JJ p.323",
+      "cite": "JJ p.321",
       "pages": [
         323
       ],
@@ -15269,7 +15269,7 @@
       "kind": "kind.power",
       "name": "Mitigate Damage",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15337,7 +15337,7 @@
       "kind": "kind.power",
       "name": "Modern Thought",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15387,7 +15387,7 @@
       "kind": "kind.power",
       "name": "Mushroom Management",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15442,7 +15442,7 @@
       "kind": "kind.power",
       "name": "Mushroom Overlord",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15511,7 +15511,7 @@
       "kind": "kind.power",
       "name": "Mystical Bloodline",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -15571,7 +15571,7 @@
       "kind": "kind.power",
       "name": "Necrosporing",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15623,7 +15623,7 @@
       "kind": "kind.power",
       "name": "Nervous Watchfulness",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -15760,7 +15760,7 @@
       "kind": "kind.power",
       "name": "Nose for Potions",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15815,7 +15815,7 @@
       "kind": "kind.power",
       "name": "Oneness of Land and Lord",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15873,7 +15873,7 @@
       "kind": "kind.power",
       "name": "Perceive Intentions",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -15926,7 +15926,7 @@
       "kind": "kind.power",
       "name": "Perfection of Body",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -15986,7 +15986,7 @@
       "kind": "kind.power",
       "name": "Personal Talisman",
       "book": "jj",
-      "cite": "JJ p.324",
+      "cite": "JJ p.322",
       "pages": [
         324
       ],
@@ -16044,7 +16044,7 @@
       "kind": "kind.power",
       "name": "Placate",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16108,7 +16108,7 @@
       "kind": "kind.power",
       "name": "Precise Shot",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16162,7 +16162,7 @@
       "kind": "kind.power",
       "name": "Prestidigitation",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16226,7 +16226,7 @@
       "kind": "kind.power",
       "name": "Probability Trance",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16282,7 +16282,7 @@
       "kind": "kind.power",
       "name": "Profane Endurance",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         325
       ],
@@ -16353,7 +16353,7 @@
       "kind": "kind.power",
       "name": "Provoke the Passion",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16440,7 +16440,7 @@
       "kind": "kind.power",
       "name": "Public Education",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16500,7 +16500,7 @@
       "kind": "kind.power",
       "name": "Public Flagellation",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16565,7 +16565,7 @@
       "kind": "kind.power",
       "name": "Pugilism",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16623,7 +16623,7 @@
       "kind": "kind.power",
       "name": "Purity of Body and Soul",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -16680,7 +16680,7 @@
       "kind": "kind.power",
       "name": "Pyroclastics",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -16740,7 +16740,7 @@
       "kind": "kind.power",
       "name": "Quickening",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -16877,7 +16877,7 @@
       "kind": "kind.power",
       "name": "Rally the Faithful",
       "book": "rr",
-      "cite": "RR p.56",
+      "cite": "RR p.54",
       "pages": [
         56
       ],
@@ -16994,7 +16994,7 @@
       "kind": "kind.power",
       "name": "Ravishing Beauty",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         325
       ],
@@ -17062,7 +17062,7 @@
       "kind": "kind.power",
       "name": "Read Languages",
       "book": "jj",
-      "cite": "JJ p.315",
+      "cite": "JJ p.313",
       "pages": [
         325
       ],
@@ -17125,7 +17125,7 @@
       "kind": "kind.power",
       "name": "Relentless",
       "book": "rr",
-      "cite": "RR p.93",
+      "cite": "RR p.91",
       "pages": [
         93
       ],
@@ -17187,7 +17187,7 @@
       "kind": "kind.power",
       "name": "Rhetoric",
       "book": "jj",
-      "cite": "JJ p.325",
+      "cite": "JJ p.323",
       "pages": [
         325
       ],
@@ -17237,7 +17237,7 @@
       "kind": "kind.power",
       "name": "Right Stuff",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17290,7 +17290,7 @@
       "kind": "kind.power",
       "name": "Rouse to Fury",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -17359,7 +17359,7 @@
       "kind": "kind.power",
       "name": "Rotless Rot",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17413,7 +17413,7 @@
       "kind": "kind.power",
       "name": "Scaly Hide",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17497,7 +17497,7 @@
       "kind": "kind.power",
       "name": "Scientific Mindset",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17546,7 +17546,7 @@
       "kind": "kind.power",
       "name": "Scion of Kings",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -17604,7 +17604,7 @@
       "kind": "kind.power",
       "name": "Second Sight",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17657,7 +17657,7 @@
       "kind": "kind.power",
       "name": "Secret Knowledge",
       "book": "jj",
-      "cite": "JJ p.319",
+      "cite": "JJ p.317",
       "pages": [
         326
       ],
@@ -17717,7 +17717,7 @@
       "kind": "kind.power",
       "name": "Secretion",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17787,7 +17787,7 @@
       "kind": "kind.power",
       "name": "Secrets of the Dark Arts",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17852,7 +17852,7 @@
       "kind": "kind.power",
       "name": "Secrets of Life and Death",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17902,7 +17902,7 @@
       "kind": "kind.power",
       "name": "Shapechange",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -17965,7 +17965,7 @@
       "kind": "kind.power",
       "name": "Shape Flesh and Bone",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -18015,7 +18015,7 @@
       "kind": "kind.power",
       "name": "Sleepless",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -18066,7 +18066,7 @@
       "kind": "kind.power",
       "name": "Solidity of Rock",
       "book": "jj",
-      "cite": "JJ p.326",
+      "cite": "JJ p.324",
       "pages": [
         326
       ],
@@ -18116,7 +18116,7 @@
       "kind": "kind.power",
       "name": "Soul of the Dragon",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -18174,7 +18174,7 @@
       "kind": "kind.power",
       "name": "Speak with Animals",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18225,7 +18225,7 @@
       "kind": "kind.power",
       "name": "Speak with Arthropods",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18278,7 +18278,7 @@
       "kind": "kind.power",
       "name": "Speed of Thought",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -18415,7 +18415,7 @@
       "kind": "kind.power",
       "name": "Spell Storing",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18481,7 +18481,7 @@
       "kind": "kind.power",
       "name": "Spiritwalk",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18538,7 +18538,7 @@
       "kind": "kind.power",
       "name": "Spore Calibration",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18605,7 +18605,7 @@
       "kind": "kind.power",
       "name": "Spore Fermentation",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18678,7 +18678,7 @@
       "kind": "kind.power",
       "name": "Spore Perception",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18744,7 +18744,7 @@
       "kind": "kind.power",
       "name": "Spore Synchronization",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18830,7 +18830,7 @@
       "kind": "kind.power",
       "name": "Stalwart Soul",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18884,7 +18884,7 @@
       "kind": "kind.power",
       "name": "Strength of Spirit",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -18950,7 +18950,7 @@
       "kind": "kind.power",
       "name": "Steward of the Wild",
       "book": "jj",
-      "cite": "JJ p.311",
+      "cite": "JJ p.309",
       "pages": [
         327
       ],
@@ -19016,7 +19016,7 @@
       "kind": "kind.power",
       "name": "Stigmata",
       "book": "jj",
-      "cite": "JJ p.318",
+      "cite": "JJ p.316",
       "pages": [
         327
       ],
@@ -19087,7 +19087,7 @@
       "kind": "kind.power",
       "name": "Student of War",
       "book": "jj",
-      "cite": "JJ p.327",
+      "cite": "JJ p.325",
       "pages": [
         327
       ],
@@ -19139,7 +19139,7 @@
       "kind": "kind.power",
       "name": "Subtle Beguilement",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19199,7 +19199,7 @@
       "kind": "kind.power",
       "name": "Summon Infernal Powers",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19258,7 +19258,7 @@
       "kind": "kind.power",
       "name": "Supernatural Resilience",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -19320,7 +19320,7 @@
       "kind": "kind.power",
       "name": "Survivability of Cockroaches",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19384,7 +19384,7 @@
       "kind": "kind.power",
       "name": "Swimming",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19464,7 +19464,7 @@
       "kind": "kind.power",
       "name": "Sworn Foe",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19525,7 +19525,7 @@
       "kind": "kind.power",
       "name": "Tainted Blood",
       "book": "jj",
-      "cite": "JJ p.321",
+      "cite": "JJ p.319",
       "pages": [
         328
       ],
@@ -19591,7 +19591,7 @@
       "kind": "kind.power",
       "name": "Taunt",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19667,7 +19667,7 @@
       "kind": "kind.power",
       "name": "Technological Jargon",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19732,7 +19732,7 @@
       "kind": "kind.power",
       "name": "Thievery Proficiency",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19793,7 +19793,7 @@
       "kind": "kind.power",
       "name": "Torment the Mind",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19848,7 +19848,7 @@
       "kind": "kind.power",
       "name": "Totem Benefit",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19902,7 +19902,7 @@
       "kind": "kind.power",
       "name": "Jargon",
       "book": "jj",
-      "cite": "JJ p.328",
+      "cite": "JJ p.326",
       "pages": [
         328
       ],
@@ -19966,7 +19966,7 @@
       "kind": "kind.power",
       "name": "Tribulating Adversary",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20019,7 +20019,7 @@
       "kind": "kind.power",
       "name": "Unconquerable Soul",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20074,7 +20074,7 @@
       "kind": "kind.power",
       "name": "Undead Slaying",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20132,7 +20132,7 @@
       "kind": "kind.power",
       "name": "Unholy Fanaticism",
       "book": "rr",
-      "cite": "RR p.63",
+      "cite": "RR p.61",
       "pages": [
         63
       ],
@@ -20194,7 +20194,7 @@
       "kind": "kind.power",
       "name": "Unliving",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20248,7 +20248,7 @@
       "kind": "kind.power",
       "name": "Unveil Esoteric Meaning",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20299,7 +20299,7 @@
       "kind": "kind.power",
       "name": "Utter Domination",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20351,7 +20351,7 @@
       "kind": "kind.power",
       "name": "Weapon Systems Expert",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20410,7 +20410,7 @@
       "kind": "kind.power",
       "name": "White Luck Presence",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20463,7 +20463,7 @@
       "kind": "kind.power",
       "name": "Wilderness Evasion",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20530,7 +20530,7 @@
       "kind": "kind.power",
       "name": "Wisdom of the Ages",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20594,7 +20594,7 @@
       "kind": "kind.power",
       "name": "Wholeness of Body",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20651,7 +20651,7 @@
       "kind": "kind.power",
       "name": "Widespread Renown",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -20713,7 +20713,7 @@
       "kind": "kind.power",
       "name": "Words of Command and Obedience",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20766,7 +20766,7 @@
       "kind": "kind.power",
       "name": "Underfoot",
       "book": "jj",
-      "cite": "JJ p.330",
+      "cite": "JJ p.328",
       "pages": [
         330
       ],
@@ -20815,7 +20815,7 @@
       "kind": "kind.power",
       "name": "Bound Waist",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -20876,7 +20876,7 @@
       "kind": "kind.power",
       "name": "Dagger Nails",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -20933,7 +20933,7 @@
       "kind": "kind.power",
       "name": "Dark Soul",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -20987,7 +20987,7 @@
       "kind": "kind.power",
       "name": "Dead Soul",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21050,7 +21050,7 @@
       "kind": "kind.power",
       "name": "Discomfited by Civilization",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21104,7 +21104,7 @@
       "kind": "kind.power",
       "name": "Easily Encumbered",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21162,7 +21162,7 @@
       "kind": "kind.power",
       "name": "Reverse Healing",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21215,7 +21215,7 @@
       "kind": "kind.power",
       "name": "Short-Statured",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21307,7 +21307,7 @@
       "kind": "kind.power",
       "name": "Unholy",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21365,7 +21365,7 @@
       "kind": "kind.power",
       "name": "Walk on Spikes",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21425,7 +21425,7 @@
       "kind": "kind.power",
       "name": "Weak",
       "book": "jj",
-      "cite": "JJ p.331",
+      "cite": "JJ p.329",
       "pages": [
         331
       ],
@@ -21478,7 +21478,7 @@
       "kind": "kind.power",
       "name": "Battlefield Prowess",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -21536,7 +21536,7 @@
       "kind": "kind.power",
       "name": "Castle",
       "book": "rr",
-      "cite": "RR p.26",
+      "cite": "RR p.24",
       "pages": [
         26
       ],
@@ -21676,7 +21676,7 @@
       "kind": "kind.power",
       "name": "Alertness",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -21732,7 +21732,7 @@
       "kind": "kind.power",
       "name": "Ambushing",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -21794,7 +21794,7 @@
       "kind": "kind.power",
       "name": "Animal Reflexes",
       "book": "rr",
-      "cite": "RR p.28",
+      "cite": "RR p.26",
       "pages": [
         28
       ],
@@ -21927,7 +21927,7 @@
       "kind": "kind.power",
       "name": "Pathfinding",
       "book": "rr",
-      "cite": "RR p.29",
+      "cite": "RR p.27",
       "pages": [
         29
       ],
@@ -21984,7 +21984,7 @@
       "kind": "kind.power",
       "name": "Natural Stealth",
       "book": "rr",
-      "cite": "RR p.29",
+      "cite": "RR p.27",
       "pages": [
         29
       ],
@@ -22111,7 +22111,7 @@
       "kind": "kind.power",
       "name": "Evasion",
       "book": "rr",
-      "cite": "RR p.29",
+      "cite": "RR p.27",
       "pages": [
         29
       ],
@@ -22167,7 +22167,7 @@
       "kind": "kind.power",
       "name": "Experience and Hardiness",
       "book": "rr",
-      "cite": "RR p.30",
+      "cite": "RR p.28",
       "pages": [
         30
       ],
@@ -22223,7 +22223,7 @@
       "kind": "kind.power",
       "name": "Border Fort",
       "book": "rr",
-      "cite": "RR p.30",
+      "cite": "RR p.28",
       "pages": [
         30
       ],
@@ -22303,7 +22303,7 @@
       "kind": "kind.power",
       "name": "Scrollreading",
       "book": "rr",
-      "cite": "RR p.35",
+      "cite": "RR p.33",
       "pages": [
         35
       ],
@@ -22471,7 +22471,7 @@
       "kind": "kind.power",
       "name": "Arcane Magic",
       "book": "rr",
-      "cite": "RR p.36",
+      "cite": "RR p.34",
       "pages": [
         36
       ],
@@ -22686,7 +22686,7 @@
       "kind": "kind.power",
       "name": "Minor Magical Research",
       "book": "rr",
-      "cite": "RR p.36",
+      "cite": "RR p.34",
       "pages": [
         36
       ],
@@ -22741,7 +22741,7 @@
       "kind": "kind.power",
       "name": "Major Magical Research",
       "book": "rr",
-      "cite": "RR p.36",
+      "cite": "RR p.34",
       "pages": [
         36
       ],
@@ -22793,7 +22793,7 @@
       "kind": "kind.power",
       "name": "Sanctum",
       "book": "rr",
-      "cite": "RR p.36",
+      "cite": "RR p.34",
       "pages": [
         36
       ],
@@ -22901,7 +22901,7 @@
       "kind": "kind.power",
       "name": "Supreme Magical Research",
       "book": "rr",
-      "cite": "RR p.37",
+      "cite": "RR p.35",
       "pages": [
         37
       ],
@@ -22956,7 +22956,7 @@
       "kind": "kind.power",
       "name": "Divine Magic",
       "book": "rr",
-      "cite": "RR p.38",
+      "cite": "RR p.36",
       "pages": [
         38
       ],
@@ -23011,7 +23011,7 @@
       "kind": "kind.power",
       "name": "Rebuke Undead",
       "book": "rr",
-      "cite": "RR p.39",
+      "cite": "RR p.37",
       "pages": [
         39
       ],
@@ -23241,7 +23241,7 @@
       "kind": "kind.power",
       "name": "Fortified Church",
       "book": "rr",
-      "cite": "RR p.40",
+      "cite": "RR p.38",
       "pages": [
         40
       ],
@@ -23310,7 +23310,7 @@
       "kind": "kind.power",
       "name": "Bribery",
       "book": "rr",
-      "cite": "RR p.42",
+      "cite": "RR p.40",
       "pages": [
         42
       ],
@@ -23366,7 +23366,7 @@
       "kind": "kind.power",
       "name": "Expert Bargaining",
       "book": "rr",
-      "cite": "RR p.42",
+      "cite": "RR p.40",
       "pages": [
         42
       ],
@@ -23464,7 +23464,7 @@
       "kind": "kind.power",
       "name": "Multilingual",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23517,7 +23517,7 @@
       "kind": "kind.power",
       "name": "Treachery",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23628,7 +23628,7 @@
       "kind": "kind.power",
       "name": "Steady Trade Route",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23722,7 +23722,7 @@
       "kind": "kind.power",
       "name": "Rumormongering",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23798,7 +23798,7 @@
       "kind": "kind.power",
       "name": "Expert Traveling",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23849,7 +23849,7 @@
       "kind": "kind.power",
       "name": "Mercantile Network",
       "book": "rr",
-      "cite": "RR p.43",
+      "cite": "RR p.41",
       "pages": [
         43
       ],
@@ -23905,7 +23905,7 @@
       "kind": "kind.power",
       "name": "Access to Capital",
       "book": "rr",
-      "cite": "RR p.44",
+      "cite": "RR p.42",
       "pages": [
         44
       ],
@@ -23972,7 +23972,7 @@
       "kind": "kind.power",
       "name": "Monopoly Power",
       "book": "rr",
-      "cite": "RR p.45",
+      "cite": "RR p.43",
       "pages": [
         45
       ],
@@ -24034,7 +24034,7 @@
       "kind": "kind.power",
       "name": "Guildhouse",
       "book": "rr",
-      "cite": "RR p.45",
+      "cite": "RR p.43",
       "pages": [
         45
       ],
@@ -24132,7 +24132,7 @@
       "kind": "kind.power",
       "name": "Tribal Origin: Jutland",
       "book": "rr",
-      "cite": "RR p.50",
+      "cite": "RR p.48",
       "pages": [
         50
       ],
@@ -24216,7 +24216,7 @@
       "kind": "kind.power",
       "name": "Tribal Origin: Skysostan",
       "book": "rr",
-      "cite": "RR p.50",
+      "cite": "RR p.48",
       "pages": [
         50
       ],
@@ -24300,7 +24300,7 @@
       "kind": "kind.power",
       "name": "Tribal Origin: Ivory Kingdoms",
       "book": "rr",
-      "cite": "RR p.50",
+      "cite": "RR p.48",
       "pages": [
         50
       ],
@@ -24384,7 +24384,7 @@
       "kind": "kind.power",
       "name": "Savage Resilience",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -24442,7 +24442,7 @@
       "kind": "kind.power",
       "name": "Animal Magnetism",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -24525,7 +24525,7 @@
       "kind": "kind.power",
       "name": "Natural Proficiency",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -24617,7 +24617,7 @@
       "kind": "kind.power",
       "name": "Chieftain's Hall",
       "book": "rr",
-      "cite": "RR p.51",
+      "cite": "RR p.49",
       "pages": [
         51
       ],
@@ -24712,7 +24712,7 @@
       "kind": "kind.power",
       "name": "Arcane Dabbling",
       "book": "rr",
-      "cite": "RR p.54",
+      "cite": "RR p.52",
       "pages": [
         54
       ],
@@ -24765,7 +24765,7 @@
       "kind": "kind.power",
       "name": "Inspire Courage",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -24830,7 +24830,7 @@
       "kind": "kind.power",
       "name": "Loremastery",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -24885,7 +24885,7 @@
       "kind": "kind.power",
       "name": "Chronicles of Battle",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -24939,7 +24939,7 @@
       "kind": "kind.power",
       "name": "Jack of All Trades",
       "book": "rr",
-      "cite": "RR p.55",
+      "cite": "RR p.53",
       "pages": [
         55
       ],
@@ -24998,7 +24998,7 @@
       "kind": "kind.power",
       "name": "Inspire Hope",
       "book": "rr",
-      "cite": "RR p.56",
+      "cite": "RR p.54",
       "pages": [
         56
       ],
@@ -25111,7 +25111,7 @@
       "kind": "kind.power",
       "name": "Great Hall",
       "book": "rr",
-      "cite": "RR p.56",
+      "cite": "RR p.54",
       "pages": [
         56
       ],
@@ -25177,7 +25177,7 @@
       "kind": "kind.power",
       "name": "Graceful Fighting",
       "book": "rr",
-      "cite": "RR p.58",
+      "cite": "RR p.56",
       "pages": [
         58
       ],
@@ -25295,7 +25295,7 @@
       "kind": "kind.power",
       "name": "Temple",
       "book": "rr",
-      "cite": "RR p.59",
+      "cite": "RR p.57",
       "pages": [
         59
       ],
@@ -25364,7 +25364,7 @@
       "kind": "kind.power",
       "name": "Strength of Faith",
       "book": "rr",
-      "cite": "RR p.59",
+      "cite": "RR p.57",
       "pages": [
         59
       ],
@@ -25428,7 +25428,7 @@
       "kind": "kind.power",
       "name": "Weapon Finesse",
       "book": "rr",
-      "cite": "RR p.59",
+      "cite": "RR p.57",
       "pages": [
         59
       ],
@@ -25504,7 +25504,7 @@
       "kind": "kind.power",
       "name": "Aura of Protection",
       "book": "rr",
-      "cite": "RR p.62",
+      "cite": "RR p.60",
       "pages": [
         62
       ],
@@ -25583,7 +25583,7 @@
       "kind": "kind.power",
       "name": "Lay on Hands",
       "book": "rr",
-      "cite": "RR p.62",
+      "cite": "RR p.60",
       "pages": [
         62
       ],
@@ -25682,7 +25682,7 @@
       "kind": "kind.power",
       "name": "Sanctified Body",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         63
       ],
@@ -25739,7 +25739,7 @@
       "kind": "kind.power",
       "name": "Holy Fervor",
       "book": "rr",
-      "cite": "RR p.63",
+      "cite": "RR p.61",
       "pages": [
         63
       ],
@@ -25797,7 +25797,7 @@
       "kind": "kind.power",
       "name": "Sense Evil",
       "book": "rr",
-      "cite": "RR p.63",
+      "cite": "RR p.61",
       "pages": [
         63
       ],
@@ -25924,7 +25924,7 @@
       "kind": "kind.power",
       "name": "Fortress",
       "book": "rr",
-      "cite": "RR p.63",
+      "cite": "RR p.61",
       "pages": [
         63
       ],
@@ -26001,7 +26001,7 @@
       "kind": "kind.power",
       "name": "Consolation",
       "book": "rr",
-      "cite": "RR p.66",
+      "cite": "RR p.64",
       "pages": [
         66
       ],
@@ -26056,7 +26056,7 @@
       "kind": "kind.power",
       "name": "Purity of the Body",
       "book": "rr",
-      "cite": "RR p.67",
+      "cite": "RR p.65",
       "pages": [
         67
       ],
@@ -26108,7 +26108,7 @@
       "kind": "kind.power",
       "name": "Cloister",
       "book": "rr",
-      "cite": "RR p.67",
+      "cite": "RR p.65",
       "pages": [
         67
       ],
@@ -26215,7 +26215,7 @@
       "kind": "kind.power",
       "name": "Lay on Hands",
       "book": "rr",
-      "cite": "RR p.67",
+      "cite": "RR p.65",
       "pages": [
         67
       ],
@@ -26314,7 +26314,7 @@
       "kind": "kind.power",
       "name": "Commune with Spirits",
       "book": "rr",
-      "cite": "RR p.70",
+      "cite": "RR p.68",
       "pages": [
         70
       ],
@@ -26422,7 +26422,7 @@
       "kind": "kind.power",
       "name": "Totem Animal",
       "book": "rr",
-      "cite": "RR p.71",
+      "cite": "RR p.69",
       "pages": [
         71
       ],
@@ -26491,7 +26491,7 @@
       "kind": "kind.power",
       "name": "Tribal Traditions",
       "book": "rr",
-      "cite": "RR p.71",
+      "cite": "RR p.69",
       "pages": [
         71
       ],
@@ -26547,7 +26547,7 @@
       "kind": "kind.power",
       "name": "Spiritual Ritual",
       "book": "rr",
-      "cite": "RR p.73",
+      "cite": "RR p.71",
       "pages": [
         73
       ],
@@ -26605,7 +26605,7 @@
       "kind": "kind.power",
       "name": "Shapechanging",
       "book": "rr",
-      "cite": "RR p.73",
+      "cite": "RR p.71",
       "pages": [
         73
       ],
@@ -26695,7 +26695,7 @@
       "kind": "kind.power",
       "name": "Spiritwalking",
       "book": "rr",
-      "cite": "RR p.73",
+      "cite": "RR p.71",
       "pages": [
         73
       ],
@@ -26754,7 +26754,7 @@
       "kind": "kind.power",
       "name": "Medicine Lodge",
       "book": "rr",
-      "cite": "RR p.73",
+      "cite": "RR p.71",
       "pages": [
         73
       ],
@@ -26836,7 +26836,7 @@
       "kind": "kind.power",
       "name": "Dark Path",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -26895,7 +26895,7 @@
       "kind": "kind.power",
       "name": "Occultism",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -26948,7 +26948,7 @@
       "kind": "kind.power",
       "name": "Power of Sacrifice",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -27005,7 +27005,7 @@
       "kind": "kind.power",
       "name": "Dark Path: Demonology",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -27064,7 +27064,7 @@
       "kind": "kind.power",
       "name": "Dark Path: Necromancy",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -27123,7 +27123,7 @@
       "kind": "kind.power",
       "name": "Dark Path: Transmogrification",
       "book": "rr",
-      "cite": "RR p.75",
+      "cite": "RR p.73",
       "pages": [
         75
       ],
@@ -27182,7 +27182,7 @@
       "kind": "kind.power",
       "name": "Studious Divine Magic",
       "book": "rr",
-      "cite": "RR p.78",
+      "cite": "RR p.76",
       "pages": [
         78
       ],
@@ -27242,7 +27242,7 @@
       "kind": "kind.power",
       "name": "Tradition",
       "book": "rr",
-      "cite": "RR p.78",
+      "cite": "RR p.76",
       "pages": [
         78
       ],
@@ -27469,7 +27469,7 @@
       "kind": "kind.power",
       "name": "Village Wisdom",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27527,7 +27527,7 @@
       "kind": "kind.power",
       "name": "Traditional Medicine",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27588,7 +27588,7 @@
       "kind": "kind.power",
       "name": "Brew Potions",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27640,7 +27640,7 @@
       "kind": "kind.power",
       "name": "Scribe Scrolls",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27691,7 +27691,7 @@
       "kind": "kind.power",
       "name": "Witch's Cottage",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27763,7 +27763,7 @@
       "kind": "kind.power",
       "name": "Tradition: Antiquarian",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27840,7 +27840,7 @@
       "kind": "kind.power",
       "name": "Tradition: Chthonic",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27917,7 +27917,7 @@
       "kind": "kind.power",
       "name": "Tradition: Sylvan",
       "book": "rr",
-      "cite": "RR p.79",
+      "cite": "RR p.77",
       "pages": [
         79
       ],
@@ -27994,7 +27994,7 @@
       "kind": "kind.power",
       "name": "Attention to Detail",
       "book": "rr",
-      "cite": "RR p.82",
+      "cite": "RR p.80",
       "pages": [
         82
       ],
@@ -28048,7 +28048,7 @@
       "kind": "kind.power",
       "name": "Crafting",
       "book": "rr",
-      "cite": "RR p.82",
+      "cite": "RR p.80",
       "pages": [
         82
       ],
@@ -28138,7 +28138,7 @@
       "kind": "kind.power",
       "name": "Hardy People",
       "book": "rr",
-      "cite": "RR p.83",
+      "cite": "RR p.81",
       "pages": [
         83
       ],
@@ -28190,7 +28190,7 @@
       "kind": "kind.power",
       "name": "Sensitivity to Rock and Stone",
       "book": "rr",
-      "cite": "RR p.83",
+      "cite": "RR p.81",
       "pages": [
         83
       ],
@@ -28243,7 +28243,7 @@
       "kind": "kind.power",
       "name": "Vault",
       "book": "rr",
-      "cite": "RR p.83",
+      "cite": "RR p.81",
       "pages": [
         83
       ],
@@ -28309,7 +28309,7 @@
       "kind": "kind.power",
       "name": "Acrobatics",
       "book": "rr",
-      "cite": "RR p.88",
+      "cite": "RR p.86",
       "pages": [
         88
       ],
@@ -28627,7 +28627,7 @@
       "kind": "kind.power",
       "name": "Attunement to Nature",
       "book": "rr",
-      "cite": "RR p.92",
+      "cite": "RR p.90",
       "pages": [
         92
       ],
@@ -28863,7 +28863,7 @@
       "kind": "kind.power",
       "name": "Fastness",
       "book": "rr",
-      "cite": "RR p.92",
+      "cite": "RR p.90",
       "pages": [
         92
       ],
@@ -28928,7 +28928,7 @@
       "kind": "kind.power",
       "name": "Connection to Nature",
       "book": "rr",
-      "cite": "RR p.93",
+      "cite": "RR p.91",
       "pages": [
         93
       ],
@@ -28986,7 +28986,7 @@
       "kind": "kind.power",
       "name": "Blood of Kings",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -29040,7 +29040,7 @@
       "kind": "kind.power",
       "name": "Favor of the Gods",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -29092,7 +29092,7 @@
       "kind": "kind.power",
       "name": "Longeval",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -29148,7 +29148,7 @@
       "kind": "kind.power",
       "name": "Divine Health",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -29202,7 +29202,7 @@
       "kind": "kind.power",
       "name": "Lay on Hands",
       "book": "rr",
-      "cite": "RR p.95",
+      "cite": "RR p.93",
       "pages": [
         95
       ],
@@ -29277,7 +29277,7 @@
       "kind": "kind.power",
       "name": "Preternatural Quickening",
       "book": "rr",
-      "cite": "RR p.99",
+      "cite": "RR p.97",
       "pages": [
         99
       ],
@@ -29331,7 +29331,7 @@
       "kind": "kind.power",
       "name": "Zaharan Dark Fortress",
       "book": "rr",
-      "cite": "RR p.99",
+      "cite": "RR p.97",
       "pages": [
         99
       ],
@@ -29436,7 +29436,7 @@
       "kind": "kind.power",
       "name": "Death Healing",
       "book": "rr",
-      "cite": "RR p.99",
+      "cite": "RR p.97",
       "pages": [
         99
       ],
@@ -29495,7 +29495,7 @@
       "kind": "kind.power",
       "name": "Arcane Striking",
       "book": "rr",
-      "cite": "RR p.99",
+      "cite": "RR p.97",
       "pages": [
         99
       ],
@@ -29599,7 +29599,7 @@
       "kind": "kind.power",
       "name": "Dark Charisma",
       "book": "rr",
-      "cite": "RR p.99",
+      "cite": "RR p.97",
       "pages": [
         99
       ],
@@ -29654,7 +29654,7 @@
       "kind": "kind.power",
       "name": "After the Flesh",
       "book": "rr",
-      "cite": "RR p.100",
+      "cite": "RR p.98",
       "pages": [
         100
       ],
@@ -29720,7 +29720,7 @@
       "kind": "kind.power",
       "name": "Ancient Pacts",
       "book": "rr",
-      "cite": "RR p.100",
+      "cite": "RR p.98",
       "pages": [
         100
       ],
@@ -29782,7 +29782,7 @@
       "kind": "kind.power",
       "name": "Dark Souls",
       "book": "rr",
-      "cite": "RR p.100",
+      "cite": "RR p.98",
       "pages": [
         100
       ],
@@ -29833,7 +29833,7 @@
       "kind": "kind.power",
       "name": "Inexorable",
       "book": "rr",
-      "cite": "RR p.101",
+      "cite": "RR p.99",
       "pages": [
         101
       ],
