@@ -5355,6 +5355,57 @@ async function syncRaceTongues(classDocs) {
  * Import every class document (skip ones already in the world). Values come
  * from the connected book; a bookless import creates constructor stubs.
  */
+/** The label `bindClass` derives for a ladder key, so a hand edit is visible. */
+const ladderLabelFor = (key) => key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
+
+/**
+ * Re-key a class ladder whose column has since been QUALIFIED.
+ *
+ * A ladder's key is the only part of a progression column that reaches a class
+ * document — the printed header is a locator and is dropped at compile — so the
+ * key is what a consumer reads to decide who a value applies to. A column keyed
+ * without a qualifier its header states hands over a broader rule than the page
+ * gives, and `importClasses` skips a class this world already holds, so no
+ * ordinary re-import would ever correct one.
+ *
+ * Document-driven like `importTemplatePackages`: it compares each class against
+ * the column keys the cookbook declares NOW, so no book need be connected and
+ * no class is named here. A key the cookbook no longer declares is re-keyed
+ * only when exactly ONE declared key is that same name behind a qualifier —
+ * anything less certain is left alone rather than guessed at. The label moves
+ * with the key only where it still reads as the one import derived; a Judge who
+ * retitled the column keeps their title.
+ *
+ * @returns {Promise<number>} how many classes were corrected
+ */
+async function repairClassLadderKeys() {
+  let repaired = 0;
+  for (const [id, entry] of classEntries()) {
+    const doc = await importedItem(id);
+    if (doc?.type !== CLASS_ITEM_TYPE) continue;
+    const ladders = doc.system?.ladders ?? [];
+    if (!ladders.length) continue;
+    const declared = (entry.fields?.progression?.cols ?? []).map((c) => String(c.key ?? ""));
+    if (!declared.length) continue;
+    let changed = false;
+    const next = ladders.map((l) => {
+      const key = String(l.key ?? "");
+      if (!key || declared.includes(key)) return l;
+      const lower = key.toLowerCase();
+      const matches = declared.filter((d) => d.length > key.length && d.toLowerCase().endsWith(lower));
+      if (matches.length !== 1) return l;
+      changed = true;
+      const label = l.label === ladderLabelFor(key) ? ladderLabelFor(matches[0]) : l.label;
+      return { ...l, key: matches[0], label };
+    });
+    if (!changed) continue;
+    await doc.update({ "system.ladders": next });
+    repaired++;
+  }
+  if (repaired) console.warn(`${MODULE_ID} | re-keyed a qualified ladder on ${repaired} class(es) imported before the column carried its qualifier.`);
+  return repaired;
+}
+
 export async function importClasses() {
   // The macro that runs this is labelled "(GM)" and is executable by every
   // seat. Without the guard a player with item-creation rights adds a second
@@ -5365,6 +5416,10 @@ export async function importClasses() {
     ui.notifications?.warn(`${MODULE_ID} | ACKS Extras is not active — the class item type is unavailable.`);
     return [];
   }
+  // Correct what an earlier run keyed wrong BEFORE the loop below: a class this
+  // world already holds is skipped there, so a repair written inside it would
+  // never reach one.
+  const repaired = await repairClassLadderKeys();
   const made = [];
   let skipped = 0;
   const gainsNode = await executeProfGains();
@@ -5393,7 +5448,9 @@ export async function importClasses() {
   await inheritRaceTongues(made);
   await syncRaceTongues(made);
   await materializeClassTemplates(made);
-  ui.notifications?.info(`${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present.`);
+  ui.notifications?.info(
+    `${MODULE_ID} | classes: ${made.length} imported, ${skipped} already present${repaired ? `, ${repaired} corrected` : ""}.`,
+  );
   return made;
 }
 

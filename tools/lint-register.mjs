@@ -53,6 +53,37 @@ function looksLikeRegex(v) {
   return !/(?:[A-Za-z]{2,}\s+){6,}/.test(v) && words.length <= 12;
 }
 
+/**
+ * A column key must carry every qualification its printed header carries.
+ *
+ * The key is the only part of a column that survives into a class document's
+ * ladder — the header is a locator and is dropped. So a header that narrows
+ * what a value APPLIES TO ("Melee Damage Bonus") and a key that does not
+ * ("damageBonus") hand the consumer a broader rule than the page states, and
+ * nothing downstream can tell the difference: the paladin's melee-only bonus
+ * arrives shaped exactly like the fighter's melee-and-missile one.
+ *
+ * Only attack-type qualifiers are checked, because they are the ones that
+ * change who a value applies to. A header word the key spells differently is
+ * fine — this asks that the narrowing be present, not that the names match.
+ *
+ * Register-only by necessity: the compiler keeps a column's key and geometry
+ * and drops its header, so this is the last point where the two can be
+ * compared at all.
+ */
+const QUALIFIERS = ["melee", "missile", "unarmed"];
+function checkColQualifiers(cols, label, where) {
+  for (const col of cols ?? []) {
+    const header = String(col.header ?? "").toLowerCase();
+    const key = String(col.key ?? "").toLowerCase();
+    for (const q of QUALIFIERS) {
+      if (header.includes(q) && !key.includes(q)) {
+        err(`${label}: ${where} col "${col.key}" drops the "${q}" qualifier its header states ("${col.header}") — key it "${q}${(col.key[0] ?? "").toUpperCase()}${col.key.slice(1)}"`);
+      }
+    }
+  }
+}
+
 /** Cap every string leaf; "note" and validated "pattern" keys get longer caps. */
 function capStrings(obj, label, keyPath = "") {
   for (const [k, v] of Object.entries(obj ?? {})) {
@@ -165,6 +196,7 @@ for (const dirent of fs.existsSync(REGISTER) ? fs.readdirSync(REGISTER, { withFi
           err(`${id}: iconNiche needs a core "icon" beside it — a seat without that module would get nothing`);
         }
       }
+      for (const [name, t] of Object.entries(e.class?.tables ?? {})) checkColQualifiers(t.cols, id, `table "${name}"`);
       capStrings(e, id);
     }
   }

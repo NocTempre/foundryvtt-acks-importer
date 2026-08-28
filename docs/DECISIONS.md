@@ -7,6 +7,46 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A column key carries every qualification its printed header carries (2026-08-27)
+
+**Problem.** The paladin's progression column is headed *Melee Damage Bonus* and
+was keyed `damageBonus`. The header is a LOCATOR — it finds the column and is
+dropped at compile — so the key is the only part of a column that reaches a
+class document's ladder, and the only thing a consumer can read to decide who a
+value applies to. Keyed unqualified, the paladin's melee-only bonus arrived
+shaped exactly like the fighter's unqualified one, and nothing downstream could
+tell them apart.
+
+**Ruled.** A key spells out every attack-type qualifier its header states.
+`tools/lint-register.mjs` enforces it over `melee`, `missile` and `unarmed`: a
+header carrying one and a key that does not is a lint failure naming the key it
+should have. The check is register-only by necessity — the compiler keeps a
+column's key and geometry and discards its header, so this is the last point at
+which the two can be compared at all.
+
+**Only attack-type qualifiers are checked.** They are the ones that change WHO a
+value applies to. A header word the key merely spells differently is not a
+defect, so the gate asks that the narrowing be present, not that the names match.
+
+**A repair, because no ordinary re-import would reach one.** `importClasses`
+skips a class the world already holds, so a wrongly-keyed ladder would survive
+every re-run. `repairClassLadderKeys` compares each imported class against the
+keys the cookbook declares NOW and re-keys a ladder whose key has since been
+qualified — document-driven, so no book need be connected and no class is named
+in code. It re-keys only where exactly ONE declared key is that same name behind
+a qualifier; anything less certain is left alone rather than guessed at. A label
+moves with the key only while it still reads as the one import derived, so a
+Judge who retitled the column keeps their title.
+
+**Unqualified is not a synonym for "both".** The fighter's column is printed
+without a qualifier because the bonus is unrestricted; the barbarian's is
+printed without one because the player elects melee or missile and cannot change
+it. No field of a class document separates those two, and the importer does not
+invent one — what an unqualified column means is the consuming module's
+question, and acks-extras asks the player rather than assuming.
+
+---
+
 ### A citation names the printed folio; everything else names the PDF page (2026-08-27)
 
 **Problem.** A field report showed a class power citing a page two past its own

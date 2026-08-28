@@ -1,5 +1,32 @@
 # Changelog
 
+## 4.4.0
+
+**A column that says "melee" imports as a column that says "melee".**
+
+### Fixed
+- **The paladin's damage bonus is melee only, and now says so.** Its
+  progression column is headed *Melee Damage Bonus*, but imported under a key
+  that had dropped the word — and the key is the only part of a column that
+  reaches the class document, because the header is a locator and is discarded
+  once it has found the column. The paladin's melee-only bonus therefore arrived
+  shaped exactly like the fighter's unrestricted one, and nothing reading the
+  class could tell the two apart.
+
+### Changed
+- **Classes imported before this are repaired in place.** Importing classes
+  skips a class your world already holds, so no ordinary re-import would ever
+  reach a ladder keyed the old way. Import now re-keys them first, and says how
+  many it corrected. It acts only where exactly one column the cookbook declares
+  is that same name behind a qualifier, and it keeps a title you wrote yourself.
+
+### Internal
+- A register column key must carry every attack-type qualifier its printed
+  header carries — `melee`, `missile`, `unarmed`. The register lint fails
+  otherwise and names the key the column should have. This is the last point
+  where key and header can be compared: the compiler keeps the key and drops
+  the header.
+
 ## 4.3.2
 
 **The page a citation names is the page you turn to.**

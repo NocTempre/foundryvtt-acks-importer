@@ -1785,7 +1785,7 @@
               "header": "Hit Dice"
             },
             {
-              "key": "damageBonus",
+              "key": "meleeDamageBonus",
               "header": "Melee Damage Bonus"
             }
           ]
