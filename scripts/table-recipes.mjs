@@ -386,6 +386,54 @@ export const TABLE_RECIPES = {
       },
     },
   },
+  // RR ch. 6 wilderness ground: the grouped Terrain Speed Multiplier table
+  // (whose road row carries the Driving rate in its own cell) and the
+  // Navigating the Wild targets. Raw page reads only; travel-binding.mjs
+  // assembles the engine-shaped `terrainMultipliers`/`roads`/`gettingLost`
+  // tables acks-extras declares via expectTables.
+  travel: {
+    source: { book: "ACKS II Revised Rulebook", pages: "272, 275" },
+    tables: {
+      terrainGroups: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 272,
+        locate: "Road multipliers are applied after",
+        column: { xMin: 300, xMax: 590 },
+        labelMaxX: 440,
+        rows: [
+          { key: "grasslandScrubland", labelRe: "^grassland" },
+          { key: "barrensDesertHillsForest", labelRe: "^barrens" },
+          { key: "jungleMountainSwamp", labelRe: "^jungle" },
+          { key: "road", labelRe: "^road$" },
+          { key: "mudSnow", labelRe: "^mud" },
+        ],
+        cellColumns: [{ key: "multiplier", x: 442, w: 148, pattern: "raw", row: true }],
+      },
+      gettingLostRaw: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 275,
+        locate: "Navigating the Wild",
+        column: { xMin: 325, xMax: 590 },
+        labelMaxX: 480,
+        rows: [
+          { key: "barrens", labelRe: "^barrens" },
+          { key: "desert", labelRe: "^desert" },
+          { key: "forest", labelRe: "^forest" },
+          { key: "grassland", labelRe: "^grassland" },
+          { key: "hills", labelRe: "^hills" },
+          { key: "jungle", labelRe: "^jungle" },
+          { key: "mountains", labelRe: "^mountains" },
+          { key: "scrublandSparse", labelRe: "^scrubland \\(low" },
+          { key: "scrublandDense", labelRe: "^scrubland \\(high" },
+          { key: "swampMarshy", labelRe: "^swamp \\(marshy" },
+          { key: "swampForested", labelRe: "^swamp \\(forested" },
+        ],
+        cellColumns: [{ key: "navigation", x: 499, w: 48, pattern: "raw", row: true }],
+      },
+    },
+  },
   equipment: {
     source: { book: "ACKS II Revised Rulebook", pages: "160" },
     tables: {

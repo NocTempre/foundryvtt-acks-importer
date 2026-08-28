@@ -40,6 +40,7 @@ import { mapPairs } from "./stats-map.mjs";
 import { createDocFor } from "./poc.mjs";
 import { importTables, tableRecipeCount } from "./tables-binding.mjs";
 import { applyBuilderImport } from "./builder-binding.mjs";
+import { applyTravelImport, TRAVEL_DOC_ID } from "./travel-binding.mjs";
 import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
@@ -833,6 +834,17 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | class-builder binding failed`, err);
       ui.notifications.warn(`acks-importer | class builder: ${err.message}`);
+    }
+  }
+  // The travel doc likewise: the raw page reads assemble into the
+  // engine-shaped tables acks-extras' travel derivations declare.
+  if (report.imported.some((d) => d.docId === TRAVEL_DOC_ID)) {
+    try {
+      const t = await applyTravelImport();
+      if (t.assembled.length) console.log(`${MODULE_ID} | travel tables assembled`, t.assembled);
+    } catch (err) {
+      console.error(`${MODULE_ID} | travel table binding failed`, err);
+      ui.notifications.warn(`acks-importer | travel tables: ${err.message}`);
     }
   }
   // The taxonomy is read, not shipped, so the items exist only once a seat has
