@@ -43,6 +43,7 @@ import { applyBuilderImport } from "./builder-binding.mjs";
 import { applyTravelImport, TRAVEL_DOC_ID } from "./travel-binding.mjs";
 import { applyWeatherImport, WEATHER_DOC_ID } from "./weather-binding.mjs";
 import { applyEncountersImport, ENCOUNTERS_DOC_ID } from "./encounters-binding.mjs";
+import { applyVoyagesImport, VOYAGES_DOC_ID } from "./voyages-binding.mjs";
 import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
@@ -869,6 +870,17 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | encounter table binding failed`, err);
       ui.notifications.warn(`acks-importer | encounter tables: ${err.message}`);
+    }
+  }
+  // And the voyages doc: the wind rows, tacking rate, navigation and hazard
+  // figures, and hull damage shares the sea derivations read.
+  if (report.imported.some((d) => d.docId === VOYAGES_DOC_ID)) {
+    try {
+      const v = await applyVoyagesImport();
+      if (v.assembled.length) console.log(`${MODULE_ID} | voyage tables assembled`, v.assembled);
+    } catch (err) {
+      console.error(`${MODULE_ID} | voyage table binding failed`, err);
+      ui.notifications.warn(`acks-importer | voyage tables: ${err.message}`);
     }
   }
   // The taxonomy is read, not shipped, so the items exist only once a seat has

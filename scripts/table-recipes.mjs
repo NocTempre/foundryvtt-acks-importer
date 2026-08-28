@@ -752,6 +752,138 @@ export const TABLE_RECIPES = {
       },
     },
   },
+  // The sea's own numbers (RR ch. 7): the Wind Strength grid, the tacking
+  // rate, the Navigation targets and their proficiency bonuses, the hazard
+  // throw and every hazard's effects, the hull damage shares and the
+  // sinking die. Raw reads only; voyages-binding.mjs assembles the
+  // engine-shaped tables acks-extras' sea derivations declare on the
+  // `voyages` document.
+  voyages: {
+    source: { book: "ACKS II Revised Rulebook", pages: "316-320" },
+    tables: {
+      // Six band rows: the 2d6 spread and the band name share the label
+      // zone — the name claims the row, labelPattern reads the spread's
+      // edges out of the same label — then sail ×, oar ×, next-day modifier
+      // and the special-effect text.
+      windStrengthRaw: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 319,
+        locate: "Special Effect",
+        column: { xMin: 60, xMax: 592 },
+        labelMaxX: 199,
+        rowTol: 5,
+        rows: [
+          { key: "still", labelRe: "still$", labelPattern: "spreadBand" },
+          { key: "gentle", labelRe: "gentle$", labelPattern: "spreadBand" },
+          { key: "moderate", labelRe: "moderate$", labelPattern: "spreadBand" },
+          { key: "strong", labelRe: "strong$", labelPattern: "spreadBand" },
+          { key: "veryStrong", labelRe: "very\\s*strong$", labelPattern: "spreadBand" },
+          { key: "gale", labelRe: "gale$", labelPattern: "spreadBand" },
+        ],
+        cellColumns: [
+          { key: "sail", x: 200, w: 62, pattern: "raw", row: true },
+          { key: "oar", x: 264, w: 62, pattern: "raw", row: true },
+          { key: "nextDay", x: 328, w: 60, pattern: "raw", row: true },
+          { key: "special", x: 392, w: 200, pattern: "raw", row: true },
+        ],
+      },
+      // The Navigation targets: a three-row sidebar grid beside the prose.
+      navigationRaw: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 320,
+        locate: "Staying on Course",
+        column: { xMin: 130, xMax: 300 },
+        labelMaxX: 218,
+        rowTol: 5,
+        rows: [
+          { key: "lakeOrRiver", labelRe: "^lake" },
+          { key: "coast", labelRe: "^c\\s*oast$" },
+          { key: "openSea", labelRe: "^o\\s*pen\\s*s\\s*ea$" },
+        ],
+        cellColumns: [{ key: "target", x: 219, w: 45, pattern: "raw", row: true }],
+      },
+      voyagesProse: {
+        shape: "proseValues",
+        book: "rr",
+        valueBlocks: [
+          {
+            id: "shares",
+            printedPage: 316,
+            locate: "cannot deal damage to vessels",
+            column: { xMin: 295, xMax: 592 },
+            values: [
+              { key: "sinkDice", find: "rounds. attacks by man-sized", before: true, span: 22, take: "window" },
+              { key: "lightBallista", find: "light and medium ballistae deal", take: "window", span: 16 },
+              { key: "heavyThird", find: "catapults deal", take: "window", span: 16 },
+              { key: "spells", find: "spells deal", take: "window", span: 16 },
+              { key: "aoeDivisor", find: "square footage /", take: "int" },
+              { key: "berthStone", find: "passengers can be carried as cargo at a weight of", take: "int" },
+            ],
+          },
+          {
+            id: "tacking",
+            printedPage: 318,
+            locate: "tacking vessels are moving at",
+            column: { xMin: 295, xMax: 592 },
+            values: [
+              { key: "tackRate", find: "tacking vessels are moving at", take: "window", span: 14 },
+            ],
+          },
+          {
+            id: "navigation",
+            printedPage: 320,
+            locate: "Staying on Course",
+            column: { xMin: 40, xMax: 300 },
+            values: [
+              // One sentence prices both arts; the binding reads the two
+              // bonuses out of the one window.
+              { key: "oneArt", find: "or the navigation proficiency, the vessel", take: "window", span: 80 },
+            ],
+          },
+          {
+            id: "hazardThrow",
+            printedPage: 320,
+            locate: "Avoiding Nautical Hazards",
+            column: { xMin: 40, xMax: 300 },
+            values: [
+              // The sentence carries the captain's target and the master
+              // mariner's parenthetical together; both parse from it.
+              { key: "captain", find: "seafaring proficiency throw", take: "window", span: 40 },
+              { key: "halfSpeed", find: "moving at half speed", take: "window", span: 60 },
+              { key: "shallowDraft", find: "galley or longship", take: "window", span: 60 },
+            ],
+          },
+          {
+            id: "repairRounding",
+            printedPage: 322,
+            locate: "cannot be healed, but they can be repaired",
+            values: [
+              { key: "repairCrew", find: "when a vessel is damaged, it takes", take: "window", span: 40 },
+              { key: "seaHalf", find: "the crew can only repair", take: "window", span: 60 },
+              { key: "roundVoyage", find: "round speed to the nearest", take: "window", span: 16 },
+              { key: "roundCombat", find: "they reduce voyage speed, rounded to the nearest", take: "window", span: 14 },
+            ],
+          },
+          {
+            id: "hazardEffects",
+            printedPage: 320,
+            locate: "Avoiding Nautical Hazards",
+            values: [
+              { key: "kelpFree", find: "disentangling the vessel requires", take: "window", span: 60 },
+              { key: "rockDamage", find: "strikes the hazard below the waterline and suffers", take: "window", span: 20 },
+              { key: "shoalDamage", find: "runs aground and suffers", take: "window", span: 16 },
+              { key: "refloat", find: "refloated by high tide in", take: "window", span: 16 },
+              { key: "lighten", find: "lightening the load grants a", take: "window", span: 30 },
+              { key: "lightenStone", find: "vessel escapes for every", take: "window", span: 30 },
+              { key: "unloadStone", find: "crew member can unload", take: "window", span: 30 },
+            ],
+          },
+        ],
+      },
+    },
+  },
   // The daily weather generator's pages: the JJ's Daily Weather bands and
   // climate/season modifier grid, and the RR's condition factors and mud/snow
   // thresholds (prose). Raw reads only; weather-binding.mjs assembles the

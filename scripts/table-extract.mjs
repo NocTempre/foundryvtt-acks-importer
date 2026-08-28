@@ -103,6 +103,15 @@ export function applyCellPattern(text, pattern = "raw") {
       // "Crusader, Mage, Thief, Venturer" -> ["crusader","mage",...]
       return t.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
     }
+    case "spreadBand": {
+      // "2, 3, 4" | "5, 6" | "14+" (a name may trail) -> {min, max};
+      // an open "+" spread leaves max null.
+      const open = t.match(/^(\d+)\s*\+/);
+      if (open) return { min: +open[1], max: null };
+      const nums = [...t.matchAll(/\d+/g)].map((m) => +m[0]);
+      if (!nums.length) return undefined;
+      return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
     case "rollBand": {
       // "11-16" | "10 or lower" | "19–20" -> {min?, max?}
       const range = t.match(/(\d+)\s*[-–]\s*(\d+)/);
