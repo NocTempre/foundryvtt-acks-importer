@@ -42,6 +42,7 @@ import { importTables, tableRecipeCount } from "./tables-binding.mjs";
 import { applyBuilderImport } from "./builder-binding.mjs";
 import { applyTravelImport, TRAVEL_DOC_ID } from "./travel-binding.mjs";
 import { applyWeatherImport, WEATHER_DOC_ID } from "./weather-binding.mjs";
+import { applyEncountersImport, ENCOUNTERS_DOC_ID } from "./encounters-binding.mjs";
 import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
 import { progressBar } from "./progress.mjs";
 import {
@@ -857,6 +858,17 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | weather table binding failed`, err);
       ui.notifications.warn(`acks-importer | weather tables: ${err.message}`);
+    }
+  }
+  // And the encounters doc: the wilderness chain's bands, names, distances,
+  // visibility, evasion and terrain lists for the formation feature.
+  if (report.imported.some((d) => d.docId === ENCOUNTERS_DOC_ID)) {
+    try {
+      const e = await applyEncountersImport();
+      if (e.assembled.length) console.log(`${MODULE_ID} | encounter tables assembled`, e.assembled.length);
+    } catch (err) {
+      console.error(`${MODULE_ID} | encounter table binding failed`, err);
+      ui.notifications.warn(`acks-importer | encounter tables: ${err.message}`);
     }
   }
   // The taxonomy is read, not shipped, so the items exist only once a seat has

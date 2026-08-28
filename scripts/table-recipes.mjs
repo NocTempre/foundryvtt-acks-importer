@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Table extraction recipes — geometry + patterns only, NEVER values (docs/
  * COOKBOOK.md, docs/RECIPES.md). Each entry says which book/page a ruledata
  * table lives on, where the row labels stop and the cells begin, which rows to
@@ -352,7 +352,299 @@ const BUILD_BLOCKS = [
   buildBlock("thief", 333, "Thief:"),
 ];
 
+/* ------------------------------------------------------------------ */
+/*  Wilderness encounters (the `encounters` ruledata document)         */
+/* ------------------------------------------------------------------ */
+
+// One monster sub-table: d100 band rows × four rarity columns, located by
+// its own heading suffix. The BAND WIDTHS vary per table (a sparse roster
+// prints wider bands), so the row specs are generic — any "NN-NN" label
+// claims the next band row and labelPattern hands its bounds to the
+// binding. COLUMN GEOMETRY varies per page too (each table sets its own
+// widths, versos sit left of rectos), so every table carries the x of its
+// four rarity headers, measured off its printing; windows open 30pt ahead
+// of each header (a small-caps first letter lands left of its word) and
+// run to the next header's opening, and the label bound is the first
+// window's own edge. KNOWN RESIDUE: a handful of two-line RARE names wrap
+// under the neighbouring column and stay unread (dev-verified at five
+// bands of 1800) — those rolls resolve as the engine's draw-from-your-book
+// line, never a wrong name.
+// The label matches UNANCHORED at its end: a long name's wrap line can
+// tuck under the label zone ("69-70raptor, Medium…"), and the band still
+// reads out of the front while labelPattern discards the rest.
+const ENC_BAND_ROWS = Array.from({ length: 50 }, (_, i) => ({
+  key: `b${i}`,
+  labelRe: "^\\d+\\s*[-–]\\s*\\d+",
+  labelPattern: "rollBand",
+}));
+
+const monsterGrid = (page, locate, [c, u, r, v]) => {
+  // The label bound is the common window's own opening: wide enough that
+  // every band label fits, tight enough that a name's stray small-cap
+  // first letter — and a long name's wrap line, which tucks right against
+  // the label — falls to the window. Verso labels end ~80, recto ~108.
+  const lbl = c <= 145 ? 82 : 116;
+  return {
+    shape: "gridRows",
+    book: "jj",
+    printedPage: page,
+    locate,
+    column: { xMin: 40, xMax: 592 },
+    labelMaxX: lbl,
+    rowTol: 6,
+    joinGap: 1,
+    cellColumns: [
+      { key: "common", x: lbl, w: u - 30 - lbl, pattern: "raw", row: true },
+      { key: "uncommon", x: u - 30, w: r - u, pattern: "raw", row: true },
+      { key: "rare", x: r - 30, w: v - r, pattern: "raw", row: true },
+      { key: "veryRare", x: v - 30, w: 622 - v, pattern: "raw", row: true },
+    ],
+    rows: ENC_BAND_ROWS,
+  };
+};
+
+// The 20-band civilized grids: two stacked full-width halves sharing one
+// page, told apart by startAfter (the scavenged-grid precedent).
+const CIV_BAND_ROWS = Array.from({ length: 20 }, (_, i) => {
+  const lo = i * 5 + 1;
+  const hi = i * 5 + 5;
+  const label = `${String(lo).padStart(2, "0")}-${hi === 100 ? "100" : String(hi).padStart(2, "0")}`;
+  return { key: label, labelRe: `^${label}$` };
+});
+
+const civilizedGrid = (startAfter) => ({
+  shape: "gridRows",
+  book: "jj",
+  printedPage: 43,
+  locate: "Grassland (farm, prairie,",
+  ...(startAfter ? { startAfter } : {}),
+  column: { xMin: 60, xMax: 592 },
+  labelMaxX: 115,
+  rowTol: 4,
+  joinGap: 1,
+  cellColumns: [
+    { key: "g1", x: 117, w: 112, pattern: "raw", row: true },
+    { key: "g2", x: 229, w: 114, pattern: "raw", row: true },
+    { key: "g3", x: 343, w: 112, pattern: "raw", row: true },
+    { key: "g4", x: 455, w: 137, pattern: "raw", row: true },
+  ],
+  rows: CIV_BAND_ROWS,
+});
+
+// The RR distance/evasion grids share one 17-row terrain roster; the
+// small-caps splits make every label seam-tolerant.
+const ENC_TERRAIN_ROWS = [
+  ["barrens", "^barrens \\(any\\)$"],
+  ["desertRocky", "^d\\s*esert \\(rocky\\)$"],
+  ["desertSandy", "^d\\s*esert \\(sandy\\)$"],
+  ["forestDeciduous", "^forest \\(deciduous\\)$"],
+  ["forestTaiga", "^forest \\(taiga\\)$"],
+  ["grassland", "^grassland \\(other\\)$"],
+  ["grasslandSteppe", "^grassland \\(steppe\\)$"],
+  ["hillsForested", "^hills \\(forested\\)$"],
+  ["hillsRocky", "^hills \\(rocky(/terraced)?\\)$"],
+  ["jungle", "^jungle \\(any\\)$"],
+  ["mountainsForested", "^mountains \\(forested\\)$"],
+  ["mountainsRocky", "^mountains \\(rocky(/snowy/terraced)?\\)$"],
+  ["scrublandSparse", "^s\\s*crubland \\(low, sparse\\)$|^s\\s*crubland \\(sparse\\)$"],
+  ["scrublandDense", "^s\\s*crubland \\(high, dense\\)$|^s\\s*crubland \\(dense\\)$"],
+  ["swampMarshy", "^s\\s*wamp \\(marshy\\)$"],
+  ["swampScrubby", "^s\\s*wamp \\(scrubby\\)$"],
+  ["swampForested", "^s\\s*wamp \\(forested\\)$"],
+].map(([key, labelRe]) => ({ key, labelRe }));
+
+// A terrain-encounter d12 sidebar: twelve numbered rows, one name cell.
+const terrainD12 = (locate, side) => ({
+  shape: "gridRows",
+  book: "jj",
+  printedPage: locate.startsWith("Valuable") ? 63 : locate.startsWith("Dangerous") ? 65 : 67,
+  locate,
+  column: side === "R" ? { xMin: 450, xMax: 592 } : { xMin: 70, xMax: 200 },
+  labelMaxX: side === "R" ? 480 : 108,
+  rowTol: 4,
+  joinGap: 1,
+  cellColumns: [{ key: "name", x: side === "R" ? 487 : 112, w: side === "R" ? 100 : 85, pattern: "raw", row: true }],
+  rows: Array.from({ length: 12 }, (_, i) => ({ key: String(i + 1), labelRe: `^${i + 1}$` })),
+});
+
 export const TABLE_RECIPES = {
+  // The wilderness encounter chain's pages: the JJ's territory, rarity,
+  // civilized and monster grids and the terrain-encounter sidebars, and the
+  // RR's distance and evasion grids with their prose figures. Raw reads
+  // only; encounters-binding.mjs assembles the engine-shaped `encounters`
+  // document acks-extras declares.
+  encounters: {
+    source: { book: "ACKS II Judges Journal + Revised Rulebook", pages: "JJ 42-67; RR 281-285" },
+    tables: {
+      territoryRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 42,
+        locate: "Wilderness Encounter by Territory Classification",
+        startAfter: "Wilderness Encounter by Territory Classification",
+        column: { xMin: 40, xMax: 592 },
+        labelMaxX: 162,
+        rowTol: 4,
+        rows: [
+          { key: "columnShift", labelRe: "^c\\s*olumn\\s*s\\s*hift,\\s*r\\s*oll\\s*a\\s*gain$" },
+          { key: "none", labelRe: "^n\\s*o\\s*e\\s*ncounter$" },
+          { key: "civilized", labelRe: "^c\\s*ivilized\\s*e\\s*ncounter$" },
+          { key: "monster", labelRe: "^monster\\s*e\\s*ncounter$" },
+          { key: "dangerousTerrain", labelRe: "^d\\s*angerous\\s*t\\s*errain\\s*e\\s*ncounter$" },
+          { key: "valuableTerrain", labelRe: "^v\\s*aluable\\s*t\\s*errain\\s*e\\s*ncounter$" },
+          { key: "uniqueTerrain", labelRe: "^u\\s*nique\\s*t\\s*errain\\s*e\\s*ncounter$" },
+        ],
+        cellColumns: [
+          { key: "civilizedRoad", x: 166, w: 74, pattern: "raw", row: true },
+          { key: "civilizedOrBorderlandsRoad", x: 243, w: 76, pattern: "raw", row: true },
+          { key: "borderlandsOrOutlandsRoad", x: 322, w: 73, pattern: "raw", row: true },
+          { key: "outlandsOrUnsettledRoad", x: 398, w: 75, pattern: "raw", row: true },
+          { key: "unsettled", x: 476, w: 86, pattern: "raw", row: true },
+        ],
+      },
+      rarityRaw: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 44,
+        locate: "Monster Rarity by Terrain Classification",
+        column: { xMin: 40, xMax: 592 },
+        labelMaxX: 172,
+        rowTol: 4,
+        rows: [
+          { key: "common", labelRe: "^c\\s*ommon$" },
+          { key: "uncommon", labelRe: "^u\\s*ncommon$" },
+          { key: "rare", labelRe: "^r\\s*are$" },
+          { key: "veryRare", labelRe: "^v\\s*ery\\s*r\\s*are$" },
+        ],
+        cellColumns: [
+          { key: "civilized", x: 176, w: 85, pattern: "raw", row: true },
+          { key: "borderlands", x: 266, w: 85, pattern: "raw", row: true },
+          { key: "outlands", x: 371, w: 85, pattern: "raw", row: true },
+          { key: "unsettled", x: 469, w: 85, pattern: "raw", row: true },
+        ],
+      },
+      civilizedUpperRaw: civilizedGrid(null),
+      civilizedLowerRaw: civilizedGrid("Forest (taiga)"),
+      distanceRaw: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 281,
+        locate: "Wilderness Encounter Distance Table",
+        column: { xMin: 340, xMax: 592 },
+        labelMaxX: 472,
+        rowTol: 4,
+        rows: ENC_TERRAIN_ROWS,
+        cellColumns: [{ key: "cell", x: 474, w: 112, pattern: "raw", row: true }],
+      },
+      evasionRaw: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 284,
+        locate: "Evasion Throw by Terrain Table",
+        column: { xMin: 250, xMax: 560 },
+        labelMaxX: 340,
+        rowTol: 4,
+        rows: ENC_TERRAIN_ROWS,
+        cellColumns: [
+          { key: "s1", x: 342, w: 40, pattern: "raw", row: true },
+          { key: "s2", x: 384, w: 40, pattern: "raw", row: true },
+          { key: "s3", x: 427, w: 40, pattern: "raw", row: true },
+          { key: "s4", x: 469, w: 40, pattern: "raw", row: true },
+          { key: "s5", x: 511, w: 45, pattern: "raw", row: true },
+        ],
+      },
+      // The size-band header over the evasion grid — the edges are printed
+      // and the binding reads them out of the captured window. The page's
+      // LEFT prose column interleaves in the flat text, so the window is
+      // bound to the grid's own column.
+      evasionSizeProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 284,
+        locate: "Evasion Throw by Terrain Table",
+        // Opens at the TITLE's own x (236), which anchors the find — "party
+        // size" alone also appears in the page's prose left of the grid —
+        // and reads the whole column as ONE stream (colSplit past the edge)
+        // so the header's edge cells stay beside their words.
+        column: { xMin: 230, xMax: 592 },
+        colSplit: 592,
+        values: [{ key: "bands", find: "evasion throw by terrain table", take: "window", span: 120 }],
+      },
+      visibilityProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 281,
+        locate: "Maximum Visibility Distance",
+        values: [
+          { key: "light", find: "can be in line of sight is", take: "window", span: 130 },
+          { key: "party", find: "party-sized formations", take: "window", span: 70 },
+          { key: "platoon", find: "platoon-sized formations", take: "window", span: 70 },
+          { key: "company", find: "company-sized formations", take: "window", span: 70 },
+          { key: "battalion", find: "battalion or larger formations", take: "window", span: 70 },
+          { key: "heads", find: "count each mounted man", take: "window", span: 180 },
+          { key: "altitude", find: "can start at an altitude of up to", take: "window", span: 30 },
+        ],
+      },
+      // The evasion grid's page sets prose in two columns AROUND the grid,
+      // and a full-page flatten interleaves grid rows into the sentences —
+      // so each block binds to its own print column.
+      evasionModsProse: {
+        shape: "proseValues",
+        book: "rr",
+        valueBlocks: [
+          {
+            id: "left",
+            printedPage: 284,
+            locate: "explorer guides a party",
+            column: { xMin: 40, xMax: 250 },
+            values: [
+              { key: "aerial", find: "can fly and the adventurers cannot, the adventurers suffer", take: "signedInt" },
+              { key: "explorer", find: "explorer guides a party in familiar territory, the party gains", take: "signedInt" },
+            ],
+          },
+          {
+            id: "right",
+            printedPage: 284,
+            locate: "can evade using the reduced party size",
+            column: { xMin: 295, xMax: 592 },
+            values: [
+              { key: "forlornHope", find: "can evade using the reduced party size with an additional", take: "signedInt" },
+              { key: "movement", find: "the slowest adventurer, the adventurers suffer", take: "signedInt" },
+            ],
+          },
+          {
+            id: "aftermath",
+            printedPage: 285,
+            locate: "make a Navigation throw at",
+            values: [
+              { key: "aftermathNavigation", find: "make a navigation throw at", take: "signedInt" },
+            ],
+          },
+        ],
+      },
+      valuableTerrainRaw: terrainD12("Valuable Terrain Encounters", "R"),
+      dangerousTerrainRaw: terrainD12("Dangerous Terrain Encounters", "L"),
+      uniqueTerrainRaw: terrainD12("Unique Terrain Encounters", "L"),
+      monstersBarrensRockyRaw: monsterGrid(45, "Rarity - Barrens (Rocky/Sandy)", [156, 266, 393, 493]),
+      monstersBarrensTundraRaw: monsterGrid(46, "Rarity - Barrens (Tundra)", [141, 264, 384, 472]),
+      monstersDesertRaw: monsterGrid(47, "Rarity - Desert (Any)", [156, 266, 393, 493]),
+      monstersForestDeciduousRaw: monsterGrid(48, "Rarity - Forest (Deciduous)", [134, 249, 369, 465]),
+      monstersForestTaigaRaw: monsterGrid(49, "Rarity - Forest (Taiga)", [160, 271, 394, 492]),
+      monstersGrasslandFarmRaw: monsterGrid(50, "Rarity - Grassland (Farmland/Prairie)", [129, 239, 366, 466]),
+      monstersGrasslandSavannaRaw: monsterGrid(51, "Rarity - Grassland (Savannah)", [162, 276, 399, 495]),
+      monstersGrasslandSteppeRaw: monsterGrid(52, "Rarity - Grassland (Steppe)", [133, 252, 374, 466]),
+      monstersHillsRaw: monsterGrid(53, "Rarity - Hills (Any)", [159, 273, 397, 493]),
+      monstersJungleRaw: monsterGrid(54, "Rarity - Jungle (Any)", [135, 252, 374, 468]),
+      monstersMountainsForestedRaw: monsterGrid(55, "Rarity - Mountains (Forested/Rocky)", [158, 271, 395, 493]),
+      monstersMountainsSnowyRaw: monsterGrid(56, "Rarity - Mountains (Snowy)", [129, 242, 368, 466]),
+      monstersMountainsVolcanicRaw: monsterGrid(57, "Rarity - Mountains (Volcanic)", [158, 271, 395, 493]),
+      monstersRiverLandRaw: monsterGrid(58, "Rarity - River (Any but Desert or Jungle)", [129, 240, 366, 465]),
+      monstersRiverDesertJungleRaw: monsterGrid(59, "Rarity - River (Desert and Jungle)", [156, 273, 403, 497]),
+      monstersScrublandSparseRaw: monsterGrid(60, "Rarity - Scrubland (Sparse)", [129, 239, 366, 466]),
+      monstersScrublandDenseRaw: monsterGrid(61, "Rarity - Scrubland (Dense)", [156, 266, 393, 493]),
+      monstersSwampRaw: monsterGrid(62, "Rarity - Swamp (Any)", [129, 239, 366, 466]),
+    },
+  },
   // The Auran Empire language taxonomy prints as one indented two-column table:
   // the Cybelean name on the left, its real-world counterpart on the right, and
   // descent carried entirely by how far each cell is indented.

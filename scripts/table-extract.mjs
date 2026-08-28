@@ -312,7 +312,16 @@ export function extractGridRows(items, recipe) {
         else obj[col.key] = v;
       }
       for (const { col, runs } of Object.values(windowed)) {
-        const joined = runs.sort((a, b) => a.x - b.x).map((r) => r.str).join("").replace(/\s+/g, " ").trim();
+        const sorted = runs.sort((a, b) => a.x - b.x);
+        // A joinGap makes the windowed join GAP-AWARE: a run starting a real
+        // word-space past its neighbour keeps the space, a small-caps weld
+        // (near-zero gap) glues — "Herd"+"a"+"nimal" reads "Herd animal",
+        // not "Herdanimal". Without one the historical glue-all join stands,
+        // which existing recipes' bindings repair themselves.
+        const gap = col.joinGap ?? recipe.joinGap;
+        const joined = gap != null
+          ? joinRuns(sorted, gap)
+          : sorted.map((r) => r.str).join("").replace(/\s+/g, " ").trim();
         const v = applyCellPattern(joined, col.pattern ?? "raw");
         if (col.row) row[col.key] = v;
         else obj[col.key] = v;
