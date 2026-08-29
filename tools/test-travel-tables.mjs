@@ -6,6 +6,7 @@
 import assert from "node:assert";
 import {
   assembleTravelTables,
+  parseDraftSubstitutions,
   parseMultiplier,
   parseRoadCell,
   parseThrow,
@@ -66,5 +67,16 @@ const lostOnly = assembleTravelTables({ gettingLostRaw: { hills: { navigation: "
 check("no terrain raw: no terrain tables invented", !("terrainMultipliers" in lostOnly) && !("roads" in lostOnly));
 check("the lost half still assembles", lostOnly.gettingLost.hills === 6);
 check("empty raws assemble to nothing", Object.keys(assembleTravelTables({})).length === 0);
+
+/* --- the draft substitutions, at invented counts ------------------------- */
+const subs = parseDraftSubstitutions("pulled by one or two heavy horses. one ox, four mules, or three medium horses");
+check("each printed count becomes the share one animal pulls",
+  subs.ox === 1 && subs.mule === 0.25 && subs.mediumHorse === 1 / 3);
+check("the heavy horse is never emitted — the unit needs no import", !("heavyHorse" in subs));
+check("a kind the sentence does not name is simply absent", !("donkey" in subs));
+check("a sentence about nothing yields nothing", parseDraftSubstitutions("a cart is a cart") === null);
+check("the assembly carries them onto the travel doc",
+  assembleTravelTables({ draftSubstitutionProse: { substitutions: "one ox, two mules" } })
+    .draftEquivalents.mule === 0.5);
 
 console.log(`test-travel-tables: all ${pass} checks passed`);

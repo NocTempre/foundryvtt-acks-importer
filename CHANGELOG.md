@@ -1,5 +1,36 @@
 # Changelog
 
+## 5.1.0
+
+**Mounts import as mounts.**
+
+### Fixed
+- **An imported animal now states what it is for.** Animal entries carried a
+  name and a description and nothing else, so every creature arrived untrained
+  and unrideable — the fields the mounted and vehicle rules read were never
+  filled, and consumers were left guessing from English names. The rulebook
+  states the role in the NAME it prints ("Horse, Heavy War", "Mule, Draft",
+  "Camel, Riding"), and those words are exactly the training kinds ACKS Extras
+  enumerates, so training is read from the printed name and mountability from
+  the species having a riding form priced in the same book. They stay separate
+  questions on purpose: a war dog is trained for war and is still not a mount.
+- **An imported animal now states what it carries.** Each creature's own
+  printed description gives its normal and maximum load, and its speed — "a
+  normal load of 30 stone and maximum load of 60 stones" — and those are read
+  from the text your book already supplies. An animal whose entry says nothing
+  arrives unstated rather than zero.
+
+### Added
+- **The draft substitutions.** The vehicle entries state how many of a kind
+  stand in for one heavy horse; each printed count is imported as the share one
+  such animal pulls. The heavy horse itself is never emitted — it is the unit
+  a team is counted in, not a figure off a page.
+
+### Changed
+- **Requires ACKS Extras 5.1.0**, which reads the draft substitutions from the
+  registry and gives an animal a panel showing what it was trained for, whether
+  it can be ridden, and what it carries.
+
 ## 5.0.0
 
 **The overland and seagoing tables come off your own printed page.**

@@ -4,7 +4,7 @@
  * animals a book prices is the reader's, never ours.
  */
 import assert from "node:assert";
-import { trainingFromName, animalSpecies, mountableSpecies } from "../scripts/cookbook.mjs";
+import { trainingFromName, animalSpecies, mountableSpecies, loadsFromText, speedFromText } from "../scripts/cookbook.mjs";
 
 let pass = 0;
 const check = (label, cond) => { assert.ok(cond, label); pass++; };
@@ -37,5 +37,19 @@ check("a war form of that same species is mountable too", ridable.has("qadar"));
 check("a war beast with no riding form is NOT marked mountable", !ridable.has("zeth"));
 check("a draft-only species is not marked mountable", !ridable.has("bruk"));
 check("only animal-group entries count", !ridable.has("not an animal"));
+
+/* --- what it carries, read from its own printed description ------------- */
+const prose = "Qadar, Medium: bred for war. They have a speed of 60' / 180', a normal "
+  + "load of 30 stone (300 lbs) and maximum load of 60 stones (600 lbs).";
+const loads = loadsFromText(prose);
+check("the normal load reads in sixths of a stone", loads.unencumbered6 === 180);
+check("the maximum load too, singular or plural", loads.capacity6 === 360);
+check("the exploration speed is the first of the printed pair", speedFromText(prose) === 60);
+const silent = loadsFromText("A beast of no stated burden.");
+check("a book that says nothing leaves both unstated",
+  silent.unencumbered6 === null && silent.capacity6 === null);
+check("and no speed either", speedFromText("A beast of no stated pace.") === null);
+check("empty text is unstated, never zero",
+  loadsFromText("").capacity6 === null && speedFromText("") === null);
 
 console.log(`test-mount-flags: all ${pass} checks passed`);

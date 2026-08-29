@@ -6240,6 +6240,38 @@ export function mountableSpecies(entries) {
   return out;
 }
 
+/**
+ * The loads an animal's own printed description states, in SIXTHS of a stone
+ * (the family's one weight unit).
+ *
+ * The RR gives each animal its carrying capacity in prose — "a normal load of
+ * 30 stone and maximum load of 60 stones" — beside the speed. That sentence is
+ * already imported as the creature's description, so reading the two figures
+ * out of the seat's own text adds no geometry and ships no value: an animal
+ * whose book says nothing simply arrives unstated.
+ */
+export function loadsFromText(text) {
+  const t = String(text ?? "").toLowerCase().replace(/\s+/g, " ");
+  const grab = (re) => {
+    const m = re.exec(t);
+    return m ? Number(m[1]) : null;
+  };
+  const normal = grab(/normal load of ([\d,]+) stones?/);
+  const max = grab(/maximum load of ([\d,]+) stones?/);
+  const six = (st) => (st == null ? null : Math.round(st * 6));
+  return { unencumbered6: six(normal), capacity6: six(max) };
+}
+
+/**
+ * The land speed an animal's description states, in feet per turn — the first
+ * of the printed pair ("a speed of 60' / 180'"), which is the exploration
+ * figure every other speed in the family derives from.
+ */
+export function speedFromText(text) {
+  const m = /speed of ([\d,]+)\s*[’']/.exec(String(text ?? "").replace(/\s+/g, " "));
+  return m ? Number(m[1].replace(/,/g, "")) : null;
+}
+
 /** Every animal-group entry the loaded cookbooks hold. */
 export function loadedAnimalEntries() {
   const out = [];
@@ -6270,6 +6302,20 @@ export function bindAnimal(entry, node, id, { ridable = null } = {}) {
   // the animal entries leave, so an imported war horse arrives FLAGGED rather
   // than defaulting to untrained and unridable.
   const training = f.training ?? trainingFromName(entry.name);
+  // The creature's own printed description states what it carries and how
+  // fast it goes; a field the book supplied directly still wins.
+  const prose = entryText(node, id, cite);
+  const loads = loadsFromText(prose);
+  const six = (v) => (Number.isFinite(v) ? v / 6 : null);
+  const normalSt = Number.isFinite(f.unencumbered6) ? six(f.unencumbered6) : six(loads.unencumbered6);
+  const capacitySt = Number.isFinite(f.capacity6) ? six(f.capacity6) : six(loads.capacity6);
+  const loadFlags = normalSt == null && capacitySt == null
+    ? null
+    : {
+        ...(normalSt != null ? { normal: normalSt } : {}),
+        ...(capacitySt != null ? { capacity: capacitySt } : {}),
+      };
+  const movement = Number.isFinite(f.movement) ? f.movement : speedFromText(prose);
   const species = animalSpecies(entry.name);
   const mountable = typeof f.mountable === "boolean"
     ? f.mountable
@@ -6282,7 +6328,7 @@ export function bindAnimal(entry, node, id, { ridable = null } = {}) {
       // ONE details object. Spreading a second `details` later would replace
       // this one wholesale and silently drop the citation.
       details: {
-        biography: entryText(node, id, cite),
+        biography: prose,
         ...(Number.isFinite(f.morale) ? { morale: f.morale } : {}),
       },
       animal: {
@@ -6290,18 +6336,22 @@ export function bindAnimal(entry, node, id, { ridable = null } = {}) {
         // Everything below is a PAGE VALUE: present only if the seat's book
         // supplied it. Nothing about an animal's price, load or speed ships.
         ...(Number.isFinite(f.cost) ? { cost: f.cost } : {}),
-        ...(Number.isFinite(f.capacity6) ? { capacity6: f.capacity6 } : {}),
-        ...(Number.isFinite(f.unencumbered6) ? { unencumbered6: f.unencumbered6 } : {}),
         ...(typeof mountable === "boolean" ? { mountable } : {}),
         ...(training ? { training } : {}),
       },
-      ...(Number.isFinite(f.movement) ? { movement: { base: f.movement } } : {}),
+      ...(Number.isFinite(movement) ? { movement: { base: movement } } : {}),
     },
     flags: {
       [MODULE_ID]: {
         cookbook: { id, cite, unaudited: !entry.audited },
         generated: true,
       },
+      // A creature's carrying capacity has ONE live store in acks-extras —
+      // the one its `capacity6()` reads and its monster sheet edits — so the
+      // loads read off this animal's own description are written there, in
+      // the stone the page prints, rather than to the animal sub-type's
+      // like-named fields, which nothing consumes.
+      ...(loadFlags ? { "acks-extras": { extras: { load: loadFlags } } } : {}),
     },
   };
 }

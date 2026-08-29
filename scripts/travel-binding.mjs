@@ -77,6 +77,36 @@ export function parseFrequencyCell(cell) {
   return undefined;
 }
 
+
+/**
+ * The draft substitutions a vehicle entry states in prose, as the share ONE
+ * animal of each kind pulls against a heavy horse.
+ *
+ * The page says how many of a kind stand in for one heavy horse — "one ox,
+ * two mules, or two medium horses" — so each printed count becomes 1/count.
+ * The heavy horse itself is the unit and is never emitted: its value is the
+ * unit's definition, not a figure read off a page. A kind the sentence does
+ * not name is simply absent, and stays unpriced downstream.
+ */
+export function parseDraftSubstitutions(window) {
+  const t = String(window ?? "").toLowerCase().replace(/\s+/g, " ");
+  const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6 };
+  const KINDS = [
+    ["ox", /(?:^|[ ,])(\w+) (?:an )?ox(?:en)?\b/],
+    ["mule", /(?:^|[ ,])(\w+) mules?\b/],
+    ["mediumHorse", /(?:^|[ ,])(\w+) medium horses?\b/],
+    ["donkey", /(?:^|[ ,])(\w+) donkeys?\b/],
+  ];
+  const out = {};
+  for (const [kind, re] of KINDS) {
+    const m = re.exec(t);
+    if (!m) continue;
+    const n = WORDS[m[1]] ?? Number(m[1]);
+    if (Number.isFinite(n) && n > 0) out[kind] = 1 / n;
+  }
+  return Object.keys(out).length ? out : null;
+}
+
 /**
  * The engine tables from the raw ones. Pure — the committed tests feed it
  * invented cells.
@@ -116,6 +146,9 @@ export function assembleTravelTables(raw = {}) {
     }
     if (Object.keys(gettingLost).length) out.gettingLost = gettingLost;
   }
+  const subs = parseDraftSubstitutions(raw.draftSubstitutionProse?.substitutions);
+  if (subs) out.draftEquivalents = subs;
+
   const freq = raw.encounterFrequencyRaw;
   if (freq) {
     const encounterFrequency = {};

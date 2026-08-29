@@ -724,6 +724,21 @@ export const TABLE_RECIPES = {
         ],
         cellColumns: [{ key: "navigation", x: 499, w: 48, pattern: "raw", row: true }],
       },
+      // The draft substitutions the vehicle entries state in prose ("One ox,
+      // two mules, or two medium horses can be substituted for 1 heavy
+      // horse") — the rates a team's pull is counted at. The heavy horse is
+      // the unit and needs no import; travel-binding turns each printed count
+      // into the share one animal of that kind pulls.
+      draftSubstitutionProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 151,
+        locate: "substituted for 1 heavy horse",
+        locateBare: true,
+        values: [
+          { key: "substitutions", find: "can be substituted for 1 heavy horse", before: true, span: 90, take: "window" },
+        ],
+      },
       // Wilderness Frequency of Encounters (JJ ~41): activity rows × the four
       // territory classifications, cells raw ("once per attempt", "none");
       // travel-binding parses them onto the engine's frequency kinds. Labels
