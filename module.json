@@ -2,7 +2,7 @@
   "id": "acks-importer",
   "title": "ACKS II — Importer",
   "description": "Imports ACKS II book content into Foundry from the reader's own PDFs: monsters, proficiencies and class powers, equipment and price tables, adventure locations and roll tables. Ships extraction recipes — page geometry and patterns — and never the book text itself. Bring your own book.",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "authors": [
     {
       "name": "NocTempre"
@@ -29,7 +29,7 @@
         "type": "module",
         "reason": "Everything imported here lands in structures acks-extras owns: the rules-table registry it feeds through the `ruledata-import` service, the acks-extras.animal, acks-extras.template and acks-extras.race sub-types, the class builder's assembled tables, the ability effect model, and the Full Monster Sheet stat block. Import writes into the acks-extras flag namespace so the imported world keeps working with this module uninstalled.",
         "compatibility": {
-          "minimum": "4.21.0"
+          "minimum": "5.0.0"
         }
       }
     ],

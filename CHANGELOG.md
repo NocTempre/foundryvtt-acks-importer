@@ -1,5 +1,59 @@
 # Changelog
 
+## 5.0.0
+
+**The overland and seagoing tables come off your own printed page.**
+
+### Added
+- **Land travel.** The grouped Terrain Speed Multiplier table — its road row
+  carrying the Driving rate in its own cell — and the Navigating the Wild
+  targets, assembled into the terrain, road and getting-lost tables acks-extras
+  reads. The printed groups fan out to the engine's terrain keys, the road cell
+  splits into its two rates across the three road kinds, and throw markers are
+  stripped.
+- **Weather.** The Daily Weather grid (twenty-seven modifier rows across four
+  axes, dashes where a column does not reach) and the climate-and-season
+  modifier grid (thirty Köppen rows of compound cells, including the polar
+  day-and-night form), plus the condition sentences and the Mud and Snow
+  thresholds read as prose. They assemble into bracket bands with the
+  or-less/or-more ends opened, per-season modifier sets, condition speed
+  factors and accumulation day-counts.
+- **Wilderness encounters, the whole chain.** The territory d20 grid, the
+  monster rarity d20, both stacked civilized d100 grids, the three
+  terrain-encounter d12 sidebars, and **all eighteen** Monster Encounter by
+  Terrain Type and Rarity sub-tables — each carrying its own measured header
+  geometry, because every table sets its own column widths and band widths and
+  a verso page sits left of a recto. With them the encounter distance and
+  evasion grids and their prose figures: the visibility ladder, the head-count
+  ladder, the altitude fraction, the evasion modifiers and the aftermath
+  navigation penalty.
+- **Voyages.** The Wind Strength grid, the tacking rate, the navigation targets
+  and the bonuses one or both arts are worth, the hazard throw with its master
+  mariner parenthetical, every hazard's dice and grounding rates, the hull
+  damage shares with the spell footprint divisor, the sinking die, the repair
+  gang and its at-sea fraction, the speed rounding grains, and the general
+  berth.
+- **Sea vessels.** The twenty-row Sea Vessels roster imports as vehicle actors
+  with their crew roles, speeds and capacities.
+
+### Changed
+- **Requires ACKS Extras 5.0.0 or later.** Everything above lands in ruledata
+  documents that release declares and reads; against an older Extras the
+  documents import and nothing consumes them.
+
+### Internal
+- The windowed cell join learned two things the stacked grids needed: an
+  optional gap-aware mode, so a name split across small-caps runs reads with
+  its real spaces back rather than welded into one word, and reading order by
+  line before column, so a cell stacked across print lines joins line by line
+  instead of interleaving.
+- A `spreadBand` label pattern reads a 2d6 spread out of a label zone the band
+  name shares, and band rows may match unanchored so a wrapped name tucked
+  under the label still yields its band.
+- Every new binding is covered by assemble checks over invented cells shaped
+  like the printed ones; the printed figures are asserted only against the
+  reader's own book at extraction time.
+
 ## 4.4.0
 
 **A column that says "melee" imports as a column that says "melee".**
