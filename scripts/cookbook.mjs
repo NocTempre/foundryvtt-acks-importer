@@ -6199,6 +6199,59 @@ export function bindEquipment(entry, node, id) {
 }
 
 /**
+ * What a printed animal name says the creature is trained for.
+ *
+ * The RR prices animals BY ROLE — "Horse, Heavy War", "Mule, Draft",
+ * "Camel, Riding", "Dog, Hunting" — so the qualifier in the name the book
+ * printed IS its statement of training, and the words it uses are the same
+ * set acks-extras' `ANIMAL_TRAINING` enumerates. Reading a qualifier out of a
+ * name the seat's own book supplied is extraction like any other: no roster of
+ * animals and no rate is shipped here, only the name-form rule.
+ */
+export function trainingFromName(name) {
+  const n = String(name ?? "").toLowerCase();
+  if (/\bwar\b/.test(n)) return "war";
+  if (/\briding\b/.test(n)) return "riding";
+  if (/\bdraft\b|\bdraught\b/.test(n)) return "draft";
+  if (/\bhunting\b/.test(n)) return "hunting";
+  if (/\bherding\b|\bshepherd\b/.test(n)) return "herding";
+  return null;
+}
+
+/** The species a printed animal name heads with: "Horse, Heavy War" → "horse". */
+export const animalSpecies = (name) => String(name ?? "").split(",")[0].trim().toLowerCase();
+
+/**
+ * Which species the reader's book prices in a RIDING form.
+ *
+ * Training and mountability are different questions and the book answers them
+ * differently: a war DOG is trained for war and is still not a mount. What the
+ * page states is that some species are sold to be ridden — so a species with a
+ * riding row is mountable in every form it is sold in, and one without is not
+ * marked either way. Computed from the entries actually loaded, so it says
+ * what THIS book prints.
+ */
+export function mountableSpecies(entries) {
+  const out = new Set();
+  for (const e of entries ?? []) {
+    if (e?.meta?.group !== "animal") continue;
+    if (trainingFromName(e.name) === "riding") out.add(animalSpecies(e.name));
+  }
+  return out;
+}
+
+/** Every animal-group entry the loaded cookbooks hold. */
+export function loadedAnimalEntries() {
+  const out = [];
+  for (const store of [data.books, data.content]) {
+    for (const cb of store.values()) {
+      for (const e of Object.values(cb.entries ?? {})) if (e?.meta?.group === "animal") out.push(e);
+    }
+  }
+  return out;
+}
+
+/**
  * Bind an `animal` equipment entry to an ACTOR instead of an item.
  *
  * The RR equipment chapter prices ten animals because you buy them in a shop,
@@ -6210,9 +6263,17 @@ export function bindEquipment(entry, node, id) {
  * there is nowhere for a creature to go, so the entry stays an item rather than
  * failing the import; the caller decides.
  */
-export function bindAnimal(entry, node, id) {
+export function bindAnimal(entry, node, id, { ridable = null } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
+  // A field the book supplied always wins; the name-form rule fills the gap
+  // the animal entries leave, so an imported war horse arrives FLAGGED rather
+  // than defaulting to untrained and unridable.
+  const training = f.training ?? trainingFromName(entry.name);
+  const species = animalSpecies(entry.name);
+  const mountable = typeof f.mountable === "boolean"
+    ? f.mountable
+    : (ridable ?? mountableSpecies(loadedAnimalEntries())).has(species) || null;
   return {
     name: entry.name,
     type: globalThis.acksExtras?.lib?.ANIMAL_TYPE ?? "acks-extras.animal",
@@ -6231,8 +6292,8 @@ export function bindAnimal(entry, node, id) {
         ...(Number.isFinite(f.cost) ? { cost: f.cost } : {}),
         ...(Number.isFinite(f.capacity6) ? { capacity6: f.capacity6 } : {}),
         ...(Number.isFinite(f.unencumbered6) ? { unencumbered6: f.unencumbered6 } : {}),
-        ...(typeof f.mountable === "boolean" ? { mountable: f.mountable } : {}),
-        ...(f.training ? { training: f.training } : {}),
+        ...(typeof mountable === "boolean" ? { mountable } : {}),
+        ...(training ? { training } : {}),
       },
       ...(Number.isFinite(f.movement) ? { movement: { base: f.movement } } : {}),
     },
