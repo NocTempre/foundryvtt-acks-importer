@@ -169,6 +169,18 @@ export function applyCellPattern(text, pattern = "raw") {
       const ROMAN = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6 };
       return ROMAN[m[1].toUpperCase()] ?? null;
     }
+    case "milesBand": {
+      // A distance band label, the shape the Wilderness Search ladder prints:
+      // "11 miles or less" -> {min:0,max:11}; "12 - 23 miles" -> {min:12,max:23};
+      // "192 miles or more" -> {min:192,max:null} (open top).
+      const n = (v) => Number(String(v).replace(/,/g, ""));
+      const less = t.match(/(\d[\d,]*)\s*miles?\s*or\s*less/i);
+      if (less) return { min: 0, max: n(less[1]) };
+      const more = t.match(/(\d[\d,]*)\s*miles?\s*or\s*more/i);
+      if (more) return { min: n(more[1]), max: null };
+      const range = t.match(/(\d[\d,]*)\s*[–—-]\s*(\d[\d,]*)\s*miles?/i);
+      return range ? { min: n(range[1]), max: n(range[2]) } : null;
+    }
     case "costBand": {
       // "1gp or less" -> {minCost:0,maxCost:1}; "2 – 10gp" -> {minCost:2,maxCost:10};
       // "10,001gp or more" -> {minCost:10001,maxCost:null} (open top)

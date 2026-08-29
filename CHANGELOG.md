@@ -1,5 +1,48 @@
 # Changelog
 
+## 5.2.0
+
+**The land travel tables.**
+
+ACKS Extras 5.2.0 grew a full overland travel surface — hunger, thirst, the
+cold, foraging, hunting, searching, city travel and flight — and declared five
+new registered documents for the figures behind it. This release reads all of
+them out of your own books.
+
+### Added
+- **Survival.** How long a body goes before it is hungry, underfed or starving,
+  by either clock; what starvation costs a day and how fast lost Constitution
+  comes back; the three onsets of dehydration and its rolled toll; how long the
+  cold is endured in each band before hypothermia and what that costs an hour;
+  what sweltering weather does to armour, thirst and the drain that follows;
+  and the Judge's provisioning shortcut with the confidence it carries.
+- **Living off the country.** The forage targets for firewood, water and food
+  with the terrain each applies in; what hard country and settled country cost
+  the throw; what the Survival proficiency is worth; how large a party one
+  water throw covers; the hunting target and how settled country moves it; a
+  hunting dog's throw, its help per dog and the cap on it; what every success
+  actually yields; which animals graze efficiently enough to keep travelling,
+  and which country feeds nothing not already living in it.
+- **Searching the wild.** The whole ladder of search targets by expedition
+  speed, kept as bracketed bands; what a moving quarry and a named target each
+  cost; how often a throw comes on the ground and in the air; which terrain
+  closes over a searcher's head and what that costs; and the land survey's own
+  target and its bonus per search already made.
+- **City travel.** What each pace covers in blocks a turn, the navigation
+  target and what knowing the destination is worth, how far a wrong turning
+  puts a party, the straggling ladder for a large party, and the street's
+  encounter cadence by where you are and what time it is.
+- **Flight.** What a day aloft is worth, what wind costs a flier, and what a
+  heavy load costs.
+
+### Changed
+- **One terrain vocabulary.** The books name the same country differently from
+  table to table — "clear" where the movement rules say "grassland", "scrub"
+  for "scrubland", "barren" for "barrens". Terrain names read out of prose are
+  now reconciled to the movement table's keys on import, and both spellings are
+  kept, so a forage target printed for one reaches a party standing in the
+  other. This is naming only: what a terrain is worth still comes off the page.
+
 ## 5.1.0
 
 **Mounts import as mounts.**

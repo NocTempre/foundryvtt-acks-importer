@@ -721,3 +721,44 @@ purpose**, the same discipline as a pre-upgrade shape.
 7. Delete the folder and every actor in it. Filter what you delete by
    `flags["acks-importer"].ose` — a parallel session's fixtures live in the same
    world, and deleting theirs is the mistake this line exists to prevent.
+
+## The land-travel tables reach a party
+
+Five documents — `survival`, `foraging`, `searching`, `cityTravel`, `flight` —
+are read from RR ch. 6 and JJ's settlement chapter, assembled by their binders,
+and consumed by acks-extras' travel surfaces. The chain has three joints and
+each can fail silently, so walk all three.
+
+**Fixtures:** none in the world; the books on the shelf are the input. The
+authoring tools below read the PDFs directly and print book prose — diagnostic
+only, never pasted into a repo.
+
+1. **Does the window land where it was meant to?**
+   `node tools/dev-try-recipe.mjs <docId> [tableKey]` runs one recipe against
+   the real book. Every table should report values and none should read
+   `__missing`. When a column box is wrong, measure it rather than guessing:
+   `node tools/dev-page-runs.mjs <book> <page> [substring]` prints each run's
+   x/y so a `cellColumns` box can be read off the page.
+2. **Does the binder read what the window caught?**
+   `node tools/dev-try-binding.mjs <docId>` runs the recipe and its assembler
+   together and prints the engine tables. Check the SHAPES as well as the
+   values: a toll that should be a die is a string, a reduction is stored as
+   the factor it leaves, and the search ladder's top row has `max: null`.
+3. **Does a party actually feel it?** In the world, run
+   `game.modules.get("acks-importer").api.cookbookImportTables()` and then, for
+   each document, confirm `acksExtras.lib.tables.getDoc(id).tables` holds the
+   ENGINE keys and not only the raw `*Prose` ones. Then exercise a derivation:
+   `acksExtras.formation.foraging.forageSpec({kind: "water", terrain: "grassland"})`
+   should price rather than answer `missing`, and
+   `acksExtras.lib.survival.thirstDie()` should return a die.
+
+**What each joint fails like.** A recipe that misses reports `MISS` or empty
+values. A binder that misses assembles fewer tables than the document has —
+the count printed by `dev-try-binding` is the check. A consumption failure
+shows as a derivation answering `{ok: false, missing: "<table>"}` while the
+document is present, which almost always means the engine reads a key
+`expectTables` does not declare — `validate-extra.mjs` in acks-extras gates
+exactly that.
+
+**Teardown:** none. Importing tables registers world ruledata; re-running is
+idempotent and no documents are created.

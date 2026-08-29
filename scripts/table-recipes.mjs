@@ -680,6 +680,375 @@ export const TABLE_RECIPES = {
   },
   // RR ch. 6 wilderness ground: the grouped Terrain Speed Multiplier table
   // (whose road row carries the Driving rate in its own cell) and the
+  // Going without: hunger, thirst, the cold and the heat. RAW prints all of
+  // it as PROSE rather than a table, so these are windows around the phrases
+  // that carry the figures; survival-binding.mjs parses them into the engine
+  // shape acks-extras declares via expectTables.
+  flight: {
+    source: { book: "ACKS II Revised Rulebook", pages: "RR 274" },
+    tables: {
+      // Air movement is three printed factors: what a full day aloft is worth,
+      // what wind costs, and what a heavy load costs. The EXCEPTION — that
+      // wind is the one weather condition air movement does not take normally
+      // — is the rule's own shape and lives in the flight code, not here.
+      airProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 274,
+        locate: "fly all day",
+        column: { xMin: 300, xMax: 592 },
+        values: [
+          { key: "aloft", find: "expedition speed is", take: "window", span: 120 },
+          // The partial-flight sentence names the same factor a second time
+          // and states the pro-rata rule; kept as the fallback read.
+          { key: "partial", find: "spent in the air", take: "window", span: 120 },
+          { key: "wind", find: "conditions also", take: "window", span: 45 },
+        ],
+      },
+      loadProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 274,
+        // "normal load" alone also matches the following page; the mount
+        // run-in is unique to this one.
+        locate: "large enough to serve as mounts",
+        // The mount paragraph sits in the LEFT column of the following page,
+        // not with the air-movement prose it continues.
+        printedPage: 275,
+        column: { xMin: 40, xMax: 300 },
+        values: [
+          // Anchored BEFORE both factors: a window opens after its anchor, so
+          // finding "half speed" consumes the very words being read.
+          { key: "heavy", find: "creatures can move at", take: "window", span: 130 },
+        ],
+      },
+    },
+  },
+
+  survival: {
+    source: { book: "ACKS II Revised Rulebook", pages: "RR 276-277" },
+    tables: {
+      starvationProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Starvation",
+        column: { xMin: 40, xMax: 300 },
+        // ONE window, not one per rung. Every threshold in this paragraph is
+        // stated BEFORE the condition it produces ("After two consecutive days
+        // without any food… becomes underfed"), and a window opens after its
+        // anchor — so an anchor on the condition consumes the figure being
+        // read. The paragraph is taken whole and the binder reads the rungs
+        // out of it.
+        values: [
+          { key: "paragraph", find: "Starvation", take: "window", span: 1250 },
+        ],
+      },
+      dehydrationProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Dehydration",
+        // Starvation fills the left column and Dehydration wraps into the
+        // right one — the section order is not the column order.
+        column: { xMin: 300, xMax: 592 },
+        // Taken whole for the same reason as starvation — and because "become
+        // dehydrated" also appears in the camel run-in on this page.
+        values: [
+          { key: "paragraph", find: "Dehydration", take: "window", span: 1100 },
+        ],
+      },
+      exposureProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        locate: "Frigid Temperatures",
+        column: { xMin: 300, xMax: 592 },
+        values: [
+          { key: "frigid", find: "without protective clothing for more than", take: "window", span: 200 },
+          { key: "cold", find: "for more than four hours", take: "window", span: 200 },
+        ],
+      },
+      heatProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        locate: "Sweltering Temperatures",
+        column: { xMin: 300, xMax: 592 },
+        // Whole, like the other two: the armour threshold is stated before the
+        // saving throw it triggers, so any anchor on the throw eats it.
+        values: [
+          { key: "paragraph", find: "Sweltering", take: "window", span: 900 },
+        ],
+      },
+      simplifiedProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        locate: "Survival, Simplified",
+        column: { xMin: 40, xMax: 300 },
+        values: [
+          { key: "food", find: "can forage about", take: "window", span: 200 },
+          // Long enough to reach the confidence the recommendation carries —
+          // the figure is the last clause of the sentence, well past the days.
+          { key: "carry", find: "carries enough food for", take: "window", span: 430 },
+        ],
+      },
+    },
+  },
+
+  // Living off the country. All prose again: the forage targets, what Survival
+  // is worth, the hunting target and its territory modifiers, the dog pack's
+  // help and cap, and what a success yields. foraging-binding.mjs parses the
+  // windows into the engine shape.
+  foraging: {
+    source: { book: "ACKS II Revised Rulebook", pages: "RR 276-277" },
+    tables: {
+      firewoodProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Foraging for firewood",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "targets", find: "target value is", take: "window", span: 150 },
+          { key: "yield", find: "gathers", take: "window", span: 150 },
+          { key: "survival", find: "Survival proficiency gains", take: "window", span: 130 },
+        ],
+      },
+      waterProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Foraging for water",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "targets", find: "throw to find water", take: "window", span: 240 },
+          { key: "yield", find: "the party finds enough water", take: "window", span: 160 },
+          { key: "group", find: "Parties larger than", take: "window", span: 180 },
+        ],
+      },
+      foodProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Foraging for food",
+        column: { xMin: 40, xMax: 592 },
+        // Taken generously: the terrain and territory penalties are the tail of
+        // this paragraph, well past the yield they follow.
+        values: [
+          { key: "target", find: "Foraging proficiency throw of", take: "window", span: 140 },
+          { key: "yield", find: "stone of food", take: "window", span: 170 },
+          { key: "modifiers", find: "doesn", take: "window", span: 460 },
+        ],
+      },
+      huntProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Hunting for food",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "throw", find: "Hunting for food", take: "window", span: 300 },
+        ],
+      },
+      dogsProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "hunting dog can attempt",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "pack", find: "hunting dog can attempt", take: "window", span: 300 },
+        ],
+      },
+      grazingProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 278,
+        locate: "Surviving the Wild",
+        column: { xMin: 40, xMax: 300 },
+        values: [
+          { key: "dromedaries", find: "Desert Dromedaries", take: "window", span: 220 },
+          { key: "grazers", find: "Efficient Grazers", take: "window", span: 220 },
+        ],
+      },
+      // The grazing MECHANIC, which draws a different list from the one above:
+      // three kinds feed themselves, but only two can do it on ancillary hours
+      // and still travel. Reading the first list for the second rule would let
+      // an ox march and graze at once.
+      grazingRules: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        // Kept short: a long locate spans run seams the extraction welds shut.
+        locate: "gather food by grazing",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          // Anchored on the sentence BEFORE: the kinds are named first, and a
+          // window opening on the clause itself would drop them.
+          { key: "ancillary", find: "half-speed if desired", take: "window", span: 200 },
+          { key: "barren", find: "animals in", take: "window", span: 140 },
+        ],
+      },
+      huntingProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 279,
+        locate: "Game is scarce",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "territory", find: "Game is scarce", take: "window", span: 320 },
+        ],
+      },
+    },
+  },
+
+  // Searching the wild: the one table in this family that IS a grid — a ladder
+  // of daily distances to targets — plus the prose modifiers around it.
+  // searching-binding.mjs brackets the ladder and parses the windows.
+  searching: {
+    source: { book: "ACKS II Revised Rulebook", pages: "RR 274-275" },
+    tables: {
+      searchLadder: {
+        shape: "gridRows",
+        book: "rr",
+        printedPage: 276,
+        locate: "Wilderness Search",
+        column: { xMin: 40, xMax: 300 },
+        labelMaxX: 210,
+        // The ladder's rows are distance BANDS, so each label carries its own
+        // bounds and the binder brackets them; the recipe only reads them.
+        rows: [
+          { key: "b01", labelRe: "miles or less", labelPattern: "milesBand" },
+          { key: "b02", labelRe: "^12", labelPattern: "milesBand" }, { key: "b03", labelRe: "^24", labelPattern: "milesBand" },
+          { key: "b04", labelRe: "^36", labelPattern: "milesBand" }, { key: "b05", labelRe: "^48", labelPattern: "milesBand" },
+          { key: "b06", labelRe: "^60", labelPattern: "milesBand" }, { key: "b07", labelRe: "^72", labelPattern: "milesBand" },
+          { key: "b08", labelRe: "^84", labelPattern: "milesBand" }, { key: "b09", labelRe: "^96", labelPattern: "milesBand" },
+          { key: "b10", labelRe: "^108", labelPattern: "milesBand" }, { key: "b11", labelRe: "^120", labelPattern: "milesBand" },
+          { key: "b12", labelRe: "^132", labelPattern: "milesBand" }, { key: "b13", labelRe: "^144", labelPattern: "milesBand" },
+          { key: "b14", labelRe: "^156", labelPattern: "milesBand" }, { key: "b15", labelRe: "^168", labelPattern: "milesBand" },
+          { key: "b16", labelRe: "^180", labelPattern: "milesBand" }, { key: "b17", labelRe: "miles or more", labelPattern: "milesBand" },
+        ],
+        cellColumns: [
+          { key: "band", x: 40, w: 168, pattern: "raw", row: true },
+          { key: "target", x: 210, w: 80, pattern: "raw", row: true },
+        ],
+      },
+      searchProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 276,
+        locate: "particular point of interest",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "specific", find: "particular point of interest imposes", take: "window", span: 140 },
+          // Read from before the aerial clause: it names the OPEN terrains
+          // ahead of its cadence, so an anchor on the cadence loses them.
+          { key: "cadence", find: "in addition, when searching", take: "window", span: 340 },
+          // Anchored one clause earlier than the terrains it lists — "when
+          // searching forest" would eat the first of the three.
+          { key: "canopy", find: "however", take: "window", span: 200 },
+          { key: "wandering", find: "trigger one random encounter", take: "window", span: 160 },
+        ],
+      },
+      // Searching for a LOST GROUP rather than a place. Printed with the
+      // rendezvous rules, chapters away from the search table it modifies.
+      lostSearchProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 287,
+        locate: "lost party is moving or searching",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "moving", find: "lost party is moving or searching", take: "window", span: 120 },
+        ],
+      },
+      // What an hour of searching costs, stated where the system is introduced
+      // rather than with the aerial exception that changes it.
+      cadenceProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 276,
+        locate: "abstract system can be used",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "hour", find: "abstract system can be used", take: "window", span: 160 },
+        ],
+      },
+      surveyProse: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 277,
+        locate: "Land Surveying",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "target", find: "target value for the proficiency throw", take: "window", span: 220 },
+          { key: "misread", find: "fails with an unmodified", take: "window", span: 200 },
+        ],
+      },
+    },
+  },
+
+  // City travel (JJ, Settlement Adventures). The paces and the straggling
+  // ladder are prose; the street's encounter cadence IS a grid.
+  //
+  // `cityTravel`, not `settlement`: this file already registers a `settlement`
+  // document for market class by families, and the two are unrelated.
+  cityTravel: {
+    source: { book: "ACKS II Judges Journal", pages: "JJ 79-80" },
+    tables: {
+      pacesProse: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 81,
+        locate: "Movement in Settlements",
+        column: { xMin: 300, xMax: 592 },
+        values: [
+          { key: "commuting", find: "At commuter speed, it takes", take: "window", span: 200 },
+          { key: "navigation", find: "must make a Navigation throw", take: "window", span: 240 },
+          { key: "stray", find: "Characters who get lost end up", take: "window", span: 160 },
+          { key: "meandering", find: "At meandering speed, it takes", take: "window", span: 180 },
+        ],
+      },
+      stragglingProse: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 81,
+        locate: "Straggling Groups",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "tiers", find: "If the party is", take: "window", span: 300 },
+        ],
+      },
+      streetCadence: {
+        shape: "gridRows",
+        book: "jj",
+        printedPage: 82,
+        locate: "Encounters in the Settlement",
+        column: { xMin: 40, xMax: 592 },
+        // Measured, not guessed: the label band ends at 130, the frequency
+        // cell runs 132-247 and the throw sits at 251.
+        labelMaxX: 130,
+        // The small-caps face splits each cell's initial glyph into its own
+        // run ("e" + "very hour"); a gap this small is a glyph boundary, not a
+        // column gutter.
+        joinCellGap: 12,
+        rows: [
+          { key: "avenueDay", labelRe: "^avenue.*day" },
+          { key: "avenueNight", labelRe: "^avenue.*night" },
+          { key: "alleyDay", labelRe: "^alley.*day" },
+          { key: "alleyNight", labelRe: "^alley.*night" },
+          { key: "holedUp", labelRe: "^holed\s*up" },
+        ],
+        cellColumns: [
+          { key: "frequency", x: 132, w: 115, pattern: "raw", row: true },
+          { key: "throw", x: 249, w: 60, pattern: "raw", row: true },
+        ],
+      },
+    },
+  },
+
   // Navigating the Wild targets. Raw page reads only; travel-binding.mjs
   // assembles the engine-shaped `terrainMultipliers`/`roads`/`gettingLost`
   // tables acks-extras declares via expectTables.

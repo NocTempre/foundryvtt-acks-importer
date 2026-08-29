@@ -45,7 +45,28 @@ import { applyWeatherImport, WEATHER_DOC_ID } from "./weather-binding.mjs";
 import { applyEncountersImport, ENCOUNTERS_DOC_ID } from "./encounters-binding.mjs";
 import { applyVoyagesImport, VOYAGES_DOC_ID } from "./voyages-binding.mjs";
 import { applyLanguageImport, LANGUAGES_DOC_ID } from "./language-binding.mjs";
+import { applySurvivalImport, SURVIVAL_DOC_ID } from "./survival-binding.mjs";
+import { applyForagingImport, FORAGING_DOC_ID } from "./foraging-binding.mjs";
+import { applySearchingImport, SEARCHING_DOC_ID } from "./searching-binding.mjs";
+import { applyCityTravelImport, CITY_TRAVEL_DOC_ID } from "./city-travel-binding.mjs";
+import { applyFlightImport, FLIGHT_DOC_ID } from "./flight-binding.mjs";
 import { progressBar } from "./progress.mjs";
+
+/**
+ * The land-travel documents, each with the assembler that turns its raw page
+ * reads into the engine tables acks-extras declares.
+ *
+ * A table rather than five near-identical blocks: they differ only in which
+ * document they answer for, and one loop cannot drift the way five copies of
+ * a try/catch do.
+ */
+const LAND_BINDINGS = Object.freeze([
+  { id: SURVIVAL_DOC_ID, apply: applySurvivalImport },
+  { id: FORAGING_DOC_ID, apply: applyForagingImport },
+  { id: SEARCHING_DOC_ID, apply: applySearchingImport },
+  { id: CITY_TRAVEL_DOC_ID, apply: applyCityTravelImport },
+  { id: FLIGHT_DOC_ID, apply: applyFlightImport },
+]);
 import {
   initCookbook, loadCookbook, cookbookImport, cookbookImportIds, cookbookImportMonsters, cookbookRemoveImports, cookbookImportAbilities, cookbookImportAbilitiesDialog, cookbookUpdateAbilities,
   cookbookFillCompanions, cookbookPruneAbilities, registerAbilityDirectoryButtons, importAbility, cookbookDebug,
@@ -881,6 +902,21 @@ async function cookbookImportTables() {
     } catch (err) {
       console.error(`${MODULE_ID} | voyage table binding failed`, err);
       ui.notifications.warn(`acks-importer | voyage tables: ${err.message}`);
+    }
+  }
+  // The land-travel documents all bind the same way — if this run imported it,
+  // assemble its engine tables and register them — so they are a table rather
+  // than five copies of one try/catch. A failure in one is reported and the
+  // rest still run: a party that can forage should not lose the ability
+  // because the flight pages would not parse.
+  for (const { id, apply } of LAND_BINDINGS) {
+    if (!report.imported.some((d) => d.docId === id)) continue;
+    try {
+      const result = await apply();
+      if (result.assembled.length) console.log(`${MODULE_ID} | ${id} tables assembled`, result.assembled);
+    } catch (err) {
+      console.error(`${MODULE_ID} | ${id} table binding failed`, err);
+      ui.notifications.warn(`acks-importer | ${id} tables: ${err.message}`);
     }
   }
   // The taxonomy is read, not shipped, so the items exist only once a seat has
