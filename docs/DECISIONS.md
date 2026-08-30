@@ -2737,3 +2737,57 @@ actually has.
 journal behind with no pages. That is honest — the shelf says nothing was
 imported — and a later good run fills it. A page of wrong prose was the defect;
 an empty journal is not.
+
+### The weapons grid prints three types, and ammunition is not a weapon (2026-08-30)
+
+The grid on RR ch.4's weapons page files four rows under **Ammunition** — the
+bolt case, the arrow quiver, the silver arrow, the sling stones — each with an
+em-dash where every weapon carries a die. `extractValueRows` had read that type
+since the recipe was written and `extractWeapons` dropped it when it attached
+the canonical names, so all four materialized as `weapon` documents.
+
+That type cannot hold one of them. It has no `quantity` field at all, so a
+bundle's count could only live in its name, where the ammunition tracker cannot
+spend it and the sheet cannot show it; and its `damage` field defaults to a die,
+so a case of bolts arrived as something to swing, listed among the weapons, with
+neither `melee` nor `missile` set. A field report described it exactly: "came in
+as a case, but with 20 bolts as a name".
+
+**Ruled: an Ammunition row materializes as inventory.** That is also the shape
+the rest of the family already assumes — `isAmmoItem` and `canBeSilvered` in
+acks-extras both read an `item` — so this removes a divergence rather than
+creating one.
+
+**Two shapes, because the grid prints two.** A row whose printed name names a
+carrying device is that device, and its load rides on the `ammo` flag to be
+minted when the device reaches an actor; a row that is bare units is a stack of
+them. Whether a name is a device is the equipment root's question — it owns the
+gear profiles that answer it — so it is asked at import rather than restated
+here.
+
+**The catalogue holds ONE document per priced row.** Minting the case and its
+bolts as two catalogue documents was rejected: RR sells the pair as one priced
+line, `containedIn` is an actor-embedded relation, and a class template copies a
+single base document, so a paired catalogue entry would arrive on a character
+with its contents left behind on the shelf. Recording the load and filling the
+device at the point of grant keeps one document per row and puts the pair where
+it is actually carried.
+
+**A loaded device carries the printed encumbrance whole; a bare stack divides
+it.** RR counts a bundle as one item however full it is, so a case that weighs
+its 1/6 st whether it holds twenty bolts or three is the printed rule, and it
+keeps encumbrance from drifting mid-combat as shots are spent. A bare stack has
+no device to hold that weight, so the printed figure is divided across the units
+it was printed for and `quantity` multiplies it back exactly — `weight6` is a
+plain NumberField, so the fraction survives.
+
+**The repair deletes rather than migrates.** A document's type cannot be changed
+in place, so `repairAmmoWeapons` removes the `weapon`-typed ones and the same
+run re-creates them — the `repairAnimalItems` pattern, with the same guard: only
+documents carrying our own `generated` flag are touched, so a Judge's hand-made
+case is never deleted. A class template's copy carries no importer stamp and is
+not reached from here; acks-extras re-derives those with its packages.
+
+The container model this feeds — a case that actually holds its bolts, and what
+a loaded device's capacity is — is ruled in acks-extras
+`docs/equipment/DECISIONS.md`, which owns it.

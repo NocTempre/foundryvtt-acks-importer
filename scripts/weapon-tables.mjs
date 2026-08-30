@@ -191,7 +191,11 @@ export function extractValueRows(items, recipe = WEAPON_TABLE) {
 /**
  * Attach each canonical weapon name to the value row whose label band matches
  * its pattern. Names are shipped (locators); values come from the seat's page.
- * @returns {{name:string, melee:boolean, missile:boolean, cells:object}[]}
+ *
+ * The seat's own `label` rides along beside the canonical name: it is the only
+ * place the reader's spelling of the row survives, and `ammoLoad` reads the
+ * printed count out of it.
+ * @returns {{name:string, label:string, melee:boolean, missile:boolean, ammunition:boolean, cells:object}[]}
  */
 export function extractWeapons(items, recipe = WEAPON_TABLE, names = WEAPON_NAMES) {
   const valueRows = extractValueRows(items, recipe);
@@ -202,7 +206,7 @@ export function extractWeapons(items, recipe = WEAPON_TABLE, names = WEAPON_NAME
     if (i < 0) continue; // this weapon's row was not found on the seat's page
     used.add(i);
     const r = valueRows[i];
-    out.push({ name: spec.name, melee: r.melee, missile: r.missile, cells: r.cells });
+    out.push({ name: spec.name, label: r.label, melee: r.melee, missile: r.missile, ammunition: r.ammunition, cells: r.cells });
   }
   return out;
 }
@@ -217,7 +221,7 @@ export function isWeaponPage(items, recipe = WEAPON_TABLE) {
  * Locate the weapons page in a seat's PDF (by anchor, edition-independent) and
  * extract its rows. `readPage(n) → {items}` is injected (the runtime's
  * pageItems; a test's PDF reader) so this module carries no PDF dependency.
- * @returns {Promise<{name,melee,missile,cells}[]>}
+ * @returns {Promise<{name,label,melee,missile,ammunition,cells}[]>}
  */
 export async function extractWeaponsFromDoc(doc, readPage, recipe = WEAPON_TABLE) {
   const guess = recipe.page ?? 1;
@@ -352,5 +356,92 @@ export function bindWeaponRow(row, id, cite) {
     system,
     // The capture the compendium lacked: all attack/damage modes on ONE item.
     flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true, weapon: { modes } } },
+  };
+}
+
+/* -------------------------------------------------------------------- */
+/*  Ammunition — the grid's own third type                              */
+/* -------------------------------------------------------------------- */
+
+/**
+ * What a printed ammunition row holds, read off the seat's own label.
+ *
+ * The grid names an ammunition row for its load — the count and the thing
+ * counted are both printed in the row's name — so neither has to be shipped:
+ * the seat's extracted label is asked first and the canonical locator only
+ * stands in for a label the page did not yield.
+ *
+ * @returns {{count:number, of:string}|null} null when the label names no count.
+ */
+export function ammoLoad(row) {
+  for (const text of [row?.label, row?.name]) {
+    // Seams are `\s*`, never `\s+`: real extraction welds words together.
+    const m = /(\d+)\s*([A-Za-z][\w'’-]*(?:\s*[A-Za-z][\w'’-]*)?)\s*$/.exec(String(text ?? "").trim());
+    if (m) return { count: Number(m[1]), of: m[2].replace(/\s+/g, " ").trim() };
+  }
+  return null;
+}
+
+/**
+ * Build a core `item` from a row the grid types **Ammunition**.
+ *
+ * The grid prints three types, not two: beside Melee and Missile it files the
+ * bolt case, the arrow quiver, the silver arrow and the sling stones as
+ * Ammunition, with an em-dash where every weapon carries a die. A `weapon`
+ * document cannot hold one of these. The type has no `quantity` field at all,
+ * so the load can only ever live in the row's NAME where nothing can spend it;
+ * and `damage` defaults to a die, so a case of bolts arrives as something to
+ * swing. Ammunition is inventory, which is also the shape the rest of the
+ * family already expects — `isAmmoItem` and `canBeSilvered` both read an
+ * `item`.
+ *
+ * Two shapes, because the grid prints two:
+ *
+ *  - A **loaded device** — a case, a quiver — is the carrying device, and its
+ *    load is recorded on the `ammo` flag rather than minted here. The catalogue
+ *    holds one document per priced row, which is what lets a class template
+ *    copy the row the way it copies every other piece of gear; the stack itself
+ *    is materialized when the device reaches an actor and can be put inside it.
+ *    It carries the printed encumbrance WHOLE, so what a bundle weighs does not
+ *    drift as it is spent — RR counts a bundle as one item however full it is.
+ *  - A **bare stack** — the silver arrow, the sling stones — has no device to
+ *    carry that weight, so the printed encumbrance is divided across the units
+ *    it was printed for and quantity multiplies it back. `weight6` is a plain
+ *    NumberField, so the fraction survives.
+ *
+ * @param {{name,label,cells}} row
+ * @param {string} id cookbook id (def.weapon.<slug>)
+ * @param {string} cite
+ * @param {{device?:boolean}} opts `device` when the printed name names a
+ *   carrying device — the equipment root's question, asked by the caller.
+ */
+export function bindAmmoRow(row, id, cite, { device = false } = {}) {
+  const c = row.cells ?? {};
+  const load = ammoLoad(row);
+  const count = load?.count ?? 1;
+  const printed6 = encToWeight6(c.enc);
+  const cost = costGp(c.cost);
+  const system = {
+    description: bookText([], cite, { id }),
+    subtype: "item",
+    quantity: { value: device ? 1 : count, max: 0 },
+  };
+  if (printed6 != null) system.weight6 = device || count <= 1 ? printed6 : printed6 / count;
+  if (cost != null) system.cost = cost;
+  return {
+    name: row.name,
+    type: "item",
+    img: "icons/weapons/ammunition/arrows-fletching.webp",
+    system,
+    flags: {
+      [MODULE_ID]: {
+        cookbook: { id, cite },
+        generated: true,
+        // What the page called this row, and what it said the row holds. The
+        // equipment root reads `ammo` to fill the device when it is granted.
+        ammunition: true,
+        ...(device && load ? { ammo: { load: load.count, of: load.of } } : {}),
+      },
+    },
   };
 }

@@ -29,6 +29,15 @@ other VTTs) while cookbooks stay valid.
   save class+level → the saves LUT, attacks → weapon Items with
   `flags.acks-extras.*` (damageType/naturalWeapon/extraordinary from the
   executor's `{key, ref}` triples and glyphColor result).
+- **Grid types → document types:** the weapons grid prints three, and only two
+  of them are weapons. A row the page types **Ammunition** becomes an `item`
+  (`bindAmmoRow`), never a `weapon` — the weapon type has no `quantity` field
+  and defaults `damage` to a die. A row whose printed name names a carrying
+  device carries its load on `flags["acks-importer"].ammo = {load, of}` for
+  acks-extras to mint and stow when the device reaches an actor; a row that is
+  bare units carries the count in `system.quantity`. Which of the two a name is
+  is asked of `acksExtras.equipment.config.gearProfileFor`, never restated here.
+  The shapes and what was rejected: [DECISIONS.md](DECISIONS.md) 2026-08-30.
 - **UI:** the materialized-text shape (`scripts/prose.mjs` — the entry's
   paragraphs, page reference last, stamped so a re-import can tell its own
   writing from a Judge's), concept→examples surfacing, the audit dialog.

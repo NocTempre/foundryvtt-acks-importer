@@ -20,7 +20,7 @@ import { OSE_PREFIX, oseSourceLabel, oseSourceLine } from "./ose-source.mjs";
 import { executeEntry, materializeEffects, attackModel, convertName } from "./executor.mjs";
 import { slugLabel } from "./table-extract.mjs";
 import { pageItems } from "./extract.mjs";
-import { WEAPON_TABLE, extractWeaponsFromDoc, bindWeaponRow } from "./weapon-tables.mjs";
+import { WEAPON_TABLE, extractWeaponsFromDoc, bindWeaponRow, bindAmmoRow } from "./weapon-tables.mjs";
 import { ARMOR_TABLE, extractArmorFromDoc, bindArmorRow } from "./armor-tables.mjs";
 import { extractPriceMapFromDoc, extractPriceRowsFromDoc, priceFor, priceKey, PRICE_TABLES } from "./gear-prices.mjs";
 import { savesForLevel } from "./stats.mjs";
@@ -6751,6 +6751,37 @@ const weaponId = (name) => `def.weapon.${slugLabel(name).replace(/-([a-z0-9])/g,
  * could not express and split into separate items instead.
  * @returns {Promise<{table:number, created:number}>}
  */
+/**
+ * Remove ammunition the grid's third type was read as a WEAPON.
+ *
+ * Before the Ammunition rows were told apart from the Missile ones, a case of
+ * bolts imported as a `weapon`: a type with no `quantity` field, so its load
+ * could only live in its name, and a default damage die, so it arrived as
+ * something to swing. A document's type cannot be changed in place, so the
+ * wrong ones are deleted and the run re-creates them as inventory — the
+ * `repairAnimalItems` pattern, and the same guard: only documents carrying our
+ * own `generated` flag are touched, so a Judge's hand-made "Case of Bolts" is
+ * never deleted. A class template's copy carries no importer stamp and is not
+ * reached from here; the equipment root re-derives those with its packages.
+ *
+ * @param {string[]} ids the cookbook ids of this seat's ammunition rows
+ * @returns {Promise<number>} how many were removed
+ */
+async function repairAmmoWeapons(ids) {
+  const want = new Set(ids);
+  if (!want.size) return 0;
+  const wrong = (await importedDocs("Item")).filter(
+    (i) =>
+      i.type === ITEM_TYPE.WEAPON &&
+      i.getFlag(MODULE_ID, "generated") &&
+      want.has(i.getFlag(MODULE_ID, "cookbook")?.id),
+  );
+  if (!wrong.length) return 0;
+  await deleteImported("Item", wrong);
+  console.warn(`${MODULE_ID} | removed ${wrong.length} ammunition row(s) imported as weapons; re-imported as inventory.`);
+  return wrong.length;
+}
+
 export async function importWeapons(folderId) {
   const session = ctx.sessionDocs.get(WEAPON_TABLE.book);
   if (!session?.doc) return { table: 0, created: 0, reason: "book not connected" };
@@ -6763,15 +6794,35 @@ export async function importWeapons(folderId) {
   }
   if (!rows.length) return { table: 0, created: 0, reason: "table not found in book" };
   const folder = folderId ?? (await ensureItemFolder("def.weapon."))?.id ?? null;
+  // BEFORE anything claims an id — a row this world already holds claims itself
+  // on the next run, and a repair written after the claim reports zero forever
+  // while the wrong documents stand (the lesson importPricedGear records).
+  const repaired = await repairAmmoWeapons(rows.filter((r) => r.ammunition).map((r) => weaponId(r.name)));
   let created = 0;
   for (const row of rows) {
     const id = weaponId(row.name);
     if (await importedItem(id)) continue;
     const cite = `${BOOKS[WEAPON_TABLE.book]?.short ?? "RR"} p. ${WEAPON_TABLE.page}`;
-    rememberImported(id, await createDoc(Item, { ...bindWeaponRow(row, id, cite), folder }));
+    // Whether an ammunition row names a carrying device is the equipment root's
+    // question — it owns the gear profiles that answer it — so it is asked, not
+    // restated here. Absent the module every ammunition row is a bare stack,
+    // which is the shape that needs nothing of it.
+    const doc = row.ammunition
+      ? bindAmmoRow(row, id, cite, { device: !!globalThis.acksExtras?.equipment?.config?.gearProfileFor?.(row.name) })
+      : bindWeaponRow(row, id, cite);
+    const item = rememberImported(id, await createDoc(Item, { ...doc, folder }));
+    // The RAW annotation layer belongs to acks-equipment, exactly as the gear
+    // cookbook defers to it: a case rides on the belt and is free to draw from.
+    if (row.ammunition) {
+      try {
+        await globalThis.acksExtras?.equipment?.annotateItem?.(item);
+      } catch (err) {
+        console.warn(`${MODULE_ID} | equipment annotation skipped for ${item?.name}`, err);
+      }
+    }
     created++;
   }
-  return { table: rows.length, created };
+  return { table: rows.length, created, repaired };
 }
 
 /** camelCase cookbook id for a table-materialized armour item. */

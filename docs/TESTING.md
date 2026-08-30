@@ -312,6 +312,66 @@ and run the import again.
 
 Delete the fixtures you created; the imported library is the world's.
 
+## Ammunition is inventory, not a weapon
+
+### Fixtures
+
+The Revised Rulebook connected. To exercise the repair as well as the create,
+build the pre-upgrade shape on purpose — recover the old binder and mint the
+four rows the way they used to arrive:
+
+```
+git show v5.4.1:scripts/weapon-tables.mjs > /tmp/old-weapon-tables.mjs
+```
+
+then, in the world, re-create one by hand with the old shape and our own stamp,
+so the repair has something to find:
+
+```
+await Item.create({name:"Case, 20 Bolts", type:"weapon", system:{damage:"1d6", weight6:1, cost:2}, flags:{"acks-importer":{cookbook:{id:"def.weapon.case20Bolts", cite:"RR p. 128"}, generated:true}}})
+```
+
+### Steps
+
+1. Import weapons with the Rulebook connected.
+   *Observable:* the four rows the page types Ammunition are `item`, and every
+   other row is still `weapon`. The one-liner:
+
+   ```
+   game.items.filter(i => i.getFlag("acks-importer","ammunition")).map(i => `${i.name} [${i.type}] ×${i.system.quantity?.value} enc6=${i.system.weight6} ${JSON.stringify(i.getFlag("acks-importer","ammo") ?? null)}`)
+   ```
+
+   Four rows, all `[item]`. The case and the quiver read `×1` with an `ammo`
+   flag naming their load; the sling stones read `×30` with none. A run where
+   any of them is `[weapon]` means the type column was not read and the rows
+   fell back — which is silent on a sheet except for a damage die nobody can
+   explain.
+2. Check the arithmetic the page states, not the one the sheet renders.
+   *Observable:* `quantity × weight6` equals the printed encumbrance for every
+   one of the four — 1 for the case, the quiver and the stones, 0 for the
+   silver arrow. A stack whose per-unit weight was rounded to an integer shows
+   here as 0, and as a character who can carry thirty stones for free.
+3. Put the case on a character and open the sheet.
+   *Observable:* it is filed as gear, not under Weapons; it carries no damage
+   die and offers no attack; and it rides on the belt, free to draw from — the
+   annotation acks-extras stamps at import. It is NOT a 1d6 line.
+4. Re-run the import over the hand-made pre-upgrade document (fixture above).
+   *Observable:* the console warns that it removed N ammunition row(s) imported
+   as weapons, and the world afterwards holds exactly ONE "Case, 20 Bolts",
+   typed `item`. Two documents means the repair ran after the claim rather than
+   before it; zero means the delete found nothing to re-create from.
+5. Make a Judge's own weapon with the same name and no importer stamp, then
+   re-import.
+   *Observable:* it is untouched. The repair only ever deletes documents
+   carrying our `generated` flag.
+
+The device actually holding its bolts, and choosing between stacks at the roll,
+are acks-extras' surfaces — its `docs/equipment/TESTING.md` owns those steps.
+
+### Teardown
+
+Delete the fixtures you created; the imported library is the world's.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras
