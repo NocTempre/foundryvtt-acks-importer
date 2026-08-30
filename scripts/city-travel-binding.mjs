@@ -169,6 +169,16 @@ export function assembleCityTravelTables(raw = {}) {
   const encounters = assembleCadence(raw.streetCadence ?? {});
   if (encounters) out.encounters = encounters;
 
+  // What making a nuisance of yourself is worth. Kept as a positive bonus to
+  // the THROW; the engine subtracts it from the target, because that is the
+  // direction the rule moves in and a reader should not have to know the sign.
+  const trouble = parseSigned(raw.intentProse?.trouble);
+  if (trouble != null) out.encounterIntent = { trouble: Math.abs(trouble) };
+
+  // The shift the dark puts on the incident roll — a bare figure, not a row.
+  const dark = /adding\s+(\d+)\s+to\s+the\s+roll/i.exec(String(raw.afterDarkProse?.shift ?? ""));
+  if (dark) out.encounterAfterDark = Number(dark[1]);
+
   return out;
 }
 

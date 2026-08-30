@@ -1021,6 +1021,28 @@ export const TABLE_RECIPES = {
           { key: "tiers", find: "If the party is", take: "window", span: 300 },
         ],
       },
+      // Looking for trouble, and the shift the dark puts on the incident roll.
+      // Two figures, two sentences, two pages apart.
+      intentProse: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 82,
+        locate: "looking for trouble",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "trouble", find: "they can increase the chance", take: "window", span: 140 },
+        ],
+      },
+      afterDarkProse: {
+        shape: "proseValues",
+        book: "jj",
+        printedPage: 83,
+        locate: "after dark",
+        column: { xMin: 40, xMax: 592 },
+        values: [
+          { key: "shift", find: "roll 1d100", take: "window", span: 90 },
+        ],
+      },
       streetCadence: {
         shape: "gridRows",
         book: "jj",

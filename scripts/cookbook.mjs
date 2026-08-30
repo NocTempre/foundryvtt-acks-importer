@@ -2943,7 +2943,16 @@ export async function cookbookImportRollTables() {
   } finally {
     bar.finish();
   }
-  if (!made && !skipped) return ui.notifications.warn("acks-importer | no roll-table entries in any open book — connect AX2/AX3 first.");
+  if (!made && !skipped) {
+    // Which books carry roll tables is derived, not recited: naming AX2/AX3 in
+    // the message went stale the moment the Judges Journal grew a table.
+    const carriers = [...data.books.keys()]
+      .filter((b) => Object.values(data.books.get(b).entries).some((e) => e.kind === "kind.rolltable"))
+      .map((b) => BOOKS[b]?.label ?? b.toUpperCase());
+    return ui.notifications.warn(
+      `acks-importer | no roll-table entries in any open book — connect ${carriers.join(" or ")} first.`,
+    );
+  }
   ui.notifications.info(`acks-importer | roll tables: ${made} created, ${skipped} already present, in "${packLabel("RollTable")}".`);
   return { made, skipped };
 }
