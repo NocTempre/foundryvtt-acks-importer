@@ -7,6 +7,103 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A printed floor and a printed rate are read, not shipped (2026-08-29)
+
+**Problem.** Two numbers the rules define reached the engine as nothing at all.
+The 1st-level hit die carries a printed minimum and the engine applied none, so
+a character rolling under it kept the raw roll. Hit points per level past 9th
+are set by the saves chassis and adjusted by race; the racial half was already
+extracted and read by nobody, and the chassis half had no recipe at all, so a
+class built with the Judges Journal builder gained a flat-less die count past
+9th while an imported class of the same spread carried the printed bonus.
+
+**Ruled.** Both are imported, both through the machinery that already exists.
+The floor is a new `hitPoints` ruledata document read from the chargen chapter
+by a `proseValues` recipe; the rates ride the EXISTING `savesRule` recipe,
+because they key on the saves chassis and the book prints them in that section —
+a second page scan would buy nothing. `builder-binding.mjs` assembles them into
+`budget.hpAfterNine`, keyed as the book PAIRS them (crusader+mage,
+fighter+thief), which is a different pairing from the post-8 XP increments
+beside it, so the two cannot share keys.
+
+**Rejected.** `kind.constant` for the floor: those entries are harvested box
+geometry against a fixed rectangle, and the sentence carrying this floor is
+running prose. Folding the rates into `acks.classBuilder`'s own tables: that
+document is builder INPUT handed wholesale to the derivation, and a hit-point
+floor is not a build point.
+
+**Cost.** Two anchors that a re-printing can move. Both are `find` strings on
+lowercase clauses carrying no digit before the number, which is the shape most
+tolerant of the welded words and interleaved superscript runs real extraction
+produces; `tools/test-hitpoint-tables.mjs` and the class-builder table test
+assert against the real books that the anchor still lands on an integer, and
+deliberately assert nothing about WHAT the integer is.
+
+**Verified negative, recorded so it is not re-investigated.** Only the dwarf
+prints a racial post-9th hit-point rate. The elf, halfling, Nobiran and Zaharan
+sections carry the boilerplate sentence naming the category and state no value,
+so `hpAfter9: null` for those races is the printed absence and not an
+unfinished extraction.
+
+---
+
+### A second printed name for a shipped entry is authored on the entry (2026-08-29)
+
+**Problem.** Two resolvers in `cookbook.mjs` answered the same question
+differently. The class Proficiency List read a flat last-wins map; a template's
+proficiency cell read a length-sorted menu whose ties fell to cookbook load
+order. Twenty printed names resolved to a class POWER on one path and the
+PROFICIENCY on the other — "Acrobatics", "Climbing" and "Weapon Finesse" among
+them. A template then granted a power the character was never owed and, because
+ownership is matched on type and name, silently refused them the proficiency
+ever afterwards. Separately, the merged Art/Craft proficiency was reachable
+under neither of the short forms the books also print for it, and the gap was
+papered over by a literal in shipped source.
+
+**Ruled.** One `abilitySurfaceIndex` feeds both paths, arbitrating collisions
+with the category ranking the monster path already uses. A printed short form
+is authored on the entry that owns it as `aliases`, compiled into the cookbook,
+and gated by `lint-register`: an alias may only give another printed surface to
+an entry this module already ships, never introduce a name for something it does
+not, and never collide with another entry's name or alias. The world's holdings
+are deliberately NOT consulted — what a spread MEANS is a fact about the book,
+not about what has been imported yet.
+
+**Rejected.** Generalising the equipment list's slash convention: `Art/Craft` is
+the only slashed awardable name of the corpus, and a rule authored for a
+population of one is a rule that will be wrong for the second member. Keeping
+the `Spec.` abbreviation hatch beside the alias rule: two coexisting rules make
+the longest-first scan order-dependent, so the hatch was deleted and the same
+abbreviation is now authored as an alias.
+
+**Cost.** The alias field is authored data with no in-app editor, correctly —
+it is a fact about a printing, not about a world. It reaches the compiled
+cookbook only through one line in `compile-cookbook.mjs`, and it fails SILENTLY
+if that line is lost, which is why `test-cookbook-coherence.mjs` asserts the
+shipped entries carry their aliases end to end rather than asserting the
+compiler in isolation.
+
+---
+
+### A printed pick rides as an offer, not as a dropped sentence (2026-08-29)
+
+**Problem.** A starting package sometimes hands over a choice rather than a
+thing — "and one spell of character's choice". Minting it as a spell produced a
+document called "One spell of character's choice", so it was dropped instead and
+preserved only in the item's note. That is invisible on the character: the
+player is owed a spell and nothing anywhere says so, and the pick is simply
+never made.
+
+**Ruled.** The clause rides in the spells array as a row carrying no name whose
+`offer` is set, with a ChoiceSpec naming what may be picked and a stable `key`
+built from the book it came out of. The printed sentence still stays on the
+note. Nothing is minted here — the importer records the OFFER, and acks-extras
+turns it into something the player can answer.
+
+**Cost.** `offer` is a flag, not an inference. An emptiness test would be
+cheaper and is wrong: a blank row added by hand on the class sheet has no name
+and an initialised ChoiceSpec, and would read as an offer.
+
 ### The library is the packs AND the sidebar this module stamped (2026-08-29)
 
 **Problem.** A world that imported before imports moved into compendia keeps

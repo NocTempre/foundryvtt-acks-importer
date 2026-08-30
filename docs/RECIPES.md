@@ -298,3 +298,22 @@ docs/BINDING-FOUNDRY.md    how the Foundry module consumes the cookbook
   (docs/BINDING-FOUNDRY.md); ACKS I books in `scripts/books.mjs` for edition
   chains; per-entry `assists` consumption for authored overrides (schema
   reserved; compiler flags cases via warnings today).
+
+## Authoring an alias
+
+An `aliases` entry records a SECOND PRINTED NAME for a definition this module
+already ships — nothing more. It carries no number, no table of options and no
+sentence, so it is on the same footing as the `name` beside it; the same
+posture the equipment phrase register was chartered under (DECISIONS,
+"Authored equivalences").
+
+Two rules, both gated by `lint-register`:
+
+- an alias may not repeat its own entry's name;
+- an alias may not collide with any other entry's name or alias. Two entries
+  sharing a printed NAME is ordinary and is arbitrated by category rank at read
+  time; an alias in that collision is not, because an alias exists precisely to
+  make one short form resolve.
+
+What a gate cannot check, and a reviewer must: that the alias is a form the
+book actually prints, and not a convenience spelling invented here.

@@ -124,8 +124,8 @@ export function assembleBuilderTables(raw) {
   // printed pairing is kept here and expanded by the consumer, as postEight
   // is. All-or-nothing: both rates come from one sentence on one page, so a
   // half-read is a broken read and must not present as a complete one.
-  if (raw.savesRule && [raw.savesRule.hpCrusaderMage, raw.savesRule.hpFighterThief].every(isNum)) {
-    budget.hpAfterNine = { crusaderMage: raw.savesRule.hpCrusaderMage, fighterThief: raw.savesRule.hpFighterThief };
+  if (raw.hpAfterNine && [raw.hpAfterNine.crusaderMage, raw.hpAfterNine.fighterThief].every(isNum)) {
+    budget.hpAfterNine = { crusaderMage: raw.hpAfterNine.crusaderMage, fighterThief: raw.hpAfterNine.fighterThief };
   }
   if (raw.racialCaps) {
     budget.racialCaps = Object.entries(raw.racialCaps)

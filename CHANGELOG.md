@@ -1,5 +1,48 @@
 # Changelog
 
+## 5.4.0
+
+**Two printed numbers the engine had been guessing at, and one printed name it could not read.**
+
+### Added
+- **The 1st-level hit-point floor imports.** RR Ch. 1 §I.5 reads a 1st-level hit
+  die at a printed minimum and adds Constitution *after* it. That minimum is now
+  read from your own rulebook into a `hitPoints` rules table, and acks-extras
+  applies it to the die rather than to the total. A world that has not imported
+  it keeps exactly the totals it had.
+- **Hit points per level past 9th import.** JJ Ch. 12 sets the rate by saving-throw
+  progression, and a race may add to it. The chassis rates are read from your own
+  Judges Journal; the racial rate was already read and had nothing consuming it.
+  Custom classes built in the class builder now carry the printed flat past 9th
+  instead of a bare die count.
+- **A printed short form resolves to the entry that owns it.** Definitions may
+  now carry `aliases` — other names the books print for the same thing. The
+  merged Art/Craft proficiency and the abbreviated Fighting Style Spec. are the
+  first two, so the template cells and class lists that print them stop coming
+  in unresolved.
+- **A pick a package offers is imported as an offer.** "…and one spell of
+  character's choice" was preserved only as a sentence on a note, where nothing
+  on the character ever showed it and the pick was never made. It now rides as
+  an offer that acks-extras turns into something the player can answer.
+
+### Fixed
+- **A printed name meant one thing to a class list and another to a template
+  cell.** Two resolvers in the same file arbitrated collisions differently, so
+  twenty names — Acrobatics, Climbing and Weapon Finesse among them — bound to a
+  class power on one path and the proficiency on the other. A template then
+  granted a power the character was never owed and, because ownership matches on
+  type and name, silently refused them the proficiency ever after. Both paths now
+  read one index. **Existing worlds pick this up on *Update Classes*, or on a
+  delete-and-re-import; class derives run on create only.**
+- **A rank printed after its selection is read.** The books print
+  "Craft (armor-making) 3" as often as "Alertness 2", and only the second form
+  was read, so every entry carrying a selection imported at rank 1.
+
+### Note on 5.3.0
+The hit-point recipes, the alias resolver and their tests were committed into
+5.3.0 by a concurrent session and shipped there unannounced. They are complete
+and were green in that build; this entry is where they are documented.
+
 ## 5.3.0
 
 **The Judges Journal, and the settlement's own table.**

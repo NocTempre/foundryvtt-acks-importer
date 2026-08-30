@@ -593,3 +593,15 @@ missing by accident.
 - **The export direction.** ACKS II out to OSE. Note that the guide's forward
   and reverse formulas are deliberately not inverses — the reverse ones assume a
   fixed difficulty — so a round trip is off by one on saves and proficiencies.
+
+## Deferred with the 2026-08-29 surface-index work
+
+- **A "spell" cookbook kind.** Spells are not a cookbook kind, so a printed
+  spell name in a template resolves only against what the world already holds.
+  The open-pick offer sidesteps this for a CHOICE; a named spell still needs
+  the world to hold it.
+- **`liftBookSpells` splits on every "and".** A printed title containing the
+  word — "purify food and water" — is torn into two entries. Two RR rows carry
+  one. The fix is to split on commas and on the LAST "and" only when the clause
+  carries no comma; it is a behaviour change to a shipped read and was not part
+  of the 2026-08-29 rulings.

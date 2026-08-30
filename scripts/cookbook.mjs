@@ -4330,10 +4330,14 @@ export function parseEquipment(cellText, menu, aliases = {}) {
  * own list, which is where a prayer book's spells used to be torn off and land
  * on the character as inventory.
  *
- * A CHOICE IS NOT A SPELL. "and one spell of character's choice" names a pick
- * the player has still to make; minted as a spell it became a document called
- * "One spell of character's choice". It stays in the note — the printed
- * sentence is preserved there whole — and the list carries only what was named.
+ * A CHOICE IS NOT A SPELL — IT IS AN OFFER. "and one spell of character's
+ * choice" names a pick the player has still to make; minted as a spell it
+ * became a document called "One spell of character's choice". But dropped
+ * entirely it was worse: the printed sentence survived only on the item's note,
+ * where nothing on the character shows it and the pick is simply never made. So
+ * the clause rides as a row that carries no name and IS the offer, which the
+ * engine turns into a marker the player answers. The printed sentence stays on
+ * the note either way.
  *
  * A DIGIT after "with" is a load, not a library: "quiver with 20 arrows".
  */
@@ -4346,9 +4350,24 @@ export function liftBookSpells(items) {
     if (!m || /\d/.test(m[2].split(/\s+/)[0] ?? "")) continue;
     it.name = m[1];
     it.note = it.note ? `${it.note}; holds ${m[2]}` : `holds ${m[2]}`;
+    let offered = 0;
     for (const s of m[2].split(/\s*(?:,|\band\b)\s*/i)) {
       const name = capFirst(s.trim());
-      if (name && !CHOICE_PHRASE.test(name)) spells.push({ uuid: "", name });
+      if (!name) continue;
+      if (!CHOICE_PHRASE.test(name)) {
+        spells.push({ uuid: "", name });
+        continue;
+      }
+      // The key is what makes the pick the SAME pick across a re-import and a
+      // re-materialize, where the row's position is not stable. Built from the
+      // book it came out of and which offer on that book it is.
+      offered += 1;
+      spells.push({
+        uuid: "",
+        name: "",
+        offer: true,
+        choice: { from: "spellList", filter: "any", count: 1, refs: [], label: "", key: `${nameKey(m[1])}:spell:${offered}` },
+      });
     }
   }
   return spells;

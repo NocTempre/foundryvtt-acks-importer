@@ -148,3 +148,16 @@ Per-book files so a binding lazy-loads only connected books; `registers.json`
 always loads (it is small: tables + def nodes). Everything is plain JSON,
 committed, shipped in the release zip, and lint-gated (`tools/lint-register.mjs`
 caps every literal at 60 chars and whitelists every key).
+
+### `aliases`
+
+A definition entry may carry `aliases`: other names the BOOKS print for the same
+thing (`Art/Craft` is also printed `Art` and `Craft`; `Fighting Style
+Specialization` is also printed `Fighting Style Spec.`). They are authored in
+the register, compiled onto the entry, and read by the name resolvers so a
+printed short form binds to the definition that owns it.
+
+The bound: an alias may only give another printed surface to an entry this
+module already ships. It never introduces a name for something the module does
+not ship, and never collides with another entry's name or alias —
+`lint-register` refuses both. Authoring rules are in [RECIPES.md](RECIPES.md).

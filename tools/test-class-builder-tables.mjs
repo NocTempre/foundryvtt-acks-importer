@@ -76,7 +76,7 @@ check("saves mapping ties categories to the four chassis", /fighter.*thief.*crus
 
 check("post-8 increments: 100k / 120k / 150k", raw.xpRules?.crusaderThief === 100000 && raw.xpRules?.fighter === 120000 && raw.xpRules?.mage === 150000);
 check("smoothing: 7th level to the nearest 5000", raw.smoothing?.level === 7 && raw.smoothing?.nearest === 5000);
-check("post-9 hit points per level read off the saves section", Number.isInteger(raw.savesRule?.hpCrusaderMage) && Number.isInteger(raw.savesRule?.hpFighterThief) && raw.savesRule.hpFighterThief > raw.savesRule.hpCrusaderMage);
+check("post-9 hit points per level read as their own table", Number.isInteger(raw.hpAfterNine?.crusaderMage) && Number.isInteger(raw.hpAfterNine?.fighterThief) && raw.hpAfterNine.fighterThief > raw.hpAfterNine.crusaderMage);
 
 check("racial caps: 4→13 … 7→10", raw.racialCaps?.["4"]?.maxLevel === 13 && raw.racialCaps?.["7"]?.maxLevel === 10 && raw.racialCaps?.["6"]?.maxLevel === 11 && raw.racialCaps?.["5"]?.maxLevel === 12);
 

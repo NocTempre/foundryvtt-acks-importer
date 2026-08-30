@@ -191,8 +191,17 @@ check("the spells come out of the book's name", spells.map((s) => s.name).join("
 check("and the book is left named as a book", lifted[0].name === "Ancient prayer book");
 check("with the printed sentence kept on its note", /holds counterspell, predict weather, and cure light injury/.test(lifted[0].note));
 const choice = [{ name: "Enameled spellbook with discern magic and one spell of character’s choice", note: "" }];
-check("a pick is never minted as a spell", liftBookSpells(choice).map((s) => s.name).join("|") === "Discern magic");
+const picked = liftBookSpells(choice);
+check("a pick is never minted as a spell", picked.filter((s) => !s.offer).map((s) => s.name).join("|") === "Discern magic");
+// Dropping the clause entirely was the older behaviour and was worse: the
+// player was owed a spell and nothing on the character ever said so.
+check("the pick rides as an OFFER instead of vanishing", picked.filter((s) => s.offer).length === 1);
+const offer = picked.find((s) => s.offer);
+check("the offer names no spell and points at the class's list", offer.name === "" && offer.uuid === "" && offer.choice.from === "spellList" && offer.choice.count === 1);
+check("the offer carries a stable key, so a re-import mints one marker", typeof offer.choice.key === "string" && offer.choice.key.length > 0);
+check("the same book read twice yields the same key", liftBookSpells([{ ...choice[0], name: "Enameled spellbook with discern magic and one spell of character’s choice", note: "" }]).find((s) => s.offer).choice.key === offer.choice.key);
 check("but the sentence offering it survives", /one spell of character’s choice/.test(choice[0].note));
+check("a book with no pick offers nothing", liftBookSpells([{ name: "Plain spellbook with sleep", note: "" }]).some((s) => s.offer) === false);
 check("a counted load is not a library", liftBookSpells([{ name: "quiver with 20 arrows", note: "" }]).length === 0);
 
 /* --- What the page says this one is worth ---------------------------------- */

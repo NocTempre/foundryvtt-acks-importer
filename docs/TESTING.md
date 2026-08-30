@@ -817,3 +817,51 @@ exactly that.
 
 **Teardown:** none. Importing tables registers world ruledata; re-running is
 idempotent and no documents are created.
+
+## The hit-point floor and the post-9th rates import
+
+**Fixtures.** None beyond a connected Revised Rulebook and Judges Journal.
+
+**Steps.**
+1. Run Import Tables with both books connected.
+2. In the console, read the registered `hitPoints` ruledata document and the
+   `acks.classBuilder` budget.
+
+**Observable.** `hitPoints.tables.firstLevel.dieMinimum` is a whole number, and
+`budget.hpAfterNine` carries both chassis rates. Both come from the seat's own
+books; neither is in the module.
+
+**Note for the tester.** The rules-table documents are deleted by the *Remove
+ALL Imports* sweep — do not run that between step 1 and step 2.
+
+**Teardown.** None; the documents are the deliverable.
+
+## Printed short forms resolve (Art/Craft, Fighting Style Spec.)
+
+**Fixtures.** Classes imported with their templates.
+
+**Steps.**
+1. Run *Update Classes* (see the drive mechanic below).
+2. Across the imported classes, count which resolve `def.prof.artCraft`,
+   which resolve `def.prof.fightingStyleSpecialization`, and which still bind
+   `def.skill.climbing`.
+
+**Observable.** No class binds `def.skill.climbing` — the printed name means the
+PROFICIENCY on both the class-list path and the template-cell path. Explorer,
+Assassin and Venturer carry `def.prof.climbing`. Four of the dwarven classes
+resolve `def.prof.artCraft` through its aliases, and thirteen classes resolve
+`def.prof.fightingStyleSpecialization` through its abbreviation.
+
+**Not this fix.** Many entries remain on `unresolvedProfs` — strings like
+"proficiencyfromthegeneralproficiencylist.Theyselectan…". Those are the
+spread's prose paragraph running into the list cell during extraction, which is
+a separate problem; being visible there is the correct behaviour, not a
+regression. Do not read the count going down as this recipe's success
+condition — read the three refs above.
+
+**The non-obvious drive mechanic.** A class already in the world does NOT change
+when you re-run Import Classes — that path skips a class the world holds. Use
+*Update Classes*, or delete the class and re-import it. Derives run on CREATE
+only; this is the fact a tester otherwise reports as "the fix did not land".
+
+**Teardown.** None.
