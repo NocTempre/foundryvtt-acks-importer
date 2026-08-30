@@ -2857,7 +2857,8 @@
       },
       "profList": {
         "label": "Priestess Proficiency List:",
-        "page": 68
+        "page": 68,
+        "y1": 605
       },
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"
@@ -4028,7 +4029,8 @@
       },
       "profList": {
         "label": "Dwarven Craftpriest Proficiency List:",
-        "page": 84
+        "page": 84,
+        "x1": 300
       },
       "cleaves": {
         "pattern": "cleave[\\s\\S]{0,200}?once\\s*per\\s*round\\s*per\\s*(class\\s*level|two\\s*class\\s*levels)"

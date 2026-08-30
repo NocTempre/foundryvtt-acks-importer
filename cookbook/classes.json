@@ -861,7 +861,7 @@
           "op": "value",
           "page": 66,
           "box": {
-            "x0": 314,
+            "x0": 318,
             "x1": 612,
             "y0": 477,
             "y1": 792
@@ -1771,7 +1771,7 @@
           "op": "value",
           "page": 72,
           "box": {
-            "x0": 314,
+            "x0": 318,
             "x1": 612,
             "y0": 417,
             "y1": 520
@@ -2626,7 +2626,7 @@
           "op": "value",
           "page": 78,
           "box": {
-            "x0": 314,
+            "x0": 318,
             "x1": 612,
             "y0": 573,
             "y1": 792
@@ -3501,7 +3501,7 @@
           "op": "value",
           "page": 84,
           "box": {
-            "x0": 314,
+            "x0": 318,
             "x1": 612,
             "y0": 537,
             "y1": 792
@@ -4464,7 +4464,7 @@
           "op": "value",
           "page": 92,
           "box": {
-            "x0": 44,
+            "x0": 48,
             "x1": 314,
             "y0": 465,
             "y1": 792
@@ -5277,7 +5277,7 @@
           "op": "value",
           "page": 30,
           "box": {
-            "x0": 294,
+            "x0": 295.5,
             "x1": 612,
             "y0": 563,
             "y1": 644
@@ -5724,7 +5724,7 @@
           "op": "value",
           "page": 35,
           "box": {
-            "x0": 64,
+            "x0": 322.5,
             "x1": 612,
             "y0": 233,
             "y1": 304
@@ -6167,7 +6167,7 @@
           "op": "value",
           "page": 37,
           "box": {
-            "x0": 184,
+            "x0": 322.5,
             "x1": 612,
             "y0": 183,
             "y1": 294
@@ -6571,7 +6571,7 @@
           "op": "value",
           "page": 40,
           "box": {
-            "x0": 294,
+            "x0": 295.5,
             "x1": 612,
             "y0": 653,
             "y1": 792
@@ -6998,7 +6998,8 @@
           },
           "pattern": "raw",
           "dropText": [
-            "Venturer Proficiency List:"
+            "Venturer Proficiency List:",
+            "cLASSES"
           ]
         },
         "description": {
@@ -7419,14 +7420,15 @@
           "op": "value",
           "page": 48,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 153,
             "y1": 244
           },
           "pattern": "raw",
           "dropText": [
-            "Assassin Proficiency List:"
+            "Assassin Proficiency List:",
+            "cLASSES"
           ]
         },
         "description": {
@@ -7852,7 +7854,7 @@
           "op": "value",
           "page": 52,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 473,
             "y1": 792
@@ -8303,7 +8305,7 @@
           "op": "value",
           "page": 57,
           "box": {
-            "x0": 194,
+            "x0": 322.5,
             "x1": 612,
             "y0": 493,
             "y1": 792
@@ -8751,14 +8753,15 @@
           "op": "value",
           "page": 60,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 83,
             "y1": 164
           },
           "pattern": "raw",
           "dropText": [
-            "Bladedancer Proficiency List:"
+            "Bladedancer Proficiency List:",
+            "cLASSES"
           ]
         },
         "description": {
@@ -9110,14 +9113,15 @@
           "op": "value",
           "page": 64,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 83,
             "y1": 164
           },
           "pattern": "raw",
           "dropText": [
-            "Paladin Proficiency List:"
+            "Paladin Proficiency List:",
+            "cLASSES"
           ]
         },
         "description": {
@@ -9565,10 +9569,10 @@
           "op": "value",
           "page": 68,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 523,
-            "y1": 792
+            "y1": 605
           },
           "pattern": "raw",
           "dropText": [
@@ -10472,7 +10476,7 @@
           "op": "value",
           "page": 77,
           "box": {
-            "x0": 84,
+            "x0": 322.5,
             "x1": 612,
             "y0": 643,
             "y1": 792
@@ -11437,13 +11441,14 @@
           "page": 84,
           "box": {
             "x0": 44,
-            "x1": 234,
+            "x1": 300,
             "y0": 153,
             "y1": 214
           },
           "pattern": "raw",
           "dropText": [
-            "Dwarven Craftpriest Proficiency List:"
+            "Dwarven Craftpriest Proficiency List:",
+            "cLASSES"
           ]
         },
         "description": {
@@ -11822,7 +11827,7 @@
           "op": "value",
           "page": 87,
           "box": {
-            "x0": 224,
+            "x0": 322.5,
             "x1": 612,
             "y0": 223,
             "y1": 304
@@ -12751,7 +12756,7 @@
           "op": "value",
           "page": 93,
           "box": {
-            "x0": 154,
+            "x0": 322.5,
             "x1": 612,
             "y0": 223,
             "y1": 334
@@ -13216,7 +13221,7 @@
           "op": "value",
           "page": 96,
           "box": {
-            "x0": 44,
+            "x0": 295.5,
             "x1": 612,
             "y0": 653,
             "y1": 792

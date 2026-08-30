@@ -1,5 +1,37 @@
 # Changelog
 
+## 5.4.1
+
+**A class's printed proficiency list is read from its own column.**
+
+### Fixed
+- **The Proficiency List no longer swallows the paragraph printed beside it.** A
+  class page is dominated by its templates table, which starves the column
+  detector into reporting a single column — so the list's box spanned the full
+  page width and swept in the Proficiency Progression paragraph next to it. Read
+  in reading order those runs interleave, welding prose onto entry names
+  ("…paladins select one class" + "Berserkergang"), and every welded name
+  arrived unresolved. The box now never starts left of the label that introduces
+  the list, because a run-in label sits on its column's left edge.
+- **The chapter tab painted into the page margin is dropped.** On a right-hand
+  page it lands inside the list's own column, between two printed lines, and
+  joined the value as a word.
+- **Two lists were clipped rather than flooded** — one whose entries voted a
+  phantom column mid-list and lost every line's tail, one that ran on into the
+  prose printed under it. Both now carry explicit bounds.
+- **Two short forms By This Axe prints are recognised.** It writes "Dungeon
+  Bashing" and "Fighting Style" where the Revised Rulebook writes
+  "Dungeonbashing Expertise" and "Fighting Style Specialization"; both are now
+  authored as aliases on the entries they name.
+- **A field may drop more than one claimed run.** `joinRuns` compared its
+  drop-list against a single string, so a list of them matched nothing.
+
+**Measured, against the connected books:** across all thirty-one class lists,
+unresolved names fall from 115 to none. Verified live by deleting every imported
+class and re-importing from scratch — the path that actually re-runs the binder,
+since derives run on create only.
+
+
 ## 5.4.0
 
 **Two printed numbers the engine had been guessing at, and one printed name it could not read.**

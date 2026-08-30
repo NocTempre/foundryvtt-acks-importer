@@ -840,24 +840,30 @@ ALL Imports* sweep — do not run that between step 1 and step 2.
 
 **Fixtures.** Classes imported with their templates.
 
-**Steps.**
-1. Run *Update Classes* (see the drive mechanic below).
-2. Across the imported classes, count which resolve `def.prof.artCraft`,
-   which resolve `def.prof.fightingStyleSpecialization`, and which still bind
+**Steps — delete and re-import, not Update Classes.** Update rewrites a class
+from the same binder, so it exercises the same code; but only a CREATE runs the
+whole path a Judge's first import runs, and derives run on create only. Delete
+every imported class document, then run Import Classes.
+
+1. Count the classes in the importer's Item pack, then delete them all.
+2. Run Import Classes. It re-creates them and re-materializes their template
+   packages — allow a few minutes; the packages are the slow half.
+3. Sum `system.unresolvedProfs` across every class, and count which resolve
+   `def.prof.artCraft`, `def.prof.fightingStyleSpecialization`,
+   `def.prof.dungeonbashingExpertise`, and which still bind
    `def.skill.climbing`.
 
-**Observable.** No class binds `def.skill.climbing` — the printed name means the
-PROFICIENCY on both the class-list path and the template-cell path. Explorer,
-Assassin and Venturer carry `def.prof.climbing`. Four of the dwarven classes
-resolve `def.prof.artCraft` through its aliases, and thirteen classes resolve
-`def.prof.fightingStyleSpecialization` through its abbreviation.
+**Observable.** `unresolvedProfs` is EMPTY on every class — the total across all
+thirty-one is zero. No class binds `def.skill.climbing`; seven carry
+`def.prof.climbing`. Nineteen resolve `def.prof.fightingStyleSpecialization`,
+eleven `def.prof.dungeonbashingExpertise`, five `def.prof.artCraft` — the last
+three through authored aliases for the short forms the books also print.
 
-**Not this fix.** Many entries remain on `unresolvedProfs` — strings like
-"proficiencyfromthegeneralproficiencylist.Theyselectan…". Those are the
-spread's prose paragraph running into the list cell during extraction, which is
-a separate problem; being visible there is the correct behaviour, not a
-regression. Do not read the count going down as this recipe's success
-condition — read the three refs above.
+A non-zero total means a list's box has drifted onto the prose printed beside
+it: run `node tools/dev-proflists.mjs` offline, which names the class and shows
+the welded strings, and `node tools/dev-proflist-names.mjs <id>` for the whole
+parsed list of one. The box is bounded per class in the register
+(`class.profList` `x0`/`x1`/`y1`).
 
 **The non-obvious drive mechanic.** A class already in the world does NOT change
 when you re-run Import Classes — that path skips a class the world holds. Use

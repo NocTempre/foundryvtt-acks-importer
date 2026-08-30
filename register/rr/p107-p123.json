@@ -984,6 +984,7 @@
     "kind": "kind.proficiency",
     "book": "rr",
     "name": "Dungeonbashing Expertise",
+    "aliases": ["Dungeon Bashing"],
     "anchor": {
       "display": "Dungeonbashing Expertise"
     },
@@ -1179,7 +1180,7 @@
     "kind": "kind.proficiency",
     "book": "rr",
     "name": "Fighting Style Specialization",
-    "aliases": ["Fighting Style Spec"],
+    "aliases": ["Fighting Style Spec", "Fighting Style"],
     "anchor": {
       "display": "Fighting Style Specialization"
     },

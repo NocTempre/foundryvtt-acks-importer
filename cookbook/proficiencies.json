@@ -3516,6 +3516,9 @@
       "id": "def.prof.dungeonbashingExpertise",
       "kind": "kind.proficiency",
       "name": "Dungeonbashing Expertise",
+      "aliases": [
+        "Dungeon Bashing"
+      ],
       "book": "rr",
       "cite": "RR p.109",
       "pages": [
@@ -4190,7 +4193,8 @@
       "kind": "kind.proficiency",
       "name": "Fighting Style Specialization",
       "aliases": [
-        "Fighting Style Spec"
+        "Fighting Style Spec",
+        "Fighting Style"
       ],
       "book": "rr",
       "cite": "RR p.111",

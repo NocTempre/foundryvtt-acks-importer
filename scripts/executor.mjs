@@ -95,6 +95,12 @@ function orderRuns(items) {
  * value). Ordinals index the FULL run list. Exported for compiler parity.
  */
 export function joinRuns(runs, fixes = {}, dropText) {
+  // One string or several: a box can enclose more than one run that is IN it
+  // without being OF it — a claimed label, and the chapter tab the page paints
+  // into its own margin, which lands mid-value and welds onto the next entry.
+  const dropSet = new Set(
+    (Array.isArray(dropText) ? dropText : dropText == null ? [] : [dropText]).map((s) => String(s).trim()),
+  );
   const drop = new Set(fixes.drop ?? []);
   const joinSpace = new Set(fixes.joinSpace ?? []);
   const mergeHyphen = new Set(fixes.mergeHyphen ?? []);
@@ -106,7 +112,7 @@ export function joinRuns(runs, fixes = {}, dropText) {
   const strip = fixes.stripPrefix ?? {};
   let out = "";
   runs.forEach((r, i) => {
-    if (drop.has(i) || (dropText && r.str.trim() === dropText)) return;
+    if (drop.has(i) || dropSet.has(r.str.trim())) return;
     let s = r.str;
     if (strip[i]) s = s.slice(strip[i]);
     if (mergeHyphen.has(i)) s = s.replace(/-\s*$/, "");

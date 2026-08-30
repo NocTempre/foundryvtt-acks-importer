@@ -7,6 +7,51 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A list is bounded by the label that introduces it (2026-08-30)
+
+**Problem.** A class's printed Proficiency List arrived with prose welded into
+its names — "paladins select one class" fused to "Berserkergang". The box was
+computed from the detected COLUMN, and a class page is dominated by its
+templates table, which starves the column detector into reporting one column.
+A one-column read boxes the list across the full page width, so the Proficiency
+Progression paragraph printed beside it fell inside; in reading order the two
+columns' runs interleave, and every welded name arrived unresolved. 115 names
+across the thirty-one class lists.
+
+**Ruled.** The box never starts left of its LABEL. A run-in label sits on the
+left edge of the column it introduces, so the label's own x is a better left
+bound than a detected column start that may not exist. That alone recovered 96
+of the 115.
+
+Three residues needed measuring rather than inferring, and the register now
+carries `class.profList` `x0`/`x1`/`y1` for them: a list whose comma-aligned
+entries voted a phantom column mid-list, losing every line's tail; one that ran
+on into the prose printed under it with no gap the stop heuristic could see; and
+the chapter TAB the page paints into its own margin, which on a recto lands
+inside a right-hand list's column between two lines. The tab is dropped by TEXT,
+not geometry — it reads the same as the running head, and no proficiency is ever
+named after the chapter.
+
+**Rejected.** Repairing the column detector. Its docstring already records why:
+lowering its threshold invents columns out of table cells and page tabs, and
+supplying the edges run-in headings imply leaves the false edges in place. The
+fix here needs no such evidence — it uses a bound the field already has.
+
+**Cost.** Three per-class measurements that a re-printing can invalidate. They
+are visible: `tools/dev-proflists.mjs` reports every class's list against the
+surface index and names what fails, and the release recipe reads its total.
+
+**Also ruled: two more printed short forms are aliases.** By This Axe writes
+"Dungeon Bashing" and "Fighting Style" where the Revised Rulebook writes
+"Dungeonbashing Expertise" and "Fighting Style Specialization". Same footing as
+Art/Craft (2026-08-29): a second printed surface for an entry this module
+already ships. That the BTA form means the RR proficiency is a reading of the
+books, not a mechanical fact — it is the entry a class list can offer, and the
+alternative left eight dwarven classes silently short two proficiencies.
+
+---
+
+
 ### A printed floor and a printed rate are read, not shipped (2026-08-29)
 
 **Problem.** Two numbers the rules define reached the engine as nothing at all.

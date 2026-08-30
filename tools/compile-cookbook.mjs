@@ -2807,8 +2807,20 @@ async function compileClass(doc, entry, kindRow) {
       warn(`${entry.id}: proficiency-list label "${spec.profList.label}" not found on p.${pPage}`);
     } else {
       const c = colOf(labelIt.x, pcols);
-      const cx0 = pcols[c] - 6;
-      const cx1 = pcols[c + 1] ? pcols[c + 1] - 6 : ppd.width;
+      // THE LIST BEGINS AT ITS LABEL. A run-in label sits on the left edge of
+      // the column it introduces, so the box never starts left of it whatever
+      // the column detector reported — and on a class page the detector is
+      // starved by the templates table below and reports ONE column, which
+      // boxed the list across the full page width and swept in the Proficiency
+      // Progression paragraph printed beside it. Read in y-then-x order, that
+      // paragraph's runs interleave with the list's, welding prose onto entry
+      // names ("paladins select one class" + "Berserkergang") — which then
+      // arrive as unresolved names nothing can match.
+      //
+      // `x0`/`x1` on the register entry override both edges, for a spread whose
+      // label does not begin its column or whose list has prose to its RIGHT.
+      const cx0 = spec.profList.x0 ?? Math.max(pcols[c] - 6, labelIt.x - 6);
+      const cx1 = spec.profList.x1 ?? (pcols[c + 1] ? pcols[c + 1] - 6 : ppd.width);
       const below = ppd.items
         .filter((i) => colOf(i.x, pcols) === c && i.y >= labelIt.y && i.h < HEADING_MIN_H)
         .sort((a, b) => a.y - b.y);
@@ -2828,11 +2840,29 @@ async function compileClass(doc, entry, kindRow) {
         .filter((i) => colOf(i.x, pcols) === c && i.h >= HEADING_MIN_H && i.y > labelIt.y + 2)
         .sort((a, b) => a.y - b.y)[0];
       if (headBelow) stopY = Math.min(stopY, headBelow.y - (headBelow.h ?? 12) - 2);
+      // THE PAGE PAINTS ITS CHAPTER TAB INTO THE MARGIN, mid-column. On a
+      // recto it lands inside a right-hand list's own x-range, between two
+      // printed lines, and joins the value as a word — "cLASSES" welded onto
+      // "Intimidation". It is dropped by TEXT rather than by geometry: the tab
+      // reads the same as the running head at the top of the page, and no
+      // printed proficiency is ever called after the chapter.
+      const runningHead = ppd.items
+        .filter((i) => i.y < 60)
+        .map((i) => i.str.trim())
+        .join("")
+        .trim();
+      const tabs = [
+        ...new Set(
+          ppd.items
+            .filter((i) => i.y > labelIt.y && fold(i.str) === fold(runningHead) && fold(i.str).length > 2)
+            .map((i) => i.str.trim()),
+        ),
+      ];
       fields.profList = {
         op: "value", page: pPage,
-        box: { x0: cx0, x1: cx1, y0: labelIt.y - 3, y1: Math.min(stopY, ppd.height) },
+        box: { x0: cx0, x1: cx1, y0: labelIt.y - 3, y1: Math.min(stopY, spec.profList.y1 ?? ppd.height, ppd.height) },
         pattern: "raw",
-        dropText: [spec.profList.label],
+        dropText: [spec.profList.label, ...tabs],
       };
     }
   }
