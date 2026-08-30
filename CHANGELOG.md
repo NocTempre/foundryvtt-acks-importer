@@ -1,5 +1,24 @@
 # Changelog
 
+## 5.3.0
+
+**The Judges Journal, and the settlement's own table.**
+
+### Added
+- **The settlement encounter table.** The d100 table of written urban incidents
+  now imports as a RollTable from your own Judges Journal — thirty-three bands,
+  reaching past 100 because the after-dark shift adds thirty to the roll. The
+  Journal had a manifest but no authored register, so it had no way in at all;
+  it now has one. The table's three pages carry different column geometry, which
+  is what a multi-grid register entry is for.
+- **What looking for trouble is worth, and what the dark adds.** Two figures the
+  settlement engine asks for, read from the same chapter.
+
+### Changed
+- **The "connect a book first" warning names whichever books actually carry
+  roll tables.** It recited AX2/AX3 in prose, which went stale the moment the
+  Judges Journal grew one.
+
 ## 5.2.2
 
 ### Fixed

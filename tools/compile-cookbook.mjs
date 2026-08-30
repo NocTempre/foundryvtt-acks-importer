@@ -3717,6 +3717,11 @@ async function compileDefinition(doc, entry, kindRow, siblings = []) {
     id: entry.id,
     kind: entry.kind,
     name: entry.name,
+    // A second name the books print for this same entry. Authored, never
+    // inferred, and gated by lint-register: an alias may only give another
+    // printed surface to an entry this module already ships, never introduce
+    // a name for something it does not.
+    ...(entry.aliases?.length ? { aliases: entry.aliases } : {}),
     book: entry.book,
     cite: citeFor(entry.book, page),
     pages: entry.pages,

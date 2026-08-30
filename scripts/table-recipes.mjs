@@ -2248,6 +2248,31 @@ export const TABLE_RECIPES = {
       },
     },
   },
+  // The floor a 1st-level hit die is read at. That a floor exists, that it
+  // applies to the DIE rather than the total, and that Constitution lands
+  // after it are structure and ship in acks-extras classes/hitpoints.mjs;
+  // what it floors TO is printed, so it is read here.
+  //
+  // The sentence opens on a superscript ordinal, so the anchor starts at the
+  // floor clause instead: three lowercase words carrying no digit and no
+  // interleaved run. Nothing between the anchor and the number is a digit, so
+  // a plain int read cannot take the threshold stated in the clause before it.
+  //
+  // The locate is body text unique to this page. Do NOT locate on the anchor
+  // itself — the same clause is restated earlier in the chapter and the
+  // radiating search reaches that one first.
+  hitPoints: {
+    source: { book: "ACKS II Revised Rulebook", pages: "16" },
+    tables: {
+      firstLevel: {
+        shape: "proseValues",
+        book: "rr",
+        printedPage: 16,
+        locate: "no longer gain Hit Dice",
+        values: [{ key: "dieMinimum", find: "treat the result", take: "int" }],
+      },
+    },
+  },
   // The JJ custom-class builder. Raw per-table extractions — scripts/
   // builder-binding.mjs assembles them into the shape the acks-extras
   // builder engine consumes and re-imports the assembled doc, then
@@ -2366,6 +2391,16 @@ export const TABLE_RECIPES = {
         values: [
           { key: "precedence", find: "to appear in order on this list:", take: "phrase", span: 90 },
           { key: "mapping", find: "the core class which is associated with that category", take: "phrase", span: 130 },
+          // Hit points per level past 9th key on the SAVES CHASSIS, which is
+          // why the book prints them in this section and why they ride this
+          // recipe instead of taking a page scan of their own. Each label is
+          // one run ending in its colon, and the rate opens the next run, so
+          // the label is the whole anchor and the first int after it is the
+          // rate; the superscript ordinal interleaves after the digit and
+          // disturbs neither. The short span is defensive — an int take reads
+          // the first match and each anchor occurs once on the page.
+          { key: "hpCrusaderMage", find: "crusader or mage:", take: "int", span: 30 },
+          { key: "hpFighterThief", find: "fighter or thief:", take: "int", span: 30 },
         ],
       },
       xpRules: {

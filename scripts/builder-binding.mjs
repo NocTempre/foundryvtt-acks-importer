@@ -118,6 +118,15 @@ export function assembleBuilderTables(raw) {
   if (raw.xpRules && [raw.xpRules.crusaderThief, raw.xpRules.fighter, raw.xpRules.mage].every(isNum)) {
     budget.postEight = { crusaderThief: raw.xpRules.crusaderThief, fighter: raw.xpRules.fighter, mage: raw.xpRules.mage };
   }
+  // The post-9th HIT-POINT rates pair the chassis differently from the
+  // post-8th XP increments above — crusader+mage and fighter+thief, not
+  // crusader+thief / fighter / mage — so the two cannot share keys. The
+  // printed pairing is kept here and expanded by the consumer, as postEight
+  // is. All-or-nothing: both rates come from one sentence on one page, so a
+  // half-read is a broken read and must not present as a complete one.
+  if (raw.savesRule && [raw.savesRule.hpCrusaderMage, raw.savesRule.hpFighterThief].every(isNum)) {
+    budget.hpAfterNine = { crusaderMage: raw.savesRule.hpCrusaderMage, fighterThief: raw.savesRule.hpFighterThief };
+  }
   if (raw.racialCaps) {
     budget.racialCaps = Object.entries(raw.racialCaps)
       .filter(([, r]) => r && !r.__missing && isNum(r.maxLevel))

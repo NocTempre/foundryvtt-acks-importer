@@ -106,6 +106,29 @@ function capStrings(obj, label, keyPath = "") {
 
 /* --- register entries --- */
 const seenIds = new Set();
+/**
+ * Printed surfaces (names and aliases) folded to their comparison key.
+ *
+ * Two entries printing the SAME name is ordinary and is arbitrated at read
+ * time by category rank — a proficiency and a thief skill are both called
+ * Climbing. An ALIAS in that collision is not ordinary: an alias exists to
+ * make one printed short form resolve, so a second claimant makes it resolve
+ * to a coin toss. Only collisions touching an alias are errors.
+ */
+const surfaces = new Map(); // folded surface -> [{id, what}]
+const nameFold = (s) => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+function recordSurface(key, id, what) {
+  if (!key) return;
+  const held = surfaces.get(key);
+  if (!held) return void surfaces.set(key, [{ id, what }]);
+  for (const prior of held) {
+    if (prior.id === id) continue;
+    if (what.startsWith("alias") || prior.what.startsWith("alias")) {
+      err(`${id}: ${what} collides with ${prior.id} ${prior.what} — one printed surface, two definitions`);
+    }
+  }
+  held.push({ id, what });
+}
 const kindIds = new Set();
 const kindRoles = new Map(); // kind id -> role (composite | definition | note | table)
 
@@ -173,7 +196,22 @@ for (const dirent of fs.existsSync(REGISTER) ? fs.readdirSync(REGISTER, { withFi
           err(`${id}: anchor must have exactly one of display|runin|label|subheading`);
         }
       }
-      if (e.aliases && !Array.isArray(e.aliases)) err(`${id}: aliases must be an array`);
+      // An alias is a SECOND PRINTED SURFACE for a name this register already
+      // owns — never a new name for something the module does not ship. It
+      // therefore may not repeat its own entry's name, and may not collide
+      // with any other entry's name or alias, which would make the surface
+      // index answer one printed word with two definitions.
+      if (e.aliases !== undefined) {
+        if (!Array.isArray(e.aliases)) err(`${id}: aliases must be an array`);
+        else {
+          for (const a of e.aliases) {
+            if (typeof a !== "string" || !a.trim()) err(`${id}: every alias must be a non-empty string`);
+            else if (nameFold(a) === nameFold(e.name)) err(`${id}: alias "${a}" repeats the entry's own name`);
+            else recordSurface(nameFold(a), id, `alias "${a}"`);
+          }
+        }
+      }
+      if (e.name) recordSurface(nameFold(e.name), id, "name");
       // An icon must at least be SHAPED like a path every seat is guaranteed
       // to have: Foundry core ("icons/...") or the ACKS system's own tree
       // ("systems/acks/assets/icons/..." — the system is a hard dependency).

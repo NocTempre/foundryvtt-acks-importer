@@ -76,6 +76,7 @@ check("saves mapping ties categories to the four chassis", /fighter.*thief.*crus
 
 check("post-8 increments: 100k / 120k / 150k", raw.xpRules?.crusaderThief === 100000 && raw.xpRules?.fighter === 120000 && raw.xpRules?.mage === 150000);
 check("smoothing: 7th level to the nearest 5000", raw.smoothing?.level === 7 && raw.smoothing?.nearest === 5000);
+check("post-9 hit points per level read off the saves section", Number.isInteger(raw.savesRule?.hpCrusaderMage) && Number.isInteger(raw.savesRule?.hpFighterThief) && raw.savesRule.hpFighterThief > raw.savesRule.hpCrusaderMage);
 
 check("racial caps: 4→13 … 7→10", raw.racialCaps?.["4"]?.maxLevel === 13 && raw.racialCaps?.["7"]?.maxLevel === 10 && raw.racialCaps?.["6"]?.maxLevel === 11 && raw.racialCaps?.["5"]?.maxLevel === 12);
 
@@ -104,6 +105,9 @@ check("craftpriest build is capped at 10th", /capped[^.]*?\b10\b[^.]*?level/i.te
 const asm = assembleBuilderTables(raw);
 
 check("budget assembles points, precedence, smoothing, post-8, caps, trade-in", asm.budget.basePoints === 4 && asm.budget.savesPrecedence[0] === "arcane" && asm.budget.smoothing.level === 7 && asm.budget.postEight.mage === 150000 && asm.budget.racialCaps.some((r) => r.points === 7 && r.maxLevel === 10) && asm.budget.tradeInXp === 250);
+check("budget assembles the post-9 hit-point rates, keyed as the book pairs them", Number.isInteger(asm.budget.hpAfterNine?.crusaderMage) && Number.isInteger(asm.budget.hpAfterNine?.fighterThief));
+check("races: the dwarf's post-9 hit points survive assembly", Number.isInteger(asm.races.dwarf.hpAfter9) && asm.races.dwarf.hpAfter9 === raw.dwarfRules.hpAfter9);
+check("races: the elf prints no post-9 hit points, and assembly says so", asm.races.elf.hpAfter9 === null);
 check("hd rows assemble with clean dice", asm.hd.find((r) => r.value === 4)?.die === "d12" && asm.hd.find((r) => r.value === 1)?.mortalWounds === 2);
 const f2 = asm.fighting.find((r) => r.value === 2);
 const f1a = asm.fighting.find((r) => r.value === 1 && r.sub === "a");

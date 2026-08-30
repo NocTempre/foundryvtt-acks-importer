@@ -355,6 +355,7 @@
     "kind": "kind.proficiency",
     "book": "rr",
     "name": "Art/Craft",
+    "aliases": ["Art", "Craft"],
     "anchor": {
       "display": "Art/Craft (G)"
     },
@@ -1178,6 +1179,7 @@
     "kind": "kind.proficiency",
     "book": "rr",
     "name": "Fighting Style Specialization",
+    "aliases": ["Fighting Style Spec"],
     "anchor": {
       "display": "Fighting Style Specialization"
     },

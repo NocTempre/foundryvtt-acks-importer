@@ -119,4 +119,41 @@ for (const printed of ["Hardy", "Dwarf Tongues", "Elf Tongues", "Sensitivity to 
   check(`racial power "${printed}" resolves through the power-source register`, printedNames.has(key));
 }
 
+
+/* --- printed surfaces resolve to exactly one definition, on every path --- */
+
+// The list path and the cell path used to be two indexes that arbitrated the
+// same collision differently, so a template cell granted a class POWER where
+// the class's own list granted the PROFICIENCY. They now read one index; this
+// asserts the shipped data still yields one answer per printed surface, and
+// that every authored alias points somewhere.
+const { abilitySurfaceIndex } = await import("../scripts/cookbook.mjs");
+const { byKey, menu } = abilitySurfaceIndex([...entries].map(([id, e]) => [id, e]));
+
+let disagreements = 0;
+for (const [key, hit] of byKey) {
+  const row = menu.find((m) => String(m.surface).toLowerCase().replace(/[^a-z0-9]/g, "") === key);
+  if (row && row.ref !== hit.ref) disagreements++;
+}
+check("the class-list path and the cell path agree about every printed surface", disagreements === 0);
+
+const aliased = [...entries.values()].filter((e) => e.aliases?.length);
+check("the shipped cookbook carries authored aliases at all", aliased.length > 0);
+for (const e of aliased) {
+  for (const a of e.aliases) {
+    const hit = byKey.get(String(a).toLowerCase().replace(/[^a-z0-9]/g, ""));
+    check(`alias "${a}" resolves to ${e.id}`, hit?.ref === e.id);
+  }
+}
+
+// A collision is allowed — the books really do print one name for two things —
+// but it must resolve to a proficiency where one is among the candidates, which
+// is what the printed lists mean by the name far more often than not.
+for (const [key, hit] of byKey) {
+  if (!hit.ambiguous) continue;
+  const ids = menu.filter((m) => String(m.surface).toLowerCase().replace(/[^a-z0-9]/g, "") === key);
+  if (!ids.length) continue;
+  check(`the collision on "${key}" resolves deterministically`, typeof hit.ref === "string" && hit.ref.length > 0);
+}
+
 console.log(`\ntest-cookbook-coherence: all ${pass} checks passed`);

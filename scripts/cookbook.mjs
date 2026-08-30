@@ -3761,64 +3761,101 @@ const splitList = (s) =>
  */
 const isAwardableByName = (entry) => !NON_ABILITY_KINDS.has(entry?.kind) && entry?.kind !== "kind.language";
 
-/** fold(name) → def id across every content cookbook (profs, powers, skills). */
-function abilityRefIndex() {
-  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
-  const index = new Map();
-  for (const cb of data.content.values()) {
-    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (!isAwardableByName(e)) continue;
-      index.set(fold(e.name), defId);
-    }
+/**
+ * Every printed SURFACE a class list or template cell can name, resolved once.
+ *
+ * A definition is printed under more than one surface: its own name, plus any
+ * authored `aliases` recording a second form the books use for the same thing.
+ * Both the list path and the cell path read this ONE index, because they used
+ * to read two that disagreed — a length-sorted menu whose ties fell to cookbook
+ * load order, and a flat last-wins map — so twenty printed names, "Acrobatics"
+ * and "Climbing" among them, resolved to a class POWER on one path and the
+ * PROFICIENCY on the other. A cell then granted a power the character was not
+ * owed AND, because `ownsRef` matches on type and name, silently refused them
+ * the proficiency ever after.
+ *
+ * Collisions are arbitrated by `byCategory` — the same ranking the monster
+ * path uses, which prefers a proficiency to a same-named power. The world's
+ * holdings are deliberately NOT consulted here: `preferredId` would hand a
+ * single world-held candidate the answer outright, so a world holding the
+ * powers but not the proficiency list would bind a class's printed "Alertness"
+ * to the power. What a class's spread means is a fact about the book, not
+ * about what has been imported yet.
+ *
+ * @returns {{byKey: Map<string, {ref: string, name: string, ambiguous: boolean}>,
+ *           menu: Array<{surface: string, name: string, ref: string, alias: boolean}>}}
+ *   `byKey` is keyed by folded surface; `menu` is ordered longest SURFACE first
+ *   (never longest name — a three-letter alias must not sort as if it were the
+ *   sixteen-letter entry it belongs to).
+ */
+export function abilitySurfaceIndex(entries = null) {
+  const candidates = new Map(); // folded surface -> {ids:Set, name, alias}
+  // Defaults to every content cookbook; takes an explicit [id, entry] list so
+  // the invariant can be tested without a compiled cookbook behind it.
+  const source = entries ?? (function* () {
+    for (const cb of data.content.values()) yield* Object.entries(cb.entries ?? {});
+  })();
+  for (const [defId, e] of source) {
+    if (!isAwardableByName(e)) continue;
+    const surfaces = [e.name, ...(e.aliases ?? [])];
+    surfaces.forEach((surface, i) => {
+      const key = nameKey(surface);
+      if (!key) return;
+      const held = candidates.get(key) ?? { ids: new Set(), name: e.name, surface, alias: i > 0 };
+      held.ids.add(defId);
+      candidates.set(key, held);
+    });
   }
-  return index;
-}
-
-/** [{name, ref}] for every ability, longest name first — the tokenizer's menu. */
-function abilityNameMenu() {
+  const byKey = new Map();
   const menu = [];
-  for (const cb of data.content.values()) {
-    for (const [defId, e] of Object.entries(cb.entries ?? {})) {
-      if (!isAwardableByName(e)) continue;
-      menu.push({ name: e.name, ref: defId });
-    }
+  for (const [key, held] of candidates) {
+    const ids = [...held.ids];
+    const ref = ids.length === 1 ? ids[0] : byCategory(ids);
+    byKey.set(key, { ref, name: held.name, ambiguous: ids.length > 1 });
+    menu.push({ surface: held.surface, name: held.name, ref, alias: held.alias });
   }
-  return menu.sort((a, b) => b.name.length - a.name.length);
+  menu.sort((a, b) => b.surface.length - a.surface.length);
+  return { byKey, menu };
 }
 
 /** One printed name as a regex literal. */
 const escapeRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-/** A lenient matcher for one printed name: letters with elastic spacing. */
-const lenientRe = (name) =>
-  new RegExp("^" + String(name).trim().split(/\s+/).map(escapeRe).join("\\s*"), "i");
+/**
+ * A lenient matcher for one printed surface: letters with elastic spacing,
+ * because real extraction welds words together.
+ *
+ * An ALIAS is a truncation the books print with a period after it ("Fighting
+ * Style Spec."), so it must not be allowed to claim the head of the longer
+ * word it abbreviates — "Spec" may not match "Specialization" — and it must
+ * consume the period, or the selection that follows is never seen and the
+ * whole style is discarded as unmatched residue.
+ */
+const lenientRe = (surface, { alias = false } = {}) =>
+  new RegExp(
+    "^" + String(surface).trim().split(/\s+/).map(escapeRe).join("\\s*") + (alias ? "(?![a-z])\\.?" : ""),
+    "i",
+  );
 
 /**
  * Tokenize a template's Proficiencies cell: greedy longest-known-name match,
  * then an optional rank digit and an optional parenthesized selection.
  * "Fighting Style Spec. (weapon & shield)Siege Engineering" →
- * two entries; anything unmatched lands whole on the last entry's note.
+ * two entries. Text that matches nothing is skipped a glyph at a time and
+ * accumulated on the preceding entry, where it is dropped on the way out —
+ * the cell keeps only what resolved.
  */
-function tokenizeProfs(cellText, menu) {
+export function tokenizeProfs(cellText, menu) {
   const out = [];
   let rest = String(cellText ?? "").replace(/\s+/g, " ").trim();
   let guard = 40;
   while (rest && guard-- > 0) {
     let hit = null;
     for (const m of menu) {
-      const match = lenientRe(m.name).exec(rest);
-      // "Spec." abbreviations: also try the name cut at its first period.
+      const match = lenientRe(m.surface, { alias: m.alias }).exec(rest);
       if (match) {
         hit = { ...m, len: match[0].length };
         break;
-      }
-      const abbrev = /^([A-Za-z]+ [A-Za-z]+)/.exec(m.name)?.[1];
-      if (abbrev && m.name.length > abbrev.length) {
-        const abbrevMatch = new RegExp("^" + abbrev.replace(/\s+/g, "\\s*") + "\\s*Spec\\.?", "i").exec(rest);
-        if (abbrevMatch) {
-          hit = { ...m, len: abbrevMatch[0].length };
-          break;
-        }
       }
     }
     if (!hit) {
@@ -3829,14 +3866,23 @@ function tokenizeProfs(cellText, menu) {
       continue;
     }
     rest = rest.slice(hit.len).trim();
-    const rank = /^(\d)\b/.exec(rest);
-    if (rank) rest = rest.slice(rank[0].length).trim();
+    // The rank sits on EITHER side of the selection: the spreads print
+    // "Craft (armor-making) 3" and "Alertness 2" alike, so a reader that only
+    // looked before the parenthesis brought every selected entry in at rank 1.
+    const takeRank = () => {
+      const m = /^(\d)\b/.exec(rest);
+      if (!m) return null;
+      rest = rest.slice(m[0].length).trim();
+      return parseInt(m[1], 10);
+    };
+    let rank = takeRank();
     const sel = /^\(([^)]*)\)/.exec(rest);
     if (sel) rest = rest.slice(sel[0].length).trim();
+    if (rank == null && sel) rank = takeRank();
     out.push({
       ref: hit.ref,
       name: hit.name,
-      rank: rank ? parseInt(rank[1], 10) : 1,
+      rank: rank ?? 1,
       selection: sel ? sel[1].replace(/\s+/g, " ").trim() : "",
     });
   }
@@ -4551,18 +4597,21 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
     }
   }
 
+  // Every printed surface, resolved once and read by BOTH the class list here
+  // and the template cells below — one decision, so the two cannot disagree
+  // about what a printed name means.
+  const surfaces = abilitySurfaceIndex();
+
   // The printed class list, token-matched against every content cookbook;
   // what fails to match is KEPT, visibly, on unresolvedProfs.
-  const refIndex = abilityRefIndex();
-  const fold = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const classProfs = [];
   const unresolvedProfs = [];
   // BTA's capture can fuse the label ("ProficiencyList:"), so the strip
   // tolerates missing inter-word space.
   const listText = String(f.profList ?? "").replace(/^.*?Proficiency\s*List:\s*/i, "");
   for (const name of splitList(listText)) {
-    const ref = refIndex.get(fold(name.replace(/\([^)]*\)/g, "")));
-    if (ref) classProfs.push(ref);
+    const hit = surfaces.byKey.get(nameKey(name.replace(/\([^)]*\)/g, "")));
+    if (hit) classProfs.push(hit.ref);
     else unresolvedProfs.push(name);
   }
 
@@ -4669,7 +4718,7 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
 
   // The eight printed starting templates: proficiency cells tokenized against
   // every known ability name, equipment cells split into skinned descriptors.
-  const tplMenu = abilityNameMenu();
+  const tplMenu = surfaces.menu;
   const eqMenu = equipmentMenu(gear);
   const templates = (f.templates?.rows ?? []).map((row) => {
     const band = row.cells.band ?? {};
@@ -8003,11 +8052,11 @@ export async function resolveAbilities(tokens) {
     const token = String(raw).trim();
     if (!token) continue;
     const m = token.match(/^(.*?)\s*\(([^)]+)\)\s*\d*$/);
-    let base = (m ? m[1] : token.replace(/\s*\d+$/, "")).trim();
+    const base = (m ? m[1] : token.replace(/\s*\d+$/, "")).trim();
     const specialty = m?.[2] ?? null;
-    // The 2nd printing merges Art and Craft into one proficiency; the JJ
-    // occupation packages still print "Craft (X)" / "Art (X)".
-    if (/^(art|craft)$/i.test(base)) base = "Art/Craft";
+    // A short form the books print for a name this module already ships is
+    // authored on the entry as an alias and reaches the index through it, so
+    // nothing here needs to know which words a printing merged.
     const guess = idForName(nameIndex, base, present);
     const id = guess?.id ?? null;
     let item = id ? loadedById.get(id) : null;
