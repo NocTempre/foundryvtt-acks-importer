@@ -202,6 +202,16 @@ these was misdiagnosed once.
 
 The dedup rules, each with a case that used to break it.
 
+- **A library the sidebar still holds.** Every id in a fully imported world has
+  a pack copy, so the sidebar-era shape has to be built: create a world Item
+  stamped `flags["acks-importer"].cookbook.id` with a cookbook id, then ask
+  `importedItemFor(id)` for it — import the module in page context
+  (`await import("/modules/acks-importer/scripts/cookbook.mjs?probe=1")`) to
+  get a fresh index rather than the session's cached one.
+  *Observable:* the gate answers with the sidebar document; before 5.2.1 it
+  answered null and the next run wrote a twin into the pack. Stamp a real class
+  id on an `acks-extras.class` item and `acksExtras`' `classItems()` grows by
+  one — that is the doubled chargen list, reproduced. Delete the fixtures after.
 - **Repeat any step.** Run `cookbookImportAbilities()` twice.
   *Observable:* the second run reports everything already present and takes
   a fraction of the first — ~190ms against ~9s — and the pack's document count

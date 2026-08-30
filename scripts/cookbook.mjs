@@ -717,6 +717,31 @@ const ourPacksOfType = (type) =>
   );
 
 /**
+ * The sidebar documents this module stamped — the other half of the library in
+ * any world old enough to have imported before imports went to compendia.
+ *
+ * A write lands on a pack today, so the sidebar is not where the library grows;
+ * it is where a sidebar-era release's imports are still sitting. A read that
+ * asks the packs alone calls every one of them missing, and the whole library
+ * follows from that: the next run mints a twin into the pack, so a world holds
+ * each class, proficiency and price twice; the rebuild controls empty the pack
+ * and leave the sidebar copy behind; Update passes over it. The actor side has
+ * always read world-then-pack — `importedIdsOfType`, `importedActor` — and this
+ * is the item side saying the same thing.
+ *
+ * Ours is the cookbook flag, which is also what `cookbookRemoveImports` sweeps
+ * by: a hand-made document carries none and is never counted. NEVER the class
+ * templates' skinned copies — a skin inherits the definition's cookbook id and
+ * would answer for the document it was made from.
+ */
+const sidebarImports = (type) => {
+  const world = { Actor: game.actors, Item: game.items, JournalEntry: game.journal, RollTable: game.tables }[type];
+  return [...(world ?? [])].filter(
+    (d) => d.getFlag(MODULE_ID, "cookbook") && !d.flags?.["acks-extras"]?.templatePart,
+  );
+};
+
+/**
  * The pack collection id imports of this type and line go to, or null if it
  * cannot be opened. A null line is the ACKS library's own pack.
  *
@@ -915,15 +940,16 @@ export async function createDocs(cls, dataList, opts = {}) {
 }
 
 /**
- * Every Item this module has imported, indexed by cookbook id — the PACK only,
- * which is where every item write goes.
+ * Every Item this module has imported, indexed by cookbook id — the packs a
+ * write lands on, and the sidebar ones a sidebar-era release left behind.
  *
- * Never the sidebar, and that is load-bearing rather than an omission. The
- * class-template materializer mints a skinned COPY of a definition's item and
- * the copy inherits the base's cookbook id, so a world-reading index answers
- * "the Waterskin you imported" with one class's engraved silver one. Keeping
- * the index on the pack means the only documents in it are documents this file
- * created, one per id.
+ * The index is what every item import asks before it creates, so an import it
+ * cannot see is an import that gets made again: never index the packs alone
+ * while a world can hold both (see `sidebarImports`). The skinned template
+ * copies are the documents this index must not answer with — a skin inherits
+ * the definition's cookbook id, so a bare world read hands back one class's
+ * engraved silver waterskin as "the Waterskin you imported" — and the filter
+ * that keeps them out lives there.
  *
  * Cached because dedup is asked once per id across a whole-corpus import, and
  * loading a compendium's documents per id would be hundreds of round trips.
@@ -937,12 +963,12 @@ async function importedIndex() {
   // shelf; reading them all anyway means a line that ever does mint an item is
   // deduplicated rather than twinned.
   const collections = ourPacksOfType("Item");
-  // No pack means the packs could not be opened and those items went to the
-  // sidebar — so read it, but skip the template skins, whose inherited ids are
-  // exactly what this index must not answer with.
-  const docs = collections.length
-    ? (await Promise.all(collections.map((c) => c.getDocuments().catch(() => [])))).flat()
-    : [...game.items].filter((i) => !i.flags?.["acks-extras"]?.templatePart);
+  const docs = [
+    ...(await Promise.all(collections.map((c) => c.getDocuments().catch(() => [])))).flat(),
+    // The packs FIRST, so the shelf a write lands on is the document an id
+    // answers with when a world holds both.
+    ...sidebarImports("Item"),
+  ];
   const byId = new Map();
   for (const doc of docs) {
     const flag = doc.getFlag(MODULE_ID, "cookbook");
@@ -1046,21 +1072,18 @@ export const importedItemFor = (id) => importedItem(id);
 export const importedActorFor = (id) => importedActor(id);
 
 /**
- * Every document of a type the library holds — the pack's, loaded.
+ * Every document of a type the library holds — the packs', loaded, and the
+ * sidebar's (`sidebarImports`).
  *
  * The one way to enumerate imports. A pass that walks `game.<collection>`
  * instead finds an empty shelf and reports it as "nothing to do", which is how
- * Update once claimed a fully-imported world held no classes. The sidebar is
- * read only when the pack could not be opened, and never its template skins:
- * those are copies of imported items and would answer for the originals.
+ * Update once claimed a fully-imported world held no classes; a pass that walks
+ * the packs alone leaves a sidebar-era import unreachable by every control that
+ * repairs, rebuilds or removes one.
  */
 export async function importedDocs(type) {
-  const collections = ourPacksOfType(type);
-  if (collections.length) {
-    return (await Promise.all(collections.map((c) => c.getDocuments().catch(() => [])))).flat();
-  }
-  const world = { Actor: game.actors, Item: game.items, JournalEntry: game.journal, RollTable: game.tables }[type];
-  return [...(world ?? [])].filter((d) => !d.flags?.["acks-extras"]?.templatePart);
+  const packed = (await Promise.all(ourPacksOfType(type).map((c) => c.getDocuments().catch(() => [])))).flat();
+  return [...packed, ...sidebarImports(type)];
 }
 
 /** Delete imported documents of a type from wherever the library lives. */

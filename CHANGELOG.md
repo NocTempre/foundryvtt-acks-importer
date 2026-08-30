@@ -1,5 +1,26 @@
 # Changelog
 
+## 5.2.1
+
+### Fixed
+- **An import is found wherever a release put it.** Imports go into this
+  module's compendiums now; a world old enough to have imported before that
+  keeps its library in the sidebar. Every check for "have I imported this
+  already?" asked the compendiums alone, so those documents were invisible to
+  it and the next run made all of them again: the classes page offered every
+  class twice, one entry per generation, and a proficiency, a price or a piece
+  of gear could double the same way. An import is now recognised by the stamp
+  this module puts on it rather than by which shelf it sits on, so running an
+  import again passes over what a sidebar-era release imported instead of
+  twinning it. The controls that repair, rebuild and remove a shelf reach those
+  documents too — rebuilding the Classes shelf now clears both copies before it
+  imports one clean set.
+- **Duplicates a world already holds stay where they are.** Nothing is deleted
+  or moved on your behalf: both copies are yours, and which one a character or
+  a class template already points at cannot be known from here. To clear them,
+  delete the older set from the sidebar by hand, or — with the book connected —
+  rebuild that shelf.
+
 ## 5.2.0
 
 **The land travel tables.**

@@ -7,6 +7,38 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### The library is the packs AND the sidebar this module stamped (2026-08-29)
+
+**Problem.** A world that imported before imports moved into compendia keeps
+that library in the sidebar. Every item-side read asked the packs alone and
+took the sidebar only as a fallback for a pack that would not open, so those
+documents were invisible: the dedup gate called each one missing and the next
+run minted a twin into the pack. The field report was a chargen class list
+offering all 31 classes twice, the two generations interleaved by the page
+their citations name — the tell that they were made by releases either side of
+the move.
+
+**Ruled.** "Imported" means a cookbook flag, not a shelf. `sidebarImports`
+gives the item reads the same world-then-pack reach the actor reads
+(`importedIdsOfType`, `importedActor`) have always had, so an import is found
+wherever a release put it. Packs are read first, so an id a world holds twice
+answers with the copy on the shelf a write lands on.
+
+**Rejected: a migration that moves sidebar imports into the pack.** It rewrites
+every uuid a character, a class template or a Judge's own macro points at, to
+tidy documents that work where they are. And **rejected: deleting the twin
+automatically** — both copies are legitimately the Judge's, and which one their
+world already points at is not knowable from here. The existing controls now
+reach both: Remove Imports always swept the sidebar, and rebuilding a shelf
+sweeps it as of this ruling.
+
+**Cost.** `importedDocs` now returns only flagged documents. In a pack-less
+world it used to answer with every document of the type, homebrew included, so
+a hand-made item could claim a printed name in the price list's library check.
+That was never intended and the reads all filter for our own flag anyway.
+
+---
+
 ### A column key carries every qualification its printed header carries (2026-08-27)
 
 **Problem.** The paladin's progression column is headed *Melee Damage Bonus* and
