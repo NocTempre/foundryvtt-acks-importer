@@ -2760,6 +2760,7 @@ export async function cookbookImportJournals() {
   const openBooks = [...data.books.keys()].filter((b) => ctx.sessionDocs.has(b));
   let made = 0;
   let updated = 0;
+  let refused = 0;
   // Every page is a fresh extraction from the seat's PDF, so a book's worth of
   // districts is minutes of work — counted up front so the bar can say how far
   // through them it is rather than only that it is busy.
@@ -2807,7 +2808,19 @@ export async function cookbookImportJournals() {
         for (const [id, e] of list) {
           sort += 100;
           const node = await executeEntry(session.doc, cb, data.registers, id).catch(() => null);
-          const creatures = Object.values(node?.fields?.creatures ?? {}).filter((c) => c && (c.ref || c.text));
+          // `ok` is the heading anchor, and a page is written only when it
+          // holds. Every location entry carries one, so a box that no longer
+          // frames its room — a printing that moved the text, or a file
+          // fingerprinting as no known book and read into the wrong slot — is
+          // refused rather than written: the room's own name and citation over
+          // whatever prose now occupies those coordinates is a page nothing
+          // downstream can tell from a good one.
+          if (!node?.ok) {
+            refused++;
+            bar.step(e.name);
+            continue;
+          }
+          const creatures = Object.values(node.fields?.creatures ?? {}).filter((c) => c && (c.ref || c.text));
           // The creature line is a cross-reference, not prose: it names what
           // the room holds, and each name is the reader's route to the imported
           // creature in the compendium.
@@ -2838,9 +2851,16 @@ export async function cookbookImportJournals() {
   } finally {
     bar.finish();
   }
+  // A run that refused everything is a wrong file or a printing this build does
+  // not read, not an empty book — say so instead of asking for a connection the
+  // reader already made.
+  if (!made && !updated && refused)
+    return ui.notifications.warn(`acks-importer | location journals: ${refused} page(s) did not match the cookbook (different printing?) — none written.`);
   if (!made && !updated) return ui.notifications.warn("acks-importer | no location entries in any open book — connect AX2/AX3 first.");
-  ui.notifications.info(`acks-importer | location journals: ${made} page(s) created, ${updated} refreshed, in "${packLabel("JournalEntry")}".`);
-  return { made, updated };
+  ui.notifications.info(
+    `acks-importer | location journals: ${made} page(s) created, ${updated} refreshed${refused ? `, ${refused} skipped (page did not match the cookbook)` : ""}, in "${packLabel("JournalEntry")}".`,
+  );
+  return { made, updated, refused };
 }
 
 /**

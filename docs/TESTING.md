@@ -399,6 +399,51 @@ cannot read the book than from the one that imported it.
 9. Delete the folder and everything created, and the hand-made fixture from
    step 8.
 
+## Location journals refuse a page they cannot anchor
+
+The AX books' rooms. Every location entry carries a heading anchor, and the
+whole point of this surface is that a page is written from the room it names or
+not at all — so the check that matters is the REFUSAL, and it needs a book in
+the wrong slot to provoke.
+
+### Fixtures
+
+1. `ax2` and `ax3` connected, and a third PDF that is **not** in the registry —
+   AX1 does the job. A file the registry knows is refused at connect
+   (`identifyBook`), so only an unknown one can reach the import; that is also
+   the field case this guard exists for.
+2. Serve the PDFs to the page: copy them under Foundry's `Data/` and connect by
+   URL, which needs no file picker —
+   `api.connectBookUrl("ax2", "/<staged>/ax1.pdf", {remember: false, bridge: false})`.
+   `remember: false` keeps the seat's location records clean; `bridge: false`
+   keeps the wrong file out of the refresh cache.
+3. Confirm the JournalEntry pack is empty first — everything counted below has
+   to be yours to delete.
+
+### Steps
+
+4. With AX1 in the `ax2` slot and the real AX3 in its own, run
+   `api.cookbookImportJournals()`. It returns `{made, updated, refused}`:
+   expect `refused: 4` (every AX2 room) and `made: 17` (every AX3 one). Open the
+   pack — the AX2 journal exists with **zero pages**. A page there, under the
+   right room name and citation, is the defect.
+5. Connect the real AX2 and run again: `{made: 4, updated: 17, refused: 0}`.
+   The guard must not over-refuse, and the second pass must UPDATE the AX3 pages
+   rather than duplicate them.
+6. Put AX1 in both slots and run a third time. Every entry refuses, nothing is
+   written, and the notification says so — "did not match the cookbook
+   (different printing?) — none written", not the empty-book message asking for
+   a connection the reader already made. **The 21 good pages from step 5 are
+   still there**: a bad re-run never destroys a good import.
+7. The connect itself warns too (`page count 80 (expected 186)`). That warning
+   is the reader's first signal; the refusal is what makes ignoring it safe.
+
+### Teardown
+
+8. Delete the journals AND the folders from the pack (`Folder.deleteDocuments`
+   with `{pack}` — deleting the entries leaves the folders behind), remove the
+   staged PDFs, and reload so the refresh bridge restores the seat's real books.
+
 ## OSE import
 
 ### Fixtures

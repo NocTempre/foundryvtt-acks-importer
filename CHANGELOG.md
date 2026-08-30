@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.2.2
+
+### Fixed
+- **A location page is written from the room it names, or not at all.** Every
+  imported entry is anchored by its own heading, and a page whose anchor does
+  not hold is refused everywhere else in this module. Location journals asked
+  for the anchor and then ignored the answer: if the box no longer framed the
+  room — a printing that moved the text, or a file connected into the wrong
+  book's slot — whatever prose sat at those coordinates was written out under
+  the right room name and the right citation, and nothing afterwards could tell
+  that page from a good one. Those pages are now skipped and counted, and the
+  import says how many it passed over; a run that could write nothing says the
+  page did not match rather than asking you to connect a book you already
+  connected. Pages already in your world are left exactly as they are.
+
 ## 5.2.1
 
 ### Fixed

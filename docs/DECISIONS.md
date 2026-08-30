@@ -2560,3 +2560,38 @@ live run, not in review.
 **A full shelf collapses behind its count**, like the book groups below it. A
 reader who owns nineteen books had them listed twice in one window, and the
 controls under the first list were a scroll away.
+
+### The anchor is not advice — it decides whether a page is written (2026-08-29)
+
+**Ruled: any path that materializes a document from an executed entry consults
+`ok` first, no exceptions.** `cookbookImportJournals` was the one that did not:
+it asked for the anchor and then read `node.fields` regardless, so an entry
+whose heading no longer framed its box wrote whatever prose occupied those
+coordinates — under the room's own name and its own citation, which is a page
+nothing downstream can distinguish from a good one.
+
+The failure is not hypothetical and not confined to a moved printing. A file
+that fingerprints as no book in the registry is accepted into whatever slot it
+was picked for (`identifyBook` can only refuse a file it recognises as another
+book), so a mis-picked PDF reaches every entry in that book. That is the field
+report this came from: a proficiency whose page rendered Judges Journal prose
+under an RR citation, on a seat whose RR slot held the JJ file.
+
+The same hole existed once before and was reached by readers rather than by
+imports — `cookbookProse`, the lazy `@PdfText` reveal, took
+`res.fields.description` with `res.ok` unread. It died with the enricher in
+4.0.0, which is why this one survived alone: the invariant was being kept by
+twenty call sites and broken by one, and nothing states it in a place a new
+call site has to pass.
+
+**Rejected: refusing the wrong file at connect instead.** Fingerprinting cannot
+tell a stranger from a printing this build has not seen, and hardening it into a
+refusal would lock out every legitimate edition drift — the registry's page
+counts are a warning surface on purpose. The anchor is the check that knows what
+it is looking at, and it is per-entry, which is the granularity the answer
+actually has.
+
+**The empty container stays.** A book whose every room refuses still leaves its
+journal behind with no pages. That is honest — the shelf says nothing was
+imported — and a later good run fills it. A page of wrong prose was the defect;
+an empty journal is not.
