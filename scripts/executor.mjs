@@ -571,7 +571,12 @@ export function materializeEffects(specs, paras) {
  * a fabricated target is not.
  *
  *   { key, label:{pattern,group?}, target:{pattern} | {pattern,on,steps},
- *     rollType?, formula?, condition?, note? }
+ *     rollType?, formula?|{pattern,group?}, condition?, note? }
+ *
+ * `formula` may be a locator instead of a string, for a roll whose DICE are
+ * part of the printed rule. A `measure` needs no target and is complete
+ * without one. A `fromLadders` spec is skipped here and expanded by the binder,
+ * which can reach the class entry that publishes the ladders.
  *
  * `target.on` names a VALUE_SCALES scale ("rank", "level"): the locator's
  * capture groups become the ladder's steps in order, so "18+ / 14+ / 10+"
@@ -591,8 +596,22 @@ export function materializeRolls(specs, paras, ctx = {}) {
     }
   };
   for (const spec of specs ?? []) {
-    const { label, target, ...rest } = spec ?? {};
+    const { label, target, formula, fromLadders, ...rest } = spec ?? {};
+    // A spec that expands from a class's published ladders is not located in
+    // prose at all — the binder does it, where the other entry is reachable.
+    if (fromLadders) continue;
     const roll = { formula: "1d20", rollType: "above", ...rest };
+
+    // The DICE may be printed rather than fixed. A spec that names them
+    // outright still may (a d20 throw is a d20 throw), but a roll whose dice
+    // are part of the rule has to read them off the page like any other value.
+    if (typeof formula === "string") roll.formula = formula;
+    else if (formula?.pattern) {
+      const fm = run(formula);
+      const dice = fm && String(fm[formula.group ?? 1] ?? "").replace(/\s+/g, "").trim();
+      if (!dice) continue; // no dice located — drop the roll, never guess one
+      roll.formula = dice;
+    }
 
     const lm = run(label);
     if (label && !lm) continue; // the recipe expects a name it cannot find here
@@ -613,6 +632,14 @@ export function materializeRolls(specs, paras, ctx = {}) {
       if (!ctx.progression?.breakpoints?.length) continue;
       roll.scale = "level";
       roll.target = ctx.progression;
+      out.push(roll);
+      continue;
+    }
+
+    // A MEASURE is not rolled against anything, so it is complete with no
+    // target at all — requiring one would drop every effect roll the books put
+    // after a successful throw.
+    if (roll.rollType === "measure") {
       out.push(roll);
       continue;
     }
@@ -1423,6 +1450,19 @@ async function execInstruction(instr, ctx) {
         }
         return v;
       };
+      // A table whose columns ARE its scale carries its header band with it, so
+      // the scale is READ here rather than shipped: the compiler said where the
+      // headers sit, the seat's own book says what they are.
+      let header = null;
+      if (instr.headerBand) {
+        const hRuns = runsIn(pd, { box: { ...instr.box, y0: instr.headerBand.y0, y1: instr.headerBand.y1 } });
+        claim(hRuns, ctx.field);
+        header = {};
+        for (const col of instr.cols ?? []) {
+          const text = spanText(hRuns, col.x0, col.x1);
+          if (text) header[col.key] = text;
+        }
+      }
       const rows = [];
       if (instr.transpose) {
         // Property labels come from the label span of every y-row; each
@@ -1465,7 +1505,7 @@ async function execInstruction(instr, ctx) {
         misses.push({ field: ctx.field, error: "grid matched no rows" });
         return null;
       }
-      return { rows };
+      return header ? { rows, header } : { rows };
     }
     case "art": {
       const infos = await ctx.getArt(instr.page);

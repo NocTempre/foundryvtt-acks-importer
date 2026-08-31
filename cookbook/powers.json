@@ -281,6 +281,60 @@
         }
       }
     },
+    "def.power.extemporaneousInvocations": {
+      "id": "def.power.extemporaneousInvocations",
+      "kind": "kind.power",
+      "name": "Extemporaneous Invocations",
+      "book": "bta",
+      "cite": "BTA p.62",
+      "pages": [
+        63
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 63,
+          "box": {
+            "x0": 304,
+            "x1": 427.94900000000047,
+            "y0": 307,
+            "y1": 316
+          },
+          "text": "Extemporaneous Invocations:"
+        },
+        "description": {
+          "op": "text",
+          "page": 63,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 309,
+                "y1": 375
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.greaterGnosis": {
       "id": "def.power.greaterGnosis",
       "kind": "kind.power",
@@ -2409,6 +2463,62 @@
         }
       }
     },
+    "def.power.linguistics": {
+      "id": "def.power.linguistics",
+      "kind": "kind.power",
+      "name": "Linguistics",
+      "book": "bta",
+      "cite": "BTA p.81",
+      "pages": [
+        82
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 82,
+          "box": {
+            "x0": 322,
+            "x1": 370.98000000000025,
+            "y0": 643,
+            "y1": 652
+          },
+          "text": "Linguistics:"
+        },
+        "description": {
+          "op": "text",
+          "page": 82,
+          "paras": [
+            {
+              "box": {
+                "x0": 315,
+                "x1": 612,
+                "y0": 645,
+                "y1": 723
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  8,
+                  9
+                ],
+                "drop": [
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "def.power.jurisprudence": {
       "id": "def.power.jurisprudence",
       "kind": "kind.power",
@@ -2719,6 +2829,65 @@
                   0,
                   1,
                   2
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "def.power.conventionalBrewing": {
+      "id": "def.power.conventionalBrewing",
+      "kind": "kind.power",
+      "name": "Conventional Brewing",
+      "book": "bta",
+      "cite": "BTA p.84",
+      "pages": [
+        85
+      ],
+      "meta": {
+        "category": "classPower"
+      },
+      "fields": {
+        "name": {
+          "op": "expect",
+          "page": 85,
+          "box": {
+            "x0": 304,
+            "x1": 401.7600000000004,
+            "y0": 631,
+            "y1": 640
+          },
+          "text": "Conventional Brewing:"
+        },
+        "description": {
+          "op": "text",
+          "page": 85,
+          "paras": [
+            {
+              "box": {
+                "x0": 305,
+                "x1": 612,
+                "y0": 633,
+                "y1": 735
+              },
+              "fixes": {
+                "joinSpace": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  5,
+                  6,
+                  7,
+                  10,
+                  11,
+                  12,
+                  13,
+                  14
+                ],
+                "drop": [
+                  0
                 ]
               }
             }
@@ -23230,6 +23399,27 @@
                   69,
                   70
                 ]
+              }
+            }
+          ]
+        },
+        "rolls": {
+          "op": "rolls",
+          "specs": [
+            {
+              "key": "t",
+              "fromLadders": {
+                "as": "crusader",
+                "grid": "rebuking",
+                "prefix": "rebuke"
+              }
+            },
+            {
+              "key": "effect",
+              "rollType": "measure",
+              "formula": {
+                "pattern": "immediately\\s*rolls?\\s*(\\d+\\s*d\\s*\\d+)",
+                "group": 1
               }
             }
           ]

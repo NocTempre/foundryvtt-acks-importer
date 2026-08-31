@@ -11,6 +11,12 @@
  *
  * Usage: node tools/compile-cookbook.mjs [book] [--out <dir>]
  *        (default: all books with entries, written into cookbook/)
+ *
+ * A `book` argument narrows what is EXTRACTED, not what is written: the
+ * content-type cookbooks span every book, so a book-scoped run can only be
+ * written to a scratch `--out` dir. Writing one into `cookbook/` is refused
+ * (see the content-cookbook write below) rather than quietly deleting the
+ * books it did not compile.
  * Emits: <out>/<book>.json + <out>/registers.json; report to stderr.
  */
 import fs from "node:fs";
@@ -23,6 +29,16 @@ import { BOOKS, citeFor, fingerprintWarning } from "../scripts/books.mjs";
 import { FILES, OSE_FILES } from "./reference-lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+
+/** A JSON file, or null when it is absent or unreadable (readJson throws). */
+function readJsonIfAny(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 const REGISTER = path.join(HERE, "..", "register");
 
 /**
@@ -2594,8 +2610,12 @@ async function compileClass(doc, entry, kindRow) {
     // A caster table's numbered sub-header line ("1 2 3 4 5 6") starts with a
     // digit exactly like a data row — the cell-count gate is what tells them
     // apart: a data row carries (nearly) every declared column.
+    // A discovered-column table has no authored count to compare against, so
+    // the floor is "wide enough to be a grid row": three cells. Without it the
+    // threshold collapses to one and the spanning caption above the header line
+    // ("Crusader Level") is read as the table's first data row.
     const dataShaped = (r) =>
-      rebuildCells(r, cellGap).length >= Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7));
+      rebuildCells(r, cellGap).length >= (t.colsFromHeader ? 3 : Math.max(Math.min(2, declaredCount), Math.ceil(declaredCount * 0.7)));
     // A spanning-group sub-header line is ALL small integers ("1 2 3 4 5 6",
     // twice for the Nobiran) — enough cells to pass the shape gate, so it is
     // recognized by content and stays a header line.
@@ -2603,6 +2623,22 @@ async function compileClass(doc, entry, kindRow) {
       const cells = rebuildCells(r, cellGap);
       return cells.length >= 3 && cells.every((c) => /^\d{1,2}$/.test(c.str.trim()) && parseInt(c.str, 10) <= 14);
     };
+    /**
+     * Is this row's first cell the start of a DATA row?
+     *
+     * Every level-keyed table answers "it is a number", which is why the rule
+     * was written that way. A table keyed on a NAME cannot: the Crusader
+     * Rebuking Undead grid's label column holds undead types and its columns
+     * hold the crusader's levels, so the numeric rule finds no data at all.
+     *
+     * `labelText` says the label column is a name, and then the header lines
+     * are told apart by what they ARE rather than by not being numeric: the
+     * line carrying the declared label header, a spanning line of bare
+     * integers, and anything too narrow to be a row.
+     */
+    const labelFold = fold(t.labelHeader ?? "");
+    const isDataFirst = (raw, row) =>
+      t.labelText ? /^[\p{L}]/u.test(raw) && !(labelFold && fold(joinRow(row)).startsWith(labelFold)) : looksLikeDataStart(raw);
     const walk = (rowSet, startIdx) => {
       const headerCells = [];
       const dataRows = [];
@@ -2612,12 +2648,17 @@ async function compileClass(doc, entry, kindRow) {
         // ("370,000") sits close enough to the title cell beside it that a
         // fused rebuild would hide the numeric start.
         const firstRaw = (r[0]?.str ?? "").trim();
-        if (!dataRows.length && (!(looksLikeDataStart(firstRaw) && dataShaped(r)) || allTinyInts(r))) {
+        if (!dataRows.length && (!(isDataFirst(firstRaw, r) && dataShaped(r)) || allTinyInts(r))) {
           if (++headerLines > 6) break;
           headerCells.push(...rebuildCells(r, cellGap));
           continue;
         }
-        if (!looksLikeDataStart(firstRaw) || !dataShaped(r)) break;
+        // A lone footnote marker sitting on its own baseline between two rows
+        // is not the end of the table. It carries no cells, so it can never be
+        // mistaken for data; skipping it keeps the row it marks (the Rebuking
+        // grid's last row is the one that is asterisked).
+        if (dataRows.length && rebuildCells(r, cellGap).length <= 1 && /^[*†‡]$/.test(firstRaw)) continue;
+        if (!isDataFirst(firstRaw, r) || !dataShaped(r)) break;
         if (dataRows.length && r[0].y - dataRows[dataRows.length - 1][0].y > 20) break;
         dataRows.push(r);
       }
@@ -2627,7 +2668,7 @@ async function compileClass(doc, entry, kindRow) {
     // A narrow table beside a prose column collects the prose into its rows,
     // so the walk breaks on the first interleaved line. The declared headers
     // say how wide the table really is — re-clip to their extent and re-walk.
-    {
+    if (!t.colsFromHeader) {
       const matchedXs = (t.cols ?? [])
         .map(
           (c) =>
@@ -2652,13 +2693,56 @@ async function compileClass(doc, entry, kindRow) {
       warn(`${entry.id}: table "${t.title}" resolved only ${dataRows.length} data row(s)`);
       continue;
     }
+    /* A table whose columns ARE the scale it is read at — the rebuking grid,
+     * whose columns are the crusader's levels. Authoring those headers would
+     * transcribe how many levels the table prints and where it stops, which is
+     * a value off the page like any other. They are DISCOVERED instead: the
+     * header line to the right of the label column votes one column each, keyed
+     * by position, and the runtime reads what each one SAYS out of the seat's
+     * own book (see `headerBand` below). What ships is geometry — the same
+     * thing every other span in this file is.
+     */
+    let discovered = null;
+    if (t.colsFromHeader) {
+      const labelCell =
+        headerCells.find((c) => fold(c.str) === fold(t.labelHeader)) ??
+        headerCells.find((c) => fold(c.str).startsWith(fold(t.labelHeader))) ??
+        headerCells.find((c) => fold(t.labelHeader).startsWith(fold(c.str)) && fold(c.str).length >= 3);
+      if (!labelCell) {
+        warn(`${entry.id}: table "${t.title}" — no label header to discover columns from`);
+        continue;
+      }
+      // The scale line is the header line carrying the MOST cells right of the
+      // label column. It is not the label header's own line — that header can
+      // sit a line above the scale, under a spanning caption — and it is not
+      // simply the last line either. Counting is the only rule that survives
+      // both arrangements without knowing what any of the cells say.
+      const byLine = new Map();
+      for (const c of headerCells) {
+        if (c.x <= labelCell.x + 4) continue;
+        const key = Math.round(c.y / 4);
+        (byLine.get(key) ?? byLine.set(key, []).get(key)).push(c);
+      }
+      const scaleCells = [...byLine.values()].sort((a, b) => b.length - a.length)[0] ?? [];
+      scaleCells.sort((a, b) => a.x - b.x);
+      if (scaleCells.length < 2) {
+        warn(`${entry.id}: table "${t.title}" — only ${scaleCells.length} scale column(s) discovered`);
+        continue;
+      }
+      discovered = { cells: scaleCells, labelCell, scaleY: scaleCells[0].y };
+    }
     // Authored column order is the REGISTER's; physical order comes from the
     // matched header x (the label column sits mid-table in a progression).
     // Spans are assigned per physical index, so the two must be reconciled
     // here — every header has to match, or the table cannot be ordered.
-    const declared = [{ key: "__label", header: t.labelHeader }, ...(t.cols ?? [])];
+    const declared = discovered
+      ? [
+          { key: "__label", header: t.labelHeader, hx: discovered.labelCell.x },
+          ...discovered.cells.map((c, i) => ({ key: `c${i + 1}`, header: c.str, hx: c.x })),
+        ]
+      : [{ key: "__label", header: t.labelHeader }, ...(t.cols ?? [])];
     let unmatched = false;
-    for (const w of declared) {
+    for (const w of discovered ? [] : declared) {
       // `occurrence` picks the nth exact header match in x order — the
       // Nobiran prints "1".."6" twice (arcane and divine spell groups).
       const exact = headerCells.filter((c) => fold(c.str) === fold(w.header)).sort((a, b) => a.x - b.x);
@@ -2729,6 +2813,13 @@ async function compileClass(doc, entry, kindRow) {
       label: labelSpan,
       cols: gridCols,
       gapMin: 2,
+      // Where the column HEADERS sit, for a table whose columns are the scale
+      // it is read at. The runtime reads what they say out of the seat's own
+      // book, so no printed level, and no count of them, is authored or shipped
+      // — only where on the page to look.
+      // Banded on the SCALE line, not on the label header's — the two are
+      // different lines whenever a spanning caption pushes the label up.
+      ...(discovered ? { headerBand: { y0: discovered.scaleY - 5, y1: discovered.scaleY + 4 } } : {}),
     };
     tableEdges.push({ page: t.page, x0: tableX0, y0, y1 });
   }
@@ -4338,6 +4429,33 @@ async function main() {
 
   // Content-type cookbooks: named by WHAT they extract, spanning every book
   // (powers appear in JJ and other books; monsters in MM and adventures).
+  //
+  // WHICH IS WHY A BOOK-SCOPED COMPILE MUST NOT WRITE ONE BLIND. Compiling a
+  // single book fills these with that book's entries alone, so writing them
+  // over a full compile's output silently deletes every other book's — tens of
+  // thousands of lines, with a clean exit code and a reassuring "wrote N
+  // entries" for the survivors. Nothing downstream notices until a coherence
+  // test fails somewhere unrelated.
+  //
+  // The rule is stated as a floor rather than as advice: a content cookbook is
+  // never written with FEWER entries than the file already on disk. A full
+  // compile only ever adds, and a scratch `--out` dir has nothing to lose, so
+  // this fires on exactly one thing — the destructive case.
+  // EVERY file is checked before ANY is written. Refusing part-way through the
+  // loop leaves the ones already written clobbered, which is the failure this
+  // guard exists to prevent, differing only in how much of it happened.
+  for (const [content, data] of Object.entries(contentOut)) {
+    const outPath = path.join(COOKBOOK, `${content}.json`);
+    const prior = readJsonIfAny(outPath)?.entries ?? null;
+    const lost = prior ? Object.keys(prior).filter((k) => !data.entries[k]) : [];
+    if (lost.length) {
+      throw new Error(
+        `refusing to write ${outPath}: it holds ${lost.length} entr(ies) this compile did not produce ` +
+          `(e.g. ${lost.slice(0, 3).join(", ")}). A content cookbook spans every book, so compiling one ` +
+          `book alone cannot write it. Compile every book, or send this run to a scratch dir with --out.`,
+      );
+    }
+  }
   for (const [content, data] of Object.entries(contentOut)) {
     const outPath = path.join(COOKBOOK, `${content}.json`);
     fs.writeFileSync(outPath, JSON.stringify(data, null, 2) + "\n");

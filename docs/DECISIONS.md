@@ -7,6 +7,44 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### A grid may be keyed on a name, and its cells need not be numbers (2026-08-30)
+
+**Ruled.** A table recipe may declare `labelText`, saying its label column holds
+a NAME rather than a level. The compiler's row walk judged data rows by "the
+first cell is a number", which every level-keyed table satisfies and which the
+Crusader Rebuking Undead grid (RR p.39) cannot: its label column is the undead
+type and its columns are the crusader's levels. Under the numeric rule the table
+resolved one data row and warned.
+
+With `labelText` the header lines are told apart by what they ARE — the line
+carrying the declared label header, a spanning line of bare integers, a line too
+narrow to be a row — instead of by not being numeric. The walk also skips a lone
+footnote marker sitting on its own baseline between two rows: it carries no
+cells so it can never be read as data, and breaking on it cost the table its
+last row, which is the asterisked one.
+
+**The cell rule is structural and holds no printed letter.** A cell that parses
+as a number is a target, a dash is a rung the character cannot act on, and
+anything else non-empty is a rung reached without a throw. Which letter the page
+prints there rides through as the rung's `text`, read from the seat's own book.
+Writing "R means automatic" into the recipe would have shipped the rule, and
+naming the nine undead types in it would have shipped a table of options; the
+row labels come off the reader's page and become the ladder keys.
+
+**Each row becomes one class LADDER on the crusader**, rather than roll targets
+on the Rebuke Undead power. A published table is borrowable: a craftpriest
+rebukes as a crusader of their class level, a necromancer controls as a chaotic
+crusader of half (rounded down), and the Black Lore of Zahar raises that to two
+thirds. All four read the one table at a different fraction — which is what
+acks-extras' `progression` target already expresses — where nine targets copied
+onto each power would be four transcriptions of one page.
+
+**Still open:** nothing yet EMITS the throws that point at those ladders. The
+throw count is data (nine types here, and a Judge's own book may print another),
+so the spec form has to expand per published ladder, and an ability entry is
+executed with no sight of the class that awards it. Where that linkage lives is
+undecided — ROADMAP.md.
+
 ### A list is bounded by the label that introduces it (2026-08-30)
 
 **Problem.** A class's printed Proficiency List arrived with prose welded into
@@ -2791,3 +2829,52 @@ not reached from here; acks-extras re-derives those with its packages.
 The container model this feeds — a case that actually holds its bolts, and what
 a loaded device's capacity is — is ruled in acks-extras
 `docs/equipment/DECISIONS.md`, which owns it.
+
+### A printed class power is an award, and nothing offline was asking (2026-08-30)
+
+**Problem.** A field report said the Dwarven Excavator imported without Expert
+Caving, Loadbearing and Mine Working — three of the four powers printed under
+its own Starting Class Powers heading. The class's register entry simply never
+named them, and an award that is not named imports as nothing at all: the class
+document carries no row, the sheet shows no gap, and the omission reads exactly
+like a class that has no such power. Nothing offline compared what a spread
+prints against what its register awards, so the only detector was a Judge
+reading the book beside the sheet.
+
+**It was not one class.** Auditing all thirty-one found seventeen powers missing
+across eight of the ten By This Axe classes — every one of them a starting
+power, and every RR class clean. The dwarven chapter was authored from its
+progression tables and its additional-powers section; the Starting Class Powers
+column was read for some classes and skipped for others.
+
+**Ruled: the audit is the gate, not the prose.** `tools/dev-award-scan.mjs`
+reads every class's own pages through the shipping extractor, reconstructs each
+run-in label, and reports the ones no award ref accounts for. A clean run is
+zero, so it is runnable after authoring a class rather than only when a report
+arrives. Labels that introduce structure are filtered by name; labels that name
+an OPTION are filtered by an explicit per-class list, because the alternative —
+a scan that always reports the same twenty residues — is a scan nobody reads.
+
+**Ruled: what a reader PICKS or ROLLS is not an award.** The Earthforger's four
+sigils, the Rhetor's rhetorical effects, the Sporecaster's optional powers and
+the table it rolls on when it takes one, and the Warlock's corruptions are all
+printed as run-in labels beside the powers, and none of them is granted. The
+Earthforger's sigil already had the shape this needs — a `choice` award over
+named refs — and the others are left unauthored rather than turned into grants
+that a class does not have.
+
+**Ruled: a proficiency-equivalent power is the proficiency, only where the
+spread says so.** The Excavator's Expert Caving and Mine Working, and the
+Pugilist's Combat Trickery and Endurance, each close with the sentence that
+names the proficiency they equal, so each awards that `def.prof.*` with the
+printed name in its note — the shape the Delver already shipped. The Pugilist's
+Combat Trickery was nearly authored as a power of its own on the reasoning that
+it obviously *is* the proficiency; the sentence at the end of the paragraph is
+what settled it, and reading to the end of the paragraph is the rule.
+
+**Cost.** Three powers had no definition to arrive as at all — the Earthforger's
+Extemporaneous Invocations, the Rhetor's Linguistics, the Sporecaster's
+Conventional Brewing. Two of the three ran on into their class's progression
+tables, because a run-in that reaches the foot of the last column continues
+overleaf; both carry `assists.descStopY`, which is the assist that gates both
+the column flow and the page flow.

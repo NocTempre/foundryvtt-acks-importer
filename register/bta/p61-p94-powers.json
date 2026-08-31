@@ -46,6 +46,21 @@
   }
  },
  {
+  "id": "def.power.extemporaneousInvocations",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Extemporaneous Invocations",
+  "anchor": {
+   "runin": "Extemporaneous Invocations:"
+  },
+  "pages": [
+   63
+  ],
+  "meta": {
+   "category": "classPower"
+  }
+ },
+ {
   "id": "def.power.earthforgerSigil",
   "kind": "kind.power",
   "book": "bta",
@@ -477,6 +492,24 @@
   }
  },
  {
+  "id": "def.power.linguistics",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Linguistics",
+  "anchor": {
+   "runin": "Linguistics:"
+  },
+  "pages": [
+   82
+  ],
+  "meta": {
+   "category": "classPower"
+  },
+  "assists": {
+   "descStopY": 733
+  }
+ },
+ {
   "id": "def.power.jurisprudence",
   "kind": "kind.power",
   "book": "bta",
@@ -549,6 +582,24 @@
   ],
   "meta": {
    "category": "classPower"
+  }
+ },
+ {
+  "id": "def.power.conventionalBrewing",
+  "kind": "kind.power",
+  "book": "bta",
+  "name": "Conventional Brewing",
+  "anchor": {
+   "runin": "Conventional Brewing:"
+  },
+  "pages": [
+   85
+  ],
+  "meta": {
+   "category": "classPower"
+  },
+  "assists": {
+   "descStopY": 745
   }
  },
  {

@@ -5322,6 +5322,18 @@
           "ref": "def.power.sigilOfTheOpenGate",
           "bta": 66,
           "disposition": "btaPrimary"
+        },
+        {
+          "name": "Extemporaneous Invocations",
+          "ref": "def.power.extemporaneousInvocations",
+          "bta": 63,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Trinkets of Power",
+          "ref": "def.power.trinketsOfPower",
+          "bta": 63,
+          "disposition": "btaPrimary"
         }
       ],
       "dwarvenExcavator": [
@@ -5397,6 +5409,24 @@
           "rr": 83,
           "bta": 67,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Expert Caving",
+          "ref": "def.prof.caving",
+          "bta": 67,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Loadbearing",
+          "ref": "def.power.loadbearing",
+          "bta": 67,
+          "disposition": "jjOnly"
+        },
+        {
+          "name": "Mine Working",
+          "ref": "def.prof.labor",
+          "bta": 67,
+          "disposition": "profEquivalent"
         }
       ],
       "dwarvenFurnacewife": [
@@ -5484,6 +5514,18 @@
           "rr": 83,
           "bta": 70,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Dwarven Throat-Singing",
+          "ref": "def.power.dwarvenThroatSinging",
+          "bta": 70,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Fiery Cauterization",
+          "ref": "def.power.fieryCauterization",
+          "bta": 70,
+          "disposition": "jjOnly"
         }
       ],
       "dwarvenFury": [
@@ -5534,6 +5576,12 @@
           "rr": 83,
           "bta": 73,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Fighting Fury",
+          "ref": "def.power.fightingFury",
+          "bta": 73,
+          "disposition": "jjOnly"
         }
       ],
       "dwarvenMachinist": [
@@ -5601,6 +5649,12 @@
           "name": "Sensitivity to Rock and Stone",
           "ref": "def.power.sensitivityToRockAndStone",
           "rr": 83,
+          "bta": 76,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Crafting",
+          "ref": "def.power.crafting",
           "bta": 76,
           "disposition": "rrPrimary"
         }
@@ -5677,6 +5731,24 @@
           "rr": 83,
           "bta": 79,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "bta": 79,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Combat Trickery",
+          "ref": "def.prof.combatTrickery",
+          "bta": 79,
+          "disposition": "profEquivalent"
+        },
+        {
+          "name": "Endurance",
+          "ref": "def.prof.endurance",
+          "bta": 79,
+          "disposition": "profEquivalent"
         }
       ],
       "dwarvenRhetor": [
@@ -5758,6 +5830,24 @@
           "rr": 83,
           "bta": 82,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "bta": 82,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Linguistics",
+          "ref": "def.power.linguistics",
+          "bta": 82,
+          "disposition": "btaPrimary"
+        },
+        {
+          "name": "Rhetoric",
+          "ref": "def.power.rhetoric",
+          "bta": 83,
+          "disposition": "jjOnly"
         }
       ],
       "dwarvenSporecaster": [
@@ -5872,6 +5962,18 @@
           "rr": 83,
           "bta": 85,
           "disposition": "rrPrimary"
+        },
+        {
+          "name": "Attention to Detail",
+          "ref": "def.power.attentionToDetail",
+          "bta": 85,
+          "disposition": "rrPrimary"
+        },
+        {
+          "name": "Conventional Brewing",
+          "ref": "def.power.conventionalBrewing",
+          "bta": 85,
+          "disposition": "btaPrimary"
         }
       ],
       "dwarvenTombsealer": [

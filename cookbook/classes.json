@@ -520,6 +520,14 @@
           "starting": true
         },
         {
+          "ref": "def.power.extemporaneousInvocations",
+          "starting": true
+        },
+        {
+          "ref": "def.power.trinketsOfPower",
+          "starting": true
+        },
+        {
           "ref": "def.power.earthforgerSigil",
           "starting": true,
           "note": "The rules of sigils; the specific sigil is the pick below."
@@ -1010,6 +1018,20 @@
           "starting": true
         },
         {
+          "ref": "def.prof.caving",
+          "starting": true,
+          "note": "Expert Caving — The class power is the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.loadbearing",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.labor",
+          "starting": true,
+          "note": "Mine Working — The class power is the proficiency; the spread says so."
+        },
+        {
           "ref": "def.prof.prospecting",
           "starting": true,
           "note": "The class power is the proficiency; the spread says so."
@@ -1447,6 +1469,10 @@
           "starting": true
         },
         {
+          "ref": "def.power.dwarvenThroatSinging",
+          "starting": true
+        },
+        {
           "ref": "def.power.fieryResistance",
           "starting": true
         },
@@ -1460,6 +1486,10 @@
         },
         {
           "ref": "def.power.fieryTorch",
+          "starting": true
+        },
+        {
+          "ref": "def.power.fieryCauterization",
           "starting": true
         },
         {
@@ -1887,6 +1917,10 @@
           "starting": true
         },
         {
+          "ref": "def.power.fightingFury",
+          "starting": true
+        },
+        {
           "ref": "def.prof.intimidation",
           "starting": true,
           "note": "The class power is the proficiency; the spread says so."
@@ -2291,6 +2325,10 @@
       "awards": [
         {
           "ref": "def.power.attentionToDetail",
+          "starting": true
+        },
+        {
+          "ref": "def.power.crafting",
           "starting": true
         },
         {
@@ -2738,6 +2776,20 @@
       },
       "awards": [
         {
+          "ref": "def.power.attentionToDetail",
+          "starting": true
+        },
+        {
+          "ref": "def.prof.combatTrickery",
+          "starting": true,
+          "note": "Combat Trickery — The class power is the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.prof.endurance",
+          "starting": true,
+          "note": "Endurance — The class power is the proficiency; the spread says so."
+        },
+        {
           "ref": "def.prof.intimidation",
           "starting": true,
           "note": "The class power is the proficiency; the spread says so."
@@ -3177,6 +3229,14 @@
       },
       "awards": [
         {
+          "ref": "def.power.attentionToDetail",
+          "starting": true
+        },
+        {
+          "ref": "def.power.linguistics",
+          "starting": true
+        },
+        {
           "ref": "def.prof.endurance",
           "starting": true,
           "note": "The class power is the proficiency; the spread says so."
@@ -3187,6 +3247,10 @@
         },
         {
           "ref": "def.power.loremastery",
+          "starting": true
+        },
+        {
+          "ref": "def.power.rhetoric",
           "starting": true
         },
         {
@@ -3626,6 +3690,10 @@
       },
       "awards": [
         {
+          "ref": "def.power.attentionToDetail",
+          "starting": true
+        },
+        {
           "ref": "def.power.necrosporing",
           "starting": true
         },
@@ -3633,6 +3701,10 @@
           "ref": "def.prof.dwarvenBrewing",
           "starting": true,
           "note": "The class power is the proficiency; the spread says so."
+        },
+        {
+          "ref": "def.power.conventionalBrewing",
+          "starting": true
         },
         {
           "ref": "def.prof.alchemy",
@@ -6510,6 +6582,97 @@
             }
           ],
           "gapMin": 1.2
+        },
+        "rebuking": {
+          "op": "grid",
+          "page": 39,
+          "box": {
+            "x0": 70.1,
+            "x1": 564.9999,
+            "y0": 247.5299,
+            "y1": 347.2498
+          },
+          "label": {
+            "x0": 70.1,
+            "x1": 144.85845
+          },
+          "cols": [
+            {
+              "key": "c1",
+              "x0": 144.85845,
+              "x1": 191.5615
+            },
+            {
+              "key": "c2",
+              "x0": 191.5615,
+              "x1": 220.40294999999998
+            },
+            {
+              "key": "c3",
+              "x0": 220.40294999999998,
+              "x1": 249.24439999999998
+            },
+            {
+              "key": "c4",
+              "x0": 249.24439999999998,
+              "x1": 278.0858
+            },
+            {
+              "key": "c5",
+              "x0": 278.0858,
+              "x1": 306.92725
+            },
+            {
+              "key": "c6",
+              "x0": 306.92725,
+              "x1": 335.7687
+            },
+            {
+              "key": "c7",
+              "x0": 335.7687,
+              "x1": 364.6101
+            },
+            {
+              "key": "c8",
+              "x0": 364.6101,
+              "x1": 393.4515
+            },
+            {
+              "key": "c9",
+              "x0": 393.4515,
+              "x1": 423.3347
+            },
+            {
+              "key": "c10",
+              "x0": 423.3347,
+              "x1": 451.1344
+            },
+            {
+              "key": "c11",
+              "x0": 451.1344,
+              "x1": 480.8443
+            },
+            {
+              "key": "c12",
+              "x0": 480.8443,
+              "x1": 508.8172
+            },
+            {
+              "key": "c13",
+              "x0": 508.8172,
+              "x1": 537.6586500000001
+            },
+            {
+              "key": "c14",
+              "x0": 537.6586500000001,
+              "x1": 564.9999
+            }
+          ],
+          "gapMin": 2,
+          "headerBand": {
+            "y0": 233.35000000000002,
+            "y1": 242.35000000000002
+          }
         },
         "hitDie": {
           "op": "value",

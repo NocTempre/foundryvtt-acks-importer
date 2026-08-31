@@ -17,6 +17,9 @@ raw PNG path, so those links survive the next refresh.
 | Import classes | A class doc's Templates pane: each printed template materialized as a bundle of world documents a Judge can repair | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/classes-template-spells.png) |
 | Import the class builder | A race document materialized from the Judges Journal — the ladder, costs, and every power resolved to the definition its rung names | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/classes-builder-import.png) |
 | Browse and audit | The entry picker — every entry with its book and page citation, and what an import will read from your copy | [guide](guides/browse-and-audit.md) | [v4.0.0](releases/v4.0.0/cookbook-import.png) |
+| A class's printed powers | A 1st-level Dwarven Excavator carrying every power its spread grants at the start of play — including the three the import used to leave behind | [guide](guides/import-from-the-cookbook.md) | [v5.5.0](releases/v5.5.0/classes-awards.png) |
+| Import ammunition | The four rows the weapons grid types Ammunition, filed as gear with a count and a fraction of a stone rather than among the weapons with a damage die | [guide](guides/import-from-the-cookbook.md) | [v5.5.0](releases/v5.5.0/equipment-ammunition.png) |
+| A rebuking table, read whole | The crusader's rebuking grid as ladders on the imported class — one per kind of undead, each rung carrying its target or the cell the page prints where no throw is made | [guide](guides/import-from-the-cookbook.md) | [v5.5.0](releases/v5.5.0/rebuking-import.png) |
 | Import equipment | An item priced only in prose, its cost read from its own paragraph | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/equipment-prose-price.png) |
 | Import languages | The Appendix A taxonomy read from the connected book, filed on its own shelf in the library — none shipped | [guide](guides/import-from-the-cookbook.md) | [v3.0.0](releases/v3.0.0/languages-import.png) |
 | Import another game's books | What the import chain's OSE step leaves in the library: an authored adventure's keyed rooms and the creatures it prints, filed under the book they came from inside its series' own compendium | [guide](guides/import-an-ose-adventure.md) | [v4.3.0](releases/v4.3.0/ose-import-everything.png) |
@@ -25,6 +28,11 @@ raw PNG path, so those links survive the next refresh.
 | Calibrate a book's wording | A publisher heading its hit dice differently, taught to that adventure alone | [guide](guides/import-an-ose-adventure.md) | [v2.10.0](releases/v2.10.0/ose-calibrate.png) |
 | Convert a block by hand | Paste a stat block and it fills the fields; correct anything the reader got wrong before converting | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual.png) |
 | Check a hand conversion | What each field became and on whose authority, with everything deliberately left alone listed beneath | [guide](guides/import-an-ose-adventure.md) | [v2.11.0](releases/v2.11.0/ose-manual-confirm.png) |
+
+**5.5.0 is a minor and adds two rows.** Both are what the release changed and
+neither had a row before: a class now grants every power its spread prints, and
+an Ammunition row now arrives as gear. Nothing else was re-shot, so every other
+row still points at the release its picture was taken in.
 
 **4.3.0 is a minor and re-shot three rows.** All three are the release: the
 library is no longer one Actor shelf, so *The imported library* is now the

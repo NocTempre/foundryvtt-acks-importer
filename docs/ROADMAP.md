@@ -5,6 +5,49 @@ missing from it.
 
 ---
 
+## Rebuking undead: the borrowers' own recipes
+
+**Shipped:** the crusader's table imports as ladders, and Rebuke Undead gets one
+throw per ladder plus the effect roll ([DECISIONS.md](DECISIONS.md)).
+
+What is left is the OTHER entries that read the same table at a fraction of
+their own level — a craftpriest at its class level, and the powers and
+proficiency that control undead at a stated fraction of theirs. Each is a
+`fromLadders` spec on its own entry naming the same class and table; the
+fraction and its rounding are printed beside the rule, so each recipe locates
+them rather than stating them. No code is needed for any of it — the spec form,
+the numerator/denominator on the target, and the resolver all ship.
+
+## Superseded: the throws that point at the ladders
+
+The crusader's Rebuking Undead grid now imports — nine ladders on the class
+document, each with its dash rungs, its targets and its two rungs that need no
+throw ([DECISIONS.md](DECISIONS.md)). acks-extras performs all of it, including
+reading the table at a fraction of class level. What is missing is the last
+link: nothing emits the THROWS on `def.power.rebukeUndead` that name those
+ladders, so a Judge still adds them by hand.
+
+The throw count is DATA — nine undead types here, and another book may print a
+tenth — so the spec cannot enumerate them, and enumerating the row labels in a
+recipe would ship a table of options besides. The form wanted is "one throw per
+published ladder whose key carries this prefix, read at this fraction", plus one
+`measure` throw for the 2d6 that follows a success.
+
+The obstacle is reach: `executeEntry` runs one entry with no sight of any other,
+and the ladders belong to the crusader while the throws belong to the power the
+crusader awards. Two candidate homes, undecided:
+
+- **At class-award time**, where `bindClass` holds both the ladders it just
+  built and the awards it is about to make. Natural, but it makes a power's
+  content depend on which class materialized it.
+- **A run-level channel** the ability binder can ask for a published class's
+  ladders. Cleaner conceptually, and a larger change to a pipeline whose entries
+  are deliberately independent.
+
+The borrowers (craftpriest at full level, necromancer at half rounded down,
+Black Lore of Zahar at two thirds rounded up) need no extraction at all once the
+form exists — each is the same throw at a different fraction.
+
 ## Cross-book merging beyond the current signals
 
 Families merge today on a shared member id or a shared family suffix. Entries

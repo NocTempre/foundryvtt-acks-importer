@@ -3102,10 +3102,40 @@ export function bindAbility(entry, node, id, opts = {}) {
   // the sheet and the chat card roll different numbers. acks-abilities owns
   // ability rolls and folds core's fields in on read for items it has not
   // written; nothing needs a shadow copy.
+  // Throws that come from a class's published TABLE rather than from this
+  // entry's prose \u2014 one per ladder, because how many there are is data. They
+  // lead the list: the books cross-reference the table first and roll whatever
+  // follows second, and that is the order a reader wants the buttons in.
+  const fromLadders = (entry.fields?.rolls?.specs ?? []).filter((sp) => sp?.fromLadders);
+  const borrowed = [];
+  for (const sp of fromLadders) {
+    for (const ladder of opts.ladders?.[sp.key ?? "ladders"] ?? []) {
+      borrowed.push({
+        key: `${sp.key ?? "t"}${ladder.key.replace(/[^A-Za-z0-9]/g, "")}`,
+        label: ladder.label,
+        formula: sp.formula ?? "1d20",
+        rollType: sp.rollType ?? "above",
+        scale: "level",
+        target: {
+          kind: "progression",
+          as: sp.fromLadders.as,
+          table: ladder.key,
+          // The FRACTION of level, and which way it rounds, are printed beside
+          // the rule; a spec that locates neither reads the table at the whole
+          // level, which is what an unqualified power does.
+          ...(sp.fromLadders.atLevelNum ? { atLevelNum: sp.fromLadders.atLevelNum } : {}),
+          ...(sp.fromLadders.atLevelDen ? { atLevelDen: sp.fromLadders.atLevelDen } : {}),
+          ...(sp.fromLadders.round ? { round: sp.fromLadders.round } : {}),
+        },
+      });
+    }
+  }
+
   const gate = extras.effects.filter((e) => e.type === "requires").flatMap((e) => e.refs ?? []);
   const thrown = extras.effects.filter((e) => e.type === "throw");
-  extras.rolls =
-    node?.fields?.rolls?.length
+  extras.rolls = [
+    ...borrowed,
+    ...(node?.fields?.rolls?.length
       ? node.fields.rolls
       : thrown.map((t, i) => ({
           key: t.key || `throw${i + 1}`,
@@ -3115,7 +3145,8 @@ export function bindAbility(entry, node, id, opts = {}) {
           target: t.value ?? { kind: "flat", flat: 0 },
           scale: t.value?.on || "level",
           condition: t.condition || "",
-        }));
+        }))),
+  ];
 
   return {
     name: entry.name,
@@ -3687,7 +3718,8 @@ async function abilityData(id, { folderId = null, pageCache = null } = {}) {
     if (!node.ok) node = null;
   }
   const folder = folderId ?? (await ensureItemFolder(id))?.id ?? null;
-  const doc = bindAbility(found.entry, node, id);
+  const ladders = await laddersForEntry(found.entry, { pageCache: pageCache ? pageCache(bookId) : null });
+  const doc = bindAbility(found.entry, node, id, ladders ? { ladders } : {});
   const extras = doc.flags["acks-extras"].extras;
   extras.effects = await resolveCompanions(extras.effects);
   return { ...doc, folder };
@@ -4482,6 +4514,102 @@ export function proseGainSchedule(body) {
  * `equipmentMenu`); omitted, a template's cell can name no weapon and no
  * armour, so the caller supplies it.
  */
+/**
+ * Every dash a page may print in an empty cell. A dash says the character
+ * cannot act at that rung at all; every other non-numeric cell says the rung is
+ * reached without a throw.
+ */
+const DASHES = new Set(["-", "\u2010", "\u2011", "\u2012", "\u2013", "\u2014", "\u2015", "\u2212"]);
+
+/**
+ * A grid keyed on a NAME rather than on a level, as one LADDER per row.
+ *
+ * The rebuking table is the case: its rows are kinds of undead and its columns
+ * are the class's levels. Each row becomes a ladder a throw can name, so every
+ * class that reads that table at a fraction of its own level borrows the one
+ * published copy instead of re-reading the page.
+ *
+ * The SCALE is the header row, read from the seat's own page \u2014 which levels the
+ * table prints, how many there are, and where it stops are values like any
+ * other, and none of them is known here.
+ *
+ * The CELL RULE is structural and holds no printed letter: a cell that parses
+ * as a number is a target, a dash is a rung the character cannot act on, and
+ * anything else non-empty is a rung reached without a throw. What the page
+ * prints there rides through as `text`, from the reader\u2019s own book \u2014 a rule
+ * that knew what the letters meant would be shipping the rule.
+ *
+ * THE one derivation of these keys, so an ability that names a ladder and the
+ * class that publishes it cannot disagree about what it is called.
+ */
+export function gridLadders(grid, prefix) {
+  const scale = new Map();
+  for (const [col, cell] of Object.entries(grid?.header ?? {})) {
+    const at = intFrom(String(cell ?? ""));
+    if (at != null) scale.set(col, at);
+  }
+  if (!scale.size) return [];
+  const out = [];
+  for (const row of grid?.rows ?? []) {
+    // The label may carry a footnote marker; the marker is about the row, not
+    // part of its name.
+    const name = String(row.label ?? "").replace(/[*\u2020\u2021\s]+$/, "").trim();
+    if (!name) continue;
+    const values = [];
+    for (const [col, cell] of Object.entries(row.cells ?? {})) {
+      const atLevel = scale.get(col);
+      if (atLevel == null) continue;
+      const text = String(cell ?? "").trim();
+      if (!text) continue;
+      const value = intFrom(text);
+      values.push(
+        value != null
+          ? { atLevel, value, text: "" }
+          : { atLevel, value: null, outcome: DASHES.has(text) ? "none" : "auto", text },
+      );
+    }
+    if (!values.length) continue;
+    values.sort((a, b) => a.atLevel - b.atLevel);
+    out.push({ key: `${prefix}${name.replace(/[^A-Za-z0-9]/g, "")}`, label: name, values });
+  }
+  return out;
+}
+
+/**
+ * The ladders a `fromLadders` spec expands over, read from the class entry that
+ * publishes them.
+ *
+ * Resolved from the COOKBOOK rather than from a document already in the world,
+ * so it does not matter whether the class has been imported yet \u2014 and rather
+ * than from a run-level channel, because entries are executed independently and
+ * one asking another for its fields is the smaller change.
+ *
+ * @returns {Promise<Array<{key: string, label: string}>>} empty when the class
+ *   entry, its book, or the grid is unreachable \u2014 a missing table drops the
+ *   throws rather than inventing any.
+ */
+export async function laddersForEntry(entry, { pageCache = null } = {}) {
+  const specs = (entry?.fields?.rolls?.specs ?? []).filter((sp) => sp?.fromLadders);
+  if (!specs.length) return null;
+  const out = {};
+  for (const sp of specs) out[sp.key ?? "ladders"] = await laddersFromSpec(sp.fromLadders, { pageCache });
+  return out;
+}
+
+export async function laddersFromSpec(spec, { pageCache = null } = {}) {
+  const classId = `def.class.${spec?.as ?? ""}`;
+  const found = spec?.as ? cookbookEntry(classId) : null;
+  if (!found) return [];
+  const session = ctx.sessionDocs.get(bookOf(found));
+  if (!session) return [];
+  const node = await executeEntry(session.doc, found.cb, data.registers, classId, {
+    ...(pageCache ? { pageCache } : {}),
+  }).catch(() => null);
+  if (!node?.ok) return [];
+  const grid = node.fields?.[spec.grid ?? "rebuking"];
+  return gridLadders(grid, spec.prefix ?? "").map(({ key, label }) => ({ key, label }));
+}
+
 export function bindClass(entry, node, id, { gains = null, commonName = null, gear = [] } = {}) {
   const cite = entry.cite ?? "";
   const f = node?.fields ?? {};
@@ -4550,6 +4678,19 @@ export function bindClass(entry, node, id, { gains = null, commonName = null, ge
     label: key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase()),
     values,
   }));
+
+  // A grid keyed on a NAME rather than on a level — the crusader's rebuking
+  // table, whose rows are undead types and whose columns are the crusader's
+  // levels. Each row becomes one ladder, so a throw can name it the same way it
+  // names a thief's Climb Walls, and every class that rebukes at a fraction of
+  // its level borrows the one published table instead of re-reading the page.
+  //
+  // The CELL RULE is structural and holds no printed letter: a cell that parses
+  // as a number is a target, a dash is a rung the character cannot act on, and
+  // anything else non-empty is a rung reached without a throw. Which letter the
+  // page prints there rides through as `text`, from the reader's own book — a
+  // rule that knew what the letters meant would be shipping the rule.
+  ladders.push(...gridLadders(f.rebuking, "rebuke"));
 
   // One combined attack-and-saves table, or the split pair the priestess and
   // witch print (crusader saves beside mage attacks) — read whichever exists.
@@ -7599,6 +7740,9 @@ export async function cookbookUpdateAbilities() {
   // name collision without guessing.
   const present = new Set((await importedIndex()).keys());
   const nodeCache = new Map();
+  // Resolved once per definition like the node it sits beside: expanding a
+  // fromLadders spec re-executes another entry, and a sweep touches many copies.
+  const ladderCache = new Map();
   let updated = 0;
   let adopted = 0;
   let onActors = 0;
@@ -7664,10 +7808,12 @@ export async function cookbookUpdateAbilities() {
         }
         nodeCache.set(id, node);
       }
+      if (!ladderCache.has(id)) ladderCache.set(id, await laddersForEntry(found.entry));
       const built = bindAbility(found.entry, nodeCache.get(id), id, {
         // A copy that recorded arriving under an older name keeps saying so.
         ...(extras.conversionStatus ? { conversionStatus: extras.conversionStatus } : {}),
         ...(extras.conversionFrom ? { conversionFrom: extras.conversionFrom } : {}),
+        ...(ladderCache.get(id) ? { ladders: ladderCache.get(id) } : {}),
       });
       built.flags["acks-extras"].extras.effects = await resolveCompanions(built.flags["acks-extras"].extras.effects);
       // Never overwrite writing this module did not put there. Authorship of

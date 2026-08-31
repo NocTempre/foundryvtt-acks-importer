@@ -1,5 +1,73 @@
 # Changelog
 
+## 5.5.0
+
+**Three things the printed page says that the import was not reading: what type a priced row is, which powers a class starts with, and the whole of the crusader's rebuking table.**
+
+### Added
+- **The Crusader Rebuking Undead table is read from your book, and the power
+  that uses it arrives ready to roll.** Every row of the table becomes a ladder
+  on the crusader class — one per kind of undead, carrying the levels it cannot
+  be attempted at, the levels it is thrown for, and the levels where the page
+  says no throw is made at all. Rebuke Undead then gets one throw per row,
+  pointed at those ladders, plus the effect roll that follows a success, whose
+  dice are read off the page like everything else. Which levels the table
+  prints, how many kinds of undead it lists, and what it says in the cells where
+  no throw is made all come from your own book; none of it is carried here.
+
+### Changed
+- **A row the weapons grid types Ammunition arrives as inventory, not as a
+  weapon.** The Revised Rulebook files four rows under Ammunition with an
+  em-dash where every weapon carries a die — the bolt case, the arrow quiver,
+  the silver arrow, the sling stones — and all four materialized as weapons.
+  That type has no quantity, so a bundle's count could only live in its name
+  where nothing can spend it, and its damage defaults to a die, so a case of
+  bolts arrived as something to swing and was listed among the weapons. Each is
+  now gear: a row whose printed name names a carrying device keeps the printed
+  encumbrance whole and records what it holds, and a row that is bare units
+  divides that encumbrance across the units it was printed for, so the quantity
+  multiplies it back exactly.
+- **A world holding the old weapon-typed rows is repaired on the next import.**
+  A document's type cannot be changed in place, so the four are removed and the
+  same run re-creates them — and only documents carrying this module's own
+  generated stamp are ever touched, so a Judge's hand-made case of the same
+  name is left alone.
+
+### Fixed
+- **The Dwarven Excavator arrives with Expert Caving, Loadbearing and Mine
+  Working.** Three of the four powers printed under its own Starting Class
+  Powers heading were never named in the class's award list, so each imported
+  as nothing at all — and a class missing a power looks exactly like a class
+  that has none, which is why the only way to notice was to read the book
+  beside the sheet.
+- **It was eight classes, not one.** Auditing all thirty-one found seventeen
+  starting powers missing across eight of the ten By This Axe classes: the
+  Earthforger, Excavator, Furnacewife, Fury, Machinist, Pugilist, Rhetor and
+  Sporecaster. Every one of them now arrives at 1st level. No class in the
+  Revised Rulebook was affected.
+- **Three of those powers had no definition to arrive as** — the Earthforger's
+  Extemporaneous Invocations, the Rhetor's Linguistics and the Sporecaster's
+  Conventional Brewing. Each now reads its own printed paragraph from the
+  connected book, and stops where the paragraph stops rather than running on
+  into the class's tables.
+- **A power the spread calls equal to a proficiency arrives as that
+  proficiency.** Expert Caving is Caving and Mine Working is Labor, because
+  each paragraph ends by saying so; the printed name travels with the award.
+
+**What deliberately did not change.** The picks and rolled tables printed
+alongside those powers are options a player takes, not grants, and are still
+not awarded: the Earthforger's four sigils, the Rhetor's rhetorical effects,
+the Sporecaster's optional powers and the table it rolls on when it takes one.
+
+**Measured, against the connected books:** a new offline audit compares every
+class's printed run-in labels against the awards its register carries, and all
+thirty-one classes now come back with nothing unaccounted for. Verified live by
+deleting the eight classes and re-importing them from scratch — the path that
+re-runs the binder, since derives run on create only. All seventeen awards
+landed, none was lost, and every class kept its description, levels, ladders
+and templates.
+
+
 ## 5.4.1
 
 **A class's printed proficiency list is read from its own column.**

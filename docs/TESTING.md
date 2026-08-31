@@ -931,3 +931,55 @@ when you re-run Import Classes — that path skips a class the world holds. Use
 only; this is the fact a tester otherwise reports as "the fix did not land".
 
 **Teardown.** None.
+
+## A class awards every power its spread prints
+
+**Offline first — this is the gate.** `node tools/dev-award-scan.mjs` reads
+every class's own pages through the shipping extractor and reports each printed
+run-in label that no award ref accounts for. **A clean run is zero across all
+thirty-one classes**; anything else is a power the class will import without,
+silently. Run it after authoring or editing any class, not only when a report
+arrives — a missing award is invisible on the sheet, which is why eight classes
+carried the same defect for a whole line.
+
+A label that names something the reader PICKS or ROLLS is not an award and is
+listed per class in the tool's `OPTIONS`. Adding to that list is a ruling: read
+the paragraph before deciding, and record it in DECISIONS.
+
+**Fixtures.** The affected classes, imported. Books connected: the class's own
+book plus RR and JJ, since a dwarven class awards powers all three print.
+
+**Steps — delete and re-import.** Derives run on CREATE only, so *Update
+Classes* does not re-run the binder; the awards of a class already in the world
+never change.
+
+1. Record each target class's level-1 award refs, then delete those class
+   documents from the importer's Item pack.
+2. `acksImporter.importClasses()` — it re-creates only what is missing.
+3. Diff the level-1 refs against what you recorded.
+
+**Observable.** Every expected ref is ADDED and none is LOST; `unresolvedProfs`
+stays empty; the class still carries its description, its levels, its ladders
+and its templates, which is what proves the book was read rather than a
+name-only class written. On the class sheet's **Awards** tab each new row shows
+by the definition's own name — the Excavator reads "Caving", "Loadbearing",
+"Labor" — with the printed class-power name in the award's note.
+
+**A power new to the register needs its own check.** `acksImporter` has no
+by-id ability import on the public API (`cookbookImportIds` is the ACTOR path
+and silently imports nothing for a `def.power.*`), so import it through the
+module directly:
+
+```js
+const mod = await import("/modules/acks-importer/scripts/cookbook.mjs");
+await mod.importAbility("def.power.linguistics");
+```
+
+*Observable:* the item's description is the whole printed paragraph and stops
+where the paragraph stops. A description carrying the class's progression or
+saving-throw table means the run-in reached the foot of its last column and
+continued overleaf — bound it with `assists.descStopY` in the register, a few
+points below the last printed line.
+
+**Teardown.** Delete the ability items the check created. The re-imported
+classes are restored world state and stay.

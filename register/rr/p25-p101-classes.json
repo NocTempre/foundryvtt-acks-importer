@@ -2033,7 +2033,25 @@
     ],
     "meta": {
       "category": "classPower"
-    }
+    },
+    "rolls": [
+      {
+        "key": "t",
+        "fromLadders": {
+          "as": "crusader",
+          "grid": "rebuking",
+          "prefix": "rebuke"
+        }
+      },
+      {
+        "key": "effect",
+        "rollType": "measure",
+        "formula": {
+          "pattern": "immediately\\s*rolls?\\s*(\\d+\\s*d\\s*\\d+)",
+          "group": 1
+        }
+      }
+    ]
   },
   {
     "id": "def.power.fortifiedChurch",
@@ -2480,6 +2498,13 @@
           "title": "Crusader Templates",
           "page": 41,
           "kind": "templates"
+        },
+        "rebuking": {
+          "title": "Crusader Rebuking Undead",
+          "page": 39,
+          "labelHeader": "Undead Type",
+          "labelText": true,
+          "colsFromHeader": true
         }
       },
       "profList": {

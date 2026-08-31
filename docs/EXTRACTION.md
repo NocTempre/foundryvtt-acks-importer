@@ -49,6 +49,8 @@ DECISIONS.md. Rows are never deleted; a superseded row says so.
 
 | Symptom | Cause | Fixed / gated at |
 | --- | --- | --- |
+| A compile deletes thousands of entries and exits 0 | Content cookbooks span every book, so a book-scoped compile writes them holding that book alone | `compile-cookbook.mjs` refuses to write a content cookbook with fewer entries than the file on disk — checked for ALL of them before ANY is written |
+| A name-keyed grid resolves one row, or none | The row walk judged a data row by its first cell being a number, true of every level table and false of a grid keyed on a name | `labelText` on the table recipe; `colsFromHeader` discovers the scale columns rather than authoring them |
 | Headings read doubled ("eencountersncounters") | Faux-bold paints the glyph twice at the same coordinates | `scripts/extract.mjs` double-strike dedup (drop exact str,x,y duplicates) — must behave identically in compiler and runtime |
 | A definition's prose comes from the wrong column | Sparse pages starve the column histogram (detector returns price-list edges instead of true columns) | `assists.columns` per-entry override; gate `tools/check-prose-boxes.mjs`; ruling in DECISIONS.md ("better detectors" rejected — they trade page sets) |
 | Entry text carries stray margin letters, or loses real superscript ordinals | Margin tab glyphs vs superscript ordinals — both are small runs near an edge | Position rule (tab sits OUTSIDE the trimmed margin, ordinal ON a line; extent from body-height runs) — DECISIONS.md |
