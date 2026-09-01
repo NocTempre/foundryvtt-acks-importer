@@ -1555,7 +1555,7 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
   for (const [field, instr] of Object.entries(entry.fields ?? {})) {
     if (opts.skipOps?.includes(instr.op)) continue; // caller choice (e.g. verify without art)
     // assist specs applied below, once the description they read exists
-    if (field === "effects" || field === "rolls" || field === "variation") continue;
+    if (field === "effects" || field === "rolls" || field === "variation" || field === "values") continue;
     const ctx = { doc, registers, getPage, getArt, claims, misses, field };
     let result = null;
     try {
@@ -1615,6 +1615,15 @@ export async function executeEntry(doc, bookCookbook, registers, entryId, opts =
     if (variationSpecs?.length) {
       const located = materializeEffects(variationSpecs, fields.description);
       if (located.length) fields.variation = located;
+    }
+    // The entry's OWN printed numbers, located the same way and kept apart for
+    // the same reason: what a thing IS is not what a difference MOVES, and
+    // neither may fall through to a scan. A spec that did not match is absent,
+    // so the binding sees the book's number or nothing — never a default.
+    const valueSpecs = entry.fields?.values?.specs;
+    if (valueSpecs?.length) {
+      const located = materializeEffects(valueSpecs, fields.description);
+      if (located.length) fields.values = located;
     }
     // Every roll the ability offers, each with its own target and progression.
     // A chef-authored recipe REPLACES the scan outright for this entry rather

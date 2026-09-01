@@ -14,6 +14,7 @@
       "meta": {
         "category": "proficiency"
       },
+      "icon": "systems/acks/assets/icons/lightning-spanner.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -67,6 +68,7 @@
       "meta": {
         "category": "proficiency"
       },
+      "icon": "systems/acks/assets/icons/rope-coil.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -128,6 +130,7 @@
         "category": "proficiency",
         "repeatable": true
       },
+      "icon": "systems/acks/assets/icons/claw-hammer.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -193,6 +196,7 @@
         "category": "proficiency",
         "repeatable": true
       },
+      "icon": "systems/acks/assets/icons/sack.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -250,6 +254,7 @@
       "meta": {
         "category": "proficiency"
       },
+      "icon": "systems/acks/assets/icons/small-hammer.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -310,7 +315,7 @@
       "meta": {
         "category": "weaponProficiency"
       },
-      "icon": "icons/svg/sword.svg",
+      "icon": "systems/acks/assets/icons/crossed-swords.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/sword-array.svg",
       "fields": {
         "name": {
@@ -414,7 +419,7 @@
       "meta": {
         "category": "armorProficiency"
       },
-      "icon": "icons/svg/shield.svg",
+      "icon": "systems/acks/assets/icons/scale-mail.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/armor-vest.svg",
       "fields": {
         "name": {
@@ -475,7 +480,7 @@
         ]
       },
       "audited": true,
-      "icon": "icons/svg/combat.svg",
+      "icon": "systems/acks/assets/icons/weapon-and-shield.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/duel.svg",
       "fields": {
         "name": {
@@ -602,7 +607,7 @@
       "meta": {
         "category": "proficiency"
       },
-      "icon": "icons/svg/cancel.svg",
+      "icon": "systems/acks/assets/icons/cancel.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/broken-shield.svg",
       "fields": {
         "name": {
@@ -1698,7 +1703,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/shield.svg",
+      "icon": "systems/acks/assets/icons/plate-armor.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/helmet.svg",
       "fields": {
         "name": {
@@ -1776,7 +1781,7 @@
         "general": true,
         "repeatable": true
       },
-      "icon": "icons/svg/statue.svg",
+      "icon": "systems/acks/assets/icons/paint-brush.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/anvil.svg",
       "fields": {
         "name": {
@@ -2288,7 +2293,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/skull.svg",
+      "icon": "systems/acks/assets/icons/black-lore.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/evil-book.svg",
       "fields": {
         "name": {
@@ -2352,7 +2357,7 @@
         "general": false
       },
       "audited": true,
-      "icon": "icons/svg/blind.svg",
+      "icon": "systems/acks/assets/icons/blindfighting.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/blindfold.svg",
       "fields": {
         "name": {
@@ -2531,7 +2536,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/light.svg",
+      "icon": "systems/acks/assets/icons/beams-aura.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/book-aura.svg",
       "fields": {
         "name": {
@@ -2697,7 +2702,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/ladder.svg",
+      "icon": "systems/acks/assets/icons/climb-walls.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/mountain-climbing.svg",
       "fields": {
         "name": {
@@ -2811,7 +2816,7 @@
         "general": false
       },
       "audited": true,
-      "icon": "icons/svg/combat.svg",
+      "icon": "systems/acks/assets/icons/crossed-slashes.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/enrage.svg",
       "fields": {
         "name": {
@@ -2909,7 +2914,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/net.svg",
+      "icon": "systems/acks/assets/icons/disarm.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/hunting-bolas.svg",
       "fields": {
         "name": {
@@ -3129,7 +3134,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/mage-shield.svg",
+      "icon": "systems/acks/assets/icons/shield-reflect.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/magic-shield.svg",
       "fields": {
         "name": {
@@ -3472,7 +3477,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/direction.svg",
+      "icon": "systems/acks/assets/icons/cart.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/old-wagon.svg",
       "fields": {
         "name": {
@@ -3528,7 +3533,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/door-steel.svg",
+      "icon": "systems/acks/assets/icons/dungeon-bashing.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/hammer-break.svg",
       "fields": {
         "name": {
@@ -3668,7 +3673,7 @@
           "kw:listening"
         ]
       },
-      "icon": "icons/svg/sound.svg",
+      "icon": "systems/acks/assets/icons/hear-noise.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/echo-ripples.svg",
       "fields": {
         "name": {
@@ -3950,7 +3955,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/book.svg",
+      "icon": "systems/acks/assets/icons/spellbook.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/scroll-unfurled.svg",
       "fields": {
         "name": {
@@ -4005,7 +4010,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/barrel.svg",
+      "icon": "systems/acks/assets/icons/bubbling-flask.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/cauldron.svg",
       "fields": {
         "name": {
@@ -4205,7 +4210,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/upgrade.svg",
+      "icon": "systems/acks/assets/icons/dual-wield.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/duel.svg",
       "fields": {
         "name": {
@@ -4315,7 +4320,7 @@
         "repeatable": true
       },
       "audited": true,
-      "icon": "icons/svg/village.svg",
+      "icon": "systems/acks/assets/icons/three-friends.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/conversation.svg",
       "fields": {
         "name": {
@@ -4506,7 +4511,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/combat.svg",
+      "icon": "systems/acks/assets/icons/goblin-head.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/goblin-head.svg",
       "fields": {
         "name": {
@@ -4763,7 +4768,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/invisible.svg",
+      "icon": "systems/acks/assets/icons/illusion.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/magic-shield.svg",
       "fields": {
         "name": {
@@ -4815,7 +4820,7 @@
         "general": true
       },
       "audited": true,
-      "icon": "icons/svg/terror.svg",
+      "icon": "systems/acks/assets/icons/intimidate.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/shouting.svg",
       "fields": {
         "name": {
@@ -5018,7 +5023,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/item-bag.svg",
+      "icon": "systems/acks/assets/icons/laborer.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/wood-axe.svg",
       "fields": {
         "name": {
@@ -5343,7 +5348,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/angel.svg",
+      "icon": "systems/acks/assets/icons/rally-the-troops.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/tattered-banner.svg",
       "fields": {
         "name": {
@@ -5447,7 +5452,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/padlock.svg",
+      "icon": "systems/acks/assets/icons/lockpicks.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/lock-picking.svg",
       "fields": {
         "name": {
@@ -5554,7 +5559,7 @@
         "general": false,
         "repeatable": true
       },
-      "icon": "icons/svg/clockwork.svg",
+      "icon": "systems/acks/assets/icons/orbital.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/gears.svg",
       "fields": {
         "name": {
@@ -6053,7 +6058,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/portal.svg",
+      "icon": "systems/acks/assets/icons/portal.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/pentacle.svg",
       "fields": {
         "name": {
@@ -6116,7 +6121,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/daze.svg",
+      "icon": "systems/acks/assets/icons/hypnotic-pattern.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/magic-swirl.svg",
       "fields": {
         "name": {
@@ -6174,7 +6179,7 @@
         "general": true,
         "repeatable": true
       },
-      "icon": "icons/svg/castle.svg",
+      "icon": "systems/acks/assets/icons/conqueror.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/chess-knight.svg",
       "fields": {
         "name": {
@@ -6355,7 +6360,7 @@
         "general": false
       },
       "audited": true,
-      "icon": "icons/svg/combat.svg",
+      "icon": "systems/acks/assets/icons/mounted-knight.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/horse-head.svg",
       "fields": {
         "name": {
@@ -6637,7 +6642,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/pawprint.svg",
+      "icon": "systems/acks/assets/icons/pass-without-trace.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/footprint.svg",
       "fields": {
         "name": {
@@ -6688,7 +6693,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/sound.svg",
+      "icon": "systems/acks/assets/icons/drama-masks.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/harp.svg",
       "fields": {
         "name": {
@@ -6792,7 +6797,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/poison.svg",
+      "icon": "systems/acks/assets/icons/snake-jar.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/poison-bottle.svg",
       "fields": {
         "name": {
@@ -6957,7 +6962,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/hanging-sign.svg",
+      "icon": "systems/acks/assets/icons/merchant.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/teacher.svg",
       "fields": {
         "name": {
@@ -7072,7 +7077,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/mountain.svg",
+      "icon": "systems/acks/assets/icons/mining.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/mining.svg",
       "fields": {
         "name": {
@@ -7179,7 +7184,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/chest.svg",
+      "icon": "systems/acks/assets/icons/locked-chest.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/gem-chain.svg",
       "fields": {
         "name": {
@@ -7260,7 +7265,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/tankard.svg",
+      "icon": "systems/acks/assets/icons/cornucopia.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/drinking.svg",
       "fields": {
         "name": {
@@ -7400,7 +7405,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/holy-shield.svg",
+      "icon": "systems/acks/assets/icons/righteous_turning.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/holy-symbol.svg",
       "fields": {
         "name": {
@@ -7734,7 +7739,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/angel.svg",
+      "icon": "systems/acks/assets/icons/templar-eye.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/holy-grail.svg",
       "fields": {
         "name": {
@@ -8150,7 +8155,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/eye.svg",
+      "icon": "systems/acks/assets/icons/prophecy2.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/crystal-ball.svg",
       "fields": {
         "name": {
@@ -8203,7 +8208,7 @@
         "general": true,
         "repeatable": true
       },
-      "icon": "icons/svg/city.svg",
+      "icon": "systems/acks/assets/icons/suspicious.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/hooded-figure.svg",
       "fields": {
         "name": {
@@ -8382,7 +8387,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/waterfall.svg",
+      "icon": "systems/acks/assets/icons/splashy-stream.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/swimfins.svg",
       "fields": {
         "name": {
@@ -8476,7 +8481,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/temple.svg",
+      "icon": "systems/acks/assets/icons/theology1.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/holy-oak.svg",
       "fields": {
         "name": {
@@ -8838,7 +8843,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/trap.svg",
+      "icon": "systems/acks/assets/icons/find-trap.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/wolf-trap.svg",
       "fields": {
         "name": {
@@ -8906,7 +8911,7 @@
         "category": "proficiency",
         "general": true
       },
-      "icon": "icons/svg/net.svg",
+      "icon": "systems/acks/assets/icons/wolf-trap.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/wolf-trap.svg",
       "fields": {
         "name": {
@@ -9116,7 +9121,7 @@
         "category": "proficiency",
         "general": false
       },
-      "icon": "icons/svg/mage-shield.svg",
+      "icon": "systems/acks/assets/icons/meditation.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/concentration-orb.svg",
       "fields": {
         "name": {
@@ -9288,7 +9293,7 @@
         "general": false
       },
       "audited": true,
-      "icon": "icons/svg/thrust.svg",
+      "icon": "systems/acks/assets/icons/fencer.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/knife-thrust.svg",
       "fields": {
         "name": {

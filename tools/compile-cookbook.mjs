@@ -3826,6 +3826,12 @@ async function compileDefinition(doc, entry, kindRow, siblings = []) {
   // dropped rather than shipped looking complete).
   if (entry.variation?.length) fields.variation = { op: "effects", specs: entry.variation };
 
+  // A definition's OWN printed numbers — an armour's class, a piece of gear's
+  // weight and price — by the same route again. Distinct from `variation`
+  // because the two say different things: a variation's numbers are what a
+  // difference MOVES, these are what the thing IS. Both ship locators only.
+  if (entry.values?.length) fields.values = { op: "effects", specs: entry.values };
+
   // Chef-authored ROLL recipes. The recipe ships how MANY rolls the entry has
   // and where each one's parts live; the label, the target and every ladder
   // step materialize from the reader's own book. Present means the chef read

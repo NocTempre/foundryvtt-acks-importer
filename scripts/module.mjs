@@ -29,7 +29,7 @@
  *   applyStats()     fill monster actors from the connected book
  *   forgetBooks()    drop this computer's remembered locations (not the shelf)
  */
-import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE } from "./constants.mjs";
+import { MODULE_ID, LANG_PREFIX, ACTOR_TYPE, DEFAULT_IMG } from "./constants.mjs";
 import { bookText } from "./prose.mjs";
 import { BOOKS, fingerprintWarning, identifyBook } from "./books.mjs";
 import { matchFilesToBooks } from "./book-match.mjs";
@@ -2286,7 +2286,7 @@ async function applyStatsToActor(actor, doc, pageData, recipe) {
   const spoils = extractSpoils(pageData).map((s) => ({
     name: s.name.charAt(0).toUpperCase() + s.name.slice(1),
     type: "item",
-    img: "icons/svg/item-bag.svg",
+    img: DEFAULT_IMG.ITEM,
     system: { description: "", subtype: "item", quantity: { value: 1, max: 0 }, cost: s.cost, weight: 0, weight6: s.weight6 },
     flags: { "acks-extras": { spoil: true, component: true, researchEffects: s.effects } },
   }));

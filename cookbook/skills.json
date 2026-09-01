@@ -14,6 +14,7 @@
       "meta": {
         "category": "classSkill"
       },
+      "icon": "systems/acks/assets/icons/locate.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -106,7 +107,7 @@
       "meta": {
         "category": "skill"
       },
-      "icon": "icons/svg/thrust.svg",
+      "icon": "systems/acks/assets/icons/backstab.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -196,7 +197,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/tools/hand/claws-climbing.webp",
+      "icon": "systems/acks/assets/icons/climb-walls.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/mountain-climbing.svg",
       "fields": {
         "name": {
@@ -307,7 +308,7 @@
       "meta": {
         "category": "skill"
       },
-      "icon": "icons/magic/perception/silhouette-stealth-shadow.webp",
+      "icon": "systems/acks/assets/icons/hide-in-shadows.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -430,7 +431,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/svg/sound.svg",
+      "icon": "systems/acks/assets/icons/human-ear.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -705,7 +706,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/commodities/currency/coins-plain-pouch-gold.webp",
+      "icon": "systems/acks/assets/icons/pick-pockets.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -825,7 +826,7 @@
       "meta": {
         "category": "skill"
       },
-      "icon": "icons/tools/scribal/magnifying-glass.webp",
+      "icon": "systems/acks/assets/icons/spot.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1036,7 +1037,7 @@
         ]
       },
       "audited": true,
-      "icon": "icons/svg/eye.svg",
+      "icon": "systems/acks/assets/icons/third-eye.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/all-seeing-eye.svg",
       "fields": {
         "name": {
@@ -1129,7 +1130,7 @@
       "meta": {
         "category": "skill"
       },
-      "icon": "icons/svg/cowled.svg",
+      "icon": "systems/acks/assets/icons/move-silently.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1282,7 +1283,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/svg/city.svg",
+      "icon": "systems/acks/assets/icons/suspicious.webp",
       "iconNiche": "modules/game-icons-net/blacktransparent/hooded-figure.svg",
       "fields": {
         "name": {
@@ -1374,7 +1375,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/svg/trap.svg",
+      "icon": "systems/acks/assets/icons/remove-trap.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1574,7 +1575,7 @@
         "category": "skill"
       },
       "audited": true,
-      "icon": "icons/skills/trades/academics-book-study-runes.webp",
+      "icon": "systems/acks/assets/icons/open-book.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1631,7 +1632,7 @@
       "meta": {
         "category": "skill"
       },
-      "icon": "icons/svg/house.svg",
+      "icon": "systems/acks/assets/icons/dungeon-hide.webp",
       "fields": {
         "name": {
           "op": "expect",

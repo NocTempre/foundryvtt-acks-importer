@@ -149,6 +149,25 @@ always loads (it is small: tables + def nodes). Everything is plain JSON,
 committed, shipped in the release zip, and lint-gated (`tools/lint-register.mjs`
 caps every literal at 60 chars and whitelists every key).
 
+### `values`
+
+A definition entry may carry `values`: the numbers its OWN passage states about
+itself — an armour's class, a weight, a price. Each spec names the field it
+fills and a `from.pattern` locator; the compiler ships the locator and the field
+name, never the number, and the executor runs the pattern over the prose the
+seat's own book yielded (the frozen `effects` op and its all-or-nothing
+materializer, so a spec that half-matched is dropped rather than shipped looking
+complete). A field is therefore the book's number or absent — never a default
+wearing the book's authority.
+
+A field name may name the UNIT the page states the value in where the page and
+the schema disagree on one: `weight6.stone` and `weight6.item` both fill
+`weight6`, which counts sixths of a stone. Converting is a change of unit, not
+of value; the binding does it (`locatedValues`).
+
+Distinct from `variation`, which uses the same machinery for the opposite thing:
+a variation's numbers are what a difference MOVES, these are what a thing IS.
+
 ### `aliases`
 
 A definition entry may carry `aliases`: other names the BOOKS print for the same

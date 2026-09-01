@@ -13,7 +13,7 @@
  * The cookbook is read-only data; all judgment happened in the offline
  * pipeline. This file only maps executor output onto acks system fields.
  */
-import { MODULE_ID, LANG_PREFIX, ITEM_TYPE } from "./constants.mjs";
+import { MODULE_ID, LANG_PREFIX, ITEM_TYPE, DEFAULT_IMG } from "./constants.mjs";
 import { bookText, entryText, escapeText, nodeParagraphs, stripBookText } from "./prose.mjs";
 import { BOOKS, bookLine } from "./books.mjs";
 import { OSE_PREFIX, oseSourceLabel, oseSourceLine } from "./ose-source.mjs";
@@ -507,7 +507,7 @@ export function bindMonster(node) {
       items.push({
         name: seen[base] > 1 ? `${base} ${seen[base]}` : base,
         type: "weapon",
-        img: "icons/svg/sword.svg",
+        img: DEFAULT_IMG.ATTACK,
         flags: {
           "acks-extras": {
             ...(seg.naturalWeapon ? { naturalWeapon: seg.naturalWeapon } : {}),
@@ -606,7 +606,7 @@ export function bindMonster(node) {
     items.push(withTarget({
       name: prof.text,
       type: "ability",
-      img: "icons/svg/book.svg",
+      img: DEFAULT_IMG.ABILITY,
       system: {
         description: "", proficiencytype: "general", favorite: false, pattern: "white",
         requirements: "", roll: "", rollType: "above", rollTarget: 0, blindroll: false, save: "",
@@ -617,7 +617,7 @@ export function bindMonster(node) {
     items.push({
       name: capitalize(sp.name),
       type: "item",
-      img: "icons/svg/item-bag.svg",
+      img: DEFAULT_IMG.ITEM,
       system: { description: "", subtype: "item", quantity: { value: 1, max: 0 }, cost: sp.cost, weight: 0, weight6: sp.weight6 },
       flags: { "acks-extras": { spoil: true, component: true, researchEffects: sp.effects.map((e) => e.text) } },
     });
@@ -1859,7 +1859,7 @@ const intFrom = (v) => {
 const weaponPayload = (name, damage, { naturalWeapon = null, damageType = null, attackMode = 0 } = {}) => ({
   name,
   type: "weapon",
-  img: "icons/svg/sword.svg",
+  img: DEFAULT_IMG.ATTACK,
   flags: {
     "acks-extras": {
       ...(naturalWeapon ? { naturalWeapon } : {}),
@@ -2613,7 +2613,7 @@ function bindLegacyMonster(node) {
       {
         name: capitalize(m[1].trim()),
         type: "weapon",
-        img: "icons/svg/sword.svg",
+        img: DEFAULT_IMG.ATTACK,
         system: {
           description: "", damage: dmg, bonus: 0, melee: true, missile: false, equipped: true,
           pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
@@ -2659,7 +2659,7 @@ function bindNpc(node) {
     items.push({
       name: capitalize(sl.atk.text),
       type: "weapon",
-      img: "icons/svg/sword.svg",
+      img: DEFAULT_IMG.ATTACK,
       system: {
         description: "", damage: diceOf(sl.dmg) || "", bonus: 0, melee: true, missile: false, equipped: true,
         pattern: "transparent", tags: [], counter: { value: 1, max: 1 }, cost: 0, weight: 0, weight6: 0,
@@ -2993,14 +2993,18 @@ const NICHE_ICON_MODULE = "game-icons-net";
  * THAT module under its own CC BY terms and attribution, and we only point at
  * it. Nothing is copied here.
  *
- * NOTE an item stores its img at creation. Installing the pack later does not
- * repaint abilities already imported — "Update Abilities" does that.
+ * NOTE an item stores its img at CREATION, and nothing rewrites it afterwards.
+ * Update Abilities does not: it rewrites the generated surface — descriptor,
+ * structured extras, cookbook id — and leaves presentation a GM may have tuned
+ * alone. So installing the pack later, or changing an entry's icon, repaints
+ * only what is imported after it; re-importing the shelf is what repaints the
+ * rest.
  */
 export function abilityIcon(entry) {
   if (entry?.iconNiche && game.modules?.get?.(NICHE_ICON_MODULE)?.active) return entry.iconNiche;
   // Falls back to the generic book, so an entry nobody has picked an icon for
   // looks exactly as it did before rather than breaking.
-  return entry?.icon || "icons/svg/book.svg";
+  return entry?.icon || DEFAULT_IMG.ABILITY;
 }
 
 /**
@@ -3244,6 +3248,7 @@ const itemShelfFor = (id) => {
  */
 const GROUP_SHELF = {
   gear: "Adventuring Gear",
+  shield: "Shields",
   clothing: "Clothing",
   animal: "Animals",
   provisions: "Provisions",
@@ -4992,7 +4997,7 @@ function trainingEffect(entry, training) {
     name: game.i18n?.format
       ? game.i18n.format(`${LANG_PREFIX}.ui.classTraining`, { class: entry.name })
       : `${entry.name} Training`,
-    img: "icons/svg/sword.svg",
+    img: DEFAULT_IMG.TRAINING,
     changes,
     transfer: true,
     disabled: false,
@@ -6369,6 +6374,46 @@ const EQUIPMENT_TYPE = Object.freeze({
 export const equipmentTypeOf = (entry) => EQUIPMENT_TYPE[entry?.meta?.group] ?? "item";
 
 /**
+ * The numbers a `values` recipe located in the seat's own prose, as the flat
+ * fields the binding reads (`aac`, `cost`, `weight6`).
+ *
+ * The recipe names the field AND the unit the page states it in, because the
+ * page and the schema do not agree on one: encumbrance prints in stone or in
+ * items, and `weight6` counts sixths of a stone. Converting here is a change of
+ * UNIT, not of value — the same translation `bindVariation` makes for a
+ * masterwork's lighter stone, and the reason a locator may not simply write
+ * whatever integer it read into the field.
+ *
+ * A field this version does not know is skipped rather than guessed at, so a
+ * later recipe can name one without this one mangling it.
+ */
+export function locatedValues(node) {
+  const out = {};
+  for (const found of node?.fields?.values ?? []) {
+    const amount = Number(found?.amount);
+    if (!Number.isFinite(amount)) continue;
+    switch (found.field) {
+      case "aac":
+      case "cost":
+      case "weight6":
+        out[found.field] = amount;
+        break;
+      case "weight6.stone":
+        out.weight6 = amount * SIXTHS_PER_STONE;
+        break;
+      case "weight6.item":
+        // An "item" IS the sixth-stone unit: the page's count is already the
+        // number the schema wants.
+        out.weight6 = amount;
+        break;
+      default:
+        break;
+    }
+  }
+  return out;
+}
+
+/**
  * Bind an equipment entry to the core item it should become. Mirrors
  * bindAbility's posture: the cookbook pre-declares NOTHING the page says —
  * name + citation always; the descriptor text is whatever the page yielded;
@@ -6386,7 +6431,7 @@ export const equipmentTypeOf = (entry) => EQUIPMENT_TYPE[entry?.meta?.group] ?? 
 export function bindEquipment(entry, node, id) {
   const cite = entry.cite ?? "";
   const meta = entry.meta ?? {};
-  const f = node?.fields ?? {};
+  const f = { ...(node?.fields ?? {}), ...locatedValues(node) };
   let type = equipmentTypeOf(entry);
 
   // EQUIPMENT ROOT (acks-extras, optional). That module owns the rule mapping a
@@ -6427,6 +6472,15 @@ export function bindEquipment(entry, node, id) {
     else if (f.armorType) typed.type = f.armorType;
   }
 
+  // What acks-extras is told about the document, in ITS scope (see the flags
+  // block below). A shield FORM is one of these: the register names which form
+  // the entry is, the overlay owns what the form does, and the item carries the
+  // ordinary AC its own page states so the overlay has something to correct.
+  const extras = {
+    ...(klass?.light ? { light: true } : {}),
+    ...(meta.shieldVariant ? { shieldVariant: meta.shieldVariant } : {}),
+  };
+
   return {
     name: entry.name,
     type,
@@ -6448,13 +6502,15 @@ export function bindEquipment(entry, node, id) {
         cookbook: { id, cite, unaudited: !entry.audited },
         generated: true,
       },
-      // The light marker belongs to acks-extras, not to us: its equipment
-      // feature writes the SAME marker in that scope when it readies a torch
-      // (equipment/actions.mjs), and its sheet and formation layers treat the
-      // item as a holdable light off it. Stamping ours under `acks-importer`
-      // would leave imported torches invisible to both. The rule of WHICH
-      // names are lights is the equipment root's; we only record the verdict.
-      ...(klass?.light ? { "acks-extras": { light: true } } : {}),
+      // These markers belong to acks-extras, not to us: its equipment feature
+      // writes the SAME markers in that scope — the light when it readies a
+      // torch (equipment/actions.mjs), the shield form when a Judge picks one
+      // off the item sheet — and its sheets, overlays and formation layers
+      // read them there. Stamping ours under `acks-importer` would leave an
+      // imported torch invisible to both, and an imported shield form a plain
+      // shield. The rule of WHICH names are lights is the equipment root's and
+      // WHAT a form does is the overlay's; we only record the verdict.
+      ...(Object.keys(extras).length ? { "acks-extras": extras } : {}),
     },
   };
 }
@@ -6801,6 +6857,33 @@ export async function repairAnimalItems() {
 }
 
 /**
+ * Remove the JJ shield forms an earlier version imported as VARIATIONS.
+ *
+ * The six forms used to be `acks-extras.variation` documents a reader dragged
+ * onto a shield; they are shields, and now import as `armor` items of type
+ * shield. An item's type cannot be changed in place and the cookbook id moved
+ * with the kind, so the old documents can neither be updated nor recognised by
+ * the new import — they would simply stand beside it, two Kite Shields of
+ * different types on two shelves.
+ *
+ * Only the LIBRARY copies go, matched on the id they were imported under. A
+ * variation a Judge already applied to a shield is an embedded copy on that
+ * document, which this never sees (`importedDocs` reads the sidebar and our own
+ * packs), so nothing a table put on an item is touched.
+ *
+ * @returns {Promise<number>} how many were removed
+ */
+export async function repairShieldVariations() {
+  const wrong = (await importedDocs("Item")).filter((i) =>
+    String(i.getFlag(MODULE_ID, "cookbook")?.id ?? "").startsWith("def.variation.shield"),
+  );
+  if (!wrong.length) return 0;
+  await deleteImported("Item", wrong);
+  console.warn(`${MODULE_ID} | removed ${wrong.length} shield form(s) imported as variations; they import as shields now.`);
+  return wrong.length;
+}
+
+/**
  * Correct the SUBTYPE of priced items an earlier run filed as plain inventory.
  *
  * Before a grid row carried the section it was printed under, every one of them
@@ -6841,6 +6924,9 @@ export async function importAllEquipment() {
   // A world imported by an earlier version holds animals as items; drop them so
   // the loop below recreates them as actors (no-op without ACKS Extras).
   const repairedAnimals = await repairAnimalItems();
+  // And the shield forms it holds as variations; the loop below imports them as
+  // the shields they are.
+  const repairedShields = await repairShieldVariations();
   const ids = cookbookEquipmentIds();
   const bar = progressBar(game.i18n.localize(`${LANG_PREFIX}.ui.progressEquipment`), ids.length);
   let created = 0;
@@ -6873,7 +6959,7 @@ export async function importAllEquipment() {
   // Last: it asks which price rows the entries above already claim, so it has
   // to run after they have had their chance at them.
   const priced = await importPricedGear();
-  return { total: ids.length, created, animals, repaired, repairedAnimals, weapons, armor, priced };
+  return { total: ids.length, created, animals, repaired, repairedAnimals, repairedShields, weapons, armor, priced };
 }
 
 /* -------------------------------------------- */

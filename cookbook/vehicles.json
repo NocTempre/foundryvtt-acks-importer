@@ -15,7 +15,7 @@
         "category": "vehicle",
         "kindOfVehicle": "land"
       },
-      "icon": "icons/svg/stone-path.svg",
+      "icon": "icons/environment/settlement/wagon.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -103,7 +103,7 @@
         "category": "vehicle",
         "kindOfVehicle": "sea"
       },
-      "icon": "icons/svg/anchor.svg",
+      "icon": "icons/environment/settlement/ship.webp",
       "fields": {
         "name": {
           "op": "expect",

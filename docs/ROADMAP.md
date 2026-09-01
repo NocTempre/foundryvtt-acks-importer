@@ -102,14 +102,14 @@ register, none of them can go yet. The gaps, per pack:
   Reflexes, Swashbuckling, Precise Shooting, Mounted Combat and the rest carry
   no effect locators, so what imports cannot do anything.
 
-- **Equipment Samples (9 documents).** Six are shields — and the names match,
-  which is misleading: the pack ships them as ARMOUR, playable gear with an
-  AC and a price, while the importer produces documents of the same names as
-  VARIATIONS, the differences a reader drags onto a shield. Neither replaces
-  the other. The armour table import produces the generic shield, not the
-  variant forms. The remaining three are demonstrations rather than content: a
-  masterwork weapon and armour with the bonus already applied, and an invented
-  named weapon.
+- **Equipment Samples (9 documents).** Six are shields, and they are ANSWERED
+  (2026-09-01): the pack ships them as armour with an AC and an encumbrance,
+  and the importer now produces the same six as armour of type shield, each
+  carrying the form flag the pack's samples carry and the numbers read from the
+  Judge's own page. The armour table import still produces only the generic
+  shield; the forms come from their JJ passages. The remaining three are
+  demonstrations rather than content: a masterwork weapon and armour with the
+  bonus already applied, and an invented named weapon.
 
 - **Henchmen Proficiencies & Powers (20 documents, 19 carrying mechanics).**
   Six are fully answered; fourteen import by name and description only —
@@ -334,29 +334,25 @@ passage, which is why they share an anchor.
   throws, structural hit points and speed — none of which is a `deltas` field.
   They want either new delta fields in extras or `conditional` entries (the
   schema's own "value claims reported to the Judge, never applied").
-- **The JJ shield FORMS are IMPORTED (2026-08-16), ahead of their consumer.**
-  All six — Auxiliary, Buckler, Crescent, Heater, Kite, Phalanx — arrive as
-  `form` variations from JJ pp.409–410.
+- ~~**The JJ shield FORMS are variations.**~~ REVERSED 2026-09-01: they are
+  SHIELDS, and import as armor items of type shield — see
+  [DECISIONS](DECISIONS.md). All six — Auxiliary, Buckler, Crescent, Heater,
+  Kite, Phalanx — arrive from JJ pp.409–410 with the in-hand AC and the
+  encumbrance their own passages state, located per entry.
 
-  What they carry is the point, and it is not a bonus. A shield form does not
-  state a MAGNITUDE: the book repeats "+1" because a standard shield is +1, and
-  a magic shield of the same form would carry the same conditions on its own
-  value. What the form states is WHERE the shield's AC applies and WHEN it does
-  not, so each entry records that as enum keys — `grantsAC` (`hand`, `front`,
-  `backVsRear`), `mounted` (`riderOrMount` / `riderAndMount`), `deniedWhen`
-  (`vulnerable`, `surprised`, `retreating`, `attackedFromBehind`), plus
-  `noBack`, `noMount` and the buckler's `requiresStyleSpecialization`. Read per
-  entry off the page, never patterned across them: an early pass applied one AC
-  regex to all six and produced a bare `equippedAC: 1` on every form, which is
-  the distinction these rules exist to make, deleted.
+  The conditions ride with them as enum keys, which is still the point and is
+  still not a bonus: `grantsAC` (`hand`, `front`, `backVsRear`), `mounted`
+  (`riderOrMount` / `riderAndMount`), `deniedWhen` (`vulnerable`, `surprised`,
+  `retreating`, `attackedFromBehind`), plus `noBack`, `noMount` and the
+  buckler's `requiresStyleSpecialization`. Read per entry off the page, never
+  patterned across them: an early pass applied one AC regex to all six, which
+  is the distinction these rules exist to make, deleted.
 
-  Encumbrance is located only where the book states it without a condition —
-  the auxiliary and heater ("however it is carried") and the buckler's item.
-  The crescent's 1-or-2 and the kite's dismounted-2/mounted-1-each are
-  conditional and are left for the consumer.
-
-  **Owed on the extras side:** a carry-state model to read these, after which
-  the frozen `SHIELD_VARIANTS` table in `scripts/equipment/config.mjs` retires.
+  **Owed on the extras side:** a carry-state model that reads those enums off
+  the document, after which the frozen `SHIELD_VARIANTS` table in
+  `scripts/equipment/config.mjs` retires. Until then the overlay reads only the
+  `shieldVariant` flag the import stamps, and the six sample documents in
+  `equipment-samples` are what this now replaces.
 - ~~**Silver, and the other material qualities.**~~ DONE 2026-08-16, and there
   are no others. Silver is printed at RR p.129 as a run-in in the weapon-quality
   list — which is why a heading search missed it — and imports as
@@ -394,8 +390,9 @@ The `system` shape a variation document fills:
 | `conditional` | value claims reported to the Judge, never applied |
 
 The pages to read: the masterwork tiers and their surcharges, the silver
-quality's multiplier, the JJ shield table's forms and carry states, and gem
-quality wherever the Judge's Journal and Treasure Tome print it.
+quality's multiplier, and gem quality wherever the Judge's Journal and Treasure
+Tome print it. The JJ shield forms were read and are not here — a form is a
+shield, not a difference applied to one (DECISIONS 2026-09-01).
 
 **The `baseTypeFields` table**, in the ruledata document `variations`, keyed by
 base type — the field specs a CATEGORY records, which belong to no one document
@@ -551,12 +548,12 @@ whether the document exists; the module packs are the reverse (41/42, 32/34,
 - **Spell lists** (system packs: 56 arcane, 19 divine). Deliberately parked —
   spell references land with the magic major (see the classes and repo
   roadmaps); the register carries the casting ladders but no spell documents.
-- **JJ shield variants and masterwork gear.** Zero `buckler`/`kite shield`
-  entries and one `masterwork` mention across the register, so extras'
-  `equipment-samples` pack stays the only source of these and could not be
-  retired with the other example packs. Closing this means reading the JJ
-  shield table and the masterwork rules into entries — as VARIATIONS now, which
-  the next section specifies.
+- **Masterwork gear.** One `masterwork` mention across the register when this
+  was measured; the rules are entries now (below), so what is left of this row
+  is the sample pack's three demonstrations — a masterwork weapon and armour
+  with the bonus already applied, and an invented named weapon. The JJ shield
+  half of this row is CLOSED: the six forms import as shields (see
+  DECISIONS 2026-09-01), which is what extras' six samples were.
 - **Class training grants — what a class may WIELD and WEAR.** The whole of
   extras' `equipment-training` pack (34 items: 5 fighting styles, 5 armour
   rungs, 18 weapon selections) has no counterpart here. The register's four

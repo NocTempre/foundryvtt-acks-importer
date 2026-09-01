@@ -13,7 +13,7 @@
     "meta": {
       "category": "weaponProficiency"
     },
-    "icon": "icons/svg/sword.svg",
+    "icon": "systems/acks/assets/icons/crossed-swords.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/sword-array.svg"
   },
   {
@@ -30,7 +30,7 @@
     "meta": {
       "category": "armorProficiency"
     },
-    "icon": "icons/svg/shield.svg",
+    "icon": "systems/acks/assets/icons/scale-mail.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/armor-vest.svg"
   },
   {
@@ -52,7 +52,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/svg/combat.svg",
+    "icon": "systems/acks/assets/icons/weapon-and-shield.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/duel.svg"
   },
   {
@@ -69,7 +69,7 @@
     "meta": {
       "category": "proficiency"
     },
-    "icon": "icons/svg/cancel.svg",
+    "icon": "systems/acks/assets/icons/cancel.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/broken-shield.svg"
   }
 ]

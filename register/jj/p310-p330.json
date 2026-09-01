@@ -1,6 +1,7 @@
 [
   {
     "id": "def.power.abominableMutation",
+    "icon": "icons/creatures/slimes/slime-face-melting-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Abominable Mutation",
@@ -16,6 +17,7 @@
   },
   {
     "id": "def.power.accuracy",
+    "icon": "icons/skills/targeting/crosshair-pointed-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Accuracy",
@@ -31,6 +33,7 @@
   },
   {
     "id": "def.power.adhesiveToePads",
+    "icon": "icons/creatures/reptiles/lizard-iguana-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Adhesive Toe Pads",
@@ -46,6 +49,7 @@
   },
   {
     "id": "def.power.ageless",
+    "icon": "icons/magic/time/hourglass-tilted-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Ageless",
@@ -61,6 +65,7 @@
   },
   {
     "id": "def.power.alienBeings",
+    "icon": "icons/creatures/magical/humanoid-silhouette-aliens-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Alien Beings",
@@ -76,6 +81,7 @@
   },
   {
     "id": "def.power.alienintuition",
+    "icon": "icons/creatures/magical/humanoid-silhoette-alien-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Alien Intuition",
@@ -91,6 +97,7 @@
   },
   {
     "id": "def.power.alienLore",
+    "icon": "icons/magic/symbols/squares-3d-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Alien Lore",
@@ -106,6 +113,7 @@
   },
   {
     "id": "def.power.alienSenses",
+    "icon": "icons/creatures/eyes/void-single-black-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Alien Senses",
@@ -121,6 +129,7 @@
   },
   {
     "id": "def.power.alluringBeauty",
+    "icon": "icons/creatures/unholy/demon-female-succubus-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Alluring Beauty",
@@ -136,6 +145,7 @@
   },
   {
     "id": "def.power.analyzeData",
+    "icon": "icons/skills/trades/electronics-tech-circuit-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Analyze Data",
@@ -151,6 +161,7 @@
   },
   {
     "id": "def.power.animalCompanion",
+    "icon": "icons/creatures/mammals/wolf-howl-moon-forest-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Animal Companion",
@@ -173,6 +184,7 @@
   },
   {
     "id": "def.power.animalFriendship",
+    "icon": "icons/magic/nature/wolf-paw-glow-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Animal Friendship",
@@ -188,6 +200,7 @@
   },
   {
     "id": "def.power.antennaeForPotions",
+    "icon": "icons/creatures/invertebrates/bug-sixlegged-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Antennae for Potions",
@@ -203,6 +216,7 @@
   },
   {
     "id": "def.power.arenaReputation",
+    "icon": "icons/skills/social/thumbs-up.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Arena Reputation",
@@ -218,6 +232,7 @@
   },
   {
     "id": "def.power.armorTraining",
+    "icon": "systems/acks/assets/icons/plate-armor.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Armor Training",
@@ -245,6 +260,7 @@
   },
   {
     "id": "def.power.artificialYouth",
+    "icon": "icons/magic/time/clock-spinning-gold-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Artificial Youth",
@@ -260,6 +276,7 @@
   },
   {
     "id": "def.power.avoidGettingLost",
+    "icon": "icons/skills/trades/academics-astronomy-navigation-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Avoid Getting Lost",
@@ -275,6 +292,7 @@
   },
   {
     "id": "def.power.awarenessOfTheEarth",
+    "icon": "icons/magic/earth/construct-stone.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Awareness of the Earth",
@@ -290,6 +308,7 @@
   },
   {
     "id": "def.power.auraOfProtection",
+    "icon": "icons/magic/defensive/barrier-shield-dome-deflect-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Aura of Protection",
@@ -327,6 +346,7 @@
   },
   {
     "id": "def.power.balefulTransformation",
+    "icon": "icons/magic/control/silhouette-hold-change-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Baleful Transformation",
@@ -342,6 +362,7 @@
   },
   {
     "id": "def.power.ballisticsExpertise",
+    "icon": "icons/skills/ranged/cannon-barrel-firing-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Ballistics Expertise",
@@ -373,6 +394,7 @@
   },
   {
     "id": "def.power.battlePlan",
+    "icon": "icons/skills/trades/academics-investigation-study-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Battle Plan",
@@ -388,6 +410,7 @@
   },
   {
     "id": "def.power.bedazzlingGlamour",
+    "icon": "icons/magic/control/hypnosis-mesmerism-swirl.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bedazzling Glamour",
@@ -403,6 +426,7 @@
   },
   {
     "id": "def.power.berserkergangGreater",
+    "icon": "icons/magic/control/buff-strength-muscle-damage-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Berserkergang, Greater",
@@ -418,6 +442,7 @@
   },
   {
     "id": "def.power.berserkergangLesser",
+    "icon": "icons/magic/control/buff-strength-muscle-damage.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Berserkergang, Lesser",
@@ -433,6 +458,7 @@
   },
   {
     "id": "def.power.bestialCry",
+    "icon": "icons/creatures/abilities/cougar-roar-rush-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bestial Cry",
@@ -448,6 +474,7 @@
   },
   {
     "id": "def.power.bestialFury",
+    "icon": "icons/creatures/abilities/bull-head-horns-glowing.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bestial Fury",
@@ -463,6 +490,7 @@
   },
   {
     "id": "def.power.bladeDancing",
+    "icon": "icons/skills/melee/maneuver-daggers-paired-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Blade-Dancing",
@@ -495,6 +523,7 @@
   },
   {
     "id": "def.power.blessingOfTheDead",
+    "icon": "icons/magic/death/grave-tombstone-glow-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Blessing of the Dead",
@@ -510,6 +539,7 @@
   },
   {
     "id": "def.power.blindsight",
+    "icon": "icons/creatures/eyes/humanoid-single-blind.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Blindsight",
@@ -525,6 +555,7 @@
   },
   {
     "id": "def.power.bloodyHealing",
+    "icon": "icons/magic/unholy/strike-beam-blood-red-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bloody Healing",
@@ -540,6 +571,7 @@
   },
   {
     "id": "def.power.boneBreakingStrength",
+    "icon": "icons/skills/wounds/bone-broken-knee-beam.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bone-Breaking Strength",
@@ -555,6 +587,7 @@
   },
   {
     "id": "def.power.bonusLanguages",
+    "icon": "icons/skills/social/diplomacy-handshake-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bonus Languages",
@@ -570,6 +603,7 @@
   },
   {
     "id": "def.power.boonCompanion",
+    "icon": "icons/creatures/birds/raptor-hawk-flying.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Boon Companion",
@@ -617,6 +651,7 @@
   },
   {
     "id": "def.power.brewingQuacksalves",
+    "icon": "icons/skills/toxins/bottle-open-vapors-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Brewing Quacksalves",
@@ -632,6 +667,7 @@
   },
   {
     "id": "def.power.brightLore",
+    "icon": "icons/magic/light/beam-rays-yellow-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Bright Lore",
@@ -647,6 +683,7 @@
   },
   {
     "id": "def.power.broadSpectrumInoculations",
+    "icon": "icons/skills/wounds/blood-cells-disease-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Broad Spectrum Inoculations",
@@ -662,6 +699,7 @@
   },
   {
     "id": "def.power.brutality",
+    "icon": "icons/skills/melee/strike-club-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Brutality",
@@ -677,6 +715,7 @@
   },
   {
     "id": "def.power.castTheRunes",
+    "icon": "icons/magic/symbols/runes-carved-stone-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Cast the Runes",
@@ -692,6 +731,7 @@
   },
   {
     "id": "def.power.ceremonialMagic",
+    "icon": "icons/magic/symbols/rune-sigil-black-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Ceremonial Magic",
@@ -707,6 +747,7 @@
   },
   {
     "id": "def.power.charismaticFerocity",
+    "icon": "icons/magic/control/control-influence-rally-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Charismatic Ferocity",
@@ -722,6 +763,7 @@
   },
   {
     "id": "def.power.childLike",
+    "icon": "icons/creatures/magical/fae-fairy-winged-glowing-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Child-Like",
@@ -737,6 +779,7 @@
   },
   {
     "id": "def.power.chitinousCarapace",
+    "icon": "icons/creatures/invertebrates/beetle-stag-tan-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Chitinous Carapace",
@@ -752,6 +795,7 @@
   },
   {
     "id": "def.power.chosenweapon",
+    "icon": "icons/skills/melee/hand-grip-sword-white-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Chosen Weapon",
@@ -767,6 +811,7 @@
   },
   {
     "id": "def.power.chthonicHegemon",
+    "icon": "icons/magic/earth/construct-stone-long-arms.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Chthonic Hegemon",
@@ -782,6 +827,7 @@
   },
   {
     "id": "def.power.clarionCommander",
+    "icon": "icons/magic/sonic/bell-alarm-red-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Clarion Commander",
@@ -797,6 +843,7 @@
   },
   {
     "id": "def.power.classicalWeaponsTraining",
+    "icon": "icons/skills/melee/weapons-crossed-poleaxes-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Classical Weapons Training",
@@ -812,6 +859,7 @@
   },
   {
     "id": "def.power.clawsAndBite",
+    "icon": "icons/creatures/abilities/fangs-teeth-bite.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Claws and Bite",
@@ -827,6 +875,7 @@
   },
   {
     "id": "def.power.cleansingTouch",
+    "icon": "icons/magic/life/heart-hand-gold-green-light.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Cleansing Touch",
@@ -842,6 +891,7 @@
   },
   {
     "id": "def.power.closeFriendOfBirdsAndBeasts",
+    "icon": "icons/creatures/birds/songbird-yellow-flying.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Close Friend of Birds and Beasts",
@@ -857,6 +907,7 @@
   },
   {
     "id": "def.power.comfortAndConsoleTheWounded",
+    "icon": "icons/skills/wounds/injury-stitched-flesh-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Comfort and Console the Wounded",
@@ -872,6 +923,7 @@
   },
   {
     "id": "def.power.commandOfVoice",
+    "icon": "icons/magic/sonic/projectile-sound-rings-wave.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Command of Voice",
@@ -887,6 +939,7 @@
   },
   {
     "id": "def.power.commandUndead",
+    "icon": "icons/magic/death/undead-skeleton-energy-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Command Undead",
@@ -902,6 +955,7 @@
   },
   {
     "id": "def.power.communeWithAncestralSpirits",
+    "icon": "icons/creatures/magical/spirit-undead-ghost-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Commune with Ancestral Spirits",
@@ -917,6 +971,7 @@
   },
   {
     "id": "def.power.compelSubmission",
+    "icon": "icons/magic/control/debuff-energy-hold-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Compel Submission",
@@ -932,6 +987,7 @@
   },
   {
     "id": "def.power.concealedFromUndead",
+    "icon": "icons/magic/death/skull-humanoid-worn-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Concealed from Undead",
@@ -947,6 +1003,7 @@
   },
   {
     "id": "def.power.conduitToTheEsoteric",
+    "icon": "icons/magic/control/energy-stream-link-spiral-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Conduit to the Esoteric",
@@ -970,6 +1027,7 @@
   },
   {
     "id": "def.power.conjureDarkPowers",
+    "icon": "icons/creatures/unholy/demon-horned-winged-laughing.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Conjure Dark Powers (1level)",
@@ -985,6 +1043,7 @@
   },
   {
     "id": "def.power.consumeSouls",
+    "icon": "icons/magic/unholy/strike-body-life-soul-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Consume Souls",
@@ -1000,6 +1059,7 @@
   },
   {
     "id": "def.power.contactDarkPowers",
+    "icon": "icons/magic/unholy/hands-cloud-light-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Contact Dark Powers",
@@ -1015,6 +1075,7 @@
   },
   {
     "id": "def.power.courage",
+    "icon": "icons/magic/holy/barrier-shield-winged-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Courage",
@@ -1030,6 +1091,7 @@
   },
   {
     "id": "def.power.createAdvancedTechnology",
+    "icon": "icons/magic/symbols/cog-orange-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Create Advanced Technology",
@@ -1045,6 +1107,7 @@
   },
   {
     "id": "def.power.cunningAndFlexibleReconnoiter",
+    "icon": "icons/magic/perception/orb-eye-scrying.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Cunning and Flexible Reconnoiter",
@@ -1060,6 +1123,7 @@
   },
   {
     "id": "def.power.curseWithIllFate",
+    "icon": "icons/magic/control/modfiy-luck-fortune-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Curse with Ill Fate",
@@ -1075,6 +1139,7 @@
   },
   {
     "id": "def.power.daredevil",
+    "icon": "icons/skills/movement/feet-winged-boots-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Daredevil",
@@ -1090,6 +1155,7 @@
   },
   {
     "id": "def.power.darkBlessing",
+    "icon": "icons/magic/unholy/hand-marked-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Dark Blessing",
@@ -1105,6 +1171,7 @@
   },
   {
     "id": "def.power.deadlyAdditive",
+    "icon": "icons/skills/toxins/poison-bottle-open-blood-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Deadly Additive",
@@ -1120,6 +1187,7 @@
   },
   {
     "id": "def.power.deathDealingDance",
+    "icon": "icons/magic/death/weapon-scythe-rune-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Death-Dealing Dance",
@@ -1135,6 +1203,7 @@
   },
   {
     "id": "def.power.deathlyVisage",
+    "icon": "icons/magic/death/skull-humanoid-white-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Deathly Visage",
@@ -1150,6 +1219,7 @@
   },
   {
     "id": "def.power.deciphering",
+    "icon": "systems/acks/assets/icons/open-book.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Deciphering",
@@ -1165,6 +1235,7 @@
   },
   {
     "id": "def.power.demandSurrender",
+    "icon": "icons/magic/control/fear-fright-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Demand Surrender",
@@ -1180,6 +1251,7 @@
   },
   {
     "id": "def.power.demiHumanAncestry",
+    "icon": "icons/creatures/magical/humanoid-silhouette-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Demi-Human Ancestry",
@@ -1195,6 +1267,7 @@
   },
   {
     "id": "def.power.designBuildAndRepairAutomatons",
+    "icon": "icons/creatures/magical/construct-iron-stomping-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Design, Build, and Repair Automatons",
@@ -1210,6 +1283,7 @@
   },
   {
     "id": "def.power.designBuildAndRepairIngeniousDevices",
+    "icon": "icons/magic/symbols/cog-shield-white-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Design, Build, and Repair Ingenious Devices",
@@ -1228,6 +1302,7 @@
   },
   {
     "id": "def.power.destined",
+    "icon": "icons/magic/control/buff-luck-fortune-rainbow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Destined",
@@ -1243,6 +1318,7 @@
   },
   {
     "id": "def.power.detachableTail",
+    "icon": "icons/creatures/abilities/tail-swipe-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Detachable Tail",
@@ -1258,6 +1334,7 @@
   },
   {
     "id": "def.power.detectGood",
+    "icon": "icons/magic/holy/saint-glass-portrait-halo.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Detect Good",
@@ -1273,6 +1350,7 @@
   },
   {
     "id": "def.power.detectEvil",
+    "icon": "icons/magic/perception/eye-ringed-glow-angry-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Detect Evil",
@@ -1288,6 +1366,7 @@
   },
   {
     "id": "def.power.detectTraps",
+    "icon": "icons/magic/perception/hand-eye-black.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Detect Traps",
@@ -1305,6 +1384,7 @@
   },
   {
     "id": "def.power.determined",
+    "icon": "icons/magic/defensive/shield-hex-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Determined",
@@ -1320,6 +1400,7 @@
   },
   {
     "id": "def.power.difficultToCorrupt",
+    "icon": "icons/magic/defensive/armor-shield-barrier-steel.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Difficult to Corrupt",
@@ -1369,6 +1450,7 @@
   },
   {
     "id": "def.power.divineProficiency",
+    "icon": "icons/magic/holy/meditation-chi-focus-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Divine Proficiency",
@@ -1384,6 +1466,7 @@
   },
   {
     "id": "def.power.discernGood",
+    "icon": "icons/magic/light/orb-beams-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Discern Good",
@@ -1399,6 +1482,7 @@
   },
   {
     "id": "def.power.discernevil",
+    "icon": "icons/magic/perception/third-eye-blue-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Discern Evil",
@@ -1414,6 +1498,7 @@
   },
   {
     "id": "def.power.distract",
+    "icon": "icons/magic/control/hypnosis-mesmerism-pendulum.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Distract",
@@ -1429,6 +1514,7 @@
   },
   {
     "id": "def.power.dominateBeastmen",
+    "icon": "icons/magic/control/control-influence-crown-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Dominate Beastmen",
@@ -1444,6 +1530,7 @@
   },
   {
     "id": "def.power.dreadShadow",
+    "icon": "icons/magic/perception/shadow-stealth-eyes-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Dread Shadow",
@@ -1459,6 +1546,7 @@
   },
   {
     "id": "def.power.eldritchTalent",
+    "icon": "icons/magic/symbols/triangle-glow-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Eldritch Talent",
@@ -1477,6 +1565,7 @@
   },
   {
     "id": "def.power.eldritchWarrior",
+    "icon": "icons/skills/melee/sword-engraved-glow-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Eldritch Warrior",
@@ -1501,6 +1590,7 @@
   },
   {
     "id": "def.power.elementalConnection",
+    "icon": "icons/magic/symbols/elements-air-earth-fire-water.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Elemental Connection",
@@ -1516,6 +1606,7 @@
   },
   {
     "id": "def.power.enchantedForest",
+    "icon": "icons/magic/nature/tree-spirit-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Enchanted Forest",
@@ -1531,6 +1622,7 @@
   },
   {
     "id": "def.power.engineeringAptitude",
+    "icon": "icons/skills/trades/construction-mason-bricklayer-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Engineering Aptitude",
@@ -1546,6 +1638,7 @@
   },
   {
     "id": "def.power.evilEye",
+    "icon": "icons/magic/perception/eye-slit-red-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Evil Eye",
@@ -1561,6 +1654,7 @@
   },
   {
     "id": "def.power.experimentation",
+    "icon": "icons/skills/toxins/cup-glass-poisoned-held.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Experimentation",
@@ -1576,6 +1670,7 @@
   },
   {
     "id": "def.power.exquisiteTorture",
+    "icon": "icons/skills/wounds/injury-pain-impaled-hand-blood.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Exquisite Torture",
@@ -1591,6 +1686,7 @@
   },
   {
     "id": "def.power.expertTraveler",
+    "icon": "icons/skills/movement/feet-winged-sandals-tan.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Expert Traveler",
@@ -1606,6 +1702,7 @@
   },
   {
     "id": "def.power.extensiveFirearmsTraining",
+    "icon": "icons/skills/ranged/rifle-scoped-firing-yellow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Extensive Firearms Training",
@@ -1621,6 +1718,7 @@
   },
   {
     "id": "def.power.exultInGloriousBattle",
+    "icon": "icons/skills/melee/swords-triple-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Exult in Glorious Battle",
@@ -1636,6 +1734,7 @@
   },
   {
     "id": "def.power.familialLoyalty",
+    "icon": "icons/skills/social/diplomacy-handshake-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Familial Loyalty",
@@ -1651,6 +1750,7 @@
   },
   {
     "id": "def.power.familiarWithTechnology",
+    "icon": "icons/skills/trades/tech-energy-charged-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Familiar with Technology",
@@ -1666,6 +1766,7 @@
   },
   {
     "id": "def.power.farseeing",
+    "icon": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Farseeing",
@@ -1681,6 +1782,7 @@
   },
   {
     "id": "def.power.fellowshipOfAnimals",
+    "icon": "icons/magic/nature/wolf-paw-glow-purple-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fellowship of Animals",
@@ -1699,6 +1801,7 @@
   },
   {
     "id": "def.power.expertScout",
+    "icon": "icons/magic/perception/eye-ringed-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Expert Scout",
@@ -1714,6 +1817,7 @@
   },
   {
     "id": "def.power.fierySpirit",
+    "icon": "icons/creatures/magical/spirit-fire-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fiery Spirit",
@@ -1729,6 +1833,7 @@
   },
   {
     "id": "def.power.fieryCauterization",
+    "icon": "icons/magic/fire/flame-burning-fist-strike.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fiery Cauterization",
@@ -1744,6 +1849,7 @@
   },
   {
     "id": "def.power.fieryResistance",
+    "icon": "icons/magic/fire/barrier-shield-explosion-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fiery Resistance",
@@ -1759,6 +1865,7 @@
   },
   {
     "id": "def.power.fightingFury",
+    "icon": "icons/skills/melee/strike-slashes-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fighting Fury",
@@ -1774,6 +1881,7 @@
   },
   {
     "id": "def.power.fistsOfIron",
+    "icon": "icons/skills/melee/unarmed-punch-fist.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fists of Iron",
@@ -1792,6 +1900,7 @@
   },
   {
     "id": "def.power.flagellation",
+    "icon": "icons/skills/melee/strike-chain-whip-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Flagellation",
@@ -1807,6 +1916,7 @@
   },
   {
     "id": "def.power.flawlessPrecision",
+    "icon": "icons/skills/targeting/crosshair-triple-strike-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Flawless Precision",
@@ -1822,6 +1932,7 @@
   },
   {
     "id": "def.power.fleshRunes",
+    "icon": "icons/magic/symbols/rune-sigil-horned-white-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Flesh-Runes",
@@ -1837,6 +1948,7 @@
   },
   {
     "id": "def.power.flying",
+    "icon": "icons/magic/control/buff-flight-wings-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Flying",
@@ -1852,6 +1964,7 @@
   },
   {
     "id": "def.power.foolsLuck",
+    "icon": "icons/magic/control/buff-luck-fortune-clover-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fool’s Luck",
@@ -1867,6 +1980,7 @@
   },
   {
     "id": "def.power.fourArms",
+    "icon": "icons/creatures/magical/humanoid-silhouette-glowing-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Four Arms",
@@ -1882,6 +1996,7 @@
   },
   {
     "id": "def.power.forbiddenSpells",
+    "icon": "icons/magic/unholy/silhouette-light-fire-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Forbidden Spells",
@@ -1897,6 +2012,7 @@
   },
   {
     "id": "def.power.friendOfBirdsAndBeasts",
+    "icon": "icons/creatures/birds/dove-pigeon-flying-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Friend of Birds and Beasts",
@@ -1912,6 +2028,7 @@
   },
   {
     "id": "def.power.fungalAwareness",
+    "icon": "icons/creatures/eyes/slime-stalk-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fungal Awareness",
@@ -1927,6 +2044,7 @@
   },
   {
     "id": "def.power.fungalCommunion",
+    "icon": "icons/magic/nature/plant-undersea-glow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fungal Communion",
@@ -1942,6 +2060,7 @@
   },
   {
     "id": "def.power.fungalFriendship",
+    "icon": "icons/magic/nature/plant-sprout-hands-vines.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fungal Friendship",
@@ -1957,6 +2076,7 @@
   },
   {
     "id": "def.power.fungalImmunity",
+    "icon": "icons/magic/defensive/shield-barrier-glowing-triangle-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fungal Immunity",
@@ -1972,6 +2092,7 @@
   },
   {
     "id": "def.power.fungalSpawn",
+    "icon": "icons/creatures/slimes/slime-bubble-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Fungal Spawn (10)",
@@ -1987,6 +2108,7 @@
   },
   {
     "id": "def.power.gatherTogetherTheDarkness",
+    "icon": "icons/magic/unholy/energy-smoke-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Gather Together the Darkness",
@@ -2002,6 +2124,7 @@
   },
   {
     "id": "def.power.giftOfTongues",
+    "icon": "icons/skills/social/handshake.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Gift of Tongues",
@@ -2017,6 +2140,7 @@
   },
   {
     "id": "def.power.glamorousAura",
+    "icon": "icons/magic/light/explosion-glow-spiral-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Glamorous Aura",
@@ -2032,6 +2156,7 @@
   },
   {
     "id": "def.power.gracefulFighting",
+    "icon": "icons/skills/melee/sword-twirl-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Graceful Fighting",
@@ -2064,6 +2189,7 @@
   },
   {
     "id": "def.power.greaterRiteOfSealing",
+    "icon": "icons/magic/symbols/runes-triangle-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Greater Rite of Sealing",
@@ -2079,6 +2205,7 @@
   },
   {
     "id": "def.power.greatnessOfSoul",
+    "icon": "icons/magic/holy/angel-winged-humanoid-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Greatness of Soul",
@@ -2094,6 +2221,7 @@
   },
   {
     "id": "def.power.greyLore",
+    "icon": "icons/magic/light/beam-layered-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Grey Lore",
@@ -2109,6 +2237,7 @@
   },
   {
     "id": "def.power.grotesqueArtsOfTransformation",
+    "icon": "icons/creatures/slimes/slime-face-hollow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Grotesque Arts of Transformation (1)",
@@ -2124,6 +2253,7 @@
   },
   {
     "id": "def.power.guardianSpirit",
+    "icon": "icons/creatures/magical/spirit-undead-masked-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Guardian Spirit",
@@ -2146,6 +2276,7 @@
   },
   {
     "id": "def.power.hardToKill",
+    "icon": "icons/magic/life/heart-cross-strong-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Hard to Kill",
@@ -2161,6 +2292,7 @@
   },
   {
     "id": "def.power.harmonyOfSpirit",
+    "icon": "icons/magic/holy/yin-yang-balance-symbol.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Harmony of Spirit",
@@ -2176,6 +2308,7 @@
   },
   {
     "id": "def.power.healingTouch",
+    "icon": "icons/magic/life/heart-cross-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Healing Touch",
@@ -2191,6 +2324,7 @@
   },
   {
     "id": "def.power.heartyConstitution",
+    "icon": "icons/magic/life/heart-glowing-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Hearty Constitution",
@@ -2206,6 +2340,7 @@
   },
   {
     "id": "def.power.heroicBreakfast",
+    "icon": "icons/skills/trades/baking-bread-rolls-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Heroic Breakfast",
@@ -2221,6 +2356,7 @@
   },
   {
     "id": "def.power.heroicSpirit",
+    "icon": "icons/magic/light/explosion-star-glow-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Heroic Spirit",
@@ -2236,6 +2372,7 @@
   },
   {
     "id": "def.power.hideousServant",
+    "icon": "icons/creatures/magical/construct-face-stone-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Hideous Servant",
@@ -2258,6 +2395,7 @@
   },
   {
     "id": "def.power.horribleTruths",
+    "icon": "icons/magic/control/fear-fright-monster-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Horrible Truths",
@@ -2273,6 +2411,7 @@
   },
   {
     "id": "def.power.impersonateOthers",
+    "icon": "icons/magic/symbols/mask-metal-silver-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Impersonate Others",
@@ -2290,6 +2429,7 @@
   },
   {
     "id": "def.power.implacableWill",
+    "icon": "icons/magic/defensive/shield-hex-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Implacable Will",
@@ -2305,6 +2445,7 @@
   },
   {
     "id": "def.power.infravision",
+    "icon": "icons/creatures/eyes/humanoid-single-red-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Infravision",
@@ -2320,6 +2461,7 @@
   },
   {
     "id": "def.power.inhumanity",
+    "icon": "icons/creatures/unholy/demon-horned-black-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Inhumanity",
@@ -2335,6 +2477,7 @@
   },
   {
     "id": "def.power.initiative",
+    "icon": "icons/magic/movement/trail-streak-impact-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Initiative",
@@ -2350,6 +2493,7 @@
   },
   {
     "id": "def.power.innateIllusionMastery",
+    "icon": "icons/magic/control/hypnosis-mesmerism-eye.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Innate Illusion Mastery",
@@ -2365,6 +2509,7 @@
   },
   {
     "id": "def.power.innovativeResearcher",
+    "icon": "icons/magic/symbols/question-stone-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Innovative Researcher",
@@ -2380,6 +2525,7 @@
   },
   {
     "id": "def.power.inspireDread",
+    "icon": "icons/magic/control/fear-fright-shadow-monster-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Inspire Dread",
@@ -2395,6 +2541,7 @@
   },
   {
     "id": "def.power.inspireExceptionalPerformance",
+    "icon": "icons/skills/trades/music-notes-sound-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Inspire Exceptional Performance",
@@ -2410,6 +2557,7 @@
   },
   {
     "id": "def.power.instillStrength",
+    "icon": "icons/magic/life/cross-beam-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Instill Strength",
@@ -2425,6 +2573,7 @@
   },
   {
     "id": "def.power.instinctiveDodge",
+    "icon": "icons/skills/movement/ball-spinning-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Instinctive Dodge",
@@ -2440,6 +2589,7 @@
   },
   {
     "id": "def.power.invulnerable",
+    "icon": "icons/magic/defensive/barrier-shield-dome-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Invulnerable",
@@ -2455,6 +2605,7 @@
   },
   {
     "id": "def.power.ironLeadership",
+    "icon": "icons/magic/defensive/shield-barrier-deflect-gold.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Iron Leadership",
@@ -2470,6 +2621,7 @@
   },
   {
     "id": "def.power.irresistibleVoice",
+    "icon": "icons/magic/sonic/explosion-shock-sound-wave.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Irresistible Voice",
@@ -2485,6 +2637,7 @@
   },
   {
     "id": "def.power.jumping",
+    "icon": "icons/skills/movement/arrow-upward-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Jumping",
@@ -2500,6 +2653,7 @@
   },
   {
     "id": "def.power.keenEyes",
+    "icon": "icons/creatures/eyes/human-single-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Keen Eyes",
@@ -2517,6 +2671,7 @@
   },
   {
     "id": "def.power.keenInsectSenses",
+    "icon": "icons/creatures/invertebrates/dragonfly-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Keen Insect Senses",
@@ -2532,6 +2687,7 @@
   },
   {
     "id": "def.power.killingSpree",
+    "icon": "icons/skills/melee/strikes-sword-triple-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Killing Spree",
@@ -2547,6 +2703,7 @@
   },
   {
     "id": "def.power.kinshipWithArthropodsAndFungi",
+    "icon": "icons/creatures/invertebrates/ant-strength-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Kinship with Arthropods and Fungi",
@@ -2562,6 +2719,7 @@
   },
   {
     "id": "def.power.kissOfLife",
+    "icon": "icons/magic/life/heart-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Kiss of Life",
@@ -2585,6 +2743,7 @@
   },
   {
     "id": "def.power.laughAtPain",
+    "icon": "icons/skills/wounds/injury-face-impact-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Laugh at Pain",
@@ -2600,6 +2759,7 @@
   },
   {
     "id": "def.power.layOnHands",
+    "icon": "icons/magic/life/heart-hand-gold-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lay on Hands",
@@ -2634,6 +2794,7 @@
   },
   {
     "id": "def.power.legwork",
+    "icon": "icons/skills/social/theft-pickpocket-bribery-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Legwork",
@@ -2666,6 +2827,7 @@
   },
   {
     "id": "def.power.lightlessVision",
+    "icon": "icons/creatures/eyes/humanoid-single-purple-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lightless Vision",
@@ -2681,6 +2843,7 @@
   },
   {
     "id": "def.power.lionHeartedLeader",
+    "icon": "icons/creatures/abilities/wolf-heads-swirl-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lion-Hearted Leader",
@@ -2696,6 +2859,7 @@
   },
   {
     "id": "def.power.lizardBrain",
+    "icon": "icons/creatures/reptiles/serpent-horned-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lizard Brain",
@@ -2711,6 +2875,7 @@
   },
   {
     "id": "def.power.loadbearing",
+    "icon": "icons/skills/wounds/anatomy-bone-joint.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Loadbearing",
@@ -2726,6 +2891,7 @@
   },
   {
     "id": "def.power.lordshipOverTheUndead",
+    "icon": "icons/magic/death/skull-humanoid-crown-white-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lordship Over the Undead",
@@ -2741,6 +2907,7 @@
   },
   {
     "id": "def.power.loreOfStarsAndSpheres",
+    "icon": "icons/magic/nature/symbol-moon-stars-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lore of Stars and Spheres",
@@ -2756,6 +2923,7 @@
   },
   {
     "id": "def.power.lowLightVision",
+    "icon": "icons/creatures/eyes/humanoid-single-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Low-Light Vision",
@@ -2771,6 +2939,7 @@
   },
   {
     "id": "def.power.lucksBoon",
+    "icon": "icons/magic/control/buff-luck-fortune-green-gold.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Luck’s Boon",
@@ -2786,6 +2955,7 @@
   },
   {
     "id": "def.power.lucky",
+    "icon": "icons/magic/symbols/clover-luck-white-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Lucky",
@@ -2833,6 +3003,7 @@
   },
   {
     "id": "def.power.magicHands",
+    "icon": "icons/magic/light/orb-hand-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Magic Hands",
@@ -2848,6 +3019,7 @@
   },
   {
     "id": "def.power.magicMirror",
+    "icon": "icons/magic/light/orb-shadow-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Magic Mirror",
@@ -2863,6 +3035,7 @@
   },
   {
     "id": "def.power.magicalProficiency",
+    "icon": "icons/magic/symbols/star-solid-gold.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Magical Proficiency",
@@ -2878,6 +3051,7 @@
   },
   {
     "id": "def.power.majestyOfTheDragon",
+    "icon": "icons/creatures/reptiles/dragon-winged-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Majesty of the Dragon",
@@ -2893,6 +3067,7 @@
   },
   {
     "id": "def.power.malevolentReputation",
+    "icon": "icons/magic/control/fear-fright-mask-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Malevolent Reputation",
@@ -2908,6 +3083,7 @@
   },
   {
     "id": "def.power.mapper",
+    "icon": "icons/environment/wilderness/terrain-forest-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mapper",
@@ -2923,6 +3099,7 @@
   },
   {
     "id": "def.power.martialProficiency",
+    "icon": "icons/skills/melee/weapons-crossed-swords-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Martial Proficiency",
@@ -2938,6 +3115,7 @@
   },
   {
     "id": "def.power.martialTalent",
+    "icon": "icons/skills/melee/weapons-crossed-swords-white-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Martial Talent",
@@ -2953,6 +3131,7 @@
   },
   {
     "id": "def.power.martyrdom",
+    "icon": "icons/magic/holy/projectiles-blades-salvo-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Martyrdom",
@@ -2968,6 +3147,7 @@
   },
   {
     "id": "def.power.marvelousmachines",
+    "icon": "icons/creatures/magical/construct-golem-stone-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Marvelous Machines",
@@ -2983,6 +3163,7 @@
   },
   {
     "id": "def.power.masteryOfEnchantmentsAndIllusions",
+    "icon": "icons/magic/control/hypnosis-mesmerism-eye-tan.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mastery of Enchantments and Illusions",
@@ -2998,6 +3179,7 @@
   },
   {
     "id": "def.power.masteryofdominationanddeception",
+    "icon": "icons/magic/control/hypnosis-mesmerism-watch.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mastery of Domination and Deception",
@@ -3016,6 +3198,7 @@
   },
   {
     "id": "def.power.meditativeFocus",
+    "icon": "icons/magic/light/circle-window-clock-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Meditative Focus",
@@ -3031,6 +3214,7 @@
   },
   {
     "id": "def.power.mindfulness",
+    "icon": "icons/magic/perception/hand-eye-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mindfulness",
@@ -3046,6 +3230,7 @@
   },
   {
     "id": "def.power.militaryGenius",
+    "icon": "icons/skills/social/symbol-pyramid-eye.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Military Genius",
@@ -3061,6 +3246,7 @@
   },
   {
     "id": "def.power.mitigateDamage",
+    "icon": "icons/magic/defensive/barrier-shield-dome-deflect-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mitigate Damage",
@@ -3076,6 +3262,7 @@
   },
   {
     "id": "def.power.modernThought",
+    "icon": "icons/magic/symbols/chevron-elipse-circle-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Modern Thought",
@@ -3091,6 +3278,7 @@
   },
   {
     "id": "def.power.mushroomManagement",
+    "icon": "icons/magic/nature/plant-sprout-potted-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mushroom Management",
@@ -3106,6 +3294,7 @@
   },
   {
     "id": "def.power.mushroomOverlord",
+    "icon": "icons/magic/nature/plant-maneater-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mushroom Overlord",
@@ -3121,6 +3310,7 @@
   },
   {
     "id": "def.power.mysticalBloodline",
+    "icon": "icons/magic/unholy/orb-glowing-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Mystical Bloodline",
@@ -3136,6 +3326,7 @@
   },
   {
     "id": "def.power.necrosporing",
+    "icon": "icons/magic/nature/plant-vines-skull-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Necrosporing",
@@ -3154,6 +3345,7 @@
   },
   {
     "id": "def.power.nervousWatchfulness",
+    "icon": "icons/creatures/birds/corvid-watchful-glowing-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Nervous Watchfulness",
@@ -3169,6 +3361,7 @@
   },
   {
     "id": "def.power.noseForPotions",
+    "icon": "icons/skills/toxins/poison-skull-herbs-bottle-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Nose for Potions",
@@ -3184,6 +3377,7 @@
   },
   {
     "id": "def.power.onenessOfLandAndLord",
+    "icon": "icons/magic/nature/root-vines-grow-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Oneness of Land and Lord",
@@ -3199,6 +3393,7 @@
   },
   {
     "id": "def.power.perceiveIntentions",
+    "icon": "icons/magic/perception/eye-tendrils-web-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Perceive Intentions",
@@ -3214,6 +3409,7 @@
   },
   {
     "id": "def.power.perfectionOfBody",
+    "icon": "icons/magic/life/cross-area-circle-green-white.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Perfection of Body",
@@ -3229,6 +3425,7 @@
   },
   {
     "id": "def.power.personalTalisman",
+    "icon": "icons/magic/symbols/star-rising-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Personal Talisman",
@@ -3244,6 +3441,7 @@
   },
   {
     "id": "def.power.placate",
+    "icon": "icons/skills/social/diplomacy-offering-ritual.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Placate",
@@ -3259,6 +3457,7 @@
   },
   {
     "id": "def.power.preciseShot",
+    "icon": "icons/skills/ranged/target-bullseye-arrow-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Precise Shot",
@@ -3290,6 +3489,7 @@
   },
   {
     "id": "def.power.probabilitytrance",
+    "icon": "icons/magic/time/arrows-circling-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Probability Trance",
@@ -3305,6 +3505,7 @@
   },
   {
     "id": "def.power.profaneEndurance",
+    "icon": "icons/magic/unholy/barrier-shield-glowing-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Profane Endurance",
@@ -3320,6 +3521,7 @@
   },
   {
     "id": "def.power.provokeThePassion",
+    "icon": "icons/magic/life/heart-red-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Provoke the Passion",
@@ -3335,6 +3537,7 @@
   },
   {
     "id": "def.power.publicEducation",
+    "icon": "icons/environment/settlement/sign-wood.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Public Education",
@@ -3350,6 +3553,7 @@
   },
   {
     "id": "def.power.publicFlagellation",
+    "icon": "icons/skills/wounds/injury-triple-slash-bleed.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Public Flagellation",
@@ -3365,6 +3569,7 @@
   },
   {
     "id": "def.power.pugilism",
+    "icon": "icons/skills/melee/unarmed-punch-fist-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Pugilism",
@@ -3380,6 +3585,7 @@
   },
   {
     "id": "def.power.purityOfBodyAndSoul",
+    "icon": "icons/magic/life/cross-worn-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Purity of Body and Soul",
@@ -3395,6 +3601,7 @@
   },
   {
     "id": "def.power.pyroclastics",
+    "icon": "icons/magic/earth/volcano-explosion-lava-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Pyroclastics",
@@ -3410,6 +3617,7 @@
   },
   {
     "id": "def.power.quickening",
+    "icon": "icons/magic/movement/trail-streak-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Quickening",
@@ -3425,6 +3633,7 @@
   },
   {
     "id": "def.power.rallyTheFaithful",
+    "icon": "icons/magic/holy/prayer-hands-glowing-yellow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Rally the Faithful",
@@ -3440,6 +3649,7 @@
   },
   {
     "id": "def.power.ravishingBeauty",
+    "icon": "icons/magic/light/explosion-star-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Ravishing Beauty",
@@ -3471,6 +3681,7 @@
   },
   {
     "id": "def.power.relentless",
+    "icon": "icons/skills/movement/arrows-up-trio-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Relentless",
@@ -3486,6 +3697,7 @@
   },
   {
     "id": "def.power.rhetoric",
+    "icon": "icons/skills/social/diplomacy-handshake.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Rhetoric",
@@ -3501,6 +3713,7 @@
   },
   {
     "id": "def.power.rightStuff",
+    "icon": "icons/magic/light/explosion-star-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Right Stuff",
@@ -3516,6 +3729,7 @@
   },
   {
     "id": "def.power.rouseToFury",
+    "icon": "icons/magic/control/fear-fright-monster-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Rouse to Fury",
@@ -3531,6 +3745,7 @@
   },
   {
     "id": "def.power.rotlessRot",
+    "icon": "icons/creatures/slimes/slime-movement-dripping-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Rotless Rot",
@@ -3546,6 +3761,7 @@
   },
   {
     "id": "def.power.scalyHide",
+    "icon": "icons/creatures/reptiles/turtle-shell-glowing-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Scaly Hide",
@@ -3561,6 +3777,7 @@
   },
   {
     "id": "def.power.scientificMindset",
+    "icon": "icons/skills/trades/helix-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Scientific Mindset",
@@ -3576,6 +3793,7 @@
   },
   {
     "id": "def.power.scionOfKings",
+    "icon": "icons/magic/symbols/fleur-de-lis-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Scion of Kings",
@@ -3591,6 +3809,7 @@
   },
   {
     "id": "def.power.secondSight",
+    "icon": "icons/magic/perception/eye-winged-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Second Sight",
@@ -3606,6 +3825,7 @@
   },
   {
     "id": "def.power.secretKnowledge",
+    "icon": "icons/magic/symbols/runes-carved-stone-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Secret Knowledge",
@@ -3621,6 +3841,7 @@
   },
   {
     "id": "def.power.secretion",
+    "icon": "icons/creatures/slimes/slime-movement-dripping-pseudopods-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Secretion",
@@ -3636,6 +3857,7 @@
   },
   {
     "id": "def.power.secretsOfTheDarkArts",
+    "icon": "icons/magic/unholy/orb-swirling-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Secrets of the Dark Arts",
@@ -3651,6 +3873,7 @@
   },
   {
     "id": "def.power.secretsOfLifeAndDeath",
+    "icon": "icons/magic/life/ankh-shadow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Secrets of Life and Death",
@@ -3666,6 +3889,7 @@
   },
   {
     "id": "def.power.shapechange",
+    "icon": "icons/creatures/mammals/humanoid-wolf-dog-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Shapechange",
@@ -3681,6 +3905,7 @@
   },
   {
     "id": "def.power.shapeFleshAndBone",
+    "icon": "icons/skills/wounds/anatomy-organ-brain-pink-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Shape Flesh and Bone",
@@ -3696,6 +3921,7 @@
   },
   {
     "id": "def.power.sleepless",
+    "icon": "icons/magic/control/sleep-bubble-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Sleepless",
@@ -3711,6 +3937,7 @@
   },
   {
     "id": "def.power.solidityOfRock",
+    "icon": "icons/creatures/magical/construct-stone-earth-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Solidity of Rock",
@@ -3726,6 +3953,7 @@
   },
   {
     "id": "def.power.soulOfTheDragon",
+    "icon": "icons/creatures/reptiles/dragon-horned-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Soul of the Dragon",
@@ -3741,6 +3969,7 @@
   },
   {
     "id": "def.power.speakWithAnimals",
+    "icon": "icons/creatures/mammals/deer-antlers-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Speak with Animals",
@@ -3756,6 +3985,7 @@
   },
   {
     "id": "def.power.speakWithArthropods",
+    "icon": "icons/creatures/invertebrates/bee-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Speak with Arthropods",
@@ -3771,6 +4001,7 @@
   },
   {
     "id": "def.power.speedOfThought",
+    "icon": "icons/magic/movement/pinwheel-turning-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Speed of Thought",
@@ -3786,6 +4017,7 @@
   },
   {
     "id": "def.power.spellStoring",
+    "icon": "icons/magic/symbols/ring-circle-smoke-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spell Storing",
@@ -3801,6 +4033,7 @@
   },
   {
     "id": "def.power.spiritwalk",
+    "icon": "icons/creatures/magical/spirit-undead-winged-ghost.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spiritwalk",
@@ -3816,6 +4049,7 @@
   },
   {
     "id": "def.power.sporeCalibration",
+    "icon": "icons/magic/nature/plant-seed-hands-glow-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spore Calibration",
@@ -3839,6 +4073,7 @@
   },
   {
     "id": "def.power.sporeFermentation",
+    "icon": "icons/magic/nature/plant-sproud-hands-dirt-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spore Fermentation",
@@ -3862,6 +4097,7 @@
   },
   {
     "id": "def.power.sporePerception",
+    "icon": "icons/creatures/eyes/slime-stalks-yellow-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spore Perception",
@@ -3885,6 +4121,7 @@
   },
   {
     "id": "def.power.sporeSynchronization",
+    "icon": "icons/magic/nature/plant-sprout-snow-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Spore Synchronization",
@@ -3908,6 +4145,7 @@
   },
   {
     "id": "def.power.stalwartSoul",
+    "icon": "icons/magic/defensive/shield-barrier-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Stalwart Soul",
@@ -3923,6 +4161,7 @@
   },
   {
     "id": "def.power.strengthOfSpirit",
+    "icon": "icons/magic/holy/chalice-glowing-yellow-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Strength of Spirit",
@@ -3938,6 +4177,7 @@
   },
   {
     "id": "def.power.stewardOfTheWild",
+    "icon": "icons/magic/nature/tree-elm-roots-brown.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Steward of the Wild",
@@ -3953,6 +4193,7 @@
   },
   {
     "id": "def.power.stigmata",
+    "icon": "icons/skills/wounds/injury-hand-blood-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Stigmata",
@@ -3968,6 +4209,7 @@
   },
   {
     "id": "def.power.studentOfWar",
+    "icon": "icons/skills/melee/swords-parry-block-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Student of War",
@@ -3983,6 +4225,7 @@
   },
   {
     "id": "def.power.subtlebeguilement",
+    "icon": "icons/magic/control/sihouette-hold-beam-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Subtle Beguilement",
@@ -3998,6 +4241,7 @@
   },
   {
     "id": "def.power.summoninfernalpowers",
+    "icon": "icons/creatures/unholy/demon-fire-imp.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Summon Infernal Powers",
@@ -4013,6 +4257,7 @@
   },
   {
     "id": "def.power.supernaturalResilience",
+    "icon": "icons/magic/defensive/shield-barrier-glowing-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Supernatural Resilience",
@@ -4028,6 +4273,7 @@
   },
   {
     "id": "def.power.survivabilityOfCockroaches",
+    "icon": "icons/creatures/invertebrates/bug-cross-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Survivability of Cockroaches",
@@ -4043,6 +4289,7 @@
   },
   {
     "id": "def.power.swimming",
+    "icon": "icons/magic/water/wave-water-rolling-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Swimming",
@@ -4058,6 +4305,7 @@
   },
   {
     "id": "def.power.swornFoe",
+    "icon": "icons/skills/targeting/crosshair-mark-rough-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Sworn Foe",
@@ -4073,6 +4321,7 @@
   },
   {
     "id": "def.power.taintedBlood",
+    "icon": "icons/magic/unholy/projectile-helix-blood-red.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Tainted Blood",
@@ -4088,6 +4337,7 @@
   },
   {
     "id": "def.power.taunt",
+    "icon": "icons/skills/social/thumbs-down.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Taunt",
@@ -4103,6 +4353,7 @@
   },
   {
     "id": "def.power.technologicaljargon",
+    "icon": "icons/magic/symbols/triangle-glowing-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Technological Jargon",
@@ -4118,6 +4369,7 @@
   },
   {
     "id": "def.power.thieveryproficiency",
+    "icon": "icons/skills/trades/security-lockpicking-chest-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Thievery Proficiency",
@@ -4133,6 +4385,7 @@
   },
   {
     "id": "def.power.tormentTheMind",
+    "icon": "icons/magic/control/voodoo-doll-pain-damage-purple.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Torment the Mind",
@@ -4148,6 +4401,7 @@
   },
   {
     "id": "def.power.totemBenefit",
+    "icon": "icons/magic/nature/wolf-paw-glow-small-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Totem Benefit",
@@ -4163,6 +4417,7 @@
   },
   {
     "id": "def.power.jargon",
+    "icon": "icons/magic/symbols/mask-yellow-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Jargon",
@@ -4178,6 +4433,7 @@
   },
   {
     "id": "def.power.tribulatingAdversary",
+    "icon": "icons/magic/control/debuff-chains-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Tribulating Adversary",
@@ -4193,6 +4449,7 @@
   },
   {
     "id": "def.power.unconquerableSoul",
+    "icon": "icons/magic/defensive/shield-barrier-flaming-pentagon-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Unconquerable Soul",
@@ -4208,6 +4465,7 @@
   },
   {
     "id": "def.power.undeadslaying",
+    "icon": "icons/magic/death/bones-crossed-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Undead Slaying",
@@ -4223,6 +4481,7 @@
   },
   {
     "id": "def.power.unholyFanaticism",
+    "icon": "icons/magic/unholy/silhouette-evil-horned-giant.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Unholy Fanaticism",
@@ -4238,6 +4497,7 @@
   },
   {
     "id": "def.power.unliving",
+    "icon": "icons/magic/death/undead-zombie-grave-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Unliving",
@@ -4253,6 +4513,7 @@
   },
   {
     "id": "def.power.unveilEsotericMeaning",
+    "icon": "icons/magic/symbols/runes-carved-stone-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Unveil Esoteric Meaning",
@@ -4268,6 +4529,7 @@
   },
   {
     "id": "def.power.utterDomination",
+    "icon": "icons/magic/control/debuff-energy-hold-blue-yellow.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Utter Domination",
@@ -4283,6 +4545,7 @@
   },
   {
     "id": "def.power.weaponsystemsexpert",
+    "icon": "icons/skills/ranged/energy-weapon-fire-blue.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Weapon Systems Expert",
@@ -4298,6 +4561,7 @@
   },
   {
     "id": "def.power.whiteLuckPresence",
+    "icon": "icons/magic/control/modfiy-luck-fortune-gray.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "White Luck Presence",
@@ -4313,6 +4577,7 @@
   },
   {
     "id": "def.power.wildernessEvasion",
+    "icon": "icons/magic/nature/stealth-hide-beast-eyes-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Wilderness Evasion",
@@ -4328,6 +4593,7 @@
   },
   {
     "id": "def.power.wisdomOfTheAges",
+    "icon": "icons/magic/time/day-night-sun-moon.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Wisdom of the Ages",
@@ -4343,6 +4609,7 @@
   },
   {
     "id": "def.power.wholenessOfBody",
+    "icon": "icons/magic/life/cross-explosion-burst-green.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Wholeness of Body",
@@ -4358,6 +4625,7 @@
   },
   {
     "id": "def.power.widespreadRenown",
+    "icon": "icons/magic/light/explosion-star-large-orange.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Widespread Renown",
@@ -4373,6 +4641,7 @@
   },
   {
     "id": "def.power.wordsOfCommandAndObedience",
+    "icon": "icons/magic/sonic/explosion-shock-wave-teal.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Words of Command and Obedience",
@@ -4388,6 +4657,7 @@
   },
   {
     "id": "def.power.underfoot",
+    "icon": "icons/skills/movement/arrow-down-pink.webp",
     "kind": "kind.power",
     "book": "jj",
     "name": "Underfoot",

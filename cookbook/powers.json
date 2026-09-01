@@ -14,6 +14,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -103,6 +104,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/sonic/scream-wail-shout-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -161,6 +163,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-green-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -219,6 +222,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/orb-stone-smoke-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -293,6 +297,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-red-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -348,6 +353,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-star-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -489,6 +495,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-carved-stone-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -540,6 +547,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-star-pentagon-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -595,6 +603,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -664,6 +673,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/barrier-stone-brown-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -772,6 +782,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/fire/flame-burning-earth-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -884,6 +895,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/fire/flame-burning-embers-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1000,6 +1012,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/movement/portal-vortex-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1138,6 +1151,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/mining-pickaxe-stone-cart.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1197,6 +1211,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/plating-metal-welding-steel.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1259,6 +1274,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1339,6 +1355,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/torch-fire-hand-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1396,6 +1413,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/circled-gem-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1447,6 +1465,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/fire/barrier-wall-flame-ring-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1508,6 +1527,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/fire/flame-burning-hand-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1565,6 +1585,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1634,6 +1655,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-rough-white-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1707,6 +1729,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/cog-glowing-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -1773,6 +1796,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/construct-golem-robot-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2018,6 +2042,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2106,6 +2131,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/bone-broken-marrow-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2179,6 +2205,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/abilities/lion-roar-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2289,6 +2316,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2355,6 +2383,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/air/air-wave-gust-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2411,6 +2440,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-hex-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2475,6 +2505,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-book-study-runes.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2531,6 +2562,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/trading-justice-scale-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2592,6 +2624,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/wave-halt-stop.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2673,6 +2706,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/intimidation-impressing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2724,6 +2758,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/feet-spurred-boots-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2779,6 +2814,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2848,6 +2884,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/cauldron-pot-bubbles-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2907,6 +2944,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/mushroom-glow-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -2967,6 +3005,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/mushrooms-fire-glow-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3019,6 +3058,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-glowing-white-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3073,6 +3113,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/air/fog-gas-smoke-dense-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3127,6 +3168,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/control-influence-puppet.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3188,6 +3230,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/tree-animated-stump-mushrooms-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3253,6 +3296,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3338,6 +3382,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-hook-white-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3406,6 +3451,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/orb-crystal-ball-scrying.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3570,6 +3616,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbsup-approval-like.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3646,6 +3693,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/slimes/slime-face-melting-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3736,6 +3784,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/targeting/crosshair-pointed-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3785,6 +3834,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/reptiles/lizard-iguana-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3845,6 +3895,7 @@
           "kw:longeval"
         ]
       },
+      "icon": "icons/magic/time/hourglass-tilted-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3905,6 +3956,7 @@
           "kw:inhumanity"
         ]
       },
+      "icon": "icons/creatures/magical/humanoid-silhouette-aliens-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -3965,6 +4017,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/humanoid-silhoette-alien-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4024,6 +4077,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/squares-3d-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4083,6 +4137,7 @@
           "kw:alertness"
         ]
       },
+      "icon": "icons/creatures/eyes/void-single-black-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4142,6 +4197,7 @@
           "kw:glamorousaura"
         ]
       },
+      "icon": "icons/creatures/unholy/demon-female-succubus-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4204,6 +4260,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/electronics-tech-circuit-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4274,6 +4331,7 @@
           "kw:totemanimal"
         ]
       },
+      "icon": "icons/creatures/mammals/wolf-howl-moon-forest-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4344,6 +4402,7 @@
           "kw:animalfriendship"
         ]
       },
+      "icon": "icons/magic/nature/wolf-paw-glow-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4403,6 +4462,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/invertebrates/bug-sixlegged-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4461,6 +4521,7 @@
           "kw:battlefieldprowess"
         ]
       },
+      "icon": "icons/skills/social/thumbs-up.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4517,6 +4578,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "systems/acks/assets/icons/plate-armor.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4592,6 +4654,7 @@
           "kw:longeval"
         ]
       },
+      "icon": "icons/magic/time/clock-spinning-gold-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4652,6 +4715,7 @@
           "kw:pathfinding"
         ]
       },
+      "icon": "icons/skills/trades/academics-astronomy-navigation-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4707,6 +4771,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/construct-stone.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4764,6 +4829,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/defensive/barrier-shield-dome-deflect-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4844,6 +4910,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/silhouette-hold-change-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -4897,6 +4964,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/ranged/cannon-barrel-firing-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5019,6 +5087,7 @@
           "kw:inspirecourage"
         ]
       },
+      "icon": "icons/skills/trades/academics-investigation-study-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5082,6 +5151,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/hypnosis-mesmerism-swirl.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5187,6 +5257,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-strength-muscle-damage-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5280,6 +5351,7 @@
           "kw:berserkerganglesser"
         ]
       },
+      "icon": "icons/magic/control/buff-strength-muscle-damage.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5342,6 +5414,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/abilities/cougar-roar-rush-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5405,6 +5478,7 @@
           "kw:berserkerganglesser"
         ]
       },
+      "icon": "icons/creatures/abilities/bull-head-horns-glowing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5472,6 +5546,7 @@
         ]
       },
       "audited": true,
+      "icon": "icons/skills/melee/maneuver-daggers-paired-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5557,6 +5632,7 @@
           "kw:divinehealth"
         ]
       },
+      "icon": "icons/magic/death/grave-tombstone-glow-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5608,6 +5684,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/eyes/humanoid-single-blind.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5661,6 +5738,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/strike-beam-blood-red-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5716,6 +5794,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/bone-broken-knee-beam.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5774,6 +5853,7 @@
           "kw:bonuslanguages"
         ]
       },
+      "icon": "icons/skills/social/diplomacy-handshake-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5827,6 +5907,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/birds/raptor-hawk-flying.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5914,6 +5995,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/bottle-open-vapors-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -5964,6 +6046,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/beam-rays-yellow-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6033,6 +6116,7 @@
           "kw:divinehealth"
         ]
       },
+      "icon": "icons/skills/wounds/blood-cells-disease-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6084,6 +6168,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/strike-club-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6136,6 +6221,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-carved-stone-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6202,6 +6288,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-black-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6275,6 +6362,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/control-influence-rally-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6333,6 +6421,7 @@
           "kw:inhumanity"
         ]
       },
+      "icon": "icons/creatures/magical/fae-fairy-winged-glowing-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6399,6 +6488,7 @@
           "kw:scalyhide"
         ]
       },
+      "icon": "icons/creatures/invertebrates/beetle-stag-tan-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6481,6 +6571,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/hand-grip-sword-white-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6554,6 +6645,7 @@
           "kw:ancientpacts"
         ]
       },
+      "icon": "icons/magic/earth/construct-stone-long-arms.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6614,6 +6706,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/sonic/bell-alarm-red-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6676,6 +6769,7 @@
           "kw:martialtalent"
         ]
       },
+      "icon": "icons/skills/melee/weapons-crossed-poleaxes-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6731,6 +6825,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/abilities/fangs-teeth-bite.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6813,6 +6908,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/heart-hand-gold-green-light.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6864,6 +6960,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/birds/songbird-yellow-flying.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6932,6 +7029,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/injury-stitched-flesh-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -6997,6 +7095,7 @@
           "kw:commandofvoice"
         ]
       },
+      "icon": "icons/magic/sonic/projectile-sound-rings-wave.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7058,6 +7157,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/undead-skeleton-energy-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7107,6 +7207,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/spirit-undead-ghost-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7181,6 +7282,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/debuff-energy-hold-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7238,6 +7340,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/skull-humanoid-worn-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7289,6 +7392,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/energy-stream-link-spiral-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7355,6 +7459,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/unholy/demon-horned-winged-laughing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7427,6 +7532,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/strike-body-life-soul-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7481,6 +7587,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/hands-cloud-light-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7544,6 +7651,7 @@
           "kw:strengthofspirit"
         ]
       },
+      "icon": "icons/magic/holy/barrier-shield-winged-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7608,6 +7716,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/cog-orange-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7661,6 +7770,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/orb-eye-scrying.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7723,6 +7833,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/modfiy-luck-fortune-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7779,6 +7890,7 @@
           "kw:strengthofspirit"
         ]
       },
+      "icon": "icons/skills/movement/feet-winged-boots-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7849,6 +7961,7 @@
           "kw:divineblessing"
         ]
       },
+      "icon": "icons/magic/unholy/hand-marked-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7913,6 +8026,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/poison-bottle-open-blood-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -7986,6 +8100,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/weapon-scythe-rune-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8046,6 +8161,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/skull-humanoid-white-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8102,6 +8218,7 @@
           "kw:deciphering"
         ]
       },
+      "icon": "systems/acks/assets/icons/open-book.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8157,6 +8274,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/fear-fright-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8217,6 +8335,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/humanoid-silhouette-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8272,6 +8391,7 @@
           "kw:designbuildandrepairautomatons"
         ]
       },
+      "icon": "icons/creatures/magical/construct-iron-stomping-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8332,6 +8452,7 @@
           "kw:designbuildandrepairautomatons"
         ]
       },
+      "icon": "icons/magic/symbols/cog-shield-white-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8387,6 +8508,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-luck-fortune-rainbow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8436,6 +8558,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/abilities/tail-swipe-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8496,6 +8619,7 @@
           "kw:discerngood"
         ]
       },
+      "icon": "icons/magic/holy/saint-glass-portrait-halo.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8552,6 +8676,7 @@
           "kw:discernevil"
         ]
       },
+      "icon": "icons/magic/perception/eye-ringed-glow-angry-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8627,6 +8752,7 @@
         "deprecated": true,
         "replacedBy": "def.power.sensitivityToRockAndStone"
       },
+      "icon": "icons/magic/perception/hand-eye-black.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8682,6 +8808,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-hex-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8734,6 +8861,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/armor-shield-barrier-steel.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8919,6 +9047,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/holy/meditation-chi-focus-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -8998,6 +9127,7 @@
           "kw:discerngood"
         ]
       },
+      "icon": "icons/magic/light/orb-beams-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9050,6 +9180,7 @@
           "kw:discernevil"
         ]
       },
+      "icon": "icons/magic/perception/third-eye-blue-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9122,6 +9253,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/hypnosis-mesmerism-pendulum.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9183,6 +9315,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/control-influence-crown-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9236,6 +9369,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/shadow-stealth-eyes-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9296,6 +9430,7 @@
           "kw:eldritchtalent"
         ]
       },
+      "icon": "icons/magic/symbols/triangle-glow-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9376,6 +9511,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/sword-engraved-glow-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9444,6 +9580,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/elements-air-earth-fire-water.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9502,6 +9639,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/tree-spirit-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9560,6 +9698,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/construction-mason-bricklayer-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9610,6 +9749,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/eye-slit-red-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9664,6 +9804,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/cup-glass-poisoned-held.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9718,6 +9859,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/injury-pain-impaled-hand-blood.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9791,6 +9933,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/feet-winged-sandals-tan.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9840,6 +9983,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/ranged/rifle-scoped-firing-yellow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9890,6 +10034,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/swords-triple-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9945,6 +10090,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-handshake-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -9998,6 +10144,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/tech-energy-charged-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10051,6 +10198,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/orb-crystal-ball-scrying-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10111,6 +10259,7 @@
           "kw:animalfriendship"
         ]
       },
+      "icon": "icons/magic/nature/wolf-paw-glow-purple-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10171,6 +10320,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/eye-ringed-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10236,6 +10386,7 @@
           "kw:battlefieldprowess"
         ]
       },
+      "icon": "icons/creatures/magical/spirit-fire-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10298,6 +10449,7 @@
           "kw:layingonhands"
         ]
       },
+      "icon": "icons/magic/fire/flame-burning-fist-strike.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10425,6 +10577,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/fire/barrier-shield-explosion-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10480,6 +10633,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/strike-slashes-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10540,6 +10694,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/unarmed-punch-fist.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10596,6 +10751,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/strike-chain-whip-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10660,6 +10816,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/targeting/crosshair-triple-strike-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10715,6 +10872,7 @@
           "kw:fleshrunes"
         ]
       },
+      "icon": "icons/magic/symbols/rune-sigil-horned-white-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10779,6 +10937,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-flight-wings-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10830,6 +10989,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-luck-fortune-clover-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -10887,6 +11047,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/humanoid-silhouette-glowing-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11003,6 +11164,7 @@
           "kw:forbiddenspells"
         ]
       },
+      "icon": "icons/magic/unholy/silhouette-light-fire-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11056,6 +11218,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/birds/dove-pigeon-flying-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11122,6 +11285,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/eyes/slime-stalk-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11174,6 +11338,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-undersea-glow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11226,6 +11391,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-sprout-hands-vines.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11281,6 +11447,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-barrier-glowing-triangle-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11335,6 +11502,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/slimes/slime-bubble-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11393,6 +11561,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/energy-smoke-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11463,6 +11632,7 @@
           "kw:bonuslanguages"
         ]
       },
+      "icon": "icons/skills/social/handshake.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11520,6 +11690,7 @@
           "kw:glamorousaura"
         ]
       },
+      "icon": "icons/magic/light/explosion-glow-spiral-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11588,6 +11759,7 @@
         ]
       },
       "audited": true,
+      "icon": "icons/skills/melee/sword-twirl-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11668,6 +11840,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-triangle-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11743,6 +11916,7 @@
           "kw:battlefieldprowess"
         ]
       },
+      "icon": "icons/magic/holy/angel-winged-humanoid-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11799,6 +11973,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/beam-layered-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11855,6 +12030,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/slimes/slime-face-hollow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -11917,6 +12093,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/spirit-undead-masked-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12007,6 +12184,7 @@
           "kw:savageresilience"
         ]
       },
+      "icon": "icons/magic/life/heart-cross-strong-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12069,6 +12247,7 @@
           "kw:divineblessing"
         ]
       },
+      "icon": "icons/magic/holy/yin-yang-balance-symbol.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12133,6 +12312,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/heart-cross-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12190,6 +12370,7 @@
           "kw:divineblessing"
         ]
       },
+      "icon": "icons/magic/life/heart-glowing-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12254,6 +12435,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/baking-bread-rolls-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12316,6 +12498,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/explosion-star-glow-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12369,6 +12552,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/construct-face-stone-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12443,6 +12627,7 @@
           "kw:ancientpacts"
         ]
       },
+      "icon": "icons/magic/control/fear-fright-monster-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12505,6 +12690,7 @@
         "deprecated": true,
         "replacedBy": "def.prof.disguise"
       },
+      "icon": "icons/magic/symbols/mask-metal-silver-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12556,6 +12742,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-hex-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12632,6 +12819,7 @@
           "kw:lightlessvision"
         ]
       },
+      "icon": "icons/creatures/eyes/humanoid-single-red-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12699,6 +12887,7 @@
           "kw:inhumanity"
         ]
       },
+      "icon": "icons/creatures/unholy/demon-horned-black-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12761,6 +12950,7 @@
           "kw:initiative"
         ]
       },
+      "icon": "icons/magic/movement/trail-streak-impact-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12812,6 +13002,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/hypnosis-mesmerism-eye.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12871,6 +13062,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/question-stone-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12927,6 +13119,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/fear-fright-shadow-monster-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -12987,6 +13180,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/music-notes-sound-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13044,6 +13238,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/cross-beam-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13101,6 +13296,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/ball-spinning-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13199,6 +13395,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/barrier-shield-dome-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13259,6 +13456,7 @@
           "kw:lionheartedleader"
         ]
       },
+      "icon": "icons/magic/defensive/shield-barrier-deflect-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13321,6 +13519,7 @@
           "kw:glamorousaura"
         ]
       },
+      "icon": "icons/magic/sonic/explosion-shock-sound-wave.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13383,6 +13582,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/arrow-upward-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13438,6 +13638,7 @@
         "deprecated": true,
         "replacedBy": "def.power.attunementToNature"
       },
+      "icon": "icons/creatures/eyes/human-single-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13500,6 +13701,7 @@
           "kw:alertness"
         ]
       },
+      "icon": "icons/creatures/invertebrates/dragonfly-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13559,6 +13761,7 @@
           "kw:berserkerganglesser"
         ]
       },
+      "icon": "icons/skills/melee/strikes-sword-triple-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13622,6 +13825,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/invertebrates/ant-strength-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13678,6 +13882,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/heart-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13748,6 +13953,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/injury-face-impact-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13805,6 +14011,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/life/heart-hand-gold-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13889,6 +14096,7 @@
         ]
       },
       "audited": true,
+      "icon": "icons/skills/social/theft-pickpocket-bribery-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -13972,6 +14180,7 @@
           "kw:lightlessvision"
         ]
       },
+      "icon": "icons/creatures/eyes/humanoid-single-purple-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14038,6 +14247,7 @@
           "kw:lionheartedleader"
         ]
       },
+      "icon": "icons/creatures/abilities/wolf-heads-swirl-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14099,6 +14309,7 @@
           "kw:initiative"
         ]
       },
+      "icon": "icons/creatures/reptiles/serpent-horned-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14151,6 +14362,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/anatomy-bone-joint.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14201,6 +14413,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/skull-humanoid-crown-white-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14265,6 +14478,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/symbol-moon-stars-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14315,6 +14529,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/eyes/humanoid-single-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14367,6 +14582,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-luck-fortune-green-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14420,6 +14636,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/clover-luck-white-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14505,6 +14722,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/orb-hand-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14554,6 +14772,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/orb-shadow-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14613,6 +14832,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/star-solid-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14685,6 +14905,7 @@
           "kw:commandofvoice"
         ]
       },
+      "icon": "icons/creatures/reptiles/dragon-winged-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14747,6 +14968,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/fear-fright-mask-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14801,6 +15023,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/wilderness/terrain-forest-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14862,6 +15085,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/weapons-crossed-swords-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14939,6 +15163,7 @@
           "kw:martialtalent"
         ]
       },
+      "icon": "icons/skills/melee/weapons-crossed-swords-white-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -14993,6 +15218,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/holy/projectiles-blades-salvo-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15053,6 +15279,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/construct-golem-stone-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15114,6 +15341,7 @@
           "kw:masteryofenchantmentsandillusions"
         ]
       },
+      "icon": "icons/magic/control/hypnosis-mesmerism-eye-tan.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15199,6 +15427,7 @@
           "kw:masteryofenchantmentsandillusions"
         ]
       },
+      "icon": "icons/magic/control/hypnosis-mesmerism-watch.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15279,6 +15508,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/circle-window-clock-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15341,6 +15571,7 @@
           "kw:alertness"
         ]
       },
+      "icon": "icons/magic/perception/hand-eye-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15394,6 +15625,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/symbol-pyramid-eye.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15445,6 +15677,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/barrier-shield-dome-deflect-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15513,6 +15746,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/chevron-elipse-circle-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15563,6 +15797,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-sprout-potted-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15618,6 +15853,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-maneater-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15693,6 +15929,7 @@
           "kw:longeval"
         ]
       },
+      "icon": "icons/magic/unholy/orb-glowing-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15750,6 +15987,7 @@
           "kw:necrosporing"
         ]
       },
+      "icon": "icons/magic/nature/plant-vines-skull-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15805,6 +16043,7 @@
           "kw:animalreflexes"
         ]
       },
+      "icon": "icons/creatures/birds/corvid-watchful-glowing-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15936,6 +16175,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/poison-skull-herbs-bottle-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -15991,6 +16231,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/root-vines-grow-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16049,6 +16290,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/eye-tendrils-web-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16108,6 +16350,7 @@
           "kw:longeval"
         ]
       },
+      "icon": "icons/magic/life/cross-area-circle-green-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16162,6 +16405,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/star-rising-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16220,6 +16464,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-offering-ritual.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16284,6 +16529,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/ranged/target-bullseye-arrow-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16402,6 +16648,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/time/arrows-circling-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16464,6 +16711,7 @@
           "kw:fleshrunes"
         ]
       },
+      "icon": "icons/magic/unholy/barrier-shield-glowing-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16529,6 +16777,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/heart-red-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16616,6 +16865,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/sign-wood.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16676,6 +16926,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/injury-triple-slash-bleed.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16741,6 +16992,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/unarmed-punch-fist-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16805,6 +17057,7 @@
           "kw:divinehealth"
         ]
       },
+      "icon": "icons/magic/life/cross-worn-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16856,6 +17109,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/volcano-explosion-lava-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -16922,6 +17176,7 @@
           "kw:animalreflexes"
         ]
       },
+      "icon": "icons/magic/movement/trail-streak-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17059,6 +17314,7 @@
           "kw:inspirehope"
         ]
       },
+      "icon": "icons/magic/holy/prayer-hands-glowing-yellow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17176,6 +17432,7 @@
           "kw:glamorousaura"
         ]
       },
+      "icon": "icons/magic/light/explosion-star-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17307,6 +17564,7 @@
           "kw:connectiontonature"
         ]
       },
+      "icon": "icons/skills/movement/arrows-up-trio-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17363,6 +17621,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-handshake.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17413,6 +17672,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/light/explosion-star-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17472,6 +17732,7 @@
           "kw:inspirecourage"
         ]
       },
+      "icon": "icons/magic/control/fear-fright-monster-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17535,6 +17796,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/slimes/slime-movement-dripping-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17592,6 +17854,7 @@
           "kw:scalyhide"
         ]
       },
+      "icon": "icons/creatures/reptiles/turtle-shell-glowing-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17673,6 +17936,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/helix-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17728,6 +17992,7 @@
           "kw:bloodofkings"
         ]
       },
+      "icon": "icons/magic/symbols/fleur-de-lis-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17780,6 +18045,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/eye-winged-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17839,6 +18105,7 @@
           "kw:forbiddenspells"
         ]
       },
+      "icon": "icons/magic/symbols/runes-carved-stone-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17893,6 +18160,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/slimes/slime-movement-dripping-pseudopods-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -17963,6 +18231,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/orb-swirling-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18028,6 +18297,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/ankh-shadow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18078,6 +18348,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/mammals/humanoid-wolf-dog-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18141,6 +18412,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/wounds/anatomy-organ-brain-pink-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18191,6 +18463,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/sleep-bubble-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18242,6 +18515,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/construct-stone-earth-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18298,6 +18572,7 @@
           "kw:bloodofkings"
         ]
       },
+      "icon": "icons/creatures/reptiles/dragon-horned-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18350,6 +18625,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/mammals/deer-antlers-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18401,6 +18677,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/invertebrates/bee-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18460,6 +18737,7 @@
           "kw:animalreflexes"
         ]
       },
+      "icon": "icons/magic/movement/pinwheel-turning-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18591,6 +18869,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/ring-circle-smoke-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18657,6 +18936,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/spirit-undead-winged-ghost.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18714,6 +18994,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-seed-hands-glow-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18781,6 +19062,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-sproud-hands-dirt-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18854,6 +19136,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/eyes/slime-stalks-yellow-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -18920,6 +19203,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/plant-sprout-snow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19006,6 +19290,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-barrier-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19063,6 +19348,7 @@
           "kw:strengthofspirit"
         ]
       },
+      "icon": "icons/magic/holy/chalice-glowing-yellow-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19132,6 +19418,7 @@
           "kw:animalfriendship"
         ]
       },
+      "icon": "icons/magic/nature/tree-elm-roots-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19198,6 +19485,7 @@
           "kw:fleshrunes"
         ]
       },
+      "icon": "icons/skills/wounds/injury-hand-blood-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19263,6 +19551,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/swords-parry-block-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19315,6 +19604,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/sihouette-hold-beam-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19375,6 +19665,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/unholy/demon-fire-imp.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19440,6 +19731,7 @@
           "kw:savageresilience"
         ]
       },
+      "icon": "icons/magic/defensive/shield-barrier-glowing-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19496,6 +19788,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/invertebrates/bug-cross-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19560,6 +19853,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/water/wave-water-rolling-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19640,6 +19934,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/targeting/crosshair-mark-rough-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19707,6 +20002,7 @@
           "kw:inhumanity"
         ]
       },
+      "icon": "icons/magic/unholy/projectile-helix-blood-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19767,6 +20063,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/thumbs-down.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19843,6 +20140,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/triangle-glowing-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19908,6 +20206,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/security-lockpicking-chest-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -19969,6 +20268,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/voodoo-doll-pain-damage-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20024,6 +20324,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/wolf-paw-glow-small-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20078,6 +20379,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/mask-yellow-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20142,6 +20444,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/debuff-chains-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20195,6 +20498,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-barrier-flaming-pentagon-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20250,6 +20554,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/bones-crossed-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20314,6 +20619,7 @@
           "kw:holyfervor"
         ]
       },
+      "icon": "icons/magic/unholy/silhouette-evil-horned-giant.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20370,6 +20676,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/undead-zombie-grave-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20424,6 +20731,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-carved-stone-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20475,6 +20783,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/debuff-energy-hold-blue-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20527,6 +20836,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/ranged/energy-weapon-fire-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20586,6 +20896,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/modfiy-luck-fortune-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20639,6 +20950,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/stealth-hide-beast-eyes-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20706,6 +21018,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/time/day-night-sun-moon.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20770,6 +21083,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/cross-explosion-burst-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20833,6 +21147,7 @@
           "kw:battlefieldprowess"
         ]
       },
+      "icon": "icons/magic/light/explosion-star-large-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20889,6 +21204,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/sonic/explosion-shock-wave-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20942,6 +21258,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/arrow-down-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -20991,6 +21308,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/control/debuff-chains-ropes-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21052,6 +21370,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/creatures/claws/claw-curved-jagged-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21109,6 +21428,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/unholy/silhouette-robe-evil-glow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21163,6 +21483,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/death/skeleton-skull-soul-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21226,6 +21547,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/light/beam-strike-village-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21280,6 +21602,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/skills/wounds/injury-body-pain-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21338,6 +21661,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/life/heart-broken-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21391,6 +21715,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/control/silhouette-grow-shrink-tan.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21483,6 +21808,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/unholy/hands-praying-fire-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21541,6 +21867,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/magic/nature/trap-spikes-thorns-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21601,6 +21928,7 @@
       "meta": {
         "category": "drawback"
       },
+      "icon": "icons/skills/wounds/injury-pain-body-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21657,6 +21985,7 @@
           "kw:battlefieldprowess"
         ]
       },
+      "icon": "icons/skills/melee/weapons-crossed-swords-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21712,6 +22041,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/watchtower-castle-night.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -21973,6 +22303,7 @@
           "kw:animalreflexes"
         ]
       },
+      "icon": "icons/creatures/abilities/cougar-pounce-stalk-black.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22106,6 +22437,7 @@
           "kw:pathfinding"
         ]
       },
+      "icon": "icons/skills/trades/academics-astronomy-navigation-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22160,6 +22492,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/silhouette-stealth-shadow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22287,6 +22620,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/illusion-evasion-echo-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22343,6 +22677,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/armor-stone-skin.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22399,6 +22734,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/watchtower-wood-tan.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22479,6 +22815,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22647,6 +22984,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-star-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22862,6 +23200,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/rune-sigil-white-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22917,6 +23256,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-star-magenta.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -22969,6 +23309,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/wizard-castle.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23077,6 +23418,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/runes-star-orange-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23132,6 +23474,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/holy/chalice-glowing-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23187,6 +23530,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/holy/barrier-shield-winged-cross.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23438,6 +23782,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/temple-night.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23563,6 +23908,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/trading-justice-scale-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23661,6 +24007,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-writing-letter.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23714,6 +24061,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/peace-luck-insult.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23825,6 +24173,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-merchant-scribe.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23919,6 +24268,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-handshake-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -23995,6 +24345,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/movement/figure-running-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24046,6 +24397,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/diplomacy-peace-alliance.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24102,6 +24454,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/orb-gold-claw-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24169,6 +24522,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/social/trading-injustice-scale-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24231,6 +24585,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/house-city.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24329,6 +24684,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/water/snowflake-ice-blue-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24413,6 +24769,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/air/wind-stream-blue-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24497,6 +24854,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/mammals/cat-hunched-glowing-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24584,6 +24942,7 @@
           "kw:savageresilience"
         ]
       },
+      "icon": "icons/magic/control/buff-strength-muscle-damage-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24639,6 +24998,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/wolf-paw-glow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24722,6 +25082,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/leaf-glow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24814,6 +25175,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/watchtower-tribe.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -24965,6 +25327,7 @@
           "kw:inspirecourage"
         ]
       },
+      "icon": "icons/skills/social/diplomacy-unity-alliance.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25082,6 +25445,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-book-study-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25136,6 +25500,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/construction-carpentry-hammer.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25198,6 +25563,7 @@
           "kw:inspirehope"
         ]
       },
+      "icon": "icons/magic/light/beam-rays-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25308,6 +25674,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/palast.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25375,6 +25742,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/skills/melee/sword-twirl-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25492,6 +25860,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/columned-forum.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25562,6 +25931,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25629,6 +25999,7 @@
         ]
       },
       "audited": true,
+      "icon": "icons/skills/melee/blade-tip-orange.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25702,6 +26073,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/defensive/barrier-shield-dome-deflect-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25781,6 +26153,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/life/heart-hand-gold-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25885,6 +26258,7 @@
           "kw:divinehealth"
         ]
       },
+      "icon": "icons/magic/holy/angel-wings-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25939,6 +26313,7 @@
           "kw:holyfervor"
         ]
       },
+      "icon": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -25994,6 +26369,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/perception/eye-ringed-glow-angry-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26121,6 +26497,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/city-night-spire.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26198,6 +26575,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/heart-cross-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26253,6 +26631,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/life/cross-flared-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26305,6 +26684,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/graveyard.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26413,6 +26793,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/life/heart-hand-gold-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26511,6 +26892,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/spirit-undead-ghost-tan-teal.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26622,6 +27004,7 @@
           "kw:totemanimal"
         ]
       },
+      "icon": "icons/magic/nature/wolf-paw-glow-large-teal-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26688,6 +27071,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/dreamcatcher-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26744,6 +27128,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/leaf-flower-wreath-glow-green-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26802,6 +27187,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/silhouette-hold-change-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26892,6 +27278,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/magical/spirit-undead-ghost-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -26951,6 +27338,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/house-shelter-stone.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27033,6 +27421,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/silhouette-robe-evil-power.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27092,6 +27481,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/symbols/circle-ouroboros.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27145,6 +27535,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/projectiles-blood-salvo-red.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27202,6 +27593,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/creatures/unholy/demon-fire-horned-clawed.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27261,6 +27653,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/undead-skeleton-lich-armor.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27320,6 +27713,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/silhouette-grow-shrink-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27379,6 +27773,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-study-reading-book.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27439,6 +27834,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/moon-crescent.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27666,6 +28062,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/well.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27724,6 +28121,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/root-vine-caduceus-healing.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27785,6 +28183,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/toxins/cauldron-bubbles-overflow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27837,6 +28236,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-scribe-quill-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27888,6 +28288,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/house-woods.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -27960,6 +28361,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-study-archaeology-bones.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28037,6 +28439,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/barrier-stone-pillar-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28114,6 +28517,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/nature/tree-spirit-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28191,6 +28595,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/academics-investigation-puzzles.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28245,6 +28650,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/trades/smithing-anvil-brown.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28335,6 +28741,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/armor-green-hex.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28387,6 +28794,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/earth/strike-fist-stone-gray.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28440,6 +28848,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/warehouse-crates.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -28827,6 +29236,7 @@
           "kw:alertness"
         ]
       },
+      "icon": "icons/magic/nature/leaf-oak-wreath-glow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29060,6 +29470,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/watchtower-cliff.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29128,6 +29539,7 @@
           "kw:connectiontonature"
         ]
       },
+      "icon": "icons/magic/nature/root-vines-face-glow-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29186,6 +29598,7 @@
           "kw:bloodofkings"
         ]
       },
+      "icon": "icons/magic/control/control-influence-crown-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29237,6 +29650,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/buff-luck-fortune-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29292,6 +29706,7 @@
           "kw:longeval"
         ]
       },
+      "icon": "icons/magic/time/hourglass-tilted-glowing-gold.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29400,6 +29815,7 @@
         "category": "classPower"
       },
       "audited": true,
+      "icon": "icons/magic/life/heart-hand-gold-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29474,6 +29890,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/movement/acceleration-speed-tech-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29528,6 +29945,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/environment/settlement/watchtower-moonlit-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29633,6 +30051,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/death/hand-undead-skeleton-fire-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29692,6 +30111,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/skills/melee/strike-dagger-arcane-pink.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29796,6 +30216,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/control/mouth-smile-deception-purple.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29851,6 +30272,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/strike-body-explode-disintegrate.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29920,6 +30342,7 @@
           "kw:ancientpacts"
         ]
       },
+      "icon": "icons/magic/symbols/rune-sigil-horned-blue.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -29979,6 +30402,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/unholy/orb-colllecting-energy-green.webp",
       "fields": {
         "name": {
           "op": "expect",
@@ -30030,6 +30454,7 @@
       "meta": {
         "category": "classPower"
       },
+      "icon": "icons/magic/defensive/shield-hex-red.webp",
       "fields": {
         "name": {
           "op": "expect",

@@ -19,7 +19,7 @@
  * content types churn.
  */
 import { rowsByY, joinRuns } from "./table-extract.mjs";
-import { MODULE_ID } from "./constants.mjs";
+import { MODULE_ID, DEFAULT_IMG } from "./constants.mjs";
 import { bookText } from "./prose.mjs";
 
 /* -------------------------------------------------------------------- */
@@ -352,7 +352,7 @@ export function bindWeaponRow(row, id, cite) {
   return {
     name: row.name,
     type: "weapon",
-    img: "icons/svg/sword.svg",
+    img: DEFAULT_IMG.WEAPON,
     system,
     // The capture the compendium lacked: all attack/damage modes on ONE item.
     flags: { [MODULE_ID]: { cookbook: { id, cite }, generated: true, weapon: { modes } } },

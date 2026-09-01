@@ -14,7 +14,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/pack-leather-strapped-tan.webp"
   },
   {
     "id": "def.equip.archeryTarget",
@@ -31,7 +31,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/environment/settlement/target.webp"
   },
   {
     "id": "def.equip.armyEmblem",
@@ -48,7 +48,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/misc/badge-law-sheriff.webp"
   },
   {
     "id": "def.equip.backpack",
@@ -65,7 +65,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/backpack.webp"
+    "icon": "icons/containers/bags/pack-leather-brown.webp"
   },
   {
     "id": "def.equip.barrel",
@@ -82,7 +82,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/barrels/barrel-oak-tan.webp"
   },
   {
     "id": "def.equip.blanket",
@@ -99,7 +99,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/commodities/cloth/cloth-worn-teal.webp"
   },
   {
     "id": "def.equip.boardgame",
@@ -116,7 +116,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/gaming/chess-king-gray.webp"
   },
   {
     "id": "def.equip.bowquiver",
@@ -133,7 +133,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/ammunition/quiver-simple-brown.webp"
   },
   {
     "id": "def.equip.candles",
@@ -150,7 +150,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/lights/candle-unlit-tan.webp"
   },
   {
     "id": "def.equip.crowbar",
@@ -167,7 +167,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/crowbar.webp"
+    "icon": "icons/tools/hand/pry-bar-steel.webp"
   },
   {
     "id": "def.equip.crutch",
@@ -184,7 +184,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/weapons/staves/staff-simple-hooked.webp"
   },
   {
     "id": "def.equip.dice",
@@ -201,7 +201,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/gaming/dice-runed-brown.webp"
   },
   {
     "id": "def.equip.disguiseKit",
@@ -218,7 +218,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/paint-palette.webp"
   },
   {
     "id": "def.equip.earplugs",
@@ -235,7 +235,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/commodities/materials/material-cotton-white.webp"
   },
   {
     "id": "def.equip.earTrumpet",
@@ -252,7 +252,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/instruments/horn-flared-wood.webp"
   },
   {
     "id": "def.equip.firewoodBundle",
@@ -269,7 +269,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/commodities/wood/log-stack-hickory-brown.webp"
   },
   {
     "id": "def.equip.flag",
@@ -286,7 +286,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/commodities/cloth/cloth-bolt-gold-red.webp"
   },
   {
     "id": "def.equip.grapplingHook",
@@ -303,7 +303,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/fasteners/chain-claw-hook-steel.webp"
   },
   {
     "id": "def.equip.hammerSmall",
@@ -320,7 +320,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/hammer-simple-wood.webp"
   },
   {
     "id": "def.equip.herbAloe",
@@ -337,7 +337,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/aloe-succulent-green.webp"
   },
   {
     "id": "def.equip.herbBelladonna",
@@ -354,7 +354,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/thorned-stem-vine-green.webp"
   },
   {
     "id": "def.equip.herbBirthwort",
@@ -371,7 +371,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/heart-cordate-leaf-yellow-green.webp"
   },
   {
     "id": "def.equip.herbBlessedThistle",
@@ -388,7 +388,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/flax-leaves-spiked-bundle-orange.webp"
   },
   {
     "id": "def.equip.herbComfrey",
@@ -405,7 +405,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/herb-tied-bundle-green.webp"
   },
   {
     "id": "def.equip.herbGarlic",
@@ -422,7 +422,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/sprout-leaf-herb-green.webp"
   },
   {
     "id": "def.equip.herbGoldenrod",
@@ -439,7 +439,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/herb-tied-bundle-dried-yellow.webp"
   },
   {
     "id": "def.equip.herbHorsetail",
@@ -456,7 +456,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/fern-fiddlehead-dried-brown.webp"
   },
   {
     "id": "def.equip.herbLungwort",
@@ -473,7 +473,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/lobed-leaf-green.webp"
   },
   {
     "id": "def.equip.herbWillowBark",
@@ -490,7 +490,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/dried-leaf-stem-twig-green.webp"
   },
   {
     "id": "def.equip.herbWolfsbane",
@@ -507,7 +507,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/holly-pointy-leaf-green.webp"
   },
   {
     "id": "def.equip.herbWoundwort",
@@ -524,7 +524,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/plants/herb-marjoram-basil-oregano-leaf-bunch-green.webp"
   },
   {
     "id": "def.equip.holyBook",
@@ -541,7 +541,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/books/book-symbol-cross-blue.webp"
   },
   {
     "id": "def.equip.holySymbol",
@@ -558,7 +558,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/holy-symbol.webp"
+    "icon": "icons/equipment/neck/amulet-carved-stone-cross.webp"
   },
   {
     "id": "def.equip.holyWater",
@@ -575,7 +575,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/holy-water.webp"
+    "icon": "icons/consumables/drinks/glass-liquid-blue.webp"
   },
   {
     "id": "def.equip.ink",
@@ -592,7 +592,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/scribal/ink-quill-pink.webp"
   },
   {
     "id": "def.equip.ironSpikes",
@@ -609,7 +609,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/fasteners/nails-steel-brown.webp"
   },
   {
     "id": "def.equip.journal",
@@ -626,7 +626,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/books/book-notes-ragged-green.webp"
   },
   {
     "id": "def.equip.laborerSTools",
@@ -643,7 +643,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/shovel-spade-steel-brown-grey.webp"
   },
   {
     "id": "def.equip.lantern",
@@ -660,7 +660,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/lights/lantern-iron-lit-yellow.webp"
   },
   {
     "id": "def.equip.lock",
@@ -677,7 +677,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/misc/lock-bronze-reinforced.webp"
   },
   {
     "id": "def.equip.manacles",
@@ -694,7 +694,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/manacles.webp"
+    "icon": "icons/sundries/survival/cuffs-shackles-steel.webp"
   },
   {
     "id": "def.equip.messKit",
@@ -711,7 +711,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/kitchenware/pot-meal.webp"
   },
   {
     "id": "def.equip.metamphora",
@@ -728,7 +728,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/drinks/wine-amphora-clay-gray.webp"
   },
   {
     "id": "def.equip.mirror",
@@ -745,7 +745,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/survival/mirror-plain.webp"
   },
   {
     "id": "def.equip.musicalInstrument",
@@ -762,7 +762,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/instruments/lute-gold-brown.webp"
   },
   {
     "id": "def.equip.oil",
@@ -779,7 +779,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/kitchenware/jug-clay-brown-sealed.webp"
   },
   {
     "id": "def.equip.pavilion",
@@ -796,7 +796,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/environment/settlement/tent-flag.webp"
   },
   {
     "id": "def.equip.pell",
@@ -813,7 +813,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/environment/settlement/target-dummy.webp"
   },
   {
     "id": "def.equip.poleWooden",
@@ -830,7 +830,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/weapons/staves/staff-simple-brown.webp"
   },
   {
     "id": "def.equip.pouchPurse",
@@ -847,10 +847,11 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/coinpouch-simple-leather-brown.webp"
   },
   {
     "id": "def.equip.prosthesis",
+    "iconNiche": "modules/game-icons-net/blacktransparent/wooden-pegleg.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Prosthesis",
@@ -864,7 +865,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/equipment/hand/gauntlet-iron-riveted-brown.webp"
   },
   {
     "id": "def.equip.quill",
@@ -881,7 +882,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/scribal/ink-quill-red.webp"
   },
   {
     "id": "def.equip.quintain",
@@ -898,7 +899,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/environment/settlement/scarecrow.webp"
   },
   {
     "id": "def.equip.rationsIron",
@@ -915,7 +916,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/food/dried-meat-jerky-fish-red.webp"
   },
   {
     "id": "def.equip.rationsStandard",
@@ -932,7 +933,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/consumables/grains/breadsticks-crackers-wrapped-ration-brown.webp"
   },
   {
     "id": "def.equip.rope50",
@@ -949,7 +950,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/survival/rope-coiled-brown.webp"
   },
   {
     "id": "def.equip.rucksack",
@@ -966,7 +967,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/duffel-simple-leather.webp"
   },
   {
     "id": "def.equip.sackLarge",
@@ -983,7 +984,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/sack-cloth-heavy-brown.webp"
   },
   {
     "id": "def.equip.sackSmall",
@@ -1000,7 +1001,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/sack-simple-brown.webp"
   },
   {
     "id": "def.equip.saddlebag",
@@ -1017,10 +1018,11 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/containers/bags/satchel-leather-brown.webp"
   },
   {
     "id": "def.equip.saddleTack",
+    "iconNiche": "modules/game-icons-net/blacktransparent/saddle.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Saddle & Tack",
@@ -1034,10 +1036,11 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/misc/horseshoe-iron.webp"
   },
   {
     "id": "def.equip.scabbard",
+    "iconNiche": "modules/game-icons-net/blacktransparent/scabbard.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Scabbard",
@@ -1051,7 +1054,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/equipment/waist/belt-coiled-leather-steel.webp"
   },
   {
     "id": "def.equip.spellBookBlank",
@@ -1068,7 +1071,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "systems/acks/assets/icons/spell-book.webp"
+    "icon": "icons/sundries/books/book-embossed-jewel-gold-purple.webp"
   },
   {
     "id": "def.equip.stakesAndMallet",
@@ -1085,7 +1088,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/survival/stake-rough-simple-brown.webp"
   },
   {
     "id": "def.equip.specialComponentsMiscellaneous",
@@ -1102,7 +1105,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/laboratory/vials-blue-pink.webp"
   },
   {
     "id": "def.equip.surgicalSaw",
@@ -1119,7 +1122,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/saw-surgical-steel-grey.webp"
   },
   {
     "id": "def.equip.tent",
@@ -1136,7 +1139,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/environment/settlement/tent.webp"
   },
   {
     "id": "def.equip.thievesTools",
@@ -1153,7 +1156,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/lockpicks-steel-grey.webp"
   },
   {
     "id": "def.equip.thievesToolsSuperior",
@@ -1170,7 +1173,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/hand/awl.webp"
   },
   {
     "id": "def.equip.tinderbox",
@@ -1187,7 +1190,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/survival/fire-lighter-brass-lit.webp"
   },
   {
     "id": "def.equip.torch",
@@ -1204,7 +1207,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/lights/torch-brown-lit.webp"
   },
   {
     "id": "def.equip.treatise",
@@ -1221,7 +1224,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/books/book-tooled-brass-brown.webp"
   },
   {
     "id": "def.equip.whistle",
@@ -1238,7 +1241,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/tools/instruments/whistle-copper.webp"
   },
   {
     "id": "def.equip.waterskinWineskin",
@@ -1255,7 +1258,7 @@
       "category": "equipment",
       "group": "gear"
     },
-    "icon": "icons/svg/item-bag.svg"
+    "icon": "icons/sundries/survival/waterskin-leather-brown.webp"
   },
   {
     "id": "def.equip.belt",
@@ -1273,7 +1276,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/waist/belt-leather-brown.webp"
   },
   {
     "id": "def.equip.boots",
@@ -1291,7 +1294,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/feet/boots-leather-simple-brown.webp"
   },
   {
     "id": "def.equip.breastwrap",
@@ -1309,7 +1312,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/chest/vest-cloth-tattered-tan.webp"
   },
   {
     "id": "def.equip.cassock",
@@ -1327,7 +1330,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/chest/robe-collared-blue.webp"
   },
   {
     "id": "def.equip.chiton",
@@ -1345,7 +1348,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/chest/shirt-long.webp"
   },
   {
     "id": "def.equip.cloak",
@@ -1363,7 +1366,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "systems/acks/assets/icons/cloak.webp"
+    "icon": "icons/equipment/back/cloak-brown.webp"
   },
   {
     "id": "def.equip.gloves",
@@ -1381,7 +1384,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "systems/acks/assets/icons/gloves.webp"
+    "icon": "icons/equipment/hand/gloves-leather-tan.webp"
   },
   {
     "id": "def.equip.hat",
@@ -1399,7 +1402,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/head/hat-belted-simple-brown.webp"
   },
   {
     "id": "def.equip.robe",
@@ -1417,7 +1420,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "systems/acks/assets/icons/robe.webp"
+    "icon": "icons/equipment/chest/robe-layered-white.webp"
   },
   {
     "id": "def.equip.sandalsShoes",
@@ -1435,7 +1438,7 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "icons/svg/statue.svg"
+    "icon": "icons/equipment/feet/shoes-sandals.webp"
   },
   {
     "id": "def.equip.tunic",
@@ -1453,13 +1456,14 @@
       "group": "clothing",
       "subtype": "clothing"
     },
-    "icon": "systems/acks/assets/icons/tunic.webp",
+    "icon": "icons/equipment/chest/shirt-simple-white.webp",
     "assists": {
       "descStopY": 400
     }
   },
   {
     "id": "def.equip.camels",
+    "iconNiche": "modules/game-icons-net/blacktransparent/camel.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Camels",
@@ -1473,10 +1477,11 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/commodities/treasure/figurine-camel.webp"
   },
   {
     "id": "def.equip.dogHunting",
+    "iconNiche": "modules/game-icons-net/blacktransparent/sitting-dog.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Dog, Hunting",
@@ -1490,10 +1495,11 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/creatures/mammals/dog-husky-white-blue.webp"
   },
   {
     "id": "def.equip.dogWar",
+    "iconNiche": "modules/game-icons-net/blacktransparent/jumping-dog.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Dog, War",
@@ -1507,10 +1513,11 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/creatures/mammals/wolf-howl-moon-gray.webp"
   },
   {
     "id": "def.equip.donkey",
+    "iconNiche": "modules/game-icons-net/blacktransparent/donkey.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Donkey",
@@ -1524,7 +1531,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/settlement/stables-horses.webp"
   },
   {
     "id": "def.equip.horseHeavy",
@@ -1541,7 +1548,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/creatures/horses.webp"
   },
   {
     "id": "def.equip.horseLight",
@@ -1558,7 +1565,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/creatures/horse-white.webp"
   },
   {
     "id": "def.equip.horseMedium",
@@ -1575,7 +1582,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/creatures/horse-brown.webp"
   },
   {
     "id": "def.equip.horseSteppe",
@@ -1592,10 +1599,11 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/creatures/horse-tan.webp"
   },
   {
     "id": "def.equip.mule",
+    "iconNiche": "modules/game-icons-net/blacktransparent/horse-head.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Mule",
@@ -1609,7 +1617,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/environment/settlement/stable.webp"
   },
   {
     "id": "def.equip.ox",
@@ -1626,7 +1634,7 @@
       "category": "equipment",
       "group": "animal"
     },
-    "icon": "icons/svg/pawprint.svg"
+    "icon": "icons/creatures/mammals/ox-buffalo-horned-green.webp"
   },
   {
     "id": "def.equip.animalFeed",
@@ -1643,7 +1651,7 @@
       "category": "equipment",
       "group": "provisions"
     },
-    "icon": "icons/svg/barrel.svg"
+    "icon": "icons/consumables/grains/sacks-grain-white.webp"
   },
   {
     "id": "def.equip.inn",
@@ -1660,7 +1668,7 @@
       "category": "equipment",
       "group": "lodging"
     },
-    "icon": "icons/svg/house.svg"
+    "icon": "icons/environment/settlement/tavern.webp"
   },
   {
     "id": "def.equip.adit",
@@ -1677,7 +1685,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/wilderness/mine-exterior-entrance.webp"
   },
   {
     "id": "def.equip.arrowSlit",
@@ -1694,7 +1702,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/city-wall.webp"
   },
   {
     "id": "def.equip.barbican",
@@ -1711,7 +1719,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/castle-gatehouse.webp"
   },
   {
     "id": "def.equip.barracksBlock",
@@ -1728,7 +1736,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/house-poles.webp"
   },
   {
     "id": "def.equip.battlement",
@@ -1745,7 +1753,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/castle-tan.webp"
   },
   {
     "id": "def.equip.building",
@@ -1762,7 +1770,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/house-construction.webp"
   },
   {
     "id": "def.equip.chapterhouse",
@@ -1779,7 +1787,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/church.webp"
   },
   {
     "id": "def.equip.cottage",
@@ -1796,10 +1804,11 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/house-farmland-small.webp"
   },
   {
     "id": "def.equip.drawbridge",
+    "iconNiche": "modules/game-icons-net/blacktransparent/drawbridge.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Drawbridge",
@@ -1813,7 +1822,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/bridge-stone.webp"
   },
   {
     "id": "def.equip.gatehouse",
@@ -1830,7 +1839,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/stone-gatehouse-tan.webp"
   },
   {
     "id": "def.equip.granaryWarehouse",
@@ -1847,7 +1856,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/warehouse-barn-crates.webp"
   },
   {
     "id": "def.equip.headquarters",
@@ -1864,7 +1873,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/city-hall.webp"
   },
   {
     "id": "def.equip.hospital",
@@ -1881,7 +1890,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/tools/medical/medkit-white-red.webp"
   },
   {
     "id": "def.equip.hut",
@@ -1898,7 +1907,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/hut.webp"
   },
   {
     "id": "def.equip.keep",
@@ -1915,7 +1924,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/castle.webp"
   },
   {
     "id": "def.equip.moat",
@@ -1932,7 +1941,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/sewer-entrance.webp"
   },
   {
     "id": "def.equip.moatCrude",
@@ -1949,7 +1958,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/wilderness/terrain-rocky-ground.webp"
   },
   {
     "id": "def.equip.palisade",
@@ -1966,7 +1975,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/fence-wooden-picket.webp"
   },
   {
     "id": "def.equip.palisadeCrude",
@@ -1983,7 +1992,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/sundries/survival/stake-rough-heavy-brown.webp"
   },
   {
     "id": "def.equip.rampart",
@@ -2000,7 +2009,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/wilderness/terrain-rocks-brown.webp"
   },
   {
     "id": "def.equip.roads",
@@ -2017,7 +2026,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/wilderness/terrain-river-road-gray.webp"
   },
   {
     "id": "def.equip.shaft",
@@ -2034,7 +2043,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "systems/acks/assets/icons/shaft.webp"
+    "icon": "icons/environment/wilderness/mine-interior-dungeon-door.webp"
   },
   {
     "id": "def.equip.stableBarracks",
@@ -2051,7 +2060,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/stables-logo.webp"
   },
   {
     "id": "def.equip.tower",
@@ -2068,7 +2077,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/tower-stone-blue.webp"
   },
   {
     "id": "def.equip.townhouse",
@@ -2085,7 +2094,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/house-two-stories.webp"
   },
   {
     "id": "def.equip.trap",
@@ -2102,7 +2111,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/pressure-plate.webp"
   },
   {
     "id": "def.equip.arrowFiringTrap",
@@ -2119,7 +2128,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/weapons/bows/shortbow-arrows-black.webp"
   },
   {
     "id": "def.equip.ceilingCollapseTrap",
@@ -2136,7 +2145,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/wilderness/terrain-stone-stalagtite.webp"
   },
   {
     "id": "def.equip.dartFiringTrap",
@@ -2153,7 +2162,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/weapons/thrown/dart-feathered.webp"
   },
   {
     "id": "def.equip.deadfallTrap",
@@ -2170,7 +2179,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/commodities/stone/rock-pile-grey.webp"
   },
   {
     "id": "def.equip.excavatedEarthPitTrap",
@@ -2187,7 +2196,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/spike-skull-white-brown.webp"
   },
   {
     "id": "def.equip.needleFiringTrap",
@@ -2204,7 +2213,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/tools/hand/needle-thread-spool.webp"
   },
   {
     "id": "def.equip.portcullisTrap",
@@ -2221,7 +2230,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/grate-steel.webp"
   },
   {
     "id": "def.equip.rockCutPitTrap",
@@ -2238,7 +2247,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/metal-spikes.webp"
   },
   {
     "id": "def.equip.rollingRockTrap",
@@ -2255,7 +2264,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/commodities/stone/boulder-grey.webp"
   },
   {
     "id": "def.equip.scythingBladeTrap",
@@ -2272,7 +2281,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/saw-steel.webp"
   },
   {
     "id": "def.equip.springSnareTrap",
@@ -2289,7 +2298,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/net.webp"
   },
   {
     "id": "def.equip.swingingLogTrap",
@@ -2306,7 +2315,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/commodities/wood/log-rough-brown.webp"
   },
   {
     "id": "def.equip.whippingBranchTrap",
@@ -2323,7 +2332,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/commodities/materials/plant-branch-brown-green.webp"
   },
   {
     "id": "def.equip.trapAccessory",
@@ -2340,7 +2349,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/traps/wire-fencing-coil.webp"
   },
   {
     "id": "def.equip.villa",
@@ -2357,7 +2366,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/house-manor.webp"
   },
   {
     "id": "def.equip.wall",
@@ -2374,7 +2383,7 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/fence-stone-brick.webp"
   },
   {
     "id": "def.equip.wallWalk",
@@ -2391,10 +2400,11 @@
       "category": "equipment",
       "group": "structure"
     },
-    "icon": "icons/svg/castle.svg"
+    "icon": "icons/environment/settlement/stone-stairs.webp"
   },
   {
     "id": "def.equip.cartLarge",
+    "iconNiche": "modules/game-icons-net/blacktransparent/old-wagon.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Cart, Large",
@@ -2408,7 +2418,7 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/environment/settlement/wagon-black.webp"
   },
   {
     "id": "def.equip.cartSmall",
@@ -2425,7 +2435,7 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/containers/misc/wheelbarrow-white.webp"
   },
   {
     "id": "def.equip.chariotHeavy",
@@ -2442,10 +2452,11 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/tools/smithing/horseshoe-steel-grey.webp"
   },
   {
     "id": "def.equip.chariotLight",
+    "iconNiche": "modules/game-icons-net/blacktransparent/chariot.svg",
     "kind": "kind.equipment",
     "book": "rr",
     "name": "Chariot, Light",
@@ -2459,7 +2470,7 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/tools/smithing/horseshoe-steel-blue.webp"
   },
   {
     "id": "def.equip.chariotMedium",
@@ -2476,7 +2487,7 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/tools/smithing/horsehoe-worn-steel-grey.webp"
   },
   {
     "id": "def.equip.howdah",
@@ -2493,7 +2504,7 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/environment/settlement/gazebo.webp"
   },
   {
     "id": "def.equip.palanquin",
@@ -2510,6 +2521,6 @@
       "category": "equipment",
       "group": "vehicle"
     },
-    "icon": "icons/svg/stone-path.svg"
+    "icon": "icons/sundries/survival/shelter-tent-small.webp"
   }
 ]

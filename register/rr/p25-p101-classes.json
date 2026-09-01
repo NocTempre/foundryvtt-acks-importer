@@ -14,7 +14,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/sword.svg",
+    "icon": "icons/sundries/flags/banner-sword-blue.webp",
     "class": {
       "key": "fighter",
       "chassis": {
@@ -123,6 +123,7 @@
   },
   {
     "id": "def.power.battlefieldProwess",
+    "icon": "icons/skills/melee/weapons-crossed-swords-yellow.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Battlefield Prowess",
@@ -138,6 +139,7 @@
   },
   {
     "id": "def.power.castle",
+    "icon": "icons/environment/settlement/watchtower-castle-night.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Castle",
@@ -185,6 +187,7 @@
   },
   {
     "id": "def.power.animalReflexes",
+    "icon": "icons/creatures/abilities/cougar-pounce-stalk-black.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Animal Reflexes",
@@ -200,6 +203,7 @@
   },
   {
     "id": "def.power.pathfinding",
+    "icon": "icons/skills/trades/academics-astronomy-navigation-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Pathfinding",
@@ -215,6 +219,7 @@
   },
   {
     "id": "def.power.naturalStealth",
+    "icon": "icons/magic/perception/silhouette-stealth-shadow.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Natural Stealth",
@@ -230,6 +235,7 @@
   },
   {
     "id": "def.power.experienceAndHardiness",
+    "icon": "icons/magic/defensive/armor-stone-skin.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Experience and Hardiness",
@@ -261,6 +267,7 @@
   },
   {
     "id": "def.power.expertBargaining",
+    "icon": "icons/skills/social/trading-justice-scale-gold.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Expert Bargaining",
@@ -276,6 +283,7 @@
   },
   {
     "id": "def.power.multilingual",
+    "icon": "icons/skills/social/diplomacy-writing-letter.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Multilingual",
@@ -291,6 +299,7 @@
   },
   {
     "id": "def.power.treachery",
+    "icon": "icons/skills/social/peace-luck-insult.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Treachery",
@@ -306,6 +315,7 @@
   },
   {
     "id": "def.power.steadyTradeRoute",
+    "icon": "icons/skills/trades/academics-merchant-scribe.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Steady Trade Route",
@@ -321,6 +331,7 @@
   },
   {
     "id": "def.power.rumormongering",
+    "icon": "icons/skills/social/diplomacy-handshake-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Rumormongering",
@@ -336,6 +347,7 @@
   },
   {
     "id": "def.power.accessToCapital",
+    "icon": "icons/skills/social/orb-gold-claw-yellow.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Access to Capital",
@@ -351,6 +363,7 @@
   },
   {
     "id": "def.power.monopolyPower",
+    "icon": "icons/skills/social/trading-injustice-scale-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Monopoly Power",
@@ -366,6 +379,7 @@
   },
   {
     "id": "def.power.savageResilience",
+    "icon": "icons/magic/control/buff-strength-muscle-damage-red.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Savage Resilience",
@@ -381,6 +395,7 @@
   },
   {
     "id": "def.power.animalMagnetism",
+    "icon": "icons/magic/nature/wolf-paw-glow-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Animal Magnetism",
@@ -412,6 +427,7 @@
   },
   {
     "id": "def.power.inspireCourage",
+    "icon": "icons/skills/social/diplomacy-unity-alliance.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Inspire Courage",
@@ -443,6 +459,7 @@
   },
   {
     "id": "def.power.chroniclesOfBattle",
+    "icon": "icons/skills/trades/academics-book-study-purple.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Chronicles of Battle",
@@ -458,6 +475,7 @@
   },
   {
     "id": "def.power.inspireHope",
+    "icon": "icons/magic/light/beam-rays-yellow.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Inspire Hope",
@@ -473,6 +491,7 @@
   },
   {
     "id": "def.power.sanctifiedBody",
+    "icon": "icons/magic/holy/angel-wings-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Sanctified Body",
@@ -491,6 +510,7 @@
   },
   {
     "id": "def.power.holyFervor",
+    "icon": "icons/magic/holy/prayer-hands-glowing-yellow-white.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Holy Fervor",
@@ -506,6 +526,7 @@
   },
   {
     "id": "def.power.evasion",
+    "icon": "icons/magic/defensive/illusion-evasion-echo-purple.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Evasion",
@@ -527,6 +548,7 @@
   },
   {
     "id": "def.power.borderFort",
+    "icon": "icons/environment/settlement/watchtower-wood-tan.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Border Fort",
@@ -542,6 +564,7 @@
   },
   {
     "id": "def.power.scrollreading",
+    "icon": "icons/magic/symbols/rune-sigil-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Scrollreading",
@@ -557,6 +580,7 @@
   },
   {
     "id": "def.power.expertTraveling",
+    "icon": "icons/skills/movement/figure-running-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Expert Traveling",
@@ -572,6 +596,7 @@
   },
   {
     "id": "def.power.mercantileNetwork",
+    "icon": "icons/skills/social/diplomacy-peace-alliance.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Mercantile Network",
@@ -587,6 +612,7 @@
   },
   {
     "id": "def.power.guildhouse",
+    "icon": "icons/environment/settlement/house-city.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Guildhouse",
@@ -602,6 +628,7 @@
   },
   {
     "id": "def.power.naturalProficiency",
+    "icon": "icons/magic/nature/leaf-glow-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Natural Proficiency",
@@ -617,6 +644,7 @@
   },
   {
     "id": "def.power.chieftainsHall",
+    "icon": "icons/environment/settlement/watchtower-tribe.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Chieftain's Hall",
@@ -632,6 +660,7 @@
   },
   {
     "id": "def.power.jackOfAllTrades",
+    "icon": "icons/skills/trades/construction-carpentry-hammer.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Jack of All Trades",
@@ -647,6 +676,7 @@
   },
   {
     "id": "def.power.greatHall",
+    "icon": "icons/environment/settlement/palast.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Great Hall",
@@ -662,6 +692,7 @@
   },
   {
     "id": "def.power.senseEvil",
+    "icon": "icons/magic/perception/eye-ringed-glow-angry-red.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Sense Evil",
@@ -677,6 +708,7 @@
   },
   {
     "id": "def.power.fortress",
+    "icon": "icons/environment/settlement/city-night-spire.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Fortress",
@@ -706,7 +738,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/target.svg",
+    "icon": "icons/sundries/flags/banner-standard-green.webp",
     "class": {
       "key": "explorer",
       "chassis": {
@@ -854,7 +886,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/eye.svg",
+    "icon": "icons/sundries/flags/banner-worn-blue.webp",
     "class": {
       "key": "thief",
       "chassis": {
@@ -1058,7 +1090,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/coins.svg",
+    "icon": "icons/sundries/flags/banner-yellow.webp",
     "class": {
       "key": "venturer",
       "chassis": {
@@ -1224,7 +1256,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/blood.svg",
+    "icon": "icons/sundries/flags/banner-flag-skull-red.webp",
     "class": {
       "key": "assassin",
       "chassis": {
@@ -1384,7 +1416,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/bones.svg",
+    "icon": "icons/sundries/flags/banner-symbol-claw.webp",
     "class": {
       "key": "barbarian",
       "chassis": {
@@ -1555,7 +1587,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/sound.svg",
+    "icon": "icons/sundries/flags/banner-flag-pink.webp",
     "class": {
       "key": "bard",
       "chassis": {
@@ -1759,7 +1791,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/shield.svg",
+    "icon": "icons/sundries/flags/banner-silver-white.webp",
     "class": {
       "key": "paladin",
       "chassis": {
@@ -1883,6 +1915,7 @@
   },
   {
     "id": "def.power.totemanimal",
+    "icon": "icons/magic/nature/wolf-paw-glow-large-teal-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Totem Animal",
@@ -1911,6 +1944,7 @@
   },
   {
     "id": "def.power.villageWisdom",
+    "icon": "icons/environment/settlement/well.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Village Wisdom",
@@ -1926,6 +1960,7 @@
   },
   {
     "id": "def.power.arcaneMagic",
+    "icon": "icons/magic/symbols/runes-star-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Arcane Magic",
@@ -1941,6 +1976,7 @@
   },
   {
     "id": "def.power.minorMagicalResearch",
+    "icon": "icons/magic/symbols/rune-sigil-white-pink.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Minor Magical Research",
@@ -1956,6 +1992,7 @@
   },
   {
     "id": "def.power.majorMagicalResearch",
+    "icon": "icons/magic/symbols/runes-star-magenta.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Major Magical Research",
@@ -1971,6 +2008,7 @@
   },
   {
     "id": "def.power.sanctum",
+    "icon": "icons/environment/settlement/wizard-castle.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Sanctum",
@@ -1986,6 +2024,7 @@
   },
   {
     "id": "def.power.supremeMagicalResearch",
+    "icon": "icons/magic/symbols/runes-star-orange-purple.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Supreme Magical Research",
@@ -2007,6 +2046,7 @@
   },
   {
     "id": "def.power.divineMagic",
+    "icon": "icons/magic/holy/chalice-glowing-gold.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Divine Magic",
@@ -2022,6 +2062,7 @@
   },
   {
     "id": "def.power.rebukeUndead",
+    "icon": "icons/magic/holy/barrier-shield-winged-cross.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Rebuke Undead",
@@ -2055,6 +2096,7 @@
   },
   {
     "id": "def.power.fortifiedChurch",
+    "icon": "icons/environment/settlement/temple-night.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Fortified Church",
@@ -2070,6 +2112,7 @@
   },
   {
     "id": "def.power.temple",
+    "icon": "icons/environment/settlement/columned-forum.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Temple",
@@ -2085,6 +2128,7 @@
   },
   {
     "id": "def.power.consolation",
+    "icon": "icons/magic/life/heart-cross-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Consolation",
@@ -2100,6 +2144,7 @@
   },
   {
     "id": "def.power.purityOfTheBody",
+    "icon": "icons/magic/life/cross-flared-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Purity of the Body",
@@ -2115,6 +2160,7 @@
   },
   {
     "id": "def.power.communeWithSpirits",
+    "icon": "icons/creatures/magical/spirit-undead-ghost-tan-teal.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Commune with Spirits",
@@ -2130,6 +2176,7 @@
   },
   {
     "id": "def.power.tribalTraditions",
+    "icon": "icons/magic/nature/dreamcatcher-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Tribal Traditions",
@@ -2151,6 +2198,7 @@
   },
   {
     "id": "def.power.darkPath",
+    "icon": "icons/magic/unholy/silhouette-robe-evil-power.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Dark Path",
@@ -2166,6 +2214,7 @@
   },
   {
     "id": "def.power.occultism",
+    "icon": "icons/magic/symbols/circle-ouroboros.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Occultism",
@@ -2181,6 +2230,7 @@
   },
   {
     "id": "def.power.studiousDivineMagic",
+    "icon": "icons/skills/trades/academics-study-reading-book.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Studious Divine Magic",
@@ -2196,6 +2246,7 @@
   },
   {
     "id": "def.power.witchTradition",
+    "icon": "icons/magic/nature/moon-crescent.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Tradition",
@@ -2224,7 +2275,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/daze.svg",
+    "icon": "icons/sundries/flags/banner-purple.webp",
     "class": {
       "key": "mage",
       "templatesAssumeIntBonus": 1,
@@ -2399,7 +2450,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/angel.svg",
+    "icon": "icons/sundries/flags/banner-symbol-sun-gold-red.webp",
     "class": {
       "key": "crusader",
       "chassis": {
@@ -2583,7 +2634,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/combat.svg",
+    "icon": "icons/sundries/flags/banner-flag-red-white.webp",
     "class": {
       "key": "bladedancer",
       "chassis": {
@@ -2771,7 +2822,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/light.svg",
+    "icon": "icons/sundries/flags/banner-white.webp",
     "class": {
       "key": "priestess",
       "chassis": {
@@ -2976,7 +3027,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/pawprint.svg",
+    "icon": "icons/sundries/flags/banner-standard-moon.webp",
     "class": {
       "key": "shaman",
       "chassis": {
@@ -3174,7 +3225,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/fire.svg",
+    "icon": "icons/sundries/flags/banner-standard-tattered-red.webp",
     "class": {
       "key": "warlock",
       "chassis": {
@@ -3387,7 +3438,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/daze.svg",
+    "icon": "icons/sundries/flags/banner-standard-purple.webp",
     "class": {
       "key": "witch",
       "templatesAssumeIntBonus": 1,
@@ -3586,6 +3637,7 @@
   },
   {
     "id": "def.power.hardyPeople",
+    "icon": "icons/magic/defensive/armor-green-hex.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Hardy People",
@@ -3601,6 +3653,7 @@
   },
   {
     "id": "def.power.sensitivityToRockAndStone",
+    "icon": "icons/magic/earth/strike-fist-stone-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Sensitivity to Rock and Stone",
@@ -3632,6 +3685,7 @@
   },
   {
     "id": "def.power.attunementToNature",
+    "icon": "icons/magic/nature/leaf-oak-wreath-glow-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Attunement to Nature",
@@ -3704,6 +3758,7 @@
   },
   {
     "id": "def.power.connectionToNature",
+    "icon": "icons/magic/nature/root-vines-face-glow-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Connection to Nature",
@@ -3725,6 +3780,7 @@
   },
   {
     "id": "def.power.bloodOfKings",
+    "icon": "icons/magic/control/control-influence-crown-gold.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Blood of Kings",
@@ -3740,6 +3796,7 @@
   },
   {
     "id": "def.power.favorOfTheGods",
+    "icon": "icons/magic/control/buff-luck-fortune-gold.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Favor of the Gods",
@@ -3755,6 +3812,7 @@
   },
   {
     "id": "def.power.longeval",
+    "icon": "icons/magic/time/hourglass-tilted-glowing-gold.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Longeval",
@@ -3786,6 +3844,7 @@
   },
   {
     "id": "def.power.afterTheFlesh",
+    "icon": "icons/magic/unholy/strike-body-explode-disintegrate.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "After the Flesh",
@@ -3801,6 +3860,7 @@
   },
   {
     "id": "def.power.ancientPacts",
+    "icon": "icons/magic/symbols/rune-sigil-horned-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Ancient Pacts",
@@ -3816,6 +3876,7 @@
   },
   {
     "id": "def.power.inexorable",
+    "icon": "icons/magic/defensive/shield-hex-red.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Inexorable",
@@ -3831,6 +3892,7 @@
   },
   {
     "id": "def.power.attentionToDetail",
+    "icon": "icons/skills/trades/academics-investigation-puzzles.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Attention to Detail",
@@ -3846,6 +3908,7 @@
   },
   {
     "id": "def.power.crafting",
+    "icon": "icons/skills/trades/smithing-anvil-brown.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Crafting",
@@ -3861,6 +3924,7 @@
   },
   {
     "id": "def.power.vault",
+    "icon": "icons/environment/settlement/warehouse-crates.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Vault",
@@ -3876,6 +3940,7 @@
   },
   {
     "id": "def.power.fastness",
+    "icon": "icons/environment/settlement/watchtower-cliff.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Fastness",
@@ -3891,6 +3956,7 @@
   },
   {
     "id": "def.power.preternaturalQuickening",
+    "icon": "icons/magic/movement/acceleration-speed-tech-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Preternatural Quickening",
@@ -3906,6 +3972,7 @@
   },
   {
     "id": "def.power.darkSouls",
+    "icon": "icons/magic/unholy/orb-colllecting-energy-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Dark Souls",
@@ -3935,7 +4002,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/anchor.svg",
+    "icon": "icons/sundries/flags/banner-standard-brown.webp",
     "class": {
       "key": "dwarvenCraftpriest",
       "race": "dwarf",
@@ -4144,7 +4211,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/shield.svg",
+    "icon": "icons/sundries/flags/banner-flag-white-mountain.webp",
     "class": {
       "key": "dwarvenVaultguard",
       "race": "dwarf",
@@ -4302,7 +4369,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/eye.svg",
+    "icon": "icons/sundries/flags/banner-symbol-eye-purple.webp",
     "class": {
       "key": "elvenNightblade",
       "race": "elf",
@@ -4548,7 +4615,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/sword.svg",
+    "icon": "icons/sundries/flags/banner-standard-blue.webp",
     "class": {
       "key": "elvenSpellsword",
       "race": "elf",
@@ -4731,7 +4798,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/angel.svg",
+    "icon": "icons/sundries/flags/banner-flag-white.webp",
     "class": {
       "key": "nobiranWonderworker",
       "race": "nobiran",
@@ -4977,7 +5044,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/skull.svg",
+    "icon": "icons/sundries/flags/banner-skull-red.webp",
     "class": {
       "key": "zaharanRuinguard",
       "race": "zaharan",
@@ -5191,6 +5258,7 @@
   },
   {
     "id": "def.power.cloister",
+    "icon": "icons/environment/settlement/graveyard.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Cloister",
@@ -5206,6 +5274,7 @@
   },
   {
     "id": "def.power.spiritualRitual",
+    "icon": "icons/magic/nature/leaf-flower-wreath-glow-green-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Spiritual Ritual",
@@ -5221,6 +5290,7 @@
   },
   {
     "id": "def.power.shapechanging",
+    "icon": "icons/magic/control/silhouette-hold-change-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Shapechanging",
@@ -5236,6 +5306,7 @@
   },
   {
     "id": "def.power.spiritwalking",
+    "icon": "icons/creatures/magical/spirit-undead-ghost-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Spiritwalking",
@@ -5251,6 +5322,7 @@
   },
   {
     "id": "def.power.medicineLodge",
+    "icon": "icons/environment/settlement/house-shelter-stone.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Medicine Lodge",
@@ -5266,6 +5338,7 @@
   },
   {
     "id": "def.power.powerOfSacrifice",
+    "icon": "icons/magic/unholy/projectiles-blood-salvo-red.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Power of Sacrifice",
@@ -5281,6 +5354,7 @@
   },
   {
     "id": "def.power.traditionalMedicine",
+    "icon": "icons/magic/nature/root-vine-caduceus-healing.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Traditional Medicine",
@@ -5296,6 +5370,7 @@
   },
   {
     "id": "def.power.brewPotions",
+    "icon": "icons/skills/toxins/cauldron-bubbles-overflow-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Brew Potions",
@@ -5311,6 +5386,7 @@
   },
   {
     "id": "def.power.scribeScrolls",
+    "icon": "icons/skills/trades/academics-scribe-quill-gray.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Scribe Scrolls",
@@ -5326,6 +5402,7 @@
   },
   {
     "id": "def.power.witchsCottage",
+    "icon": "icons/environment/settlement/house-woods.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Witch's Cottage",
@@ -5341,6 +5418,7 @@
   },
   {
     "id": "def.power.zaharanDarkFortress",
+    "icon": "icons/environment/settlement/watchtower-moonlit-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Zaharan Dark Fortress",
@@ -5356,6 +5434,7 @@
   },
   {
     "id": "def.power.deathHealing",
+    "icon": "icons/magic/death/hand-undead-skeleton-fire-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Death Healing",
@@ -5371,6 +5450,7 @@
   },
   {
     "id": "def.power.arcaneStriking",
+    "icon": "icons/skills/melee/strike-dagger-arcane-pink.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Arcane Striking",
@@ -5386,6 +5466,7 @@
   },
   {
     "id": "def.power.darkCharisma",
+    "icon": "icons/magic/control/mouth-smile-deception-purple.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Dark Charisma",

@@ -372,6 +372,68 @@ are acks-extras' surfaces — its `docs/equipment/TESTING.md` owns those steps.
 
 Delete the fixtures you created; the imported library is the world's.
 
+## A shield form is a shield
+
+### Fixtures
+
+The Judges Journal connected — the six forms are the only thing that reads
+pp.409–410. ACKS Extras active, for the overlay and for the variation type the
+repair looks for. To exercise the repair as well as the create, build the
+pre-upgrade shape: mint one form the way it used to arrive, under the id it
+used to carry.
+
+```
+await Item.create({name:"Kite Shield", type:"acks-extras.variation", system:{key:"shield.kite", kind:"form", appliesTo:["shield"]}, flags:{"acks-importer":{cookbook:{id:"def.variation.shieldKite", cite:"JJ p.408"}}}})
+```
+
+### Steps
+
+1. Import equipment with the Journal connected.
+   *Observable:* six armour items on ACKS Cookbook / Equipment / Shields, each
+   one a shield carrying the numbers its own passage states.
+
+   ```
+   game.items.filter(i => String(i.getFlag("acks-importer","cookbook")?.id ?? "").startsWith("def.equip.shield")).map(i => `${i.name} [${i.type}/${i.system.type}] AC=${i.system.aac?.value} enc6=${i.system.weight6} form=${i.getFlag("acks-extras","shieldVariant")}`)
+   ```
+
+   Six rows, all `[armor/shield]`, each with an AC and a form. The
+   encumbrances differ and that is the check: the buckler is printed in ITEMS
+   and must read 1, the kite is printed at two stone and must read 12, and the
+   other four read 6. A buckler reading 6 means the item unit was scaled like a
+   stone; a form reading 0 means its locator missed and the shield weighs
+   nothing.
+2. Disconnect the Journal and import into a world that has none of them.
+   *Observable:* the six still arrive, named and typed, with no description, no
+   AC and no encumbrance. That is the bookless tier working: structure ships,
+   the numbers are the reader's. A "+1" appearing here means a value was baked.
+3. Put one on a character and equip it.
+   *Observable:* AC rises by the number the sheet shows, not by a number this
+   module chose. With the overlay on, cycle the strap to the back: the ordinary
+   bonus goes away (the overlay corrects downward from the item's own value),
+   and cycling back to hand restores it. A form that never moves the AC either
+   way means the flag did not reach the overlay.
+4. Re-run the import over the hand-made pre-upgrade document (fixture above).
+   *Observable:* the console warns that it removed N shield form(s) imported as
+   variations, and the world afterwards holds exactly ONE "Kite Shield", typed
+   `armor`. Two documents means the repair ran after the claim rather than
+   before it.
+5. Apply a masterwork variation to a shield, then re-import.
+   *Observable:* the applied variation is untouched. The repair reads the
+   sidebar and our own packs; a variation living on an item is an embedded copy
+   it never sees.
+6. Make a Judge's own "Kite Shield" with no importer stamp, then re-import.
+   *Observable:* it is untouched, and a second, generated Kite Shield stands
+   beside it. The repair matches on the cookbook id it imported under, which a
+   hand-made document does not carry.
+
+What a form does once it is on a character — the carry states, the mounted
+rules, the specialization gate — is acks-extras' surface; its
+`docs/equipment/TESTING.md` owns those steps.
+
+### Teardown
+
+Delete the fixtures you created; the imported library is the world's.
+
 ## Class template packages
 
 The recipe lives with the surface's owner: acks-extras
@@ -983,3 +1045,64 @@ points below the last printed line.
 
 **Teardown.** Delete the ability items the check created. The re-imported
 classes are restored world state and stay.
+
+## Every imported item wears its own icon
+
+The register carries one `icon` per entry and each kind draws from its own
+visual family; the compiled cookbook is what the runtime reads, so a register
+edit that was never compiled shows as the old picture and nothing else.
+
+### Fixtures
+
+Items you import and then delete. Do not run this against a world's existing
+library: those documents were created before the icons changed and are supposed
+to look old.
+
+### Steps
+
+1. Offline first, in the repo: `npm run icons` must report every kind fully
+   placed, and `node tools/check-cookbook-drift.mjs` must report none — drift
+   means the register was edited without recompiling, and the seat cannot see a
+   register edit at all.
+2. In the world, import three families whose registers differ most. There is no
+   by-shelf import for proficiencies on the public API (`cookbookImportAbilities`
+   opens a dialog and blocks a scripted run), so take one ability by id:
+
+   ```js
+   await acksImporter.importAbility("def.prof.alchemy");   // ACKS pictogram
+   await acksImporter.importClasses();                     // banners
+   await acksImporter.importAllEquipment();                // painted objects
+   ```
+
+3. Read the three shelves in the importer's Item compendium together, or count
+   from the index:
+
+   ```js
+   const p = game.packs.filter(x => x.metadata.label === "ACKS Cookbook — Item")[0];
+   const rows = [...p.index].filter(e => e.img?.startsWith("icons/svg/"));
+   ({ grey: rows.length, sample: rows.slice(0, 5).map(e => e.name) });
+   ```
+
+   `importEquipment()` covers a narrower set than `importAllEquipment()` — a
+   structure or a BTA good deleted before the run comes back only from the
+   latter, which is the call to use when checking coverage.
+
+**Observable.** A proficiency is a flat white-on-black pictogram, a class is a
+coloured banner, equipment is painted objects — three families a reader
+separates without reading a name. Nothing this run created carries an
+`icons/svg/` path. Rows that DO are older documents; that is correct, see below.
+
+4. Import one monster and open it. Its embedded attacks, and any spoils, carry
+   painted defaults rather than grey ones — those are minted from the page and
+   have no entry to take an icon from, so they read `DEFAULT_IMG` in
+   `scripts/constants.mjs`.
+
+**An item's picture is written once, at creation.** Nothing rewrites it
+afterwards — `cookbookUpdateAbilities` rewrites the descriptor, the extras and
+the cookbook id, and deliberately does not touch `img`. So the repaint path for
+an already-imported world is **Reimport One Shelf (GM)**
+(`cookbookReimportShelf`), which deletes that shelf and builds it again. Verify
+that rather than assuming it: note one old item's `img`, reimport its shelf,
+read the `img` back.
+
+**Teardown.** Delete the items and the actor the check imported.

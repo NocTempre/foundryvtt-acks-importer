@@ -1,6 +1,7 @@
 [
  {
   "id": "def.power.darkPathDemonology",
+  "icon": "icons/creatures/unholy/demon-fire-horned-clawed.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Dark Path: Demonology",
@@ -10,6 +11,7 @@
  },
  {
   "id": "def.power.darkPathNecromancy",
+  "icon": "icons/magic/death/undead-skeleton-lich-armor.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Dark Path: Necromancy",
@@ -19,6 +21,7 @@
  },
  {
   "id": "def.power.darkPathTransmogrification",
+  "icon": "icons/magic/control/silhouette-grow-shrink-blue.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Dark Path: Transmogrification",
@@ -28,6 +31,7 @@
  },
  {
   "id": "def.power.witchTraditionAntiquarian",
+  "icon": "icons/skills/trades/academics-study-archaeology-bones.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tradition: Antiquarian",
@@ -37,6 +41,7 @@
  },
  {
   "id": "def.power.witchTraditionChthonic",
+  "icon": "icons/magic/earth/barrier-stone-pillar-purple.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tradition: Chthonic",
@@ -46,6 +51,7 @@
  },
  {
   "id": "def.power.witchTraditionSylvan",
+  "icon": "icons/magic/nature/tree-spirit-green.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tradition: Sylvan",
@@ -55,6 +61,7 @@
  },
  {
   "id": "def.power.barbarianOriginJutland",
+  "icon": "icons/magic/water/snowflake-ice-blue-white.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tribal Origin: Jutland",
@@ -64,6 +71,7 @@
  },
  {
   "id": "def.power.barbarianOriginSkysostan",
+  "icon": "icons/magic/air/wind-stream-blue-gray.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tribal Origin: Skysostan",
@@ -73,6 +81,7 @@
  },
  {
   "id": "def.power.barbarianOriginIvoryKingdoms",
+  "icon": "icons/creatures/mammals/cat-hunched-glowing-red.webp",
   "kind": "kind.power",
   "book": "rr",
   "name": "Tribal Origin: Ivory Kingdoms",

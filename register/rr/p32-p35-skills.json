@@ -13,7 +13,7 @@
     "meta": {
       "category": "skill"
     },
-    "icon": "icons/svg/thrust.svg",
+    "icon": "systems/acks/assets/icons/backstab.webp",
     "effects": [
       {
         "type": "modifier",
@@ -81,7 +81,7 @@
         "note": "Fall distance and damage as the entry states them - the formula involves dice and a midpoint, which no numeric field can honestly carry."
       }
     ],
-    "icon": "icons/tools/hand/claws-climbing.webp",
+    "icon": "systems/acks/assets/icons/climb-walls.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/mountain-climbing.svg",
     "audited": "2026-08-01",
     "auditor": "chef"
@@ -107,7 +107,7 @@
         "page": 33
       }
     },
-    "icon": "icons/magic/perception/silhouette-stealth-shadow.webp",
+    "icon": "systems/acks/assets/icons/hide-in-shadows.webp",
     "effects": [
       {
         "type": "modifier",
@@ -155,7 +155,7 @@
       },
       "descStopY": 700
     },
-    "icon": "icons/svg/sound.svg",
+    "icon": "systems/acks/assets/icons/human-ear.webp",
     "effects": [
       {
         "type": "limitation",
@@ -267,7 +267,7 @@
         "page": 33
       }
     },
-    "icon": "icons/commodities/currency/coins-plain-pouch-gold.webp",
+    "icon": "systems/acks/assets/icons/pick-pockets.webp",
     "effects": [
       {
         "type": "modifier",
@@ -354,7 +354,7 @@
         "note": "A methodical search of the same area is still allowed, and may be repeated. A failed throw made while hastily searching on the move spends that area's one hasty attempt."
       }
     ],
-    "icon": "icons/tools/scribal/magnifying-glass.webp",
+    "icon": "systems/acks/assets/icons/spot.webp",
     "rolls": [
       {
         "key": "hasty",
@@ -395,7 +395,7 @@
         "kw:lightlessvision"
       ]
     },
-    "icon": "icons/svg/eye.svg",
+    "icon": "systems/acks/assets/icons/third-eye.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/all-seeing-eye.svg",
     "effects": [
       {
@@ -494,7 +494,7 @@
         "note": "Engaging an unengaged opponent from the rear while sneaking denies that opponent its free facing change."
       }
     ],
-    "icon": "icons/svg/cowled.svg"
+    "icon": "systems/acks/assets/icons/move-silently.webp"
   },
   {
     "id": "def.skill.streetwise",
@@ -525,7 +525,7 @@
         "note": "Automatic in his own home settlement, with no throw. The Judge may set a harder target for secretive or distant organizations."
       }
     ],
-    "icon": "icons/svg/city.svg",
+    "icon": "systems/acks/assets/icons/suspicious.webp",
     "iconNiche": "modules/game-icons-net/blacktransparent/hooded-figure.svg",
     "effects": [
       {
@@ -604,7 +604,7 @@
         "note": "Any other failure only denies the quick fix; a methodical attempt on the same trap is still open. TODO: retry rules await their own primitive per the owner's 2026-08-01 note."
       }
     ],
-    "icon": "icons/svg/trap.svg",
+    "icon": "systems/acks/assets/icons/remove-trap.webp",
     "rolls": [
       {
         "key": "hasty",
@@ -649,7 +649,7 @@
     },
     "audited": "2026-07-18",
     "auditor": "first-pass",
-    "icon": "icons/skills/trades/academics-book-study-runes.webp"
+    "icon": "systems/acks/assets/icons/open-book.webp"
   },
   {
     "id": "def.skill.hideout",
@@ -673,7 +673,7 @@
       "descStopY": 315,
       "expectTop": 2
     },
-    "icon": "icons/svg/house.svg",
+    "icon": "systems/acks/assets/icons/dungeon-hide.webp",
     "effects": [
       {
         "type": "companion",

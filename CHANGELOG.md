@@ -1,5 +1,43 @@
 # Changelog
 
+## 5.5.1
+
+**Every imported item now has its own picture, and a shield you buy is a shield.**
+
+### Changed
+- **No two imported items share an icon, and you can tell what a row is before
+  you read it.** Each kind of thing draws from its own visual family:
+  proficiencies, combat proficiencies and thief skills wear the ACKS system's
+  flat pictograms; a class is a heraldic banner; a class power is effect art; a
+  piece of equipment is a painted object; a variation is forge and material; a
+  trap is the mechanism or the thing that hits you. Before this, four hundred
+  and thirty-seven class powers had no icon at all and fell back to one book,
+  sixty-eight goods shared one bag, forty-three structures shared one castle,
+  every trap shared one trap, and every class was one of nine grey glyphs. The
+  flat grey `icons/svg` set is no longer used anywhere: it is what Foundry hands
+  a document nobody chose a picture for, so using one was the same as not
+  choosing. Where one printed name appears twice — a power that is also a
+  proficiency, an item that is in two books — it keeps one picture.
+- **Items that are built from the page rather than from an entry get a painted
+  default too** — a monster's attacks, its spoils, the rows of the weapons and
+  armour grids, and an ability with no definition behind it.
+- **The six Judges Journal shield forms import as shields, not as differences
+  applied to one.** Each arrives as a core armour item of type shield, filed on
+  Equipment / Shields, carrying the in-hand armour class and the encumbrance its
+  own passage states, read from your book. Previously each was a variation
+  document that could only be dragged onto a shield you already owned. The
+  conditions — which carry states grant the bonus, what denies it, what changes
+  mounted — remain on the item for the sheet to apply.
+
+### Note for existing worlds
+- Items already imported keep the picture they were created with — Foundry
+  stores it on the document, and nothing rewrites it afterwards. **Update
+  Abilities does not repaint them**; it rewrites descriptions and mechanics and
+  leaves presentation alone. To get the new pictures on what you have already
+  imported, use **Reimport One Shelf (GM)** — it deletes that shelf's documents
+  and builds them again. The new shields import beside whatever your world
+  already holds; nothing is deleted for you.
+
 ## 5.5.0
 
 **Three things the printed page says that the import was not reading: what type a priced row is, which powers a class starts with, and the whole of the crusader's rebuking table.**

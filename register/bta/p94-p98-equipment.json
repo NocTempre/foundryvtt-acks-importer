@@ -1,6 +1,7 @@
 [
  {
   "id": "def.equip.dwarvenBelts",
+  "icon": "icons/equipment/waist/belt-thick-studded-leather.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Belts",
@@ -18,6 +19,7 @@
  },
  {
   "id": "def.equip.dwarvenBoots",
+  "icon": "icons/equipment/feet/boots-leather-simple-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Boots",
@@ -35,6 +37,7 @@
  },
  {
   "id": "def.equip.dwarvenCap",
+  "icon": "icons/equipment/head/cap-simple-leather-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Cap",
@@ -52,6 +55,7 @@
  },
  {
   "id": "def.equip.dwarvenCloak",
+  "icon": "icons/equipment/back/cloak-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Cloak",
@@ -69,6 +73,7 @@
  },
  {
   "id": "def.equip.dwarvenCoat",
+  "icon": "icons/equipment/chest/coat-trench-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Coat",
@@ -92,6 +97,7 @@
  },
  {
   "id": "def.equip.tunicAndPants",
+  "icon": "icons/equipment/leg/pants-breeches-leather-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Tunic and Pants",
@@ -115,6 +121,7 @@
  },
  {
   "id": "def.equip.turban",
+  "icon": "icons/equipment/head/headwrap-cloth-white.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Turban",
@@ -139,6 +146,7 @@
  },
  {
   "id": "def.equip.basket",
+  "icon": "icons/containers/misc/basket-handle-woven-yellow.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Basket",
@@ -155,6 +163,7 @@
  },
  {
   "id": "def.equip.bucket",
+  "icon": "icons/containers/misc/bucket-wooden-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Bucket",
@@ -171,6 +180,7 @@
  },
  {
   "id": "def.equip.craftsmansWorkshop",
+  "icon": "icons/tools/hand/hammer-and-nail.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Craftsman's Workshop",
@@ -187,6 +197,7 @@
  },
  {
   "id": "def.equip.delversHarness",
+  "icon": "icons/sundries/survival/leather-strap-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Delver's Harness",
@@ -203,6 +214,7 @@
  },
  {
   "id": "def.equip.dwarvenBrew",
+  "icon": "icons/consumables/drinks/alcohol-beer-stein-wooden-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Dwarven Brew",
@@ -219,6 +231,7 @@
  },
  {
   "id": "def.equip.dwarvenBrewersLab",
+  "icon": "icons/tools/laboratory/cauldron-filled-gold.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Dwarven Brewer's Lab",
@@ -235,6 +248,7 @@
  },
  {
   "id": "def.equip.gnosticImplements",
+  "icon": "icons/tools/laboratory/alembic-glass-ball-blue.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Gnostic Implements",
@@ -251,6 +265,7 @@
  },
  {
   "id": "def.equip.helmetLightDwarven",
+  "icon": "icons/equipment/head/helm-spangen-tan.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Helmet, Light Dwarven",
@@ -267,6 +282,7 @@
  },
  {
   "id": "def.equip.helmetHeavyDwarven",
+  "icon": "icons/equipment/head/greathelm-banded-steel.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Helmet, Heavy Dwarven",
@@ -283,6 +299,7 @@
  },
  {
   "id": "def.equip.hoist",
+  "icon": "icons/tools/fasteners/chain-hook-grey.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Hoist",
@@ -299,6 +316,7 @@
  },
  {
   "id": "def.equip.dwarvenJournal",
+  "icon": "icons/sundries/books/book-notes-ragged-green.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Journal",
@@ -315,6 +333,7 @@
  },
  {
   "id": "def.equip.laborersTools",
+  "icon": "icons/tools/hand/shovel-spade-steel-brown-grey.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Laborer's Tools",
@@ -331,6 +350,7 @@
  },
  {
   "id": "def.equip.machinistsSpareParts",
+  "icon": "icons/tools/fasteners/nut-and-bolt-threaded-screw.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Machinist's Spare Parts",
@@ -347,6 +367,7 @@
  },
  {
   "id": "def.equip.dwarvenManacles",
+  "icon": "icons/sundries/survival/cuffs-shackles-steel.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Manacles",
@@ -363,6 +384,7 @@
  },
  {
   "id": "def.equip.minersHelm",
+  "icon": "icons/equipment/head/helmet-mining-lamp.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Miner's Helm",
@@ -379,6 +401,7 @@
  },
  {
   "id": "def.equip.petard",
+  "icon": "icons/weapons/thrown/bomb-fuse-black.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Petard",
@@ -395,6 +418,7 @@
  },
  {
   "id": "def.equip.portableBatteringRam",
+  "icon": "icons/commodities/wood/log-cut-hickory-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Portable Battering Ram",
@@ -411,6 +435,7 @@
  },
  {
   "id": "def.equip.prayerBook",
+  "icon": "icons/sundries/books/book-symbol-canterbury-cross.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Prayer Book",
@@ -427,6 +452,7 @@
  },
  {
   "id": "def.equip.specialComponents",
+  "icon": "icons/tools/laboratory/vials-blue-pink.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Special Components, Miscellaneous",
@@ -443,6 +469,7 @@
  },
  {
   "id": "def.equip.specialMushrooms",
+  "icon": "icons/consumables/mushrooms/campanulate-bell-red-white.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Special Mushrooms",
@@ -459,6 +486,7 @@
  },
  {
   "id": "def.equip.dwarvenWhistle",
+  "icon": "icons/tools/instruments/whistle-copper.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Whistle",
@@ -475,6 +503,7 @@
  },
  {
   "id": "def.equip.alchemicalFuel",
+  "icon": "icons/sundries/survival/fuel-canister-glass-green.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Alchemical Fuel",
@@ -491,6 +520,7 @@
  },
  {
   "id": "def.equip.charcoal",
+  "icon": "icons/commodities/materials/powder-black.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Charcoal",
@@ -507,6 +537,7 @@
  },
  {
   "id": "def.equip.commonOil",
+  "icon": "icons/containers/kitchenware/jug-clay-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Common Oil",
@@ -523,6 +554,7 @@
  },
  {
   "id": "def.equip.compost",
+  "icon": "icons/commodities/materials/slime-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Compost",
@@ -539,6 +571,7 @@
  },
  {
   "id": "def.equip.firewood",
+  "icon": "icons/commodities/wood/logs-pile-rough-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Firewood",
@@ -555,6 +588,7 @@
  },
  {
   "id": "def.equip.refinedOil",
+  "icon": "icons/sundries/survival/fuel-canister-glass-yellow.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Refined Oil",
@@ -571,6 +605,7 @@
  },
  {
   "id": "def.equip.earthshooter",
+  "icon": "icons/weapons/artillery/ballista-wood-green.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Earthshooter",
@@ -587,6 +622,7 @@
  },
  {
   "id": "def.equip.warBear",
+  "icon": "icons/creatures/abilities/bear-roar-bite-brown.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "War Bear",
@@ -603,6 +639,7 @@
  },
  {
   "id": "def.equip.guardBear",
+  "icon": "icons/creatures/abilities/bear-roar-bite-brown-green.webp",
   "kind": "kind.equipment",
   "book": "bta",
   "name": "Guard Bear",

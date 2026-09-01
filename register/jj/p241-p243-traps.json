@@ -13,7 +13,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/wilderness/terrain-stone-stalagtite.webp",
     "assists": {
       "columns": [
         72,
@@ -35,7 +35,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/commodities/stone/rock-pile-grey.webp",
     "assists": {
       "columns": [
         72,
@@ -57,7 +57,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/traps/spike-skull-white-brown.webp",
     "assists": {
       "columns": [
         72,
@@ -79,7 +79,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/magic/fire/explosion-embers-orange.webp",
     "assists": {
       "columns": [
         72,
@@ -101,7 +101,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/skills/ranged/arrow-barbed-flying-gray.webp",
     "assists": {
       "columns": [
         72,
@@ -123,7 +123,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/tools/hand/needle-grey.webp",
     "assists": {
       "columns": [
         45,
@@ -145,7 +145,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/traps/grate-steel.webp",
     "assists": {
       "columns": [
         45,
@@ -167,7 +167,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/traps/metal-spikes.webp",
     "assists": {
       "columns": [
         45,
@@ -189,7 +189,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/commodities/stone/boulder-grey.webp",
     "assists": {
       "columns": [
         45,
@@ -211,7 +211,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/traps/saw-steel.webp",
     "assists": {
       "columns": [
         45,
@@ -239,7 +239,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/environment/traps/net.webp",
     "assists": {
       "columns": [
         72,
@@ -261,7 +261,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/commodities/wood/log-rough-brown.webp",
     "assists": {
       "columns": [
         72,
@@ -283,7 +283,7 @@
     "meta": {
       "category": "trap"
     },
-    "icon": "icons/svg/trap.svg",
+    "icon": "icons/commodities/materials/plant-branch-brown-green.webp",
     "assists": {
       "columns": [
         72,

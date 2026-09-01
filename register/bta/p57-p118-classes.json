@@ -15,7 +15,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/cave.svg",
+    "icon": "icons/sundries/flags/banner-worn-green.webp",
     "class": {
       "key": "dwarvenDelver",
       "factored": true,
@@ -251,7 +251,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/mountain.svg",
+    "icon": "icons/sundries/flags/banner-symbol-axe-red.webp",
     "class": {
       "key": "dwarvenEarthforger",
       "factored": true,
@@ -486,7 +486,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/mole.svg",
+    "icon": "icons/sundries/flags/banner-pink.webp",
     "class": {
       "key": "dwarvenExcavator",
       "factored": true,
@@ -694,7 +694,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/fire.svg",
+    "icon": "icons/sundries/flags/banner-worn-red.webp",
     "class": {
       "key": "dwarvenFurnacewife",
       "factored": true,
@@ -900,7 +900,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/blood.svg",
+    "icon": "icons/sundries/flags/banner-flag-pirate.webp",
     "class": {
       "key": "dwarvenFury",
       "factored": true,
@@ -1067,7 +1067,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/clockwork.svg",
+    "icon": "icons/sundries/flags/banner-blue.webp",
     "class": {
       "key": "dwarvenMachinist",
       "factored": true,
@@ -1272,7 +1272,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/combat.svg",
+    "icon": "icons/sundries/flags/banner-flag-pirate-swords.webp",
     "class": {
       "key": "dwarvenPugilist",
       "factored": true,
@@ -1471,7 +1471,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/sound.svg",
+    "icon": "icons/sundries/flags/banner-flag-blue.webp",
     "class": {
       "key": "dwarvenRhetor",
       "factored": true,
@@ -1678,7 +1678,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/poison.svg",
+    "icon": "icons/sundries/flags/banner-green.webp",
     "class": {
       "key": "dwarvenSporecaster",
       "factored": true,
@@ -1906,7 +1906,7 @@
     "meta": {
       "category": "class"
     },
-    "icon": "icons/svg/padlock.svg",
+    "icon": "icons/sundries/flags/banner-flag-pirate-blue.webp",
     "class": {
       "key": "dwarvenTombsealer",
       "factored": true,

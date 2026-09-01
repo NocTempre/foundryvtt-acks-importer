@@ -25,6 +25,7 @@
  *     OSE's scale is wider at both ends, so a clamp would silently pin most of
  *     a book's roster to the maximum. See `moraleOffset`.
  */
+import { DEFAULT_IMG } from "./constants.mjs";
 
 /** Damage-bearing lineages, and how each prints an armour class that arrives
  * with no second figure beside it. The B-X family print DESCENDING. Dolmenwood
@@ -392,7 +393,7 @@ export function convertOse(parsed, constants, opts = {}) {
     items.push({
       name: mode.name.replace(/^./, (c) => c.toUpperCase()),
       type: "weapon",
-      img: "icons/svg/sword.svg",
+      img: DEFAULT_IMG.ATTACK,
       system: {
         description: "",
         damage: mode.damage ?? "",

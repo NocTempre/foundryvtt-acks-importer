@@ -14,7 +14,7 @@
       "appliesTo": ["weapon"],
       "supersedes": []
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/commodities/metal/ingot-silver.webp",
     "variation": [
       {
         "field": "cost.baseMul",

@@ -15,6 +15,8 @@
  *                       install/checkout, with a skip notice when absent.
  *   lint-register       IP + schema lint of register/ and cookbook/. No PDFs,
  *                       runs everywhere including CI (`npm run lint:register`).
+ *   icon-ledger         Ratchet: no entry may lose its icon and no kind may
+ *                       gain an unplaced one (`npm run icons`).
  *   check-prose-boxes    Does each definition's description come from the
  *                       column its own heading starts? Pure geometry, no PDFs.
  *   check-cookbook-drift  Is the committed cookbook/ what register/ compiles
@@ -134,6 +136,6 @@ if (failed) {
 // Re-exec so each check's own output surfaces and its non-zero exit propagates
 // (execFileSync throws, this process exits non-zero). Sequential and
 // fail-fast: a drift report is noise while the register itself is broken.
-for (const tool of ["lint-register.mjs", "test-ose-statline.mjs", "test-ose-convert.mjs", "test-ose-blocks.mjs", "test-ose-binding.mjs", "test-ose-template.mjs", "test-ose-location.mjs", "test-ose-manual.mjs", "test-ose-lang.mjs", "audit-transcription.mjs", "check-prose-boxes.mjs", "check-cookbook-drift.mjs"]) {
-  execFileSync(process.execPath, [path.join(ROOT, "tools", tool)], { stdio: "inherit" });
+for (const [tool, ...args] of [["lint-register.mjs"], ["icon-ledger.mjs", "--check"], ["test-ose-statline.mjs"], ["test-ose-convert.mjs"], ["test-ose-blocks.mjs"], ["test-ose-binding.mjs"], ["test-ose-template.mjs"], ["test-ose-location.mjs"], ["test-ose-manual.mjs"], ["test-ose-lang.mjs"], ["audit-transcription.mjs"], ["check-prose-boxes.mjs"], ["check-cookbook-drift.mjs"]]) {
+  execFileSync(process.execPath, [path.join(ROOT, "tools", tool), ...args], { stdio: "inherit" });
 }

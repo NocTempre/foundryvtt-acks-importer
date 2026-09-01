@@ -38,6 +38,15 @@ other VTTs) while cookbooks stay valid.
   bare units carries the count in `system.quantity`. Which of the two a name is
   is asked of `acksExtras.equipment.config.gearProfileFor`, never restated here.
   The shapes and what was rejected: [DECISIONS.md](DECISIONS.md) 2026-08-30.
+- **Icons:** an entry's `icon` becomes the document's `img`, and `iconNiche`
+  replaces it where the optional game-icons.net pack is installed. Each kind
+  draws from its own visual register so a sidebar row announces what it is
+  before its name is read, no two differently-named entries share a path, and
+  `icons/svg/*` is banned — generated documents that have no entry behind them
+  take `DEFAULT_IMG` (`scripts/constants.mjs`) instead. The registers, the
+  same-name rule and what was rejected: [DECISIONS.md](DECISIONS.md)
+  2026-09-01. State and gate: `npm run icons` (`tools/icon-ledger.mjs`,
+  ledger `register/_icons.json`).
 - **UI:** the materialized-text shape (`scripts/prose.mjs` — the entry's
   paragraphs, page reference last, stamped so a re-import can tell its own
   writing from a Judge's), concept→examples surfacing, the audit dialog.

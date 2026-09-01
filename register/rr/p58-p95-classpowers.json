@@ -1,6 +1,7 @@
 [
   {
     "id": "def.power.bladedancerGracefulFighting",
+    "icon": "icons/skills/melee/sword-twirl-orange.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Graceful Fighting",
@@ -59,6 +60,7 @@
   },
   {
     "id": "def.power.bladedancerStrengthOfFaith",
+    "icon": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Strength of Faith",
@@ -90,6 +92,7 @@
   },
   {
     "id": "def.power.bladedancerWeaponFinesse",
+    "icon": "icons/skills/melee/blade-tip-orange.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Weapon Finesse",
@@ -129,6 +132,7 @@
   },
   {
     "id": "def.power.paladinAuraOfProtection",
+    "icon": "icons/magic/defensive/barrier-shield-dome-deflect-blue.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Aura of Protection",
@@ -171,6 +175,7 @@
   },
   {
     "id": "def.power.paladinLayOnHands",
+    "icon": "icons/magic/life/heart-hand-gold-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Lay on Hands",
@@ -231,6 +236,7 @@
   },
   {
     "id": "def.power.priestessLayOnHands",
+    "icon": "icons/magic/life/heart-hand-gold-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Lay on Hands",
@@ -291,6 +297,7 @@
   },
   {
     "id": "def.power.wonderworkerLayOnHands",
+    "icon": "icons/magic/life/heart-hand-gold-green.webp",
     "kind": "kind.power",
     "book": "rr",
     "name": "Lay on Hands",

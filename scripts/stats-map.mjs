@@ -8,6 +8,7 @@
  * acks-monsters scripts/config.mjs (public shipped data).
  */
 import { savesForLevel } from "./stats.mjs";
+import { DEFAULT_IMG } from "./constants.mjs";
 
 const TYPE_KEYS = ["animal", "beastman", "construct", "enchanted", "giant", "humanoid", "incarnation", "monstrosity", "ooze", "plant", "undead", "vermin"];
 const SIZE_KEYS = ["small", "man", "large", "huge", "gigantic", "colossal"];
@@ -282,7 +283,7 @@ export function mapPairs(pairs) {
       items.push({
         name,
         type: "weapon",
-        img: "icons/svg/sword.svg",
+        img: DEFAULT_IMG.ATTACK,
         flags: {
           "acks-extras": {
             ...(nw ? { naturalWeapon: nw.key } : {}),
@@ -316,7 +317,7 @@ export function mapPairs(pairs) {
       items.push({
         name,
         type: "ability",
-        img: "icons/svg/book.svg",
+        img: DEFAULT_IMG.ABILITY,
         system: {
           description: "",
           proficiencytype: "general",

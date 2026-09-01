@@ -12,7 +12,7 @@
         62,
         109
       ],
-      "icon": "icons/svg/cave.svg",
+      "icon": "icons/sundries/flags/banner-worn-green.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenDelver",
@@ -495,7 +495,7 @@
         66,
         110
       ],
-      "icon": "icons/svg/mountain.svg",
+      "icon": "icons/sundries/flags/banner-symbol-axe-red.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenEarthforger",
@@ -1005,7 +1005,7 @@
         69,
         111
       ],
-      "icon": "icons/svg/mole.svg",
+      "icon": "icons/sundries/flags/banner-pink.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenExcavator",
@@ -1456,7 +1456,7 @@
         72,
         112
       ],
-      "icon": "icons/svg/fire.svg",
+      "icon": "icons/sundries/flags/banner-worn-red.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenFurnacewife",
@@ -1904,7 +1904,7 @@
         75,
         113
       ],
-      "icon": "icons/svg/blood.svg",
+      "icon": "icons/sundries/flags/banner-flag-pirate.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenFury",
@@ -2315,7 +2315,7 @@
         78,
         114
       ],
-      "icon": "icons/svg/clockwork.svg",
+      "icon": "icons/sundries/flags/banner-blue.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenMachinist",
@@ -2767,7 +2767,7 @@
         81,
         115
       ],
-      "icon": "icons/svg/combat.svg",
+      "icon": "icons/sundries/flags/banner-flag-pirate-swords.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenPugilist",
@@ -3220,7 +3220,7 @@
         84,
         116
       ],
-      "icon": "icons/svg/sound.svg",
+      "icon": "icons/sundries/flags/banner-flag-blue.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenRhetor",
@@ -3681,7 +3681,7 @@
         89,
         117
       ],
-      "icon": "icons/svg/poison.svg",
+      "icon": "icons/sundries/flags/banner-green.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenSporecaster",
@@ -4208,7 +4208,7 @@
         92,
         118
       ],
-      "icon": "icons/svg/padlock.svg",
+      "icon": "icons/sundries/flags/banner-flag-pirate-blue.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenTombsealer",
@@ -4695,7 +4695,7 @@
         26,
         27
       ],
-      "icon": "icons/svg/sword.svg",
+      "icon": "icons/sundries/flags/banner-sword-blue.webp",
       "meta": {
         "category": "class",
         "key": "fighter",
@@ -5050,7 +5050,7 @@
         29,
         30
       ],
-      "icon": "icons/svg/target.svg",
+      "icon": "icons/sundries/flags/banner-standard-green.webp",
       "meta": {
         "category": "class",
         "key": "explorer",
@@ -5441,7 +5441,7 @@
         34,
         35
       ],
-      "icon": "icons/svg/eye.svg",
+      "icon": "icons/sundries/flags/banner-worn-blue.webp",
       "meta": {
         "category": "class",
         "key": "thief",
@@ -5908,7 +5908,7 @@
         36,
         37
       ],
-      "icon": "icons/svg/daze.svg",
+      "icon": "icons/sundries/flags/banner-purple.webp",
       "meta": {
         "category": "class",
         "key": "mage",
@@ -6309,7 +6309,7 @@
         40,
         41
       ],
-      "icon": "icons/svg/angel.svg",
+      "icon": "icons/sundries/flags/banner-symbol-sun-gold-red.webp",
       "meta": {
         "category": "class",
         "key": "crusader",
@@ -6837,7 +6837,7 @@
         44,
         45
       ],
-      "icon": "icons/svg/coins.svg",
+      "icon": "icons/sundries/flags/banner-yellow.webp",
       "meta": {
         "category": "class",
         "key": "venturer",
@@ -7268,7 +7268,7 @@
         47,
         48
       ],
-      "icon": "icons/svg/blood.svg",
+      "icon": "icons/sundries/flags/banner-flag-skull-red.webp",
       "meta": {
         "category": "class",
         "key": "assassin",
@@ -7664,7 +7664,7 @@
         51,
         52
       ],
-      "icon": "icons/svg/bones.svg",
+      "icon": "icons/sundries/flags/banner-symbol-claw.webp",
       "meta": {
         "category": "class",
         "key": "barbarian",
@@ -8109,7 +8109,7 @@
         56,
         57
       ],
-      "icon": "icons/svg/sound.svg",
+      "icon": "icons/sundries/flags/banner-flag-pink.webp",
       "meta": {
         "category": "class",
         "key": "bard",
@@ -8570,7 +8570,7 @@
         59,
         60
       ],
-      "icon": "icons/svg/combat.svg",
+      "icon": "icons/sundries/flags/banner-flag-red-white.webp",
       "meta": {
         "category": "class",
         "key": "bladedancer",
@@ -8986,7 +8986,7 @@
         63,
         64
       ],
-      "icon": "icons/svg/shield.svg",
+      "icon": "icons/sundries/flags/banner-silver-white.webp",
       "meta": {
         "category": "class",
         "key": "paladin",
@@ -9357,7 +9357,7 @@
         67,
         68
       ],
-      "icon": "icons/svg/light.svg",
+      "icon": "icons/sundries/flags/banner-white.webp",
       "meta": {
         "category": "class",
         "key": "priestess",
@@ -9813,7 +9813,7 @@
         72,
         73
       ],
-      "icon": "icons/svg/pawprint.svg",
+      "icon": "icons/sundries/flags/banner-standard-moon.webp",
       "meta": {
         "category": "class",
         "key": "shaman",
@@ -10270,7 +10270,7 @@
         76,
         77
       ],
-      "icon": "icons/svg/fire.svg",
+      "icon": "icons/sundries/flags/banner-standard-tattered-red.webp",
       "meta": {
         "category": "class",
         "key": "warlock",
@@ -10753,7 +10753,7 @@
         80,
         81
       ],
-      "icon": "icons/svg/daze.svg",
+      "icon": "icons/sundries/flags/banner-standard-purple.webp",
       "meta": {
         "category": "class",
         "key": "witch",
@@ -11251,7 +11251,7 @@
         83,
         84
       ],
-      "icon": "icons/svg/anchor.svg",
+      "icon": "icons/sundries/flags/banner-standard-brown.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenCraftpriest",
@@ -11694,7 +11694,7 @@
         86,
         87
       ],
-      "icon": "icons/svg/shield.svg",
+      "icon": "icons/sundries/flags/banner-flag-white-mountain.webp",
       "meta": {
         "category": "class",
         "key": "dwarvenVaultguard",
@@ -12060,7 +12060,7 @@
         90,
         91
       ],
-      "icon": "icons/svg/eye.svg",
+      "icon": "icons/sundries/flags/banner-symbol-eye-purple.webp",
       "meta": {
         "category": "class",
         "key": "elvenNightblade",
@@ -12579,7 +12579,7 @@
         92,
         93
       ],
-      "icon": "icons/svg/sword.svg",
+      "icon": "icons/sundries/flags/banner-standard-blue.webp",
       "meta": {
         "category": "class",
         "key": "elvenSpellsword",
@@ -12988,7 +12988,7 @@
         95,
         96
       ],
-      "icon": "icons/svg/angel.svg",
+      "icon": "icons/sundries/flags/banner-flag-white.webp",
       "meta": {
         "category": "class",
         "key": "nobiranWonderworker",
@@ -13465,7 +13465,7 @@
         100,
         101
       ],
-      "icon": "icons/svg/skull.svg",
+      "icon": "icons/sundries/flags/banner-skull-red.webp",
       "meta": {
         "category": "class",
         "key": "zaharanRuinguard",

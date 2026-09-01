@@ -1,7 +1,7 @@
 [
   {
-    "id": "def.variation.shieldAuxiliary",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldAuxiliary",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Auxiliary Shield",
     "anchor": {
@@ -11,20 +11,9 @@
       409
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.auxiliary",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [
-        {
-          "key": "encStone",
-          "type": "number",
-          "label": "Encumbrance (stone)"
-        }
-      ],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "auxiliary",
       "grantsAC": [
         "hand",
         "backVsRear"
@@ -39,21 +28,28 @@
         "vulnerable"
       ]
     },
-    "icon": "icons/svg/shield.svg",
-    "variation": [
+    "icon": "icons/equipment/shield/targe-wooden-boss-steel-brown.webp",
+    "values": [
       {
-        "field": "data.encStone",
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "dismounted\\s*character\\s*,?\\s*an\\s*auxiliary\\s*shield\\s*grants\\s*a\\s*\\+(\\d+)"
+        }
+      },
+      {
+        "field": "weight6.stone",
         "from": {
           "into": "amount",
           "pattern": "However\\s*it\\s*is\\s*carried[\\s\\S]{0,60}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
         }
       }
     ],
-    "note": "Every shield AC bonus here is CONDITIONAL - on carry state (hand / front / back), on being mounted, and on circumstance (vulnerable, surprised, attacked from behind). The buckler depends on a proficiency instead. So none records a bare equippedAC: one number cannot say what these rules say. Only encumbrance is captured, where stated without condition."
+    "note": "A shield form is a SHIELD, not a difference applied to one: it imports as an armor item of type shield, carrying the ordinary in-hand AC and encumbrance its own passage states. The conditions - which carry states grant AC, what denies it, what mounting changes - are the meta enums; the consumer corrects DOWN from the ordinary value, so the item must state one. No price: the JJ prints none."
   },
   {
-    "id": "def.variation.shieldBuckler",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldBuckler",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Buckler",
     "anchor": {
@@ -63,20 +59,9 @@
       409
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.buckler",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [
-        {
-          "key": "encItems",
-          "type": "number",
-          "label": "Encumbrance (items)"
-        }
-      ],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "buckler",
       "grantsAC": [
         "hand"
       ],
@@ -85,20 +70,28 @@
         "vulnerable"
       ]
     },
-    "icon": "icons/svg/shield.svg",
-    "variation": [
+    "icon": "icons/equipment/shield/buckler-wooden-boss.webp",
+    "values": [
       {
-        "field": "data.encItems",
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "Specialization\\s*\\(Weapon\\s*&\\s*Shield\\)\\s*gain\\s*a\\s*\\+(\\d+)\\s*bonus"
+        }
+      },
+      {
+        "field": "weight6.item",
         "from": {
           "into": "amount",
           "pattern": "It\\s*has\\s*an\\s*encumbrance\\s*of\\s*(\\d+)\\s*item"
         }
       }
-    ]
+    ],
+    "note": "The only form whose AC is stated as a proficiency's, so its locator reads that sentence; `requiresStyleSpecialization` is what says the ordinary value does not apply without it. Encumbrance is printed in ITEMS, the sixth-stone unit."
   },
   {
-    "id": "def.variation.shieldCrescent",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldCrescent",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Crescent Shield",
     "anchor": {
@@ -108,14 +101,9 @@
       409
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.crescent",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "crescent",
       "grantsAC": [
         "hand",
         "front",
@@ -125,12 +113,28 @@
         "vulnerable"
       ]
     },
-    "icon": "icons/svg/shield.svg",
-    "note": "Encumbrance is 1 stone, or 2 strapped on the front - conditional, so not captured as a bare number."
+    "icon": "icons/equipment/shield/round-wooden-boss-notched-red.webp",
+    "values": [
+      {
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "in\\s*hand\\s*,?\\s*a\\s*crescent\\s*shield\\s*grants\\s*a\\s*\\+(\\d+)"
+        }
+      },
+      {
+        "field": "weight6.stone",
+        "from": {
+          "into": "amount",
+          "pattern": "It\\s*has\\s*an\\s*encumbrance\\s*of\\s*(\\d+)\\s*stone"
+        }
+      }
+    ],
+    "note": "Carried, it encumbers what the first stated figure says; strapped on the front it encumbers more. The front case belongs to the carry state, which is `grantsAC.front`, so the item takes the in-hand figure the passage states first."
   },
   {
-    "id": "def.variation.shieldHeater",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldHeater",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Heater Shield",
     "anchor": {
@@ -140,20 +144,9 @@
       409
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.heater",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [
-        {
-          "key": "encStone",
-          "type": "number",
-          "label": "Encumbrance (stone)"
-        }
-      ],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "heater",
       "grantsAC": [
         "hand",
         "backVsRear"
@@ -168,10 +161,17 @@
         "attackedFromBehind"
       ]
     },
-    "icon": "icons/svg/shield.svg",
-    "variation": [
+    "icon": "icons/equipment/shield/heater-steel-grey.webp",
+    "values": [
       {
-        "field": "data.encStone",
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "dismounted\\s*character\\s*,?\\s*a\\s*heater\\s*shield\\s*grants\\s*a\\s*\\+(\\d+)"
+        }
+      },
+      {
+        "field": "weight6.stone",
         "from": {
           "into": "amount",
           "pattern": "However\\s*it\\s*is\\s*carried[\\s\\S]{0,60}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
@@ -180,8 +180,8 @@
     ]
   },
   {
-    "id": "def.variation.shieldKite",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldKite",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Kite Shield",
     "anchor": {
@@ -191,14 +191,9 @@
       410
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.kite",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "kite",
       "grantsAC": [
         "hand"
       ],
@@ -208,12 +203,28 @@
         "vulnerable"
       ]
     },
-    "icon": "icons/svg/shield.svg",
-    "note": "Dismounted it encumbers 2 stone; mounted, rider and mount take 1 each. Conditional, so not captured."
+    "icon": "icons/equipment/shield/kite-wooden-boss-steel-brown.webp",
+    "values": [
+      {
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "kite\\s*shield\\s*equipped\\s*has\\s*his\\s*Armor\\s*Class\\s*increased\\s*by\\s*(\\d+)"
+        }
+      },
+      {
+        "field": "weight6.stone",
+        "from": {
+          "into": "amount",
+          "pattern": "kite\\s*shield\\s*equipped\\s*has\\s*his[\\s\\S]{0,60}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
+        }
+      }
+    ],
+    "note": "Both locators are anchored on the DISMOUNTED sentence: mounted, rider and mount are encumbered separately, which is `mounted: riderAndMount` and the overlay's to apply."
   },
   {
-    "id": "def.variation.shieldPhalanx",
-    "kind": "kind.variation",
+    "id": "def.equip.shieldPhalanx",
+    "kind": "kind.equipment",
     "book": "jj",
     "name": "Phalanx Shield",
     "anchor": {
@@ -223,21 +234,32 @@
       410
     ],
     "meta": {
-      "category": "variation",
-      "key": "shield.phalanx",
-      "variationKind": "form",
-      "appliesTo": [
-        "shield"
-      ],
-      "supersedes": [],
-      "dataFields": [],
+      "category": "equipment",
+      "group": "shield",
+      "shieldVariant": "phalanx",
       "grantsAC": [
         "hand"
       ],
       "noBack": true,
       "noMount": true
     },
-    "icon": "icons/svg/shield.svg",
-    "note": "Its one encumbrance clause sits inside the dismounted sentence and it cannot be used mounted at all, so the figure is not unconditional the way the auxiliary shield stated one is."
+    "icon": "icons/equipment/shield/Scutum-steel-worn.webp",
+    "values": [
+      {
+        "field": "aac",
+        "from": {
+          "into": "amount",
+          "pattern": "phalanx\\s*shield\\s*equipped\\s*has\\s*his\\s*Armor\\s*Class\\s*increased\\s*by\\s*(\\d+)"
+        }
+      },
+      {
+        "field": "weight6.stone",
+        "from": {
+          "into": "amount",
+          "pattern": "phalanx\\s*shield\\s*equipped\\s*has\\s*his[\\s\\S]{0,80}?encumbrance\\s*of\\s*(\\d+)\\s*stone"
+        }
+      }
+    ],
+    "note": "The one form that cannot be used mounted at all (`noMount`) and the one that counts for the Defend action - the latter has no field yet and stays in the passage the reader imports."
   }
 ]

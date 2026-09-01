@@ -7,7 +7,7 @@
     "anchor": { "display": "SEA VESSELS" },
     "pages": [318, 319],
     "meta": { "category": "vehicle", "kindOfVehicle": "sea" },
-    "icon": "icons/svg/anchor.svg",
+    "icon": "icons/environment/settlement/ship.webp",
     "assists": {
       "grids": {
         "sea": {

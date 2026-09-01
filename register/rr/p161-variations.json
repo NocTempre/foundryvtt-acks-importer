@@ -13,7 +13,7 @@
       "appliesTo": ["weapon"],
       "supersedes": ["magical.*"]
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/tools/smithing/hammer-sledge-steel-grey.webp",
     "variation": [
       {
         "field": "cost.add",
@@ -39,7 +39,7 @@
       "appliesTo": ["weapon"],
       "supersedes": ["magical.*"]
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/tools/smithing/anvil.webp",
     "variation": [
       {
         "field": "cost.add",
@@ -65,7 +65,7 @@
       "appliesTo": ["weapon"],
       "supersedes": ["magical.*"]
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/tools/smithing/furnace-fire-metal-orange.webp",
     "variation": [
       {
         "field": "cost.add",
@@ -95,7 +95,7 @@
       "appliesTo": [],
       "supersedes": []
     },
-    "icon": "icons/svg/upgrade.svg"
+    "icon": "icons/commodities/metal/ingot-engraved-gold.webp"
   },
   {
     "id": "def.variation.masterworkArmorLight",
@@ -111,7 +111,7 @@
       "appliesTo": ["armor", "shield"],
       "supersedes": ["magical.*"]
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/tools/smithing/plate-steel-grey.webp",
     "variation": [
       {
         "field": "cost.add",
@@ -137,7 +137,7 @@
       "appliesTo": ["armor", "shield"],
       "supersedes": ["magical.*"]
     },
-    "icon": "icons/svg/upgrade.svg",
+    "icon": "icons/commodities/metal/armor-plate-reticulated.webp",
     "variation": [
       {
         "field": "cost.add",

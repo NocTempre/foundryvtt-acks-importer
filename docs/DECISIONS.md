@@ -7,6 +7,116 @@ Entries are dated and append-only. A superseded entry stays, marked.
 
 ---
 
+### One picture per entry, one register per kind (2026-09-01)
+
+**Ruled.** Every one of the 819 register entries that becomes an Item carries an
+`icon`, no two differently-named entries share one, and each kind draws from a
+visual register that says what the row is before its name is read:
+
+| Kind | Register | Source |
+|---|---|---|
+| proficiency, combat proficiency, skill | flat white-on-black pictogram | `systems/acks/assets/icons/` |
+| class | heraldic banner | `icons/sundries/flags/` |
+| power | effect art — spell, knack, or stronghold | `icons/magic|skills|creatures|environment/` |
+| equipment | painted object | `icons/commodities|consumables|containers|equipment|tools|weapons|sundries|environment/` |
+| variation | forge and material | `icons/tools/smithing/`, `icons/commodities/`, `icons/equipment/shield/` |
+| trap | the mechanism, or the thing that hits you | `icons/environment|weapons|magic|tools|commodities|skills/` |
+| vehicle | conveyance | `icons/environment/vehicles|settlement/`, `icons/tools/nautical|navigation/` |
+
+Before this, 73 of 819 were placed: 437 powers had no icon at all and fell back
+to one book, 68 goods shared one bag, 43 structures shared one castle, 13 traps
+shared one trap, every class was one of nine grey glyphs. A sidebar of imported
+items was a wall of repeats, which is the same as no icon at all.
+
+**`icons/svg/*` is banned outright, in entries and in generated documents.**
+Those flat greys are what Foundry gives a document nobody chose a picture for,
+so choosing one is indistinguishable from not choosing — every duplicate above
+was one. Generated documents (a monster's attack, a spoil, a grid row, an
+ability with no entry behind it) cannot have a per-entry icon, so they take
+`DEFAULT_IMG` from `scripts/constants.mjs` — painted art from the same folders,
+one named symbol rather than a scatter of literals.
+
+**Sameness is per printed NAME, not per id.** Lay on Hands is one ability under
+three classes and Manacles is one item in two books; each keeps one picture, and
+the ledger counts a collision only when one path answers to two names. That is
+also why the power register reaches into the ACKS tree: where a class power *is*
+a printed proficiency (Alertness, Armor Training, Deciphering), it wears the
+proficiency's pictogram rather than a second picture for one concept.
+
+**Rejected: keyword-scored auto-assignment.** `tools/propose-icons.mjs` already
+measured it — 2 right and 14 wrong in a 42-entry sample, with Battle Magic
+scored onto a battle AXE — and its verdict stands. Every path here was picked by
+reading the entry; the tool's `--search` mode and the ledger's `--free` are what
+made that tractable.
+
+**The gate is a ratchet, not a snapshot.** `tools/icon-ledger.mjs --check`
+(against `register/_icons.json`) fails when unplaced entries increase, so a new
+entry authored without an icon is caught where it lands rather than at the next
+release. `--apply` refuses any path not present in an installed library, which
+is what keeps a typo from shipping as a broken image on every seat.
+
+**Cost.** A handful of picks are approximate because the libraries have no
+better answer: four horseshoes stand in for three chariots and a saddle, a
+stable stands in for a donkey, a bolt of cloth for a signal flag. Eleven of
+those carry an `iconNiche` upgrade from game-icons.net for seats that have the
+pack. The one surface still sharing pictures is the weapons and armour grids,
+whose rows are minted from the page and take `DEFAULT_IMG.WEAPON`/`.ARMOR`/
+`.SHIELD`: giving each printed row its own art needs a name-keyed table in
+shipped code, which is the IP structure-vs-content line and wants its own
+ruling.
+
+### A shield form is a shield, not a difference applied to one (2026-09-01)
+
+**Ruled.** The six Judges Journal shield forms — auxiliary, buckler, crescent,
+heater, kite, phalanx — import as core `armor` items of type `shield`, one base
+item each, filed on Equipment / Shields. They imported as `acks-extras.variation`
+documents from 2026-08-16; that is reversed, and the entries are `kind.equipment`
+now.
+
+A variation is a difference a reader applies to a thing they already own:
+masterwork, silvering, an ornament. A form is not that. Nothing in the books
+sells a shield and then sells kite-ness to fit onto it — the passage describes a
+complete piece of equipment a soldier is issued, and a reader who wants one buys
+one. The two shapes were also visibly the same thing twice: extras' sample pack
+ships all six as playable armour while this module shipped six documents of the
+same names that could only be dragged onto a shield, and extras' own variation
+layer refuses a `form` variation on any item already carrying the shield-form
+flag, because the flag and the document say the same thing.
+
+**The item states an ordinary AC, and that is what changed.** The earlier ruling
+recorded none, on the reasoning that a form does not state a magnitude — the book
+repeats "+1" because a standard shield is +1, and what a form states is where the
+AC applies and when it does not. That reasoning holds for what the number MEANS
+and the conditions are still enums on the entry (`grantsAC`, `mounted`,
+`deniedWhen`, `noBack`, `noMount`, `requiresStyleSpecialization`). What it cannot
+survive is the document becoming the shield itself: core adds an equipped
+shield's `aac.value` unconditionally and the overlay reading those enums corrects
+DOWNWARD from it, so a form with no AC is not conservative, it is an unusable
+shield and a broken correction. Each entry therefore locates its own in-hand AC
+and its own encumbrance from the seat's page, by a locator anchored in that
+entry's own sentence — never one pattern swept across six passages, which is the
+mistake the 2026-08-16 entry was written against and which is what produced a
+bare `equippedAC: 1` on all six.
+
+Encumbrance is now read for all six rather than three. As a difference, a figure
+that changes with the carry state stated nothing unconditional and was left out;
+as a base item, the weight in hand is the item's weight and the carry states are
+the overlay's business — so the crescent takes the figure its passage states
+first, and the kite and phalanx take their dismounted one.
+
+**Rejected: the Armor shelf**, beside the shields the RR grid materializes. The
+shelf a document lands on is the shelf that rebuilds it: "Armor" is refilled by
+`importArmor`, which reads a printed grid and cannot mint a described entry, so
+one shelf rebuild would have deleted the six with nothing to put back. Equipment
+refills from the entries, which is where they now are.
+
+**Cost.** A world that imported the forms before this holds six documents of a
+type that cannot be changed in place, under ids that moved with the kind, so
+`repairShieldVariations` deletes the library copies and the equipment import
+re-creates them — the `repairAnimalItems` pattern. Variations a Judge already
+applied to a shield are embedded copies on that document and are never touched.
+The forms carry no price: the Judges Journal prints none for them.
+
 ### A grid may be keyed on a name, and its cells need not be numbers (2026-08-30)
 
 **Ruled.** A table recipe may declare `labelText`, saying its label column holds

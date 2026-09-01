@@ -7,7 +7,7 @@
     "anchor": { "display": "Vehicles" },
     "pages": [136],
     "meta": { "category": "vehicle", "kindOfVehicle": "land" },
-    "icon": "icons/svg/stone-path.svg",
+    "icon": "icons/environment/settlement/wagon.webp",
     "assists": {
       "grids": {
         "land": {

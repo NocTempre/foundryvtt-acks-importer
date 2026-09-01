@@ -7,7 +7,7 @@
  */
 import { rowsByY, joinRuns } from "./table-extract.mjs";
 import { stripNoise, bindRowCells } from "./weapon-tables.mjs";
-import { MODULE_ID } from "./constants.mjs";
+import { MODULE_ID, DEFAULT_IMG } from "./constants.mjs";
 import { bookText } from "./prose.mjs";
 
 export const ARMOR_TABLE = Object.freeze({
@@ -211,7 +211,7 @@ export function bindArmorRow(row, id, cite) {
   return {
     name: row.name,
     type: "armor",
-    img: type === "shield" ? "icons/svg/shield.svg" : "icons/svg/statue.svg",
+    img: type === "shield" ? DEFAULT_IMG.SHIELD : DEFAULT_IMG.ARMOR,
     system,
     flags: {
       [MODULE_ID]: { cookbook: { id, cite }, generated: true, armor: armorFlag },

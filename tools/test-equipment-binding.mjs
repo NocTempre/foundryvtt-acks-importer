@@ -54,6 +54,23 @@ check("an extracted damage overrides the root fallback", hwPaged.system.damage =
 const sword = bindEquipment(mk("Sword", "weapon"), { fields: { damage: "1d6", melee: true } }, "def.equip.sword");
 check("a register weapon still binds as a weapon", sword.type === "weapon" && sword.system.damage === "1d6");
 
+// --- The JJ shield FORMS: base items, not differences applied to one ----------
+// Each is a shield you buy, so it carries the ordinary AC and encumbrance its
+// own passage states; which carry states that AC applies in is the overlay's,
+// and the form it reads is named in the extras scope.
+const shield = (name, variant) => ({ name, cite: "JJ p.407", meta: { category: "equipment", group: "shield", shieldVariant: variant } });
+
+const kite = bindEquipment(shield("Kite Shield", "kite"), { fields: { values: [{ field: "aac", amount: 1 }, { field: "weight6.stone", amount: 2 }] } }, "def.equip.shieldKite");
+check("a shield form binds as armour of type shield", kite.type === "armor" && kite.system.type === "shield");
+check("its AC is the number the page stated", kite.system.aac.value === 1);
+check("an encumbrance printed in stone converts to sixths", kite.system.weight6 === 12);
+check("the form is named where acks-extras reads it", kite.flags["acks-extras"].shieldVariant === "kite");
+check("no price is invented for a form the book does not price", kite.system.cost === undefined);
+
+const buckler = bindEquipment(shield("Buckler", "buckler"), { fields: { values: [{ field: "weight6.item", amount: 1 }] } }, "def.equip.shieldBuckler");
+check("an encumbrance printed in ITEMS is already sixths", buckler.system.weight6 === 1);
+check("a locator that did not match leaves the field absent", buckler.system.aac === undefined);
+
 // --- Degrade: no acks-equipment → the register's own type stands --------------
 globalThis.acksExtras.equipment = undefined;
 const torchAlone = bindEquipment(mk("Torch"), { fields: {} }, "def.equip.torch");
