@@ -1,5 +1,8 @@
 # ACKS II — Importer
 
+> **Retired 2026-09-01 — this module is now part of [ACKS II — Extras](https://github.com/NocTempre/foundryvtt-acks-extras) (6.0.0 and later).**
+> Install Extras and disable this module; on the next load your imported library, server-held books and macros are carried over automatically. This repository is a read-only archive of the importer's history and releases; report problems and read the guide at the Extras repository and [documentation site](https://noctempre.github.io/foundryvtt-acks-extras/guides/importer/).
+
 Imports **Adventurer Conqueror King System II** book content into Foundry **from
 your own PDFs**: monsters, proficiencies and class powers, equipment and price
 tables, adventure locations and roll tables.
